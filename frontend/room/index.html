@@ -1,0 +1,43 @@
+<style>
+body {
+  color: white;
+  background-color: #222;
+}
+</style>
+<script src="network.js"></script>
+<script>
+function login() {
+  let username = "";
+  let password = "";
+  let arr = network.fetchExistingUsernamePassword();
+  if (arr) {
+    username = arr[0];
+    password = arr[1];
+  } else {
+    while (username.length == 0) {
+      username = prompt("username?");
+    }
+    while (password.length == 0) {
+      password = prompt("password?");
+    }
+  }
+  return network.makeWebSocket("chat", username, password);
+  // return network.makeWebSocket("oligarch", username, password);
+}
+
+let gSocket;
+login().then((socket) => {
+  console.log("CONNECTED");
+  gSocket = socket;
+  gSocket.addEventListener("message", (event) => {
+    console.log("MESSAGE:", event.data);
+  });
+  gSocket.addEventListener("close", () => {
+    console.log("CLOSED");
+  });
+}, (error) => {
+  console.log("ERROR:", error);
+});
+
+</script>
+Hello World!
