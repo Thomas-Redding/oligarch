@@ -1,5 +1,8 @@
 let geography = require('./geography.js')
 
+
+
+
 class Timer
 {
     
@@ -32,7 +35,7 @@ class Player
         this.cash = 0
         this.auth = auth  
         this.shares = {}
-        for (let key in nations) 
+        for (let key in geography.nations) 
         {
             this.shares[key] = 0
         }
