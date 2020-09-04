@@ -1,11 +1,12 @@
 let geography = require('./geography.js')
 
 
-
+//global lists defined here
 const phases = ['deliberation','auction','election','actions']
 const subphases = ['move','attack','spawn','build','dividends']
 const blacknames = ['NA','EU','AS','SA','AF','AU']
 
+//game logic classes below
 class Timer
 {
     
