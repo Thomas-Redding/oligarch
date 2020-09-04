@@ -1,4 +1,25 @@
-let neighbors = {
+const nations = {
+  "Africa": {
+    "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"]
+  },
+  "North America": {
+    "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"]
+  },
+  "South America": {
+    "territories": ["Venezuela", "Brazil", "Argentina", "Peru"]
+  },
+  "Europe": {
+    "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"]
+  },
+  "Asia": {
+    "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"]
+  },
+  "Australia": {
+    "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"]
+  }
+};
+
+const neighbors = {
     "Afghanistan": {
       "Ural": 1,
       "Siberia": 1,
@@ -244,4 +265,7 @@ let neighbors = {
     }
   }
 
-  module.exports = neighbors
+  module.exports = {
+    neighbors: neighbors,
+    nations: nations
+  }
