@@ -1,20 +1,26 @@
 const nations = {
   "Africa": {
+    "base_income_per_territory" : 6,
     "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"]
   },
   "North America": {
+    "base_income_per_territory" : 4,
     "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"]
   },
   "South America": {
+    "base_income_per_territory" : 9,
     "territories": ["Venezuela", "Brazil", "Argentina", "Peru"]
   },
   "Europe": {
+    "base_income_per_territory" : 5,
     "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"]
   },
   "Asia": {
+    "base_income_per_territory" : 5,
     "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"]
   },
   "Australia": {
+    "base_income_per_territory" : 9,
     "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"]
   }
 };
