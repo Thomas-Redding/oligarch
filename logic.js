@@ -1,21 +1,65 @@
-let foo = require('./neighbors.js')
-console.log(foo)
+let geography = require('./geography.js')
 
-
-function initGameState()
+class Timer
 {
-    let foo = require('./neighbors.js')
-    console.log(foo)
+    
+    constructor(time, callback) {
+        this._callback = callback;
+        this._startTime = new Date().getTime();
+        this._t = time;
+        this._id = setTimeout(this._callback, time);
+    }
+    queryTime() {
+        let timeElapsed = new Date().getTime() - this._startTime;
+        return this._t - timeElapsed;
+    }
+    extendTime(newTime) {
+        this._startTime = new Date().getTime();
+        this._t = newTime;
+        clearTimeout(this._id);
+        this._id = setTimeout(this._callback, time);
+    }
+    terminateTime() {
+        clearTimeout(this._id);
+    }
+}
 
+class Player
+{
+    constructor(username, auth='player')
+    {
+        this.username = username
+        this.cash = 0
+        this.auth = auth  
+        this.shares = {}
+        for (let key in nations) 
+        {
+            this.shares[key] = 0
+        }
+        
+        //{ for nation in  Object.keys(nations) : 0 }
+    }
 }
 
 
-
-function sendFile(response, filePath) 
+class Game
 {
-    console.log("js is gay")
+    constructor(prayer) 
+    {
+        this.prayer = prayer
+        this.mother_state = { }
+        this.mother_state.players = { }
+        this.mother_state.nations = nations
+        this.mother_state.time = {}
+
+       
+    }
+
+    addPlayer(username)
+    {
+        player = Player(username)
+        this.mother_state.players.username = player
+    }
+
     
 }
-
-initGameState();
-sendFile();
