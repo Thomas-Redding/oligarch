@@ -2,6 +2,9 @@ let geography = require('./geography.js')
 
 
 
+const phases = ['deliberation','auction','election','actions']
+const subphases = ['move','attack','spawn','build','dividends']
+const blacknames = ['NA','EU','AS','SA','AF','AU']
 
 class Timer
 {
@@ -25,6 +28,16 @@ class Timer
     terminateTime() {
         clearTimeout(this._id);
     }
+}
+
+class Stage
+{
+    constructor()
+    this.round = 0
+    this.phase = 'lobby'
+    this.turn = 'north meri'
+    this.subphase = 'buy'
+
 }
 
 class Player
@@ -54,6 +67,7 @@ class Game
         this.mother_state.players = { }
         this.mother_state.nations = nations
         this.mother_state.time = {}
+        this.mother_state.phase = 'lobby'
 
        
     }
@@ -66,3 +80,8 @@ class Game
 
     
 }
+
+functionTests
+
+timer = new Timer(100,()=>{})
+timer.terminateTime()
