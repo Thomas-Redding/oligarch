@@ -1,6 +1,7 @@
 const WebSocket = require('ws')
 
 var Room = require("./room.js");
+var Game = require("../logic.js");
 
 class OligarchRoom extends Room {
   constructor() {
