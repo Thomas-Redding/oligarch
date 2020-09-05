@@ -1,161 +1,85 @@
-const countries = {
+const nations = {
   "Africa": {
-    "color": new Color(224, 128, 96)
+    "color": new Color(224, 128, 96),
+    "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"]
   },
   "North America": {
-    "color": new Color(224, 224, 96)
+    "color": new Color(224, 224, 96),
+    "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"]
   },
   "South America": {
-    "color": new Color(96, 255, 255)
+    "color": new Color(96, 255, 255),
+    "territories": ["Venezuela", "Brazil", "Argentina", "Peru"]
   },
   "Europe": {
-    "color": new Color(96, 128, 255)
+    "color": new Color(96, 128, 255),
+    "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"]
   },
   "Asia": {
-    "color": new Color(96, 255, 96)
+    "color": new Color(96, 255, 96),
+    "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"]
   },
   "Australia": {
-    "color": new Color(255, 96, 255)
+    "color": new Color(255, 96, 255),
+    "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"]
   }
 };
 
-const states = {
-  "Alaska": {
-    "center": [64, 123],
-    "name": "Alaska"
-  },
-  "Northwest Territory": {
-    "center": [178, 130],
-    "name": "NW Territory"
-  },
-  "Greenland": {
-    "center": [396, 80],
-  },
-  "Alberta": {
-    "center": [167, 179]
-  },
-  "Ontario": {
-    "center": [240, 189]
-  },
-  "Quebec": {
-    "center": [313, 189]
-  },
-  "Western United States": {
-    "center": [160, 241],
-    "name": "W United States"
-  },
-  "Eastern United States": {
-    "center": [255, 258],
-    "name": "E United States"
-  },
-  "Western Europe": {
-    "center": [437, 279],
-    "name": "W Europe"
-  },
-  "Great Britain": {
-    "center": [426, 208]
-  },
-  "Northern Europe": {
-    "center": [490, 224],
-    "name": "N Europe"
-  },
-  "Southern Europe": {
-    "center": [502, 272],
-    "name": "S Europe"
-  },
-  "Ukraine": {
-    "center": [586, 184]
-  },
-  "Scandinavia": {
-    "center": [492, 130]
-  },
-  "Ural": {
-    "center": [682, 168]
-  },
-  "Siberia": {
-    "center": [747, 137]
-  },
-  "Yakutsk": {
-    "center": [848, 125]
-  },
-  "Kamchatka": {
-    "center": [942, 130]
-  },
-  "Irkutsk": {
-    "center": [813, 189]
-  },
-  "Mongolia": {
-    "center": [836, 240]
-  },
-  "Japan": {
-    "center": [906, 264]
-  },
-  "China": {
-    "center": [766, 302]
-  },
-  "Central America": {
-    "center": [190, 314],
-    "name": "Mexico"
-  },
-  "Venezuela": {
-    "center": [225, 385]
-  },
-  "Peru": {
-    "center": [211, 458]
-  },
-  "Brazil": {
-    "center": [317, 445]
-  },
-  "North Africa": {
-    "center": [439, 397],
-    "name": "N Africa"
-  },
-  "Egypt": {
-    "center": [514, 355]
-  },
-  "East Africa": {
-    "center": [552, 430],
-    "name": "E Africa"
-  },
-  "Congo": {
-    "center": [506, 483]
-  },
-  "Middle East": {
-    "center": [588, 333]
-  },
-  "India": {
-    "center": [704, 362]
-  },
-  "Afghanistan": {
-    "center": [657, 251]
-  },
-  "Indonesia": {
-    "center": [811, 454]
-  },
-  "New Guniea": {
-    "center": [912, 463]
-  },
-  "South Africa": {
-    "center": [506, 575]
-  },
-  "Western Australia": {
-    "center": [790, 553],
-    "name": "W Australia"
-  },
-  "Eastern Australia": {
-    "center": [912, 555],
-    "name": "E Australia"
-  },
-  "Argentina": {
-    "center": [244, 556]
-  },
-  "Iceland": {
-    "center": [432, 148]
-  },
-  "Siam": {
-    "center": [781, 372]
-  },
-  "Madagascar": {
-    "center": [588, 567],
-  }
+const territories = {
+
+"Alaska": { "center": [216,205] },
+"Northwest Territory": { "center": [300,190] },
+"Greenland": { "center": [430,177] },
+"Quebec": { "center": [392,248] },
+"Ontario": { "center": [336,248] },
+"Alberta": { "center": [279,244] },
+"Western United States": { "center": [285,297] },
+"Central America": { "center": [302,363] },
+"Eastern United States": { "center": [350,312] },
+
+"Venezuela": { "center": [370,387] },
+"Peru": { "center": [341,460] },
+"Brazil": { "center": [409,446] },
+"Argentina": { "center": [360,531] },
+
+"South Africa": { "center": [580,553] },
+"Madagascar": { "center": [644,558] },
+"East Africa": { "center": [622,465] },
+"Congo": { "center": [575,491] },
+"North Africa": { "center": [515,431] },
+"Egypt": { "center": [572,405] },
+
+"Western Europe": { "center": [493,343] },
+"Southern Europe": { "center": [556,342] },
+"Northern Europe": { "center": [538,291] },
+"Ukraine": { "center": [610,263] },
+"Scandinavia": { "center": [549,210] },
+"Iceland": { "center": [489,217] },
+"Great Britain": { "center": [478, 286] },
+
+"Kamchatka": { "center": [835,194] },
+"Yakursk": { "center": [775,182] },
+"Siberia": { "center": [719,201] },
+"Ural": { "center": [679,242] },
+"Afghanistan": { "center": [671,306] },
+"Middle East": { "center": [635,385] },
+"India": { "center": [713,383] },
+"Siam": { "center": [777,409] },
+"Japan": { "center": [851,301] },
+"Mongolia": { "center": [779,298] },
+"Irkutsk": { "center": [764,246] },
+"China": { "center": [752,345] },
+
+"Indonesia": { "center": [768,494] },
+"New Guinea": { "center": [851,466] },
+"Eastern Australia": { "center": [885,548] },
+"Western Australia": { "center": [799,547] },
 };
+
+
+
+
+
+
+
+
