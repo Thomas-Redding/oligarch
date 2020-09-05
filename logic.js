@@ -64,7 +64,7 @@ class Game
         return rtn
     }
 
-    startGame()
+    startGame(username)
     {
         this.prayer('game_start', {}, this.mother_state)
         this._act()

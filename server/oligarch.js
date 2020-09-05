@@ -27,11 +27,13 @@ class OligarchRoom extends Room {
     if (data.action == "state") {
       console.log('<<<', "<state>");
       this.sendDataToAll(["state", null, this.game.mother_state]);
+    } else if (data.action == "forward") {
+      this.game[data.method](username, ...data.args);
     } else if (data.action == "end_lobby") {
-      this.game.endLobby(username)
-      this.game.startGame()
+      this.game["endLobby"](username)
+      this.game["startGame"](username)
     } else if (data.action === "ready_up") {
-      this.game.rdyUp(username);
+      this.game["rdyUp"](username);
     }
   }
 
