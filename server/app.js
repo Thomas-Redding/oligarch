@@ -10,6 +10,7 @@ const ChatRoom = require("./chat.js");
 function sendFile(response, filePath) {
   fs.readFile(filePath, function (err, data) {
     if (err) {
+      console.log("404...");
       fs.readFile(filePath + "/index.html", function (err2, data) {
         if (err2) {
           sendCode(response, 404, JSON.stringify(err))
@@ -55,10 +56,13 @@ function sendCode(response, code, specific_message=undefined) {
 
 // Create an instance of the http server to handle HTTP requests
 let app = http.createServer((request, response) => {
+  console.log(request.url);
   if (request.url.startsWith('/api/')) {
     sendCode(response, 501);
   } else if (request.url.startsWith('/room/')) {
-    if (request.url.indexOf(".") > -1) {
+    if (request.url.startsWith('/room/utils.js')) {
+      sendFile(response, 'utils.js')
+    } else if (request.url.indexOf(".") > -1) {
       sendFile(response, 'frontend' + request.url)
     } else {
       let path = request.url.substr(6);

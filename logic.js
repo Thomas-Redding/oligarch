@@ -1,4 +1,5 @@
 let GEOGRAPHY = require('./geography.js')
+let utils = require('./utils.js')
 
 //macro for pythonic list indexing
 Array.prototype.fromback = function(i=1) {
