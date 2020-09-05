@@ -15,6 +15,7 @@ const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
 const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
  'election':120*1000}
+const UNITS = ['Cavalry','Infantry','Artillery']
 
 
 //game class defined below
@@ -154,11 +155,11 @@ class Game
         }
     }
 
-    move(username, unit_id)
+    move(username, unit_id, target_territory)
     {
         nat = this.mother_state.stage.turn
         if (this.mother_state.nations[nat].president === username) {
-            //TODO
+            this._register_move(unit_id, target_territory)
         }
     }
 
@@ -175,7 +176,7 @@ class Game
         if (this.mother_state.players[username].vote == null) {
             this._register_vote(username, player)
         }
-        this.rdyUp(username)
+        //this.rdyUp(username)
     }
 
     constructor(prayer, timer)
@@ -215,8 +216,20 @@ class Game
     }
 
     //acts based on current game state
+    _parse_stage(stage){
+        return [stage.round, stage.phase, stage.turn, stage.subphase]
+    }
+
+    //act mutates the state as necessary for the game
+    //this method must either call _transition to update to the next state
+    //OR it can ensure that another method called by _act
+    //will eventually call _transition (i.e. timer events)
     _act()
     {
+    
+        let [round, phase, turn, subphase] = this._parse_stage(
+            this.mother_state.stage)
+        
         console.log(this.mother_state.stage.phase)
         if (this.mother_state.stage.phase === 'Taxation') {
             let nat = this.mother_state.stage.turn
@@ -230,24 +243,31 @@ class Game
         }
 
         else if (this.mother_state.stage.phase === 'Auction') {
-            this._start_auction(this.mother_state.stage.turn)            
+            if (utils.shares_sold(this.mother_state, turn) <
+                utils.NATIONS[turn].total_shares) 
+                {
+                    this._start_auction(turn)
+                }
+            else this._transition()
         }
-
-        
 
         else if (this.mother_state.stage.subphase === 'Election') {
             this._start_election(this.mother_state.stage.turn)            
         }
 
         else if (this.mother_state.stage.subphase == 'Move') {
-            let nat = this.mother_state.stage.turn
-            let prez = this.mother_state.nations[nat].president
-            if (prez === null || prez === 'abstain'){
+            let prez = this.mother_state.nations[turn].president
+            let no_army = this.mother_state.nations[turn].army.length === 0
+            if (prez === null || prez === 'abstain') {
                 this.mother_state.subphase = 'Dividends'
                 this._transition()
             }
+            else if(no_army){
+                this.mother_state.subphase = 'Attack'
+                this._transition()
+            }
             else{
-                //this._movement
+                this._movement()
             }
         }
 
@@ -258,8 +278,10 @@ class Game
     }
 
     //computes the transition based on game state
+    //always calls act on end
     _transition()
     {
+        console.log(this.mother_state.stage)
         function next(cur, table) {
             let next_idx = (table.indexOf(cur) + 1) % table.length
             return table[next_idx]
@@ -268,12 +290,10 @@ class Game
         function is_last(cur, table){
             return table.indexOf(cur) == table.length - 1
         }
+      
 
-        function parse_stage(stage){
-            return [stage.round, stage.phase, stage.turn, stage.subphase]
-        }
-
-        let [round, phase, turn, subphase] = parse_stage(this.mother_state.stage)
+        let [round, phase, turn, subphase] = this._parse_stage(
+            this.mother_state.stage)
 
         if (['Taxation','Auction'].includes(phase)){
             if (is_last(turn, TURNS)) {
@@ -288,12 +308,23 @@ class Game
             this.mother_state.stage.turn = next(turn, TURNS)
         }
 
+        else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback() 
+            && turn == TURNS.fromback()) {
+                this.mother_state.stage.round += 1
+                this.mother_state.stage.phase = PHASES[0]
+                this.mother_state.stage.turn = TURNS[0]
+                this.mother_state.stage.subphase = SUBPHASES[0]
+            }
+
         else if (phase == 'Deliberation'){
             this.mother_state.stage.phase = next(phase, PHASES)
         }
 
         else if (phase == 'Action'){
             console.log('action transition')
+            if (subphase == SUBPHASES.fromback()) {
+                this.mother_state.stage.turn = next(turn, TURNS)
+            }
             this.mother_state.stage.subphase = next(subphase, SUBPHASES)
             console.log(this.mother_state.stage.subphase)
         }
@@ -401,31 +432,17 @@ class Game
 
     _register_vote(username, candidate_username)
     {
-        console.log("QQQ", candidate_username);
-        this.mother_state.players[username].vote = candidate_username
-        let nation = this.mother_state.stage.turn
+        let candidate_votes = utils.candidate_votes(this.mother_state)
         //check majority
         let voters = utils.owners(this.mother_state, nation)
+        this._prayer('vote_tallied', candidate_votes)
         let n_votes = 0
-        let v_in_favor = {}
         for (let player in voters) {
             n_votes += voters[player]
         }
         n_votes = Math.floor(n_votes/2)+1
 
-        for (let player in voters){
-            if (!(this.mother_state.players[player].vote in v_in_favor)) {
-                v_in_favor[player] = voters[player]
-            }
-            else {
-                v_in_favor[player] += voters[player]
-                if (v_in_favor[player] >= n_votes) { 
-                    this.mother_state.nations[nation].president = winner
-                    this.timer.stop(true)
-                    break
-                }
-            }
-        }
+
     }
 
     _conclude_election()
@@ -436,6 +453,27 @@ class Game
         this._transition()  
     }
 
+    //movement routines
+
+    //_find
+
+    _move_is_valid( uid, target_territory)
+    {
+        
+
+
+    }
+    _movement()
+    {
+
+    }
+
+    //spawn routines
+
+    _spawn_unit()
+    {
+
+    }
     
     
     

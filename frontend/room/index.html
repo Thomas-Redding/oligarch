@@ -675,6 +675,8 @@ login().then((socket) => {
     console.log("Received state:", state);
     console.log("========================");
 
+    const myUsername = network.fetchExistingUsernamePassword()[0];
+
     gameLogDiv.innerHTML += `<div>` + action + `(` + JSON.stringify(details) + `)</div>`;
 
     if (action === "get_state") {
@@ -744,7 +746,7 @@ login().then((socket) => {
       let modal_type = get_current_modal_type();
       console.log(modal_type)
       if (modal_type === "Bid") {
-        if (parseInt(bidInput.value) < state.current_bid) {
+        if (parseInt(bidInput.value) < state.current_bid && parseInt(bidInput.value) + 1 < state.players[myUsername].cash) {
           bidInput.value = state.current_bid + 1;
         }
       }
@@ -816,14 +818,30 @@ function update_buttons(state) {
 function onstagechange(state) {
   update_buttons(state);
   render_status_bar(state);
+
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myCash = state.players[myUsername].cash;
+
+  bidInput.max = myCash;
+  bidInput.value = Math.min(parseInt(bidInput.value), myCash);
+  bribeInput.max = myCash;
+  bribeInput.value = Math.min(parseInt(bribeInput.value), myCash)
 }
 
 function increment_bid_input(delta) {
-  bidInput.value = parseInt(bidInput.value) + delta;
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  let newBid = parseInt(bidInput.value) + delta;
+  newBid = Math.max(newBid, 0);
+  newBid = Math.min(newBid, gLatestState.players[myUsername].cash);
+  bidInput.value = newBid;
 }
 
 function increment_bribe_input(delta) {
-  bribeInput.value = parseInt(bribeInput.value) + delta;
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  let newBribe = parseInt(bribeInput.value) + delta;
+  newBribe = Math.max(newBribe, 0);
+  newBribe = Math.min(newBribe, gLatestState.players[myUsername].cash);
+  bribeInput.value = newBribe;
 }
 
 let gTradeYou = null;
