@@ -308,6 +308,10 @@ let utils = {
     return rtn;
   },
 
+  /*
+   * @param {string} territory - the territory whose income to compute
+   * @returns {int} the income of the given territory
+   */
   income_of_territory: (mother_state, territory) => {
     let natural_income = utils.natural_income_of_territory(territory);
     let nation = utils.nation_of_territory(mother_state, territory);
