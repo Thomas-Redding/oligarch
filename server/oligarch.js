@@ -14,28 +14,24 @@ class OligarchRoom extends Room {
   }
 
   prayer(action, details, newModel) {
-    sendData({
-      "action": action,
-      "details": details,
-      "model": newModel,
-    })
+    sendData([ action, details, newModel ]);
   }
 
   didReceiveData(username, data) {
     console.log('didReceiveData("' + username + '", ' + data + '")')
     data = JSON.parse(data);
-    if (data.action == "state") {
+    if (data[0] == "state") {
       super.sendData(this.game.mother_state);
-    } else if (data.action == "endLobby") {
+    } else if (data[0] == "endLobby") {
       this.game.endLobby(username)
     }
   }
 
   tryToJoin(username, password, ws) {
-    if (super.users().indexOf(username)) {
+    if (super.users().indexOf(username) > -1) {
       return super.tryToJoin(username, password, ws);
     } else {
-      let allowJoin = true;
+      let allowJoin = this.game.addPlayer(username)
       if (allowJoin) {
         return super.tryToJoin(username, password, ws);
       } else {
