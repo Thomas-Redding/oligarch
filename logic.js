@@ -107,7 +107,7 @@ class Game
         }
     }
 
-    bid(amount, username)
+    bid(username, amount)
     {
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
@@ -186,13 +186,13 @@ class Game
 
     _conclude_bidding()
     {
-        price = this.mother_state.current_bid
-        winner = this.mother_state.highest_bidder
-        curnat = this.mother_state.stage.turn
+        let price = this.mother_state.current_bid
+        let winner = this.mother_state.highest_bidder
+        let curnat = this.mother_state.stage.turn
         this.mother_state.players[winner].shares[curnat] += 1
         this.mother_state.players[winner].cash -= price
         this.mother_state.nations[curnat].cash += price
-        details = {'winner' : winner, 'nation' : curnat, 'price':price}
+        let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
         this._prayer('conclude_bidding', details)
         this._transition()
