@@ -67,9 +67,10 @@ class Game
 
     addPlayer(username, auth='admin')
     {
-        player = {}
-        rtn = true
-        if (this.stage.phase !== 'lobby') {
+        console.log("addPlayer", username);
+        let player = {}
+        let rtn = true
+        if (this.mother_state.stage.phase !== 'lobby') {
             return !rtn
         }
         else {
@@ -81,9 +82,9 @@ class Game
             player.curbid = 0
             player.vote = null
             for (let key in geography.nations) {
-                this.shares[key] = 0
+                player.shares[key] = 0
             }        
-            this.mother_state.players.username = player
+            this.mother_state.players[username] = player
         }
         return rtn
     }
@@ -123,8 +124,6 @@ class Game
         }
         this.terr2nat = this.terr2nat
     }
-
-    
 
     _compute_income(nation)
     {
@@ -174,7 +173,6 @@ class Game
 
         }
     }
-
 
     _transition()
     {

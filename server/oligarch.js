@@ -28,10 +28,10 @@ class OligarchRoom extends Room {
   }
 
   tryToJoin(username, password, ws) {
-    if (super.users().indexOf(username)) {
+    if (super.users().indexOf(username) > -1) {
       return super.tryToJoin(username, password, ws);
     } else {
-      let allowJoin = true;
+      let allowJoin = this.game.addPlayer(username)
       if (allowJoin) {
         return super.tryToJoin(username, password, ws);
       } else {
