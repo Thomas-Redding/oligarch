@@ -21,6 +21,13 @@ const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000, 'election':120*10
 
 class Game
 {
+    fetchGameState()
+    {
+        if (this.timer && this.timer.isRunning())
+        this.mother_state.clock = this.timer.queryTime();
+        return this.mother_state
+    }
+
     endLobby(username)
     {
         let rtn;
