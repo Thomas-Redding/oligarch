@@ -14,7 +14,7 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 15*1000,
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
  'election':120*1000}
 
 
