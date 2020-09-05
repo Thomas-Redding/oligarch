@@ -161,7 +161,7 @@ class Game
                 this.mother_state.nations[nation][terr].n_factories = Math.random() < 0.5 ? 1 :0 
                 this.mother_state.nations[nation][terr].n_baracks = 1
                 this.mother_state.nations[nation][terr].n_baracks = 1
-                this.mother_state.nations[nation].army = {}
+                this.mother_state.nations[nation].army = []
                 terr2nat[terr] = nation
             }
         }
@@ -216,7 +216,7 @@ class Game
     _act()
     {
         if (this.mother_state.stage.phase === 'Taxation') {
-            utils.compute_income(this.mother_state, this.terr2nat, this.mother_state.stage.turn)
+            utils.compute_income(this.mother_state, this.mother_state.stage.turn)
             this._transition()
         }
     
