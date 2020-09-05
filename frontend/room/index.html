@@ -547,8 +547,7 @@ window.onresize = () => {
 function login() {
   let username = "";
   let password = "";
-  // let arr = network.fetchExistingUsernamePassword();
-  let arr = null;
+  let arr = network.fetchExistingUsernamePassword();
   if (arr) {
     username = arr[0];
     password = arr[1];
@@ -620,6 +619,9 @@ let gLatestState;
 login().then((socket) => {
   console.log("CONNECTED");
   gSocket = socket;
+  gSocket.addEventListener("close", (event) => {
+    window.location.reload();
+  });
   gSocket.addEventListener("message", (event) => {
     let [action, details, state] = JSON.parse(event.data);
     gLatestState = state;
