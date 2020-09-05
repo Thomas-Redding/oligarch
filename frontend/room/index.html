@@ -268,8 +268,11 @@ function render_table(state) {
     tbody.appendChild(tr);
   }
 
-  let shares = utils.num_shares_already_auctioned_for_nation(state);
+  update_map(state);
+}
 
+function update_nation_rects(state) {
+  let shares = utils.num_shares_already_auctioned_for_nation(state);
   nationRects.innerHTML = "";
   for (let name in nations) {
     let nation = state.nations[name];
@@ -291,6 +294,10 @@ function render_table(state) {
     let sharesText = svg.text(shares[name] + "/" + nation.territories.length + " shares", coords.x + 4, coords.y + 42);
     nationRects.appendChild(sharesText);
   }
+}
+
+function update_map(state) {
+  update_nation_rects(state);
 }
 
 function add_player(details, state) {
