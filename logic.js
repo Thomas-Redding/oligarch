@@ -276,16 +276,20 @@ class Game
             let prez = this.mother_state.nations[turn].president
             let no_army = this.mother_state.nations[turn].army.length === 0
             if (prez === null || prez === 'abstain') {
-                this.mother_state.subphase = 'Dividends'
-                this._transition()
+                this.mother_state.stage.subphase = 'Dividends'
+                this._prayer('begin_dividends','')
             }
             else if(no_army){
-                this.mother_state.subphase = 'Attack'
-                this._transition()
+                this.mother_state.stage.subphase = 'Build'
+                this._prayer('begin_build','')
             }
             else{
-                this._movement()
             }
+        }
+
+
+        else if (this.mother_state.stage.subphase == 'Dividends') {
+            //this._dividends()
         }
 
         else if (this.mother_state.stage.subphase == 'Dividends') {
@@ -345,6 +349,7 @@ class Game
                 this.mother_state.stage.turn = next(turn, TURNS)
             }
             this.mother_state.stage.subphase = next(subphase, SUBPHASES)
+            this._prayer('begin_' + this.mother_state.stage.subphase,'')
         }
         this._act()
     }
@@ -461,6 +466,7 @@ class Game
             }
         }
         n_votes = Math.floor(n_votes/2)+1
+        //this.rdyUp(username)
     }
 
 
@@ -513,6 +519,13 @@ class Game
 
     _spawn_unit()
     {
+
+    }
+
+    //building routines
+    _building()
+    {
+
 
     }
     

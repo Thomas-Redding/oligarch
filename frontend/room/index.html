@@ -292,8 +292,8 @@ function render_table(state) {
     tr.innerHTML += '<td class="column-AF">' + player.shares["Africa"] + "</td>";
     tr.innerHTML += '<td class="column-AS">' + player.shares["Asia"] + "</td>";
     tr.innerHTML += '<td class="column-AU">' + player.shares["Australia"] + "</td>";
-    tr.innerHTML += "<td>$" + player.cash + "B</td>";
-    tr.innerHTML += "<td>$" + utils.score_of_player(state, player.username) + "B</td>";
+    tr.innerHTML += "<td>" + player.cash + "</td>";
+    tr.innerHTML += "<td>" + utils.score_of_player(state, player.username) + "</td>";
 
     tbody.appendChild(tr);
   }
@@ -481,6 +481,8 @@ function main() {
 
   currentBidDiv.style.opacity = 0;
 
+  render_presidential_div(gLatestState);
+
   window.onresize();
 };
 
@@ -625,14 +627,12 @@ class Clock {
     }, 100);
   }
   set_time_remaining(timeRemaining) {
-    console.log("set_time_remaining");
     this._startTime = new Date();
     this._totalTime = timeRemaining;
     this._paused = false;
     this.update();
   }
   pause() {
-    console.log('PAUSE');
     this._totalTime = this._totalTime - (new Date() - this._startTime);
     this.startTime = new Date();
     this._paused = true;
@@ -695,7 +695,6 @@ login().then((socket) => {
   gSocket.addEventListener("message", (event) => {
     let [action, details, state] = JSON.parse(event.data);
     gLatestState = state;
-    // console.log(state);
     console.log("========================");
     console.log("Received action:", action);
     console.log("Received details:", details);
@@ -773,6 +772,9 @@ login().then((socket) => {
       // TODO(mredding): update currentVotesDiv when this exists on the backend.
       currentVotesDiv.innerHTML = "";
     }
+    else if (action === "begin_build") {
+      factoryRadio.checked = true;
+    }
     else if (action === "conclude_bidding") {
       render_table(state);
       render_nation_rects(state);
@@ -782,7 +784,6 @@ login().then((socket) => {
 
       // Update bid price if the modal is showing.
       let modal_type = get_current_modal_type();
-      console.log(modal_type)
       if (modal_type === "Bid") {
         if (parseInt(bidInput.value) < state.current_bid && parseInt(bidInput.value) + 1 < state.players[myUsername].cash) {
           bidInput.value = state.current_bid + 1;
@@ -863,15 +864,30 @@ function onstagechange(state) {
   bidInput.max = myCash;
   bidInput.value = Math.min(parseInt(bidInput.value), myCash);
   bribeInput.max = myCash;
-  bribeInput.value = Math.min(parseInt(bribeInput.value), myCash)
+  bribeInput.value = Math.min(parseInt(bribeInput.value), myCash);
 
+  render_presidential_div(state);
+}
+
+function render_presidential_div(state) {
+  const myUsername = network.fetchExistingUsernamePassword()[0];
   if (state.stage.phase === "Action") {
     const subphase = state.stage.subphase;
+    const nation = state.nations[state.stage.turn];
+
     finishMovingButton.style.display = (subphase === "Move" ? "inline-block" : "none");
     finishAttackingButton.style.display = (subphase === "Attack" ? "inline-block" : "none");
     finishSpawningButton.style.display = (subphase === "Spawn" ? "inline-block" : "none");
-    finishBuildingButton.style.display = (subphase === "Build" ? "inline-block" : "none");
-    finishDividendsButton.style.display = (subphase === "Dividends" ? "inline-block" : "none");
+    buildingDiv.style.display = (subphase === "Build" ? "inline-block" : "none");
+    dividendsDiv.style.display = (subphase === "Dividends" ? "inline-block" : "none");
+    presidentialHeader.innerHTML = state.stage.turn + " ($" + nation.cash + " B)";
+
+    const num_shares = utils.num_shares_already_auctioned_for_nation(state)[state.stage.turn] + 4;
+    dividendSlider.step = num_shares;
+    dividendSlider.max = nation.cash;
+    dividendSlider.value = (nation.cash / num_shares | 0) * num_shares;
+    dividendValueDiv.innerHTML = dividendSlider.value;
+
     if (state.nations[state.stage.turn].president === myUsername) {
       presidentDiv.style.display = "block";
     } else {
@@ -1088,6 +1104,20 @@ function start_game() {
   }]);
 }
 
+function pay_dividends() {
+  send({
+    "method": "dividends",
+    "args": [parseInt(dividendSlider.value)]
+  });
+}
+
+function finish_building() {
+  send({
+    "method": "done",
+    "args": []
+  });
+}
+
 </script>
 
 </head>
@@ -1143,18 +1173,26 @@ function start_game() {
     <div id="presidentDiv" style="position:relative; background-color:#555; border-radius:0.2em; margin:0.5em;">
       <img src="assets/president.png" style="filter:invert(100%); height:4em; position:absolute; right:0; top:0;">
 
-      <h2 align="center">Asia ($200)</h2>
+      <h2 id="presidentialHeader"></h2>
 
       <div id="finishMovingButton" class="button">Finish Moving</div><br>
       <div id="finishAttackingButton" class="button">Finish Attacking</div><br>
       <div id="finishSpawningButton" class="button">Finish Recruiting</div><br>
-      <div id="finishBuildingButton" class="button">Finish Building</div><br>
+      <div id="buildingDiv">
+
+        <input name="buildForm" id="factoryRadio" type="radio"><label for="factoryRadio">Factory ($10B)</label>
+        <br>
+        <input name="buildForm" id="barracksRadio" type="radio"><label for="barracksRadio">Barracks ($25B)</label>
+        <br>
+
+        <div onclick="finish_building()" class="button">Finish Building</div>
+      </div>
       <div id="dividendsDiv">
         <div style="display:flex; flex-direction:row; width:100%; padding:0.5em;">
-          <input type="range" min=0 max=100 step=3 style="width:100%" onchange="dividendValueDiv.innerHTML = this.value;" onmousemove="dividendValueDiv.innerHTML = this.value;">
-          <div id="dividendValueDiv" style="width:3em;">abc</div>
+          <input id="dividendSlider" type="range" min=0 max=100 step=3 style="width:100%" onchange="dividendValueDiv.innerHTML = this.value;" onmousemove="dividendValueDiv.innerHTML = this.value;">
+          <div id="dividendValueDiv" style="width:3em;"></div>
         </div>
-        <div id="finishDividendsButton" class="button">Pay Dividends</div><br>
+        <div onclick="pay_dividends()" class="button">Pay Dividends</div><br>
       </div>
     </div>
     <div id="currentVotesDiv"></div>
