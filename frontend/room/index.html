@@ -694,8 +694,6 @@ login().then((socket) => {
 
     const myUsername = network.fetchExistingUsernamePassword()[0];
 
-    gameLogDiv.innerHTML += `<div>` + action + `(` + JSON.stringify(details) + `)</div>`;
-
     if (action === "get_state") {
       // We assume get_state is only called when the user
       // reloads the page.
@@ -709,6 +707,9 @@ login().then((socket) => {
       playIcon.style.display = gLatestState.is_paused ? "block" : "none";
       pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
       clock.set_time_remaining(state.clock);
+    }
+    else if (action === "log") {
+      gameLogDiv.innerHTML += `<div>` + JSON.stringify(details) + `</div>`;
     }
     else if (action === "refresh") {
       // Called when an undo is performed.

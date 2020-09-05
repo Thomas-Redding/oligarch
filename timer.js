@@ -62,6 +62,7 @@ class Timer
         this._is_running = false;
         if (do_callback) {
             this._callback()
+            this._callback = () => {};
         }
         clearTimeout(this._id);
     }
