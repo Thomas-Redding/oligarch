@@ -10,6 +10,7 @@ class OligarchRoom extends Room {
   }
 
   sendData(data) {
+    console.log("sendData", JSON.stringify(data))
     super.sendData(JSON.stringify(data));
   }
 
