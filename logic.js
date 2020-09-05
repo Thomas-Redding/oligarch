@@ -14,7 +14,7 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 5*1000,
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 15*1000,
  'election':120*1000}
 
 
@@ -274,7 +274,9 @@ class Game
         }
 
         else if (phase == 'Action'){
-            this.mother_state.stage.subphase = next(phase, PHASES)
+            console.log('action transition')
+            this.mother_state.stage.subphase = next(subphase, SUBPHASES)
+            console.log(this.mother_state.stage.subphase)
         }
         this._act()
     }
@@ -371,8 +373,7 @@ class Game
         this.mother_state.highest_bidder = null
         let voters = utils.owners(this.mother_state, nation)
         for (let player in voters){
-            if (voters[player] == 0) this.mother_state.player.ready = true
-            else this.mother_state.player.ready = false
+            this.mother_state.players[player].ready = (voters[player] == 0)
         }
         if (this.timer.isRunning) this.timer.terminateTime(false)
         this.timer = new Timer(TIMING.election, this._conclude_election.bind(this))
