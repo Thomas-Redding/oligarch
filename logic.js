@@ -1,4 +1,4 @@
-let geography = require('./geography.js')
+let GEOGRAPHY = require('./geography.js')
 
 //macro for pythonic list indexing
 Array.prototype.fromback = function(i=1) {
@@ -69,7 +69,6 @@ class Game
 
     addPlayer(username, auth='admin')
     {
-        console.log("addPlayer", username);
         let player = {}
         let rtn = true
         if (this.mother_state.stage.phase !== 'lobby') {
@@ -84,7 +83,7 @@ class Game
             player.curbid = 0
             player.vote = null
             player.ready = false
-            for (let key in geography.nations) {
+            for (let key in GEOGRAPHY.nations) {
                 player.shares[key] = 0
             }        
             this.mother_state.players[username] = player
@@ -113,7 +112,7 @@ class Game
         this.timer = null
         this.mother_state = { }
         this.mother_state.players = { }
-        this.mother_state.nations = geography.nations
+        this.mother_state.nations = GEOGRAPHY.nations
         this.mother_state.blacklisted_names = TURNS.concat(BLACKLISTED_NAMES)
         this.mother_state.phase = PHASES
         this.mother_state.subphase = SUBPHASES
@@ -135,9 +134,10 @@ class Game
         let terr2nat = {}
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
+            this.mother_state.nations[nation].owns = []
             
-            for (let terr of this.mother_state.nations[nation].territories) {
-                this.mother_state.nations[nation].owns = terr
+            for (let terr of GEOGRAPHY.nations[nation].territories) {
+                this.mother_state.nations[nation].owns.push(terr)
                 terr2nat[terr] = nation
             }
         }
@@ -147,15 +147,13 @@ class Game
     _compute_income(nation)
     {
         let inc = 0
+        //console.log(this.mother_state.nations[nation].owns)
         for (let terr of this.mother_state.nations[nation].owns) {
-            console.log('hi')
-            console.log(terr)
-            console.log(this.terr2nat)
-            let defnat = geography.nations[this.terr2nat[terr]]
-            console.log(this.mother_state.nations[nation].territories)
+            let defnat = GEOGRAPHY.nations[this.terr2nat[terr]]
+            //console.log(this.mother_state.nations[nation].territories)
             inc += defnat.base_income_per_territory  
         }
-        this.nations.cash += inc
+        this.mother_state.nations[nation].cash += inc
         return inc
     }
 
@@ -173,10 +171,11 @@ class Game
         if (this.mother_state.stage.phase === 'taxation') {
             this._compute_income(this.mother_state.stage.turn)
             this._transition()
+
         }
 
         else if (this.mother_state.stage.phase === 'deliberation') {
-            this.timer = new Timer(TIMING.deliberation, this._finish_deliberation)
+            this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
 
         }
 
@@ -214,20 +213,21 @@ class Game
     {
         function _transition(cur, table)
         {
-            next_idx = (table.indexOf(cur) + 1) % table.length
+            let next_idx = (table.indexOf(cur) + 1) % table.length
             return [table[next_idx], cur === table.fromback()] 
         }
 
         for (let ord of this.mother_state.order) {
 
             let popup;
-            this.mother_state.stage[ord], popup = _transition(
+            [this.mother_state.stage[ord], popup] = _transition(
                 this.mother_state.stage[ord], this.mother_state[ord])
 
             if (!popup) {
                 break
             }
         }
+
 
         this._act()
     }
