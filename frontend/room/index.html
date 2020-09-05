@@ -768,7 +768,7 @@ login().then((socket) => {
     }
     else if (action === "bid_received") {
       clock.set_time_remaining(state.clock);
-      
+
       // Update bid price if the modal is showing.
       let modal_type = get_current_modal_type();
       console.log(modal_type)
@@ -1139,7 +1139,7 @@ function start_game() {
           <input type="range" min=0 max=100 step=3 style="width:100%" onchange="dividendValueDiv.innerHTML = this.value;" onmousemove="dividendValueDiv.innerHTML = this.value;">
           <div id="dividendValueDiv" style="width:3em;">abc</div>
         </div>
-        <div class="button">Pay Dividends</div><br>
+        <div id="finishDividendsButton" class="button">Pay Dividends</div><br>
       </div>
     </div>
     <div id="currentVotesDiv"></div>
