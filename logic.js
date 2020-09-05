@@ -166,7 +166,19 @@ class Game
         this.rdyUp(username)
     }
 
+<<<<<<< HEAD
+    initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
+    {
+        if (this.mother_state.players[username].vote == null) {
+            this._register_vote(username, player)
+        }
+        this.rdyUp(username)
+    }
+
+    constructor(prayer) 
+=======
     constructor(prayer, timer)
+>>>>>>> dfe4963e8b614f1ffd69abf7c0a6b61b04509757
     {
         this.prayer = prayer
         this.timer = timer
@@ -228,8 +240,8 @@ class Game
         }
 
         else if (this.mother_state.stage.subphase == 'Move') {
-            nat = this.mother_state.stage.turn
-            prez = this.mother_state.nations[nat].president
+            let nat = this.mother_state.stage.turn
+            let prez = this.mother_state.nations[nat].president
             if (prez === null || prez === 'abstain'){
                 this.mother_state.subphase = 'Dividends'
                 this._transition()
@@ -385,13 +397,13 @@ class Game
         if (this.timer.isRunning) this.timer.stop(false)
         this.timer.start(TIMING.election, this._conclude_election.bind(this))
         this._prayer('start_election', nation)
-
     }
 
     _register_vote(username, player)
     {
         
         this.mother_state.players[username].vote = player
+        let nation = this.mother_state.stage.turn
         //check majority
         let voters = utils.owners(this.mother_state, nation)
         let n_votes = 0
@@ -418,7 +430,8 @@ class Game
 
     _conclude_election()
     {
-        let details = {'winner' : this.mother_state.nations[nation].president}
+        let nat = this.mother_state.stage.turn
+        let details = {'winner' : this.mother_state.nations[nat].president}
         this._prayer('conclude_election', details)
         this._transition()  
     }
