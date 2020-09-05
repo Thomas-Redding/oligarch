@@ -44,3 +44,8 @@ body {
 .piece-circle {
   fill: black;
 }
+
+.button {
+  /*border: solid black 1px;*/
+  box-shadow: 0 0 0.5em #888;
+}
