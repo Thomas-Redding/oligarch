@@ -152,7 +152,6 @@ class Game
         this.mother_state.highest_bidder = username
         if (this.timer) this.timer.terminateTime(false)
             this.timer = new Timer(TIMING.bidding, this._conclude_bidding.bind(this))
-            
         this._prayer('bid_recieved', {'amount' : amount, 'player': username})
 
     }
@@ -167,7 +166,10 @@ class Game
             if (voters[player] == 0) this.mother_state.player.ready = true
             else this.mother_state.player.ready = false
         }
-        //this._prayer('auction_start', nation)
+        if (this.timer.isRunning) this.timer.terminateTime(false)
+        this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
+            this._prayer('begin_deliberation',TIMING.deliberation)
+        this._prayer('start_election', nation)
 
     }
 
@@ -198,7 +200,6 @@ class Game
         this.timer.terminateTime(false)
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
-        console.log(this.mother_state.clock)
         this._prayer('auction_start', nation)
     }
 
