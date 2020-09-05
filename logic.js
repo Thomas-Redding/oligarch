@@ -106,10 +106,9 @@ class Game
     _act()
     {
         if (this.mother_state.stage.phase === 'taxation') {
-            this.mother_state.stage.turn
-
+            this._compute_income(this.mother_state.stage.turn)
+            this._transition()
         }
-
 
     }
 
