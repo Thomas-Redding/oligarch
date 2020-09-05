@@ -45,11 +45,11 @@ class OligarchRoom extends Room {
       } else if (x.method == "pause") {
         if (!this.game.is_admin(username)) continue;
         this.timer.pause()
-        sendDataToAll(["pause", null, fetchGameState()])
+        this.sendDataToAll(["pause", null, this.fetchGameState()])
       } else if (x.method == "resume") {
         if (!this.game.is_admin(username)) continue;
         this.timer.resume()
-        sendDataToAll(["resume", null, fetchGameState()])
+        this.sendDataToAll(["resume", null, this.fetchGameState()])
       } else if (x.method == "is_admin") {
         let mother_state = this.fetchGameState()
         console.log('<<<', this.game.is_admin(username), "<state clock:" + mother_state.clock + ">");
