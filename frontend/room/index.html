@@ -107,7 +107,6 @@ path {
 
 #gameLogDiv {
   flex: 1;
-  padding: 1em;
   overflow-y: auto;
 }
 
@@ -297,7 +296,7 @@ let stage = {
 
 let tab = kTabMap;
 
-const kIsBoard = true;
+const kIsBoard = false;
 
 window.onresize = () => {
   const bodyRect = document.body.getBoundingClientRect();
@@ -390,6 +389,13 @@ function increment_transfer_input(delta) {
   elem.value = parseInt(elem.value) + delta;
 }
 
+function show_modal(type) {
+  popupDiv.children[0].onclick = () => {
+    popupDiv.style.display = 'none';
+  }
+  popupDiv.style.display = 'block';
+}
+
 </script>
 
 </head>
@@ -474,21 +480,10 @@ function increment_transfer_input(delta) {
       </tbody>
     </table>
     <br>
-    <div id="transferDiv" style="text-align:center; border-top:solid black 1px; margin-top:0.5em; padding:1em; font-size:1.5em;">
-      <input id="transferInput" type='number' value=0 min=0 style="width:3em; font-size:1em;"> <div class="personButton" onClick="increment_transfer_input(5);">+5</div> <div class="personButton" onClick="increment_transfer_input(20);">+20</div>
-      <br>to<br>
-      <div class='personButton'>Abby</div>
-      <div class='personButton'>Morgan</div>
-      <div class='personButton'>Thomas</div>
-      <div class='personButton'>Tony</div>
-      <br>
-      <div class='personButton'>NA</div>
-      <div class='personButton'>EU</div>
-      <div class='personButton'>AS</div>
-      <br>
-      <div class='personButton'>SA</div>
-      <div class='personButton'>AF</div>
-      <div class='personButton'>AU</div>
+    <div id="transferDiv" style="text-align:center; border-top:solid black 1px; padding:0.5em; font-size:1.5em;">
+      <div class='button' style="display:inline-block;" onclick="show_modal('transfer')">Transfer</div>
+      <div class='button' style="display:inline-block;" onclick="show_modal('vote')">Vote</div>
+      <div class='button' style="display:inline-block;" onclick="show_modal('bid')">Bid</div>
     </div>
     <div id="gameLogDiv" style="display:flex; flex-direction:column;">
       <div style="padding:0.5em; border-top: solid black 1px; display:flex; flex-direction:row;">
@@ -496,7 +491,7 @@ function increment_transfer_input(delta) {
         <div style="flex:1"></div>
         <button>Undo</button>
       </div>
-      <div style="overflow-y:auto; flex:1;">
+      <div style="overflow-y:auto; flex:1; padding:0.5em;">
         <div>Morgan gave Thomas $19</div>
         <div>NA auctioned to Thomas for $73</div>
         <div>SA auctioned to Tony for $56</div>
@@ -597,6 +592,41 @@ function increment_transfer_input(delta) {
   <div id="mapButton" class='tab-button' onclick="tab = kTabMap; window.onresize();">Map</div>
   <div id="infoButton" class='tab-button' onclick="tab = kTabInfo; window.onresize();">Info</div>
   <div id="logButton" class='tab-button' onclick="tab = kTabLog; window.onresize();">Log</div>
+</div>
+
+<div id='popupDiv' style='display:none;'>
+  <div style="position:absolute; background-color:black; opacity:0.5; left:0; top:0; width:100%; height:100%;">
+  </div>
+
+  <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); background-color:white; border:solid black 1px; opacity:1; padding:1em;">
+    <table style='text-align:center; margin: 0 auto;'>
+      <tbody>
+        <tr>
+          <td>
+            <input id="transferInput" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
+          </td>
+          <td>
+            <div class="personButton" onClick="increment_transfer_input(5);">+5</div>
+          </td>
+          <td>
+            <div class="personButton" onClick="increment_transfer_input(20);">+20</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class='personButton'>Abby</div>
+    <div class='personButton'>Morgan</div>
+    <div class='personButton'>Thomas</div>
+    <div class='personButton'>Tony</div>
+    <br>
+    <div class='personButton'>NA</div>
+    <div class='personButton'>EU</div>
+    <div class='personButton'>AS</div>
+    <br>
+    <div class='personButton'>SA</div>
+    <div class='personButton'>AF</div>
+    <div class='personButton'>AU</div>
+  </div>
 </div>
 
 </body>
