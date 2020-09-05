@@ -147,10 +147,8 @@ class Game
     _compute_income(nation)
     {
         let inc = 0
-        //console.log(this.mother_state.nations[nation].owns)
         for (let terr of this.mother_state.nations[nation].owns) {
             let defnat = GEOGRAPHY.nations[this.terr2nat[terr]]
-            //console.log(this.mother_state.nations[nation].territories)
             inc += defnat.base_income_per_territory  
         }
         this.mother_state.nations[nation].cash += inc
@@ -169,9 +167,13 @@ class Game
     _act()
     {
         if (this.mother_state.stage.phase === 'taxation') {
+            isDone = this.mother_state.stage.turn === TURNS.fromback()
             this._compute_income(this.mother_state.stage.turn)
             this._transition()
-
+            if (isDone) {
+                this.prayer('taxes_collected','',this.mother_state)
+            }
+            
         }
 
         else if (this.mother_state.stage.phase === 'deliberation') {
@@ -180,10 +182,8 @@ class Game
         }
 
         else if (this.mother_state.stage.phase === 'action') {
-            this.timer = new Timer(TIMING.deliberation, this._finish_deliberation)
+            
         }
-
-
 
     }
 
@@ -216,7 +216,6 @@ class Game
             let next_idx = (table.indexOf(cur) + 1) % table.length
             return [table[next_idx], cur === table.fromback()] 
         }
-
         for (let ord of this.mother_state.order) {
 
             let popup;
@@ -227,14 +226,8 @@ class Game
                 break
             }
         }
-
-
         this._act()
-    }
-
-
-
-    
+    } 
 }
 
 module.exports = Game;
