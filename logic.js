@@ -167,7 +167,7 @@ class Game
     _act()
     {
         if (this.mother_state.stage.phase === 'taxation') {
-            isDone = this.mother_state.stage.turn === TURNS.fromback()
+            let isDone = this.mother_state.stage.turn === TURNS.fromback()
             this._compute_income(this.mother_state.stage.turn)
             this._transition()
             if (isDone) {
