@@ -159,8 +159,8 @@ class Game
         while (this.mother_state.stage.phase == 'deliberation'){
             this._transition()
         }
+        this.prayer()
     }
-
 
     _act()
     {
@@ -170,6 +170,11 @@ class Game
         }
 
         else if (this.mother_state.stage.phase === 'deliberation') {
+            this.timer = new Timer(TIMING.deliberation, this._finish_deliberation)
+
+        }
+
+        else if (this.mother_state.stage.phase === 'action') {
             this.timer = new Timer(TIMING.deliberation, this._finish_deliberation)
         }
 
@@ -218,7 +223,7 @@ class Game
             }
         }
 
-        this.prayer('transition')
+        this._act()
     }
 
 
