@@ -433,16 +433,15 @@ class Game
     _register_vote(username, candidate_username)
     {
         let candidate_votes = utils.candidate_votes(this.mother_state)
-        //check majority
-        let voters = utils.owners(this.mother_state, nation)
         this._prayer('vote_tallied', candidate_votes)
         let n_votes = 0
-        for (let player in voters) {
-            n_votes += voters[player]
+        for (let player in candidate_votes) {
+            if (candidate_votes[player] >= n_votes) {
+                this.mother_state.nations[nation].president = player
+                this.timer.stop(true)
+            }
         }
         n_votes = Math.floor(n_votes/2)+1
-
-
     }
 
     _conclude_election()
