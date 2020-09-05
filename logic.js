@@ -14,11 +14,39 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000,
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 15*1000,
  'election':120*1000}
 
 
 //game class defined below
+
+class History {
+  constructor() {
+    this._states = [];
+    this._args = [];
+    this._actions = [];
+    this._logs = [];
+  }
+  save(action, args, mother_state, log) {
+    this._actions.push(action);
+    this._args.push(args);
+    this._states.push(utils.deep_copy(mother_state));
+    this._logs.push(log);
+  }
+  logs() {
+    return utils.deep_copy(this._logs);
+  }
+  undo() {
+    let action = this._actions.pop();
+    let args = this._args.pop();
+    let state = this._actions.pop();
+    this._logs.pop();
+    if (this._historicalStates.length <= 1) {
+        throw Exception("Attempted to undo witha history of length 1.")
+    }
+    return [action, args, state];
+  }
+}
 
 class Game
 {
@@ -29,6 +57,24 @@ class Game
         return this.mother_state
     }
 
+    logs(username)
+    {
+        return this._history.logs();
+    }
+
+    undo(username) {
+        throw Exception("Game.undo() is not implemented yet.");
+        if (this._historicalStates.length !== this._historicalActions.length) {
+            throw Exception("Invalid history.");
+        }
+        if (this.mother_state.players[username].auth !== 'admin') return;
+        [action, args, state] = this._history.undo();
+        this.mother_state = state;
+        if (this.timer) this.timer.terminateTime();
+        if (action)
+        this.timer = new Timer(this.mother_state.clock);
+    }
+
     endLobby(username)
     {
         let rtn;
@@ -36,6 +82,7 @@ class Game
             rtn = false
         }
         else {
+            this._history.save("endLobby", [username], this.mother_state, "<b>" + username + "</b> closed the lobby.");
             for (let ord of this.mother_state.order) {
                 this.mother_state.stage[ord] = this.mother_state[ord][0]
             }
@@ -48,6 +95,7 @@ class Game
 
     startGame(username)
     {
+        this._history.save("startGame", [username], this.mother_state, "<b>" + username + "</b> started the game.");
         this._player_cash_init()
         this.prayer('game_start', {}, this.mother_state)
         this._act()
@@ -55,7 +103,6 @@ class Game
 
     addPlayer(username, auth='admin')
     {
-        console.log('addPlayer')
         let player = {}
         let rtn = true
         if (this.mother_state.stage.phase !== 'lobby') {
@@ -79,13 +126,14 @@ class Game
 
     rdyUp(username)
     {
+        if (this.mother_state.players[username].ready) return;
+        this._history.save("rdyUp", [username], this.mother_state, "<b>" + username + "</b> readied up");
         this.mother_state.players[username].ready = true
         let all_ready = true
         for (let player of Object.values(this.mother_state.players)) {
             all_ready &= player.ready
         }
-
-        if (all_ready){
+        if (all_ready) {
             this.mother_state.clock = this.timer.queryTime 
             this.timer.terminateTime(true);
         }
@@ -98,6 +146,7 @@ class Game
         //console.log(this.mother_state.players[username])
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
+            this._history.save("bid", [username], this.mother_state, "<b>" + username +  "</b> bid $" + amount);
             this._register_bid(amount, username)
         }
     }
@@ -106,6 +155,7 @@ class Game
     {
         this.prayer = prayer
         this.timer = null
+        this._history = new History();
         this.mother_state = { }
         this.mother_state.players = { }
         this.mother_state.nations = utils.NATIONS
