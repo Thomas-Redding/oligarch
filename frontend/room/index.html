@@ -144,6 +144,7 @@ class Color {
 <script src="network.js"></script>
 <script src='polygon_data.js'></script>
 <script src='states.js'></script>
+<script src='svg.js'></script>
 <script>
 
 class Vec2 {
@@ -168,26 +169,18 @@ class Vec2 {
 }
 
 function create_label(text, x, y) {
-  let label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  label.setAttribute('x', Math.round(x));
-  label.setAttribute('y', Math.round(y));
-  // label.setAttribute('fill', '#000');
-  // label.setAttribute('stroke', 'red');
-  label.setAttribute('text-anchor', 'middle');
-  label.style = "font-style:normal;font-weight:normal;fill:black;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-  label.textContent = text;
-  label.pointerEvents = 'none';
-  return label;
+  return svg.text(txt, x, y, {
+    'style': 'font-style:normal;font-weight:normal;fill:black;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1',
+    'pointerEvents': 'none',
+    'text-anchor': 'middle'
+  });
 }
 
 function create_circle(x, y, r) {
-  let label = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-  label.setAttribute('cx', Math.round(x));
-  label.setAttribute('cy', Math.round(y));
-  label.setAttribute('r', Math.round(r));
-  label.setAttribute('stroke', '#000');
-  label.setAttribute('fill', '#000f');
-  return label;
+  return svg.circle(x, y, r, attrs={
+    'stroke': '#000',
+    'fill': '#000f',
+  });
 }
 
 function argmax(A) {
