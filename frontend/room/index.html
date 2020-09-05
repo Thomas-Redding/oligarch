@@ -302,9 +302,67 @@ function render_nation_rects(state) {
   }
 }
 
+function sum(A) {
+  return A.reduce((a, b) => a + b, 0);
+}
+
 function render_map(state) {
   render_nation_rects(state);
   // TODO(mredding): update armies/factories/barracks
+
+  Array.from(document.getElementsByTagName('path')).forEach(path => {
+    let territory_name = path.id;
+    let nation_name = territory2nation[territory_name];
+    let territory = state.nations[nation_name][territory_name];
+
+    let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, "move");
+
+    console.log(army);
+
+    let icon_drawers = [];
+
+    if (sum(army.infanty) > 0) {
+      icon_drawers.push((x, y) => {
+        let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
+        riskMap.appendChild(circ);
+      });
+    }
+    if (sum(army.calvary) > 0) {
+      icon_drawers.push((x, y) => {
+        let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
+        riskMap.appendChild(circ);
+      });
+    }
+    if (sum(army.cannon) > 0) {
+      icon_drawers.push((x, y) => {
+        let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
+        riskMap.appendChild(circ);
+      });
+    }
+    if (territory.n_factories > 0) {
+      icon_drawers.push((x, y) => {
+        let circ = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
+        riskMap.appendChild(circ);
+      });
+    }
+    if (territory.n_barracks > 0) {
+      icon_drawers.push((x, y) => {
+        let circ = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
+        riskMap.appendChild(circ);
+      });
+    }
+
+    const r = 12;
+    const s = 20;
+    const tau = Math.PI * 2;
+    for (let t = 0; t < icon_drawers.length; ++t) {
+      let angle = tau * t / icon_drawers.length - Math.PI / 2;
+      let [x, y] = territories[territory_name].center;
+      x += Math.cos(angle) * r * 1.7;
+      y += Math.sin(angle) * r * 1.7;
+      icon_drawers[t](x, y);
+    }
+  });
 }
 
 function add_player(details, state) {
@@ -354,7 +412,7 @@ function main() {
     console.log(Math.round(loc.x), Math.round(loc.y));
   });
 
-  Array.from(document.getElementsByTagName('path')).map(path => {
+  Array.from(document.getElementsByTagName('path')).forEach(path => {
     let territory = path.id;
     let nation = territory2nation[territory];
     let nationColor = nations[nation].color;
@@ -384,10 +442,6 @@ function main() {
     };
     path.addEventListener("mouseleave", onmouseleave);
 
-    if (!(territory in territories)) {
-      return;
-    }
-
     {
       let [x, y] = territories[territory].center;
       circ = create_circle(x, y, 20);
@@ -395,35 +449,6 @@ function main() {
       circ.style.stroke = 'white';
       riskMap.appendChild(circ);
     }
-
-    const r = 12;
-    const s = 20;
-    const tau = Math.PI * 2;
-    for (let t of [0, 1, 2, 3, 4, 5, 6, 7]) {
-      let angle = tau * t / 8 - Math.PI / 2;
-      if (Math.random() < 0.7) {
-        continue;
-      }
-      let [x, y] = territories[territory].center;
-      x += Math.cos(angle) * r * 1.7;
-      y += Math.sin(angle) * r * 1.7;
-      let circ;
-      if (t === 2) {
-        circ = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
-      } else if (t === 3) {
-        circ = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
-      } else if (t === 0) {
-        circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
-      } else if (t === 1) {
-        circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
-      } else if (t === 4) {
-        circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
-      } else {
-        circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
-      }
-      riskMap.appendChild(circ);
-    }
-
   });
 
   window.onresize();
