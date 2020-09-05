@@ -138,7 +138,7 @@ class Game
             all_ready &= player.ready
         }
         if (all_ready) {
-            this.mother_state.clock = this.timer.queryTime 
+            this.mother_state.clock = this.timer.queryTime()
             this.timer.stop(true);
         }
     }
@@ -384,7 +384,7 @@ class Game
     _begin_deliberation()
     {
         this.mother_state.clock = TIMING.deliberation
-            if (this.isRunning) this.timer.stop(false)
+            if (this.timer.isRunning()) this.timer.stop(false)
             this.timer.start(TIMING.deliberation,
                 this._finish_deliberation.bind(this))
             this._prayer('begin_deliberation',TIMING.deliberation)
@@ -441,7 +441,7 @@ class Game
         for (let player in voters){
             this.mother_state.players[player].ready = (voters[player] == 0)
         }
-        if (this.timer.isRunning) this.timer.stop(false)
+        if (this.timer.isRunning()) this.timer.stop(false)
         this.timer.start(TIMING.election, this._conclude_election.bind(this))
         this._prayer('start_election', nation)
     }
