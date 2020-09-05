@@ -12,7 +12,7 @@ const PHASES = ['taxation','deliberation','auction','action']
 const TURNS = ['NA','SA','EU','AF','AS','AU']
 const SUBPHASES = ['election','move','attack','spawn','build','dividends']
 const BLACKLISTED_NAMES = []
-
+const TIMING = {'deliberation' : 90}
 
 //game logic classes below
 class Timer
@@ -63,6 +63,7 @@ class Game
     startGame()
     {
         this._act()
+        this.prayer('game_start', {}, this.mother_state)
     }
 
     addPlayer(username, auth='admin')
@@ -136,6 +137,15 @@ class Game
         return inc
     }
 
+
+    _finish_deliberation()
+    {
+        while (this.mother_state.stage.phase == 'deliberation'){
+            this._transition()
+        }
+            
+    }
+
     _act()
     {
         if (this.mother_state.stage.phase === 'taxation') {
@@ -144,7 +154,9 @@ class Game
         }
 
         else if (this.mother_state.stage.phase === 'deliberation') {
-            this.timer = new Timer(90*1000)
+            function 
+
+            this.timer = new Timer(TIMING.deliberation, )
 
         }
 
