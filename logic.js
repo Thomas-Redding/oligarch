@@ -184,7 +184,7 @@ class Game
                 this.mother_state.players[owner].cash += inc
             }
         }
-        this._prayer('dividends_paided',amount,this.mother_state)
+        this._prayer('dividends_paid',amount,this.mother_state)
     }
 
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
