@@ -471,6 +471,8 @@ function main() {
     }
   });
 
+  currentBidDiv.style.opacity = 0;
+
   window.onresize();
 };
 
@@ -565,7 +567,7 @@ function login() {
     username = arr[0];
     password = arr[1];
   } else {
-    while (username.length == 0) {
+    while (username.length == 0 || username.length > 9) {
       username = prompt("username?");
     }
     while (password.length == 0) {
@@ -690,6 +692,9 @@ login().then((socket) => {
     }
     else if (action === "deliberation_over") {
     }
+    else if (action === "start_election") {
+      currentBidDiv.style.opacity = 0;
+    }
     else if (action === "conclude_bidding") {
       render_table(state);
       render_nation_rects(state);
@@ -704,8 +709,8 @@ login().then((socket) => {
         }
       }
 
-      console.log("xx");
-      currentBidDiv.innerHTML = "Current Bid: $" + gLatestState.current_bid + 'B by ' + gLatestState.highest_bidder;
+      currentBidDiv.style.opacity = 1;
+      currentBidDiv.children[1].innerHTML = state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B";
     }
     onstagechange(state);
   });
@@ -998,7 +1003,10 @@ function start_game() {
         </tr>
       </tbody>
     </table>
-    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%);">
+    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:2em; display:flex; flex-direction:column;">
+      <div style="flex:1"></div>
+      <div></div>
+      <div style="flex:1"></div>
     </div>
     <br>
     <div id="actionPanel">
