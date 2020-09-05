@@ -283,11 +283,19 @@ window.onload = () => {
       return;
     }
 
-    const r = 8;
+    {
+      let [x, y] = territories[territory].center;
+      circ = create_circle(x, y, 20);
+      circ.style.fill = 'none';
+      circ.style.stroke = 'white';
+      riskMap.appendChild(circ);
+    }
+
+    const r = 12;
     const s = 20;
     const tau = Math.PI * 2;
-    for (let t of [0, 1, 2, 3, 4]) {
-      let angle = tau * t / 5 - Math.PI / 2;
+    for (let t of [0, 1, 2, 3, 4, 5, 6, 7]) {
+      let angle = tau * t / 8 - Math.PI / 2;
       if (Math.random() < 0.7) {
         continue;
       }
@@ -306,7 +314,7 @@ window.onload = () => {
       } else if (t === 4) {
         circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
       } else {
-        circ = create_circle(x, y, r);
+        circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
       }
       riskMap.appendChild(circ);
     }
@@ -319,6 +327,10 @@ window.onload = () => {
   add_player("Tony");
 
   window.onresize();
+
+  onstagechange({stage: {
+    phase: "deliberation",
+  }});
 };
 
 const kTabMap = 'kTabMap';
@@ -443,6 +455,27 @@ login().then((socket) => {
   console.log("ERROR:", error);
 });
 
+function onstagechange(model) {
+  let stage = model.stage;
+  if (stage.phase === "auction") {
+    bidButton.style.display = "inline-block";
+  } else {
+    bidButton.style.display = "none";
+  }
+
+  if (stage.phase === "deliberation") {
+    endDeliberationButton.style.display = "inline-block";
+  } else {
+    endDeliberationButton.style.display = "none";
+  }
+
+  if (stage.phase === "action" && stage.subphase == "election") {
+    voteButton.style.display = "inline-block";
+  } else {
+    voteButton.style.display = "none";
+  }
+}
+
 function increment_transfer_input(delta) {
   let elem = document.getElementById("transferInput");
   elem.value = parseInt(elem.value) + delta;
@@ -466,6 +499,10 @@ function show_modal(type) {
     popupDiv.style.display = 'none';
   }
   popupDiv.style.display = 'block';
+}
+
+function end_deliberation() {
+  // TODO(mredding)
 }
 
 function send(obj) {
@@ -515,10 +552,10 @@ function start_game() {
     </table>
     <br>
     <div id="actionPanel" style="text-align:center; border-top:solid black 1px; padding:0.5em; font-size:1.5em;">
-      <div class='button' style="display:inline-block;" onclick="show_modal('Give')">Give</div>
-      <div class='button' style="display:inline-block;" onclick="show_modal('Vote')">Vote</div>
-      <div class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
-      <div class='button' style="display:inline-block;">End Deliberation</div>
+      <div id="giveButton" class='button' style="display:inline-block;" onclick="show_modal('Give')">Give</div>
+      <div id="voteButton" class='button' style="display:inline-block;" onclick="show_modal('Vote')">Vote</div>
+      <div id="bidButton" class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
+      <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
     <div id="gameLogDiv" style="display:flex; flex-direction:column; flex:1; min-height:0; overflow:auto; border-top: solid black 1px;">
       <div style="padding:0.5em; display:flex; flex-direction:row;">
