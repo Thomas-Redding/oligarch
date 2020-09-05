@@ -6,24 +6,30 @@ var Game = require("../logic.js");
 class OligarchRoom extends Room {
   constructor() {
     super()
-    this.game = new Game()
+    this.game = new Game(this.prayer.bind(this))
   }
 
-  sendData(data) {
-    super.sendData(JSON.stringify(data));
+  sendDataToAll(data) {
+    console.log("sendDataToAll", JSON.stringify(data))
+    let users = super.connectedUsers();
+    for (let user of users) {
+      console.log(user);
+      super.sendData(user, JSON.stringify(data));
+    }
   }
 
   prayer(action, details, newModel) {
-    sendData([ action, details, newModel ]);
+    this.sendDataToAll([ action, details, newModel ]);
   }
 
   didReceiveData(username, data) {
     console.log('didReceiveData("' + username + '", ' + data + '")')
     data = JSON.parse(data);
-    if (data[0] == "state") {
-      super.sendData(this.game.mother_state);
-    } else if (data[0] == "endLobby") {
+    if (data.action == "state") {
+      this.sendDataToAll(this.game.mother_state);
+    } else if (data.action == "endLobby") {
       this.game.endLobby(username)
+      this.game.startGame()
     }
   }
 
