@@ -270,17 +270,21 @@ let utils = {
       "Kamchatka": 1,
     }
   },
+
+  /*
+   * @return
+   */
   num_shares_already_auctioned_for_nation: (mother_state) => {
-    let r = {};
+    let rtn = {};
     for (let name in mother_state.nations) {
-      r[name] = 0;
+      rtn[name] = 0;
     }
     for (let player of Object.values(mother_state.players)) {
       for (let nation in player.shares) {
-        r[nation] += player.shares[nation];
+        rtn[nation] += player.shares[nation];
       }
     }
-    return r;
+    return rtn;
   },
 
   /*
@@ -397,6 +401,7 @@ let utils = {
     }
     throw Error("Something went wrong in `utils.nation_of_territory()`.");
   },
+
   /*
    * This method returns a dictionary. The keys of the dictionary are the troop
    * types ("infantry" | "calvary" | "cannon"). The values are an array with two
