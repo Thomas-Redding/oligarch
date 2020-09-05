@@ -66,7 +66,6 @@ class Game
     _nation_init()
     {
         let terr2nat = {}
-        console.log(this.mother_state.nations)
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
             for (let terr in this.mother_state.nations[nation].territories) {
