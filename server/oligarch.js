@@ -27,7 +27,7 @@ class OligarchRoom extends Room {
     if (data.action == "state") {
       console.log('<<<', "<state>");
       this.sendDataToAll(["state", null, this.game.mother_state]);
-    } else if (data.action == "endLobby") {
+    } else if (data.action == "end_lobby") {
       this.game.endLobby(username)
       this.game.startGame()
     } else if (data.action === "readyUp") {
