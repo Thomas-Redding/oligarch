@@ -370,7 +370,7 @@ class Game
         }
 
         else if (phase == 'Action'){
-            nextsubphase = next(subphase, SUBPHASES)
+            let nextsubphase = next(subphase, SUBPHASES)
             if (subphase == SUBPHASES.fromback()) {
                 this.mother_state.stage.turn = next(turn, TURNS)
                 this.timer.stop(true)
