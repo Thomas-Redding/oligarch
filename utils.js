@@ -1,31 +1,37 @@
 let utils = {
   NATIONS: {
     "Africa": {
+      "capital": "South Africa",
       "base_income_per_territory" : 6,
       "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"],
       "total_shares": 5
     },
     "North America": {
+      "capital": "Ontario",
       "base_income_per_territory" : 4,
       "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"],
       "total_shares": 7
     },
     "South America": {
+      "capital": "Argentina",
       "base_income_per_territory" : 9,
       "territories": ["Venezuela", "Brazil", "Argentina", "Peru"],
       "total_shares": 4
     },
     "Europe": {
+      "capital": "Northern Europe",
       "base_income_per_territory" : 5,
       "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"],
       "total_shares": 6
     },
     "Asia": {
+      "capital": "Japan",
       "base_income_per_territory" : 5,
       "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"],
       "total_shares": 8
     },
     "Australia": {
+      "capital": "Eastern Australia",
       "base_income_per_territory" : 9,
       "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"],
       "total_shares": 3
@@ -401,6 +407,27 @@ let utils = {
       }
     }
     throw Error("Something went wrong in `utils.nation_of_territory()`.");
+  },
+
+  /*
+   * @returns the puppeteer of the given nation. If the nation owns itself, then
+   * the puppeteer is itself. If the capital is contested only by enemies, then
+   * this method returns null.
+   */
+  puppeteer: (mother_state, nation) => {
+    if (mother_state.nations[nation].army.filter(x => x.territory == utils.NATIONS[nation].capital).length > 0) {
+      return nation;
+    }
+    let owner = null;
+    for (let n in mother_state.nations) {
+      if (n === nation) continue;
+      if (mother_state.nations[n].army.filter(x => x.territory == utils.NATIONS[nation].capital).length > 0) {
+        if (owner !== null) return null;
+        owner = n;
+      }
+    }
+    if (owner) return owner;
+    return nation;
   },
 
   /*
