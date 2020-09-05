@@ -10,7 +10,6 @@ class OligarchRoom extends Room {
   }
 
   sendDataToAll(data) {
-    console.log('<<<', JSON.stringify(data))
     let users = super.connectedUsers();
     for (let user of users) {
       super.sendData(user, JSON.stringify(data));
@@ -18,6 +17,7 @@ class OligarchRoom extends Room {
   }
 
   prayer(action, details, newModel) {
+    console.log('<<<', JSON.stringify([action, details, "<state>"]));
     this.sendDataToAll([ action, details, newModel ]);
   }
 
@@ -25,6 +25,7 @@ class OligarchRoom extends Room {
     console.log('>>>', data)
     data = JSON.parse(data);
     if (data.action == "state") {
+      console.log('<<<', "<state>");
       this.sendDataToAll(["state", null, this.game.mother_state]);
     } else if (data.action == "endLobby") {
       this.game.endLobby(username)

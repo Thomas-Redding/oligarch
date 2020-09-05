@@ -45,3 +45,7 @@ body {
 .piece-circle {
   fill: white;
 }
+
+.button {
+  border: solid black 1px;
+}
