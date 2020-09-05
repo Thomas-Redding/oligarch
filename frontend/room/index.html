@@ -37,6 +37,8 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  text-shadow: 0 0 0.25em #888;
 }
 
 .personButton {
@@ -420,6 +422,14 @@ let theme = {
   }
 }
 theme.set(theme.get());
+
+window.addEventListener("load", () => {
+  let path = "/room/lobby/" + Math.floor(5*Math.random()) + ".jpg";
+  let lobbyDiv = document.getElementById("lobbyDiv");
+  lobbyDiv.style.background = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('" + path + "')";
+  lobbyDiv.style.backgroundSize = "cover"
+  lobbyDiv.style.backgroundPosition = "center center";
+})
 
 function main() {
   riskMap.addEventListener('click', (e) => {
@@ -1326,7 +1336,11 @@ function start_game() {
 
 <div id="lobbyDiv">
   <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); text-align: center;">
-    <h1 align="center">In Lobby...</h1>
+    <h1 align="center">Oligarch</h1>
+    <br/><br/><br/><br/>
+    <p>
+      waiting for players to join...
+    </p>
     <div class="button" onclick="start_game();" style="margin: 2em auto;">
       Start Game
     </div>
