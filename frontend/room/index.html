@@ -317,8 +317,6 @@ function render_map(state) {
 
     let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, "move");
 
-    console.log(army);
-
     let icon_drawers = [];
 
     if (sum(army.infanty) > 0) {
@@ -632,6 +630,10 @@ login().then((socket) => {
       }
       main();
       render_table(state);
+    }
+    else if (action === "refresh") {
+      // Called when an undo is performed.
+      window.location.reload(true);
     }
     else if (action === "end_lobby") {
       // Equivalent to game_start
