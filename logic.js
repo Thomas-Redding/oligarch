@@ -175,7 +175,11 @@ class Game
         this.rdyUp(username)
     }
 
+<<<<<<< HEAD
     constructor(prayer) 
+=======
+    constructor(prayer, timer)
+>>>>>>> ef754a76e82283f63a33a192b89995d3b0f3e9da
     {
         this.prayer = prayer
         this.timer = timer
