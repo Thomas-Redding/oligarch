@@ -861,7 +861,11 @@ function onstagechange(state) {
     finishSpawningButton.style.display = (subphase === "Spawn" ? "inline-block" : "none");
     finishBuildingButton.style.display = (subphase === "Build" ? "inline-block" : "none");
     finishDividendsButton.style.display = (subphase === "Dividends" ? "inline-block" : "none");
-    presidentDiv.style.display = "block";
+    if (state.nations[state.stage.turn].president === myUsername) {
+      presidentDiv.style.display = "block";
+    } else {
+      presidentDiv.style.display = "none";
+    }
   } else {
     presidentDiv.style.display = "none";
   }
