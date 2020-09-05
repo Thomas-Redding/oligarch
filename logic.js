@@ -167,6 +167,14 @@ class Game
         this.rdyUp(username)
     }
 
+    initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
+    {
+        if (this.mother_state.players[username].vote == null) {
+            this._register_vote(username, player)
+        }
+        this.rdyUp(username)
+    }
+
     constructor(prayer) 
     {
         this.prayer = prayer
@@ -386,13 +394,13 @@ class Game
         if (this.timer.isRunning) this.timer.terminateTime(false)
         this.timer = new Timer(TIMING.election, this._conclude_election.bind(this))
         this._prayer('start_election', nation)
-
     }
 
     _register_vote(username, player)
     {
         
         this.mother_state.players[username].vote = player
+        nation = this.mother_state.stage.turn
         //check majority
         let voters = utils.owners(this.mother_state, nation)
         let n_votes = 0
