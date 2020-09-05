@@ -484,12 +484,14 @@ class Game
         let tau = this.timer.queryTime() + TIMING.actions
         details['time'] = tau
         this._prayer('begin_presidential_command',details)
-        this.timer.start(tau, this._end_presidential_command()) 
+        this.timer.start(tau, this._end_presidential_command) 
     }
 
     _end_presidential_command()
     {
         this._prayer('end_presidential_command','')
+        let nat = this.mother_state.stage.turn
+        this.mother_state.nations[nat].president = null
         this._transition()
     }
 
