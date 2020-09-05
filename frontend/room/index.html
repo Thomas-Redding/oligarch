@@ -359,9 +359,10 @@ function main() {
     let nation = territory2nation[territory];
     let nationColor = nations[nation].color;
     let randColor = Color.random().scale(0.15);
+    let color = nationColor.scale(0.85).plus(randColor);
 
     path.style = '';
-    path.style.fill = nationColor.scale(0.85).plus(randColor).hex();
+    path.style.fill = color.hex();
     path.style.stroke = 'black';
 
     let onclick = (e) => {
@@ -374,12 +375,14 @@ function main() {
     path.addEventListener('click', onclick);
 
     let onmouseover = (e) => {
-      path.style.fill = color.plus(new Color(255,255,255)).scale(0.5).hex();
+      path.style.fill = color.plus(new Color(255, 255, 255)).scale(0.5).hex();
     }
+    path.addEventListener("mouseover", onmouseover);
 
     let onmouseleave = (e) => {
       path.style.fill = color.hex();
     };
+    path.addEventListener("mouseleave", onmouseleave);
 
     if (!(territory in territories)) {
       return;
