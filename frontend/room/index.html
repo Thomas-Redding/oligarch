@@ -530,6 +530,7 @@ window.onresize = () => {
     gameLogContainer.style.display = 'block';
     gameLogContainer.style.maxWidth = '20em';
     bottomNavBarDiv.style.display = 'none';
+    currentVotes.style.display = "block";
   } else {
     console.log('mobile');
     statusBarDiv.style.fontSize = '1em';
@@ -543,8 +544,9 @@ window.onresize = () => {
     gameLogContainer.style.display = (tab === kTabLog ? "block" : "none");
     gameLogContainer.style.maxWidth = 'none';
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
-    mainTable.style.display = (tab == kTabInfo ? "table" : "none");
+    mainTable.style.display = (tab === kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';
+    currentVotes.style.display = (tab === kTabInfo ? "block" : "none");
   }
 
   lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
@@ -694,6 +696,11 @@ login().then((socket) => {
     }
     else if (action === "start_election") {
       currentBidDiv.style.opacity = 0;
+      currentVotesDiv.innerHTML = "";
+    }
+    else if (action === "election_received") {
+      // TODO(mredding): update currentVotesDiv when this exists on the backend.
+      currentVotesDiv.innerHTML = "";
     }
     else if (action === "conclude_bidding") {
       render_table(state);
@@ -926,6 +933,17 @@ function show_modal(type) {
     }
   }
 
+  {
+    let button = document.createElement('DIV');
+    button.classList.add("personButton");
+    button.innerHTML = "abstain";
+    button.addEventListener('click', (e) => {
+      close_modal();
+      vote_for();
+    })
+    votePlayerButtonsContainer.appendChild(button);
+  }
+
   tradePopup2Div.style.display = "none";
   bidPopupDiv.style.display = (type === "Bid" ? "block" : "none");
   tradePopupDiv.style.display = (type === "Trade" ? "block" : "none");
@@ -1017,6 +1035,7 @@ function start_game() {
       <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1)">Bid +1</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
+    <div id="currentVotesDiv"></div>
     <div id="gameLogContainer">
       <div style="padding:0.5em; display:flex; flex-direction:row;">
         <div style="text-align:center; font-weight:900; font-size: 1.3em;">Game Log</div>
