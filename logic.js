@@ -82,12 +82,28 @@ class Game
             player.ready = false
             player.curbid = 0
             player.vote = null
+            player.ready = false
             for (let key in geography.nations) {
                 player.shares[key] = 0
             }        
             this.mother_state.players[username] = player
         }
         return rtn
+    }
+
+    rdyUp(username)
+    {
+        this.mother_state.players[username]['ready'] = true
+        
+        all_ready = true
+        for (let player of this.mother_state.players) {
+            all_ready = all_ready && player.ready
+        }
+
+        if (all_ready){
+            this.mother_state.clock = this.timer.queryTime 
+            this.timer.terminateTime()
+        }
     }
 
     constructor(prayer) 
@@ -103,7 +119,7 @@ class Game
         this.mother_state.turn = TURNS
         this.mother_state.round = ROUNDS
         this.mother_state.order = ['subphase', 'turn', 'phase', 'round']
-        this.mother_state.time = 0
+        this.mother_state.clock = 0
         //this.mother_state.phase = 'lobby'
         this.mother_state.stage = {}
         this.mother_state.stage.round = 0
