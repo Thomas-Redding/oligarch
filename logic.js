@@ -432,17 +432,10 @@ class Game
 
     _register_vote(username, candidate_username)
     {
-<<<<<<< HEAD
         let candidate_votes = utils.candidate_votes(this.mother_state)
-=======
-        console.log("QQQ", candidate_username);
-        this.mother_state.players[username].vote = candidate_username
-        let nation = this.mother_state.stage.turn
->>>>>>> 55b03fbd0efb623a94bb70bdd03b6532f41e9ac2
         //check majority
         let voters = utils.owners(this.mother_state, nation)
-        this._prayer('vote_tallied', candidate_votes )
-        console.log(voters)
+        this._prayer('vote_tallied', candidate_votes)
         let n_votes = 0
         for (let player in voters) {
             n_votes += voters[player]
@@ -450,19 +443,6 @@ class Game
         n_votes = Math.floor(n_votes/2)+1
 
 
-        for (let player in voters){
-            if (!(this.mother_state.players[player].vote in v_in_favor)) {
-                v_in_favor[player] = voters[player]
-            }
-            else v_in_favor[player] += voters[player]
-
-            if (v_in_favor[player] >= n_votes) { 
-                this.mother_state.nations[nation].president = player
-                this.timer.stop(true)
-                break
-            }
-        }
-        console.log(v_in_favor)
     }
 
     _conclude_election()
