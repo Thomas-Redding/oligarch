@@ -71,3 +71,22 @@ body {
 text {
   fill: white;
 }
+
+.column-NA {
+  color: rgb(224, 210, 107);
+}
+.column-SA {
+  color: rgb(116, 242, 233);
+}
+.column-EU {
+  color: rgb(94, 143, 222);
+}
+.column-AF {
+  color: rgb(200, 110, 111);
+}
+.column-AS {
+  color: rgb(92, 221, 93);
+}
+.column-AU {
+  color: rgb(254, 102, 226);
+}

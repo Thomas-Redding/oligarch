@@ -254,12 +254,12 @@ function render_table(state) {
   tbody.innerHTML = `
     <tr>
       <td></td>
-      <td>NA</td>
-      <td>SA</td>
-      <td>EU</td>
-      <td>AF</td>
-      <td>AS</td>
-      <td>AU</td>
+      <td class="column-NA">NA</td>
+      <td class="column-SA">SA</td>
+      <td class="column-EU">EU</td>
+      <td class="column-AF">AF</td>
+      <td class="column-AS">AS</td>
+      <td class="column-AU">AU</td>
       <td>Cash</td>
       <td>Score</td>
     </tr>
@@ -272,12 +272,12 @@ function render_table(state) {
 
     let tr = document.createElement("TR");
     tr.innerHTML += "<td>" + player.username + "</td>";
-    tr.innerHTML += "<td>" + player.shares["North America"] + "</td>";
-    tr.innerHTML += "<td>" + player.shares["South America"] + "</td>";
-    tr.innerHTML += "<td>" + player.shares["Europe"] + "</td>";
-    tr.innerHTML += "<td>" + player.shares["Africa"] + "</td>";
-    tr.innerHTML += "<td>" + player.shares["Asia"] + "</td>";
-    tr.innerHTML += "<td>" + player.shares["Australia"] + "</td>";
+    tr.innerHTML += '<td class="column-NA">' + player.shares["North America"] + "</td>";
+    tr.innerHTML += '<td class="column-SA">' + player.shares["South America"] + "</td>";
+    tr.innerHTML += '<td class="column-EU">' + player.shares["Europe"] + "</td>";
+    tr.innerHTML += '<td class="column-AF">' + player.shares["Africa"] + "</td>";
+    tr.innerHTML += '<td class="column-AS">' + player.shares["Asia"] + "</td>";
+    tr.innerHTML += '<td class="column-AU">' + player.shares["Australia"] + "</td>";
     tr.innerHTML += "<td>" + player.cash + "</td>";
     tr.innerHTML += "<td>TODO</td>";
 
@@ -806,12 +806,12 @@ function start_game() {
       <tbody>
         <tr>
           <td></td>
-          <td>NA</td>
-          <td>SA</td>
-          <td>EU</td>
-          <td>AF</td>
-          <td>AS</td>
-          <td>AU</td>
+          <td class="column-NA">NA</td>
+          <td class="column-SA">SA</td>
+          <td class="column-EU">EU</td>
+          <td class="column-AF">AF</td>
+          <td class="column-AS">AS</td>
+          <td class="column-AU">AU</td>
           <td>Cash</td>
           <td>Score</td>
           <td style="width:100%"></td>
