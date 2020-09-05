@@ -137,6 +137,10 @@ path {
   padding: 1em;
 }
 
+#tradeTbody > tr > td {
+  width: 50%;
+}
+
 </style>
 <link rel="stylesheet" class="theme" id="stylesheet-light" href="light.css">
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
@@ -317,7 +321,6 @@ function sum(A) {
 
 function render_map(state) {
   render_nation_rects(state);
-  // TODO(mredding): update armies/factories/barracks
 
   Array.from(document.getElementsByTagName('path')).forEach(path => {
     let territory_name = path.id;
@@ -742,21 +745,113 @@ function increment_transfer_input(delta) {
   elem.value = parseInt(elem.value) + delta;
 }
 
+let gTradeYou = null;
+let gTradeThem = null;
+let gTradeDelta = null;
+let gTradeIcon = null;
+function increment_offer(delta) {
+  if (!gTradeIcon) {
+    gTradeIcon = document.createElement("div");
+    gTradeIcon.classList.add("button");
+    gTradeIcon.style.backgroundColor = '#8f8';
+    gTradeIcon.style.cursor = 'default';
+  }
+
+  if (gTradeIcon.parentNode) {
+    gTradeIcon.parentNode.removeChild(gTradeIcon);
+  }
+
+  gTradeDelta += delta;
+  if (gTradeDelta > gLatestState.players[gTradeYou].cash) {
+    gTradeDelta = gLatestState.players[gTradeYou].cash;
+  } else if (-gTradeDelta > gLatestState.players[gTradeThem].cash) {
+    gTradeDelta = -gLatestState.players[gTradeThem].cash;
+  }
+  gTradeIcon.innerHTML = "$" + Math.abs(gTradeDelta) + " B";
+
+  if (gTradeDelta > 0) {
+    tradeDivYourOffer.appendChild(gTradeIcon);
+  } else if (gTradeDelta < 0) {
+    tradeDivTheirOffer.appendChild(gTradeIcon);
+  }
+}
+
+function offer_trade() {
+  alert("TODO: OFFER TRADE TO SERVER");
+  close_modal();
+}
+
 function trade_with(playername) {
+  gTradeDelta = 0;
+  gTradeIcon = null;
   tradeWithDiv.innerHTML = "Trading with " + playername;
 
-  let you = gLatestState.players[network.fetchExistingUsernamePassword()[0]];
-  let them = gLatestState.players[playername];
+  tradeDivYourAssets.innerHTML = "";
+  tradeDivTheirAssets.innerHTML = "";
+  tradeDivYourOffer.innerHTML = "";
+  tradeDivTheirOffer.innerHTML = "";
 
-  tradeTable.innerHTML = "";
-  tradeTable.innerHTML += `<tr><td>TODO</td></tr>`;
+  gTradeYou = network.fetchExistingUsernamePassword()[0];
+  gTradeThem = playername;
+
+  let you = gLatestState.players[gTradeYou];
+  let them = gLatestState.players[gTradeThem];
+
+  let playerIncomeIcon = {};
+
+  const shortenName = {
+    "North America": "NA",
+    "South America": "SA",
+    "Europe": "EU",
+    "Africa": "AF",
+    "Asia": "AS",
+    "Australia": "AU",
+  }
+
+  for (let i = 0; i < 2; ++i) {
+    let player = (i == 0 ? you : them);
+    let td = (i == 0 ? tradeDivYourAssets : tradeDivTheirAssets);
+
+    {
+      let button = document.createElement("DIV");
+      button.classList.add("button");
+      button.innerHTML = "$" + player.cash + "B";
+      button.style.margin = '0.5em';
+      button.style.backgroundColor = '#777';
+      button.style.cursor = 'default';
+      playerIncomeIcon[player.username] = playerIncomeIcon;
+      td.appendChild(button);
+    }
+
+    for (let share in player.shares) {
+      for (let i = 0; i < player.shares[share]; ++i) {
+        let button = document.createElement("DIV");
+        button.classList.add("button");
+        button.innerHTML = shortenName[share];
+        button.style.margin = '0.5em';
+        button.onclick = () => {
+          let parent = button.parentNode;
+          button.parentNode.removeChild(button);
+          if (parent === tradeDivYourAssets) {
+            tradeDivYourOffer.appendChild(button);
+          } else if (parent === tradeDivTheirAssets) {
+            tradeDivTheirOffer.appendChild(button);
+          } else if (parent === tradeDivYourOffer) {
+            tradeDivYourAssets.appendChild(button);
+          } else if (parent === tradeDivTheirOffer) {
+            tradeDivTheirAssets.appendChild(button);
+          }
+        }
+        td.appendChild(button);
+      }
+    }
+  }
 
   tradePopupDiv.style.display = "none";
   tradePopup2Div.style.display = "flex";
 }
 
 function vote_for(playername) {
-  // TODO: change to send({...}) when backend supports.
   send({
     "method": "vote",
     "username": playername,
@@ -949,11 +1044,45 @@ function start_game() {
     <div id="tradePlayerButtonsContainer"></div>
   </div>
 
-  <div id="tradePopup2Div" class="popup" style="flex-direction:column;">
+  <div id="tradePopup2Div" class="popup" style="flex-direction:column; left:2em; top:2em; right:2em; bottom:2em; transform:none; padding:0;">
     <h2 id="tradeWithDiv" align="center"></h2>
     <div style="width:100%; flex:1;">
-      <table>
-        <tbody id="tradeTable"></tbody>
+      <table style="width:100%; font-size:0.5em;">
+        <tbody id="tradeTbody">
+          <tr>
+            <td>Your Assets</td>
+            <td>Their Assets</td>
+          </tr>
+          <tr>
+            <td id="tradeDivYourAssets"></td>
+            <td id="tradeDivTheirAssets"></td>
+          </tr>
+          <tr>
+            <td>Your Offer</td>
+            <td>Their Offer</td>
+          </tr>
+          <tr>
+            <td id="tradeDivYourOffer" style="border-top: solid white 1px;"></td>
+            <td id="tradeDivTheirOffer" style="border-top: solid white 1px;"></td>
+          </tr>
+          <tr>
+            <td style="border-top: solid white 1px;">
+              <div class="button" style="margin:0.5em;" onclick="increment_offer(1)">+1</div>
+              <div class="button" style="margin:0.5em;" onclick="increment_offer(5)">+5</div>
+              <div class="button" style="margin:0.5em;" onclick="increment_offer(20)">+20</div>
+            </td>
+            <td style="border-top: solid white 1px;">
+              <div class="button" style="margin:0.5em;" onclick="increment_offer(-1)">+1</div>
+              <div class="button" style="margin:0.5em;" onclick="increment_offer(-5)">+5</div>
+              <div class="button" style="margin:0.5em;" onclick="increment_offer(-20)">+20</div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan=2>
+              <div class="button" onclick="offer_trade();">Offer</div>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>
