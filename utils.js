@@ -384,12 +384,23 @@ let utils = {
    */
   territories_of_nation: (mother_state, nation) => {
     let rtn = [];
-    for (let territory of utils.NATIONS[nation].territories) {
-      if (utils.nation_of_territory(mother_state, territory) == nation) {
-        rtn.push(territory);
+    for (let nat in utils.NATIONS) {
+      for (let territory of utils.NATIONS[nat].territories) {
+        if (utils.nation_of_territory(mother_state, territory) == nation) {
+          rtn.push(territory);
+        }
       }
     }
     return rtn;
+  },
+
+  territory_for_territory_name: (mother_state, territory_name) => {
+    for (let nation in mother_state.nations) {
+      if (territory_name in mother_state.nations[nation]) {
+        return mother_state.nations[nation].territories[territory_name]
+      }
+    }
+    return undefined;
   },
 
   /*
@@ -418,6 +429,18 @@ let utils = {
       }
     }
     throw Error("Something went wrong in `utils.nation_of_territory()`.");
+  },
+
+  territories_of_nation_that_can_spawn: (mother_state, nation) => {
+    let territory_names = utils.territories_of_nation(mother_state, nations);
+    let rtn = [];
+    for (let territory_name of territory_names) {
+      let territory = utils.territory_for_territory_name(mother_state, territory_name);
+      if (territory.n_barracks_can_spawn) {
+        rtn.push(territory_name);
+      }
+    }
+    return rtn;
   },
 
   /*
@@ -527,7 +550,7 @@ let utils = {
    * functions.
    */
   deep_copy: (x) => {
-  	return JSON.parse(JSON.stringify(x));
+    return JSON.parse(JSON.stringify(x));
   },
 
   uuid: (username="") => {
