@@ -404,6 +404,27 @@ let utils = {
   },
 
   /*
+   * @returns the puppeteer of the given nation. If the nation owns itself, then
+   * the puppeteer is itself. If the capital is contested only by enemies, then
+   * this method returns null.
+   */
+  puppeteer: (mother_state, nation) => {
+    if (mother_state.nations[nation].army.filter(x => x.territory == utils.NATIONS[nation].capital).length > 0) {
+      return nation;
+    }
+    let owner = null;
+    for (let n in mother_state.nations) {
+      if (n === nation) continue;
+      if (mother_state.nations[n].army.filter(x => x.territory == utils.NATIONS[nation].capital).length > 0) {
+        if (owner !== null) return null;
+        owner = n;
+      }
+    }
+    if (owner) return owner;
+    return nation;
+  },
+
+  /*
    * This method returns a dictionary. The keys of the dictionary are the troop
    * types ("infantry" | "calvary" | "cannon"). The values are an array with two
    * natural numbers. The first number represents the number of troops of that

@@ -132,14 +132,13 @@ class Game
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
             this.mother_state.nations[nation].owns = []
-            
+            this.mother_state.nations[nation].army = []
             for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
                 this.mother_state.nations[nation][terr] = {}
                 this.mother_state.nations[nation][terr].n_factories = Math.random() < 0.5 ? 1 :0 
                 this.mother_state.nations[nation][terr].n_baracks = 1
                 this.mother_state.nations[nation][terr].n_baracks = 1
-                this.mother_state.nations[nation].army = []
                 terr2nat[terr] = nation
             }
         }
