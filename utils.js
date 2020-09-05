@@ -299,13 +299,20 @@ let utils = {
    * @param {string} nation - the nation whose income to compute
    * @returns {int} the income of the given country
    */
-  compute_income: (mother_state, nation) => {
+  income_of_nation: (mother_state, nation) => {
     let rtn = 0;
     let territories = utils.territories_of_nation(mother_state, nation);
     for (let territory of territories) {
-      rtn += utils.natural_income_of_territory(territory);
+      rtn += utils.income_of_territory(mother_state, territory);
     }
     return rtn;
+  },
+
+  income_of_territory: (mother_state, territory) => {
+    let natural_income = utils.natural_income_of_territory(territory);
+    let nation = utils.nation_of_territory(mother_state, territory);
+    let factory_income = 5 * mother_state.nations[nation][territory].n_factories;
+    return natural_income + factory_income;
   },
 
   /*
@@ -329,7 +336,7 @@ let utils = {
     let player = mother_state.players[username];
     let rtn = player.cash;
     for (let nation in player.shares) {
-      let income = compute_income(mother_state, nation);
+      let income = income_of_nation(mother_state, nation);
       let shares_sold = utils.shares_sold(mother_state, nation);
       if (shares_sold) continue;
       let percent_owned = player.shares[nation] / shares_sold;
