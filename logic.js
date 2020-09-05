@@ -1,4 +1,5 @@
 let utils = require('./utils.js')
+let Timer = require('./timer.js')
 
 //macro for pythonic list indexing
 Array.prototype.fromback = function(i=1) {
@@ -11,37 +12,10 @@ const ROUNDS = [1,2,3,4,5,6]
 const PHASES = ['Taxation','Deliberation','Auction','Action']
 const TURNS = ['North America', 'South America', 
     'Europe', 'Africa', 'Asia', 'Australia']
-const SUBPHASES = [null, 'Election','Move','Attack','Spawn','Build','Dividends']
+const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
 const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000}
 
-//game logic classes below
-class Timer
-{
-    
-    constructor(time, callback) {
-        this._callback = callback;
-        this._startTime = new Date().getTime();
-        this._t = time;
-        this._id = setTimeout(this._callback, time);
-    }
-    queryTime() {
-        let timeElapsed = new Date().getTime() - this._startTime;
-        return this._t - timeElapsed;
-    }
-    extendTime(newTime) {
-        this._startTime = new Date().getTime();
-        this._t = newTime;
-        clearTimeout(this._id);
-        this._id = setTimeout(this._callback, time);
-    }
-    terminateTime(do_callback) {
-        if (do_callback) {
-            this._callback()
-        }
-        clearTimeout(this._id);
-    }
-}
 
 //game class defined below
 
@@ -146,8 +120,8 @@ class Game
 
     _prayer(prayer_id, signal)
     {
-        let tau;
-        if (this.timer) tau = this.timer.queryTime()
+        let tau = 0;
+        if (this.isRunning) tau = this.timer.queryTime()
         this.mother_state.clock = tau
         this.prayer(prayer_id, signal, this.mother_state)
     }
@@ -178,7 +152,6 @@ class Game
         this.mother_state.highest_bidder = username
         if (this.timer) this.timer.terminateTime(false)
             this.timer = new Timer(TIMING.bidding, this._conclude_bidding.bind(this))
-            
         this._prayer('bid_recieved', {'amount' : amount, 'player': username})
 
     }
@@ -193,7 +166,10 @@ class Game
             if (voters[player] == 0) this.mother_state.player.ready = true
             else this.mother_state.player.ready = false
         }
-        this._prayer('auction_start', nation)
+        if (this.timer.isRunning) this.timer.terminateTime(false)
+        this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
+            this._prayer('begin_deliberation',TIMING.deliberation)
+        this._prayer('start_election', nation)
 
     }
 
@@ -221,6 +197,7 @@ class Game
     _start_auction(nation)
     {
         this.mother_state.clock = 0
+        this.timer.terminateTime(false)
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this._prayer('auction_start', nation)
@@ -229,7 +206,7 @@ class Game
     _act()
     {
         if (this.mother_state.stage.phase === 'Taxation') {
-            utils.compute_income(this.mother_state, this.mother_state.stage.turn)
+            utils.income_of_nation(this.mother_state, this.mother_state.stage.turn)
             this._transition()
         }
     
