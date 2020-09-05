@@ -9,7 +9,7 @@ class OligarchRoom extends Room {
       super.sendData(username, "pong");
       return;
     }
-    let data = JSON.parse(data);
+    data = JSON.parse(data);
   }
 
   tryToJoin(username, password, ws) {
