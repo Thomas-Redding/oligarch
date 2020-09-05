@@ -67,7 +67,7 @@ class Game
     }
 
     undo(username) {
-        throw Exception("Game.undo() is not implemented yet.");
+        // throw Exception("Game.undo() is not implemented yet.");
         if (this._historicalStates.length !== this._historicalActions.length) {
             throw Exception("Invalid history.");
         }

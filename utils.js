@@ -396,8 +396,9 @@ let utils = {
 
   territory_for_territory_name: (mother_state, territory_name) => {
     for (let nation in mother_state.nations) {
-      if (territory_name in mother_state.nations[nation]) {
-        return mother_state.nations[nation].territories[territory_name]
+      if (mother_state.nations[nation].territories.includes(territory_name)) {
+        let i = mother_state.nations[nation].territories.indexOf(territory_name);
+        return mother_state.nations[nation][territory_name];
       }
     }
     return undefined;
@@ -437,6 +438,18 @@ let utils = {
     for (let territory_name of territory_names) {
       let territory = utils.territory_for_territory_name(mother_state, territory_name);
       if (territory.n_barracks_can_spawn) {
+        rtn.push(territory_name);
+      }
+    }
+    return rtn;
+  },
+
+  territories_of_nation_that_can_build: (mother_state, nation) => {
+    let territory_names = utils.territories_of_nation(mother_state, nation);
+    let rtn = [];
+    for (let territory_name of territory_names) {
+      let territory = utils.territory_for_territory_name(mother_state, territory_name);
+      if (territory.n_factories + territory.n_barracks < 4) {
         rtn.push(territory_name);
       }
     }
