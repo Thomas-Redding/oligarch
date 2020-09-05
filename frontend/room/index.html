@@ -537,6 +537,11 @@ login().then((socket) => {
     else if (action === "taxes_collected") {
       render_table(state);
     }
+    else if (action === "deliberation_over") {
+      console.log(action);
+      console.log(details);
+      console.log(state);
+    }
     onstagechange(state);
   });
   gSocket.addEventListener("close", () => {
