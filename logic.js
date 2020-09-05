@@ -140,13 +140,15 @@ class Game
                 terr2nat[terr] = nation
             }
         }
-        this.terr2nat = this.terr2nat
+        this.terr2nat = terr2nat
     }
 
     _compute_income(nation)
     {
         let inc = 0
         for (let terr of this.mother_state.nations[nation].owns) {
+            console.log(terr)
+            console.log(this.terr2nat)
             let defnat = geography.nations[this.terr2nat[terr]]
             inc += defnat.base_income_per_territory  
         }
