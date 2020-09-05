@@ -31,6 +31,10 @@ body {
   background-color: white;
 }
 
+#bottomNavBarDiv {
+  border-top: solid black 1px;
+}
+
 .piece-circle {
   fill: black;
 }
