@@ -9,9 +9,10 @@ Array.prototype.fromback = function(i=1) {
 //global lists and macros defined here
 const ROUNDS = [1,2,3,4,5,6] 
 const PHASES = ['taxation','deliberation','auction','action']
-const TURNS = ['NA','SA','EU','AF','AS','AU']
+const TURNS = ['North America', 'South America', 
+    'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = ['election','move','attack','spawn','build','dividends']
-const BLACKLISTED_NAMES = []
+const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
 const TIMING = {'deliberation' : 90}
 
 //game logic classes below
@@ -134,21 +135,24 @@ class Game
         let terr2nat = {}
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
-            for (let terr in this.mother_state.nations[nation].territories) {
+            
+            for (let terr of this.mother_state.nations[nation].territories) {
                 this.mother_state.nations[nation].owns = terr
                 terr2nat[terr] = nation
             }
         }
-        this.terr2nat = this.terr2nat
+        this.terr2nat = terr2nat
     }
 
     _compute_income(nation)
     {
         let inc = 0
-        console.log("QQQ", nation)
-        console.log(this.mother_state.nations)
         for (let terr of this.mother_state.nations[nation].owns) {
+            console.log('hi')
+            console.log(terr)
+            console.log(this.terr2nat)
             let defnat = geography.nations[this.terr2nat[terr]]
+            console.log(this.mother_state.nations[nation].territories)
             inc += defnat.base_income_per_territory  
         }
         this.nations.cash += inc
@@ -161,8 +165,8 @@ class Game
         while (this.mother_state.stage.phase == 'deliberation'){
             this._transition()
         }
+        this.prayer()
     }
-
 
     _act()
     {
@@ -172,6 +176,11 @@ class Game
         }
 
         else if (this.mother_state.stage.phase === 'deliberation') {
+            this.timer = new Timer(TIMING.deliberation, this._finish_deliberation)
+
+        }
+
+        else if (this.mother_state.stage.phase === 'action') {
             this.timer = new Timer(TIMING.deliberation, this._finish_deliberation)
         }
 
@@ -220,7 +229,7 @@ class Game
             }
         }
 
-        this.prayer('transition')
+        this._act()
     }
 
 
