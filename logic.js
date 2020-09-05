@@ -121,7 +121,7 @@ class Game
     _prayer(prayer_id, signal)
     {
         let tau = 0;
-        if (this.isRunning) tau = this.timer.queryTime()
+        if (this.timer && this.timer.isRunning()) tau = this.timer.queryTime()
         this.mother_state.clock = tau
         this.prayer(prayer_id, signal, this.mother_state)
     }
@@ -132,14 +132,13 @@ class Game
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
             this.mother_state.nations[nation].owns = []
-            
+            this.mother_state.nations[nation].army = []
             for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
                 this.mother_state.nations[nation][terr] = {}
                 this.mother_state.nations[nation][terr].n_factories = Math.random() < 0.5 ? 1 :0 
                 this.mother_state.nations[nation][terr].n_baracks = 1
                 this.mother_state.nations[nation][terr].n_baracks = 1
-                this.mother_state.nations[nation].army = []
                 terr2nat[terr] = nation
             }
         }
