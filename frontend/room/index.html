@@ -705,9 +705,9 @@ function get_current_modal_type() {
   return popupTitle.innerHTML;
 }
 
-function onstagechange(state) {
-  let stage = state.stage;
-  console.log("onstagechange", stage);
+function update_buttons(state) {
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const stage = state.stage;
 
   if (stage.phase === "Auction") {
     bidButton.style.display = "inline-block";
@@ -729,6 +729,14 @@ function onstagechange(state) {
     tradeButton.style.display = "none";
   }
 
+  if (state.players[myUsername].ready) {
+    endDeliberationButton.style.backgroundColor = '#888';
+    endDeliberationButton.style.cursor = 'default';
+  } else {
+    endDeliberationButton.style.backgroundColor = '';
+    endDeliberationButton.style.cursor = 'cursor';
+  }
+
   bribeButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
 
   if (stage.phase === "Action" && stage.subphase == "Election") {
@@ -736,13 +744,19 @@ function onstagechange(state) {
   } else {
     voteButton.style.display = "none";
   }
+}
 
+function onstagechange(state) {
+  update_buttons(state);
   render_status_bar(state);
 }
 
-function increment_transfer_input(delta) {
-  let elem = document.getElementById("bidInput");
-  elem.value = parseInt(elem.value) + delta;
+function increment_bid_input(delta) {
+  bidInput.value = parseInt(bidInput.value) + delta;
+}
+
+function increment_bribe_input(delta) {
+  bribeInput.value = parseInt(bribeInput.value) + delta;
 }
 
 let gTradeYou = null;
@@ -905,6 +919,8 @@ function end_deliberation() {
     "method": "rdyUp",
     "args": [],
   });
+  endDeliberationButton.style.backgroundColor = '#888';
+  endDeliberationButton.style.cursor = 'default';
 }
 
 function send(obj) {
@@ -1098,13 +1114,13 @@ function start_game() {
       <tbody>
         <tr>
           <td>
-            <input id="bidInput" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
+            <input id="bribeInput" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
           </td>
           <td>
-            <div class="personButton" onClick="increment_transfer_input(5);">+5</div>
+            <div class="personButton" onClick="increment_bribe_input(5);">+5</div>
           </td>
           <td>
-            <div class="personButton" onClick="increment_transfer_input(20);">+20</div>
+            <div class="personButton" onClick="increment_bribe_input(20);">+20</div>
           </td>
         </tr>
       </tbody>
@@ -1130,10 +1146,10 @@ function start_game() {
             <input id="bidInput" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
           </td>
           <td>
-            <div class="personButton" onClick="increment_transfer_input(5);">+5</div>
+            <div class="personButton" onClick="increment_bid_input(5);">+5</div>
           </td>
           <td>
-            <div class="personButton" onClick="increment_transfer_input(20);">+20</div>
+            <div class="personButton" onClick="increment_bid_input(20);">+20</div>
           </td>
         </tr>
       </tbody>
