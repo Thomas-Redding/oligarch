@@ -9,9 +9,10 @@ Array.prototype.fromback = function(i=1) {
 //global lists and macros defined here
 const ROUNDS = [1,2,3,4,5,6] 
 const PHASES = ['taxation','deliberation','auction','action']
-const TURNS = ['NA','SA','EU','AF','AS','AU']
+const TURNS = ['North America', 'South America', 
+    'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = ['election','move','attack','spawn','build','dividends']
-const BLACKLISTED_NAMES = []
+const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
 const TIMING = {'deliberation' : 90}
 
 //game logic classes below
@@ -145,8 +146,6 @@ class Game
     _compute_income(nation)
     {
         let inc = 0
-        console.log("QQQ", nation)
-        console.log(this.mother_state.nations)
         for (let terr of this.mother_state.nations[nation].owns) {
             let defnat = geography.nations[this.terr2nat[terr]]
             inc += defnat.base_income_per_territory  
