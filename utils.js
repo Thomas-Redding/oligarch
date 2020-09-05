@@ -296,30 +296,40 @@ let utils = {
   },
 
   /*
-   * TODO: Remove terr2nat
    * @param {string} nation - the nation whose income to compute
    * @returns {int} the income of the given country
    */
-  compute_income: (mother_state, terr2nat, nation) => {
-    let inc = 0;
-    for (let terr of mother_state.nations[nation].owns) {
-      let defnat = utils.NATIONS[terr2nat[terr]];
-      inc += defnat.base_income_per_territory;
+  compute_income: (mother_state, nation) => {
+    let rtn = 0;
+    let territories = utils.territories_of_nation(mother_state, nation);
+    for (let territory of territories) {
+      rtn += utils.natural_income_of_territory(territory);
     }
-    mother_state.nations[nation].cash += inc;
-    return inc;
+    return rtn;
   },
 
   /*
-   * TODO: remove terr2nat
+   * @param {string} territory - the territory whose natural income we want
+   * @returns the natural income of the given territory
+   */
+  natural_income_of_territory: (territory) => {
+    for (let nation in utils.NATIONS) {
+      if (utils.NATIONS[nation].territories.includes(territory)) {
+        return utils.NATIONS[nation].base_income_per_territory;
+      }
+    }
+    throw Error("Unrecognized `territory`.");
+  },
+
+  /*
    * @param username - the user whose score we are computing
    * @returns {int} the score the given user would have if the game ended now
    */
-  compute_score: (mother_state, terr2nat, username) => {
+  compute_score: (mother_state, username) => {
     let player = mother_state.players[username];
     let rtn = player.cash;
-    for (nation in player.shares) {
-      let income = compute_income(mother_state, terr2nat, nation);
+    for (let nation in player.shares) {
+      let income = compute_income(mother_state, nation);
       let shares_sold = utils.shares_sold(mother_state, nation);
       if (shares_sold) continue;
       let percent_owned = player.shares[nation] / shares_sold;
@@ -346,12 +356,12 @@ let utils = {
    */
   territories_of_nation: (mother_state, nation) => {
     let rtn = [];
-    for (let territory of NATIONS[nation].territories) {
-      if (nation_of_territory(mother_state, territory) == nation) {
+    for (let territory of utils.NATIONS[nation].territories) {
+      if (utils.nation_of_territory(mother_state, territory) == nation) {
         rtn.push(territory);
       }
     }
-    return territory;
+    return rtn;
   },
 
   /*
@@ -370,7 +380,7 @@ let utils = {
     }
     if (owner) return owner;
     for (let nation in utils.NATIONS) {
-      if (utils.NATIONS[nation].territories.includes(territories)) {
+      if (utils.NATIONS[nation].territories.includes(territory)) {
         return nation;
       }
     }
