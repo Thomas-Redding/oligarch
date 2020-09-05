@@ -72,6 +72,7 @@ class Game
 
     addPlayer(username, auth='admin')
     {
+        console.log('addPlayer')
         let player = {}
         let rtn = true
         if (this.mother_state.stage.phase !== 'lobby') {
@@ -109,6 +110,9 @@ class Game
 
     bid(amount, username)
     {
+        //console.log(username)
+        //console.log(this.mother_state.players)
+        //console.log(this.mother_state.players[username])
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
             this._register_bid(amount, username)
@@ -179,9 +183,17 @@ class Game
 
     }
 
-    _start_election()
+    _start_election(nation)
     {
-        
+        this.mother_state.clock = 0
+        this.mother_state.current_bid = -1
+        this.mother_state.highest_bidder = null
+        let voters = utils.owners(this.mother_state, nation)
+        for (let player in voters)){
+            if (voters[player] == 0) this.mother_state.player.ready = true
+        }
+        this._prayer('auction_start', nation)
+
     }
 
     _conclude_bidding()
@@ -266,6 +278,10 @@ class Game
 
         else if (phase == 'Deliberation'){
             this.mother_state.stage.phase = next(phase, PHASES)
+        }
+
+        else if (phase == 'Action'){
+            this.mother_state.stage.subphase = next(phase, PHASES)
         }
 
         this._act()
