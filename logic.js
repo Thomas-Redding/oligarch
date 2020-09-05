@@ -189,8 +189,9 @@ class Game
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         let voters = utils.owners(this.mother_state, nation)
-        for (let player in voters)){
+        for (let player in voters){
             if (voters[player] == 0) this.mother_state.player.ready = true
+            else this.mother_state.player.ready = false
         }
         this._prayer('auction_start', nation)
 
