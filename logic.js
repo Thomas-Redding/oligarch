@@ -5,12 +5,14 @@ Array.prototype.fromback = function(i=1) {
     return this[this.length - i];
 }
 
-//global lists defined here
-const rounds = [1,2,3,4,5,6] 
-const phases = ['taxation','deliberation','auction','action']
-const turns = ['NA','SA','EU','AF','AS','AU']
-const subphases = ['election','move','attack','spawn','build','dividends']
-const blacklisted_names = []
+
+//global lists and macros defined here
+const ROUNDS = [1,2,3,4,5,6] 
+const PHASES = ['taxation','deliberation','auction','action']
+const TURNS = ['NA','SA','EU','AF','AS','AU']
+const SUBPHASES = ['election','move','attack','spawn','build','dividends']
+const BLACKLISTED_NAMES = []
+
 
 //game logic classes below
 class Timer
@@ -41,17 +43,64 @@ class Timer
 
 class Game
 {
+    endLobby(username)
+    {
+        let rtn;
+        if (this.mother_state.players[username].auth !== 'admin') {
+            rtn = false
+        }
+        else {
+            for (let ord of this.mother_state.order) {
+                this.mother_state.stage[ord] = this.mother_state[ord][0]
+            }
+            rtn = true
+            
+        }
+        this.prayer('end_lobby', {}, this.mother_state)
+        return rtn
+    }
+
+    startGame()
+    {
+        this._act()
+    }
+
+    addPlayer(username, auth='admin')
+    {
+        console.log("addPlayer", username);
+        let player = {}
+        let rtn = true
+        if (this.mother_state.stage.phase !== 'lobby') {
+            return !rtn
+        }
+        else {
+            player.username = username
+            player.cash = 0
+            player.auth = auth  
+            player.shares = {}
+            player.ready = false
+            player.curbid = 0
+            player.vote = null
+            for (let key in geography.nations) {
+                player.shares[key] = 0
+            }        
+            this.mother_state.players[username] = player
+        }
+        return rtn
+    }
+
     constructor(prayer) 
     {
         this.prayer = prayer
+        this.timer = null
         this.mother_state = { }
         this.mother_state.players = { }
         this.mother_state.nations = geography.nations
-        this.mother_state.blacklisted_names = turns.concat(blacklisted_names)
-        this.mother_state.phase = phases
-        this.mother_state.subphase = subphases
-        this.mother_state.turn = turns
-        this.mother_state.round = rounds
+        this.mother_state.blacklisted_names = TURNS.concat(BLACKLISTED_NAMES)
+        this.mother_state.phase = PHASES
+        this.mother_state.subphase = SUBPHASES
+        this.mother_state.turn = TURNS
+        this.mother_state.round = ROUNDS
         this.mother_state.order = ['subphase', 'turn', 'phase', 'round']
         this.mother_state.time = 0
         //this.mother_state.phase = 'lobby'
@@ -76,29 +125,6 @@ class Game
         this.terr2nat = this.terr2nat
     }
 
-    endLobby(username)
-    {
-        console.log(this.mother_state.players);
-        let rtn;
-        if (this.mother_state.players[username].auth !== 'admin') {
-            rtn = false
-        }
-        else {
-            for (let ord of this.mother_state.order) {
-                this.mother_state.stage[ord] = this.mother_state[ord][0]
-            }
-            rtn = true
-            
-        }
-        this.prayer('end_lobby', {}, this.mother_state)
-        return rtn
-    }
-
-    startGame()
-    {
-        this._act()
-    }
-
     _compute_income(nation)
     {
         inc = 0
@@ -117,11 +143,12 @@ class Game
             this._transition()
         }
 
-        else if (this.mother_state.stage.phase === 'auction') {
-
-
+        else if (this.mother_state.stage.phase === 'deliberation') {
+            this.timer = new Timer(90*1000)
 
         }
+
+
 
     }
 
@@ -145,31 +172,6 @@ class Game
         if (all_ready){
 
         }
-    }
-
-
-    addPlayer(username, auth='admin')
-    {
-        console.log("addPlayer", username);
-        let player = {}
-        let rtn = true
-        if (this.mother_state.stage.phase !== 'lobby') {
-            return !rtn
-        }
-        else {
-            player.username = username
-            player.cash = 0
-            player.auth = auth  
-            player.shares = {}
-            player.ready = false
-            player.curbid = 0
-            player.vote = null
-            for (let key in geography.nations) {
-                player.shares[key] = 0
-            }        
-            this.mother_state.players[username] = player
-        }
-        return rtn
     }
 
     _transition()

@@ -400,6 +400,8 @@ login().then((socket) => {
   gSocket = socket;
   gSocket.addEventListener("message", (event) => {
     console.log("MESSAGE:", event.data);
+    let [action, details, model] = JSON.parse(event.data);
+    console.log(action);
   });
   gSocket.addEventListener("close", () => {
     console.log("CLOSED");
