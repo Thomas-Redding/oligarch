@@ -516,6 +516,53 @@ function login() {
   return network.makeWebSocket("oligarch", username, password);
 }
 
+function render_status_bar(state) {
+  statusBarRoundDiv.innerHTML = state.stage.round;
+  statusBarPhaseDiv.innerHTML = state.stage.phase;
+  statusBarNationDiv.innerHTML = state.stage.turn;
+  if (state.stage.phase === "action") {
+    statusBarSubphaseDiv.previousElementSibling.style.display = "block";
+    statusBarSubphaseDiv.innerHTML = state.stage.subphase;
+  } else {
+    statusBarSubphaseDiv.previousElementSibling.style.display = "none";
+    statusBarSubphaseDiv.innerHTML = "";
+  }
+
+  console.log('render_status_bar');
+
+  if ("clock" in state) {
+    clock.set_time_remaining(state.clock);
+  }
+}
+
+// Singleton class.
+class Clock {
+  constructor() {
+    this.startTime = new Date();
+    this.totalTime = 0;
+    setInterval(() => {
+      this.update();
+    }, 100);
+  }
+  set_time_remaining(timeRemaining) {
+    this.startTime = new Date();
+    this.totalTime = timeRemaining;
+    this.update();
+  }
+  update() {
+    let timeElapsed = new Date() - this.startTime;
+    let secsRemaining = (this.totalTime - timeElapsed) / 1000;
+    let minsRemaining = secsRemaining / 60 | 0;
+    secsRemaining -= minsRemaining * 60;
+    secsRemaining = Math.round(secsRemaining * 10) / 10 + '';
+    if (!secsRemaining.includes('.')) {
+      secsRemaining += '.0';
+    }
+    statusBarTimeDiv.innerHTML = minsRemaining + ':' + secsRemaining;
+  }
+}
+let clock = new Clock();
+
 let gSocket;
 login().then((socket) => {
   console.log("CONNECTED");
@@ -523,7 +570,11 @@ login().then((socket) => {
   gSocket.addEventListener("message", (event) => {
     let [action, details, state] = JSON.parse(event.data);
     // console.log(state);
+    console.log("========================");
     console.log("Received action:", action);
+    console.log("Received details:", details);
+    console.log("Received state:", state);
+    console.log("========================");
     if (action === "end_lobby") {
       // Equivalent to game_start
     }
@@ -537,6 +588,10 @@ login().then((socket) => {
     else if (action === "taxes_collected") {
       render_table(state);
     }
+    else if (action === "begin_deliberation") {
+    }
+    else if (action === "deliberation_over") {
+    }
     onstagechange(state);
   });
   gSocket.addEventListener("close", () => {
@@ -546,27 +601,29 @@ login().then((socket) => {
   console.log("ERROR:", error);
 });
 
-function onstagechange(model) {
-  let stage = model.stage;
-  if (stage.phase === "auction") {
+function onstagechange(state) {
+  let stage = state.stage;
+  console.log("onstagechange", stage);
+
+  if (stage.phase === "Auction") {
     bidButton.style.display = "inline-block";
   } else {
     bidButton.style.display = "none";
   }
 
-  console.log('onstagechange', stage);
-
-  if (stage.phase === "deliberation") {
+  if (stage.phase === "Deliberation") {
     endDeliberationButton.style.display = "inline-block";
   } else {
     endDeliberationButton.style.display = "none";
   }
 
-  if (stage.phase === "action" && stage.subphase == "election") {
+  if (stage.phase === "Action" && stage.subphase == "Election") {
     voteButton.style.display = "inline-block";
   } else {
     voteButton.style.display = "none";
   }
+
+  render_status_bar(state);
 }
 
 function increment_transfer_input(delta) {
@@ -623,15 +680,15 @@ function start_game() {
 <body>
 
 <div id='statusBarDiv'>
-  <div>Round 3</div>
+  <div id="statusBarRoundDiv">Round 3</div>
   <div style='flex:1'></div>
-  <div>Action</div>
+  <div id="statusBarPhaseDiv">Action</div>
   <div style='flex:1'></div>
-  <div>Europe</div>
+  <div id="statusBarNationDiv">Europe</div>
   <div style='flex:1'></div>
-  <div>Build</div>
+  <div id="statusBarSubphaseDiv">Build</div>
   <div style='flex:1'></div>
-  <div>01:34</div>
+  <div id="statusBarTimeDiv">01:34</div>
 </div>
 
 <div id='contentDiv'>

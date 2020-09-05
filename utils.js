@@ -290,7 +290,51 @@ let utils = {
     }
     mother_state.nations[nation].cash += inc;
     return inc;
-  }
+  },
+  compute_score: (mother_state, terr2nat, username) => {
+    let player = mother_state.players[username];
+    let rtn = player.cash;
+    for (nation in player[shares]) {
+      let income = compute_income(mother_state, terr2nat, nation);
+      rtn += 2 * player[shares] * income;
+    }
+    return rtn;
+  },
+  /*
+   * This method returns a dictionary. The keys of the dictionary are the troop
+   * types ("infantry" | "calvary" | "cannon"). The values are an array with two
+   * natural numbers. The first number represents the number of troops of that
+   * type in the given territory that have no `action` left; the second number
+   * represents the number of troops with an `action` left. In this way, each
+   * non-zero number returned in the dictionary corresponds to a "stack" to
+   * render.
+   *
+   * @param {Array} army - mother_state.nations[nation].army
+   * @param {string} territory - the territory
+   * @param {string} stage - either "move" or "attack"
+   * @return the dictionary described above.
+   */
+   army_in_territory: (army, territory, action) => {
+     if (action != "move" && action != "attack") {
+       throw Error("Unrecognized `stage` parameter.");
+     }
+     let arr = army.filter(x => x.territory == territory);
+     let rtn = {
+       "infanty": [0, 0],
+       "calvary": [0, 0],
+       "cannon": [0, 0],
+     };
+     for (let troop of arr) {
+       let index;
+       if (action == "move") {
+         index = troop.can_move ? 1 : 0;
+       } else {
+         index = troop.can_attack ? 1 : 0;
+       }
+       rtn[troop.type][index] += 1;
+     }
+     return rtn;
+   }
 };
 
 // Terrible hack so this can be included on frontend.
