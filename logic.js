@@ -490,6 +490,8 @@ class Game
     _end_presidential_command()
     {
         this._prayer('end_presidential_command','')
+        let nat = this.mother_state.stage.turn
+        this.mother_state.nations[nat].president = null
         this._transition()
     }
 
