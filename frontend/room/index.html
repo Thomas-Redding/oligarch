@@ -59,12 +59,16 @@ body {
   padding: 0.5em;
 }
 
-#gameLogDiv {
+#gameLogContainer {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
   overflow: auto;
+  margin-top: 1em;
+  flex: 1;
+  overflow-y: auto;
+
 }
 
 #bottomNavBarDiv {
@@ -110,12 +114,6 @@ path {
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-#gameLogDiv {
-  margin-top: 1em;
-  flex: 1;
-  overflow-y: auto;
 }
 
 #mainTable {
@@ -466,8 +464,8 @@ window.onresize = () => {
     actionPanel.style.display = 'block';
     mapDiv.style.display = 'block';
     mapDiv.style.flex = 1;
-    gameLogDiv.style.display = 'block';
-    gameLogDiv.style.display = 'block';
+    gameLogContainer.style.display = 'block';
+    gameLogContainer.style.display = 'block';
     bottomNavBarDiv.style.display = 'none';
   } else {
     console.log('mobile');
@@ -479,7 +477,7 @@ window.onresize = () => {
     mapDiv.style.flex = 0;
     mapDiv.style.maxWidth = "100%";
     mapDiv.style.maxHeight = "100%";
-    gameLogDiv.style.display = (tab === kTabLog ? "block" : "none");
+    gameLogContainer.style.display = (tab === kTabLog ? "block" : "none");
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
     mainTable.style.display = (tab == kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';
@@ -552,6 +550,7 @@ class Clock {
   update() {
     let timeElapsed = new Date() - this.startTime;
     let secsRemaining = (this.totalTime - timeElapsed) / 1000;
+    secsRemaining = Math.max(secsRemaining, 0);
     let minsRemaining = secsRemaining / 60 | 0;
     secsRemaining -= minsRemaining * 60;
     secsRemaining = Math.round(secsRemaining * 10) / 10 + '';
@@ -575,6 +574,9 @@ login().then((socket) => {
     console.log("Received details:", details);
     console.log("Received state:", state);
     console.log("========================");
+
+    gameLogDiv.innerHTML += `<div>` + action + `</div>`;
+
     if (action === "end_lobby") {
       // Equivalent to game_start
     }
@@ -716,56 +718,13 @@ function start_game() {
       <div id="bidButton" class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
-    <div id="gameLogDiv">
+    <div id="gameLogContainer">
       <div style="padding:0.5em; display:flex; flex-direction:row;">
         <div style="text-align:center; font-weight:900; font-size: 1.3em;">Game Log</div>
         <div style="flex:1"></div>
         <div class="button">Undo</div>
       </div>
-      <div style="flex:1; padding:0.5em;">
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-        <div>Morgan gave Thomas $19</div>
-        <div>NA auctioned to Thomas for $73</div>
-        <div>SA auctioned to Tony for $56</div>
-      </div>
+      <div id="gameLogDiv" style="flex:1; padding:0.5em;"></div>
     </div>
   </div>
 
