@@ -329,7 +329,7 @@ function render_map(state) {
   render_nation_rects(state);
   // TODO(mredding): update armies/factories/barracks
 
-  Array.from(document.getElementsByTagName('path')).forEach(path => {
+  Array.from(document.getElementById("riskMap").getElementsByTagName('path')).forEach(path => {
     let territory_name = path.id;
     let nation_name = territory2nation[territory_name];
     let territory = state.nations[nation_name][territory_name];
@@ -429,10 +429,10 @@ function main() {
     console.log(Math.round(loc.x), Math.round(loc.y));
   });
 
-  Array.from(document.getElementsByTagName('path')).forEach(path => {
+  Array.from(document.getElementById("riskMap").getElementsByTagName('path')).forEach(path => {
     let territory = path.id;
     let nation = territory2nation[territory];
-    let nationColor = utils.NATIONS[nation].color;
+    let nationColor = nations[nation].color;
     let randColor = Color.random().scale(0.15);
     let color = nationColor.scale(0.85).plus(randColor);
 
