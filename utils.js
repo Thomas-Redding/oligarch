@@ -353,9 +353,9 @@ let utils = {
     let player = mother_state.players[username];
     let rtn = player.cash;
     for (let nation in player.shares) {
-      let income = income_of_nation(mother_state, nation);
+      let income = utils.income_of_nation(mother_state, nation);
       let shares_sold = utils.shares_sold(mother_state, nation);
-      if (shares_sold) continue;
+      if (shares_sold == 0) continue;
       let percent_owned = player.shares[nation] / shares_sold;
       rtn += (2 + utils.rounds_left(mother_state)) * percent_owned * income;
     }
@@ -364,7 +364,7 @@ let utils = {
 
   rounds_left: (mother_state) => {
     return 6 - mother_state.round;
-  }
+  },
 
   /*
    * @param {string} nation
@@ -476,6 +476,11 @@ let utils = {
      }
      return rtn;
   },
+
+  /*
+   * Perform a deep copy of a json object. This method does not support
+   * functions.
+   */
   deep_copy: (x) => {
     let type_x = utils._type(x);
     if (type_x == "object") {
@@ -494,6 +499,14 @@ let utils = {
       return x;
     }
   },
+
+  uuid: (username="") => {
+    if (this._counter === undefined) this._counter = 0;
+    ++this._counter;
+    let usernameHash = username.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+    return usernameHash + (this._counter - 1);
+  },
+
   _type: (x) => {
     if (Array.isArray(x)) return "array";
     if (typeof(x) == "object") return "object";

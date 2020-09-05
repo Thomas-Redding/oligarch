@@ -166,7 +166,6 @@ class Game
         this.rdyUp(username)
     }
 
-<<<<<<< HEAD
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
         if (this.mother_state.players[username].vote == null) {
@@ -175,10 +174,7 @@ class Game
         this.rdyUp(username)
     }
 
-    constructor(prayer) 
-=======
     constructor(prayer, timer)
->>>>>>> dfe4963e8b614f1ffd69abf7c0a6b61b04509757
     {
         this.prayer = prayer
         this.timer = timer
