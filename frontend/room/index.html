@@ -37,6 +37,8 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  text-shadow: 0 0 0.25em #888;
 }
 
 .personButton {
@@ -290,8 +292,8 @@ function render_table(state) {
     tr.innerHTML += '<td class="column-AF">' + player.shares["Africa"] + "</td>";
     tr.innerHTML += '<td class="column-AS">' + player.shares["Asia"] + "</td>";
     tr.innerHTML += '<td class="column-AU">' + player.shares["Australia"] + "</td>";
-    tr.innerHTML += "<td>$" + player.cash + "B</td>";
-    tr.innerHTML += "<td>$" + utils.score_of_player(state, player.username) + "B</td>";
+    tr.innerHTML += "<td>" + player.cash + "</td>";
+    tr.innerHTML += "<td>" + utils.score_of_player(state, player.username) + "</td>";
 
     tbody.appendChild(tr);
   }
@@ -421,6 +423,29 @@ let theme = {
 }
 theme.set(theme.get());
 
+function build(territory, building_type) {
+  const nationName = state.stage.turn;
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  if (state.nations[nationName].president !== myUsername) {
+    return;
+  }
+  if (utils.nation_of_territory(gLatestState, territory) !== nationName) {
+    return;
+  }
+  send({
+    "method": "build_factory",
+    "args": [building_type]
+  })
+}
+
+window.addEventListener("load", () => {
+  let path = "/room/lobby/" + Math.floor(5*Math.random()) + ".jpg";
+  let lobbyDiv = document.getElementById("lobbyDiv");
+  lobbyDiv.style.background = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('" + path + "')";
+  lobbyDiv.style.backgroundSize = "cover"
+  lobbyDiv.style.backgroundPosition = "center center";
+})
+
 function main() {
   riskMap.addEventListener('click', (e) => {
     let pt = riskMap.createSVGPoint();
@@ -442,11 +467,22 @@ function main() {
     path.style.stroke = 'black';
 
     let onclick = (e) => {
-      let pt = riskMap.createSVGPoint();
-      pt.x = e.clientX;
-      pt.y = e.clientY;
-      let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
-      console.log('"' + territory + '": { "center": [' + [Math.round(loc.x), Math.round(loc.y)] + '] },');
+      if (false) {
+        // Print out coordinates.
+        let pt = riskMap.createSVGPoint();
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+        let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
+        console.log('"' + territory + '": { "center": [' + [Math.round(loc.x), Math.round(loc.y)] + '] },');
+      }
+
+      if (gLatestState.stage.phase === "Action" && gLatestState.stage.subphase === "Build") {
+        if (factoryRadio.checked) {
+          build(territory, "factory");
+        } else if (barracksRadio.checked) {
+          build(territory, "barrack");
+        }
+      }
     }
     path.addEventListener('click', onclick);
 
@@ -762,6 +798,9 @@ login().then((socket) => {
       // TODO(mredding): update currentVotesDiv when this exists on the backend.
       currentVotesDiv.innerHTML = "";
     }
+    else if (action === "begin_build") {
+      factoryRadio.checked = true;
+    }
     else if (action === "conclude_bidding") {
       render_table(state);
       render_nation_rects(state);
@@ -865,16 +904,15 @@ function render_presidential_div(state) {
     finishMovingButton.style.display = (subphase === "Move" ? "inline-block" : "none");
     finishAttackingButton.style.display = (subphase === "Attack" ? "inline-block" : "none");
     finishSpawningButton.style.display = (subphase === "Spawn" ? "inline-block" : "none");
-    finishBuildingButton.style.display = (subphase === "Build" ? "inline-block" : "none");
-    finishDividendsButton.style.display = (subphase === "Dividends" ? "inline-block" : "none");
-    presidentialHeader.innerHTML = state.stage.turn + "($" + nation.cash + " B)";
+    buildingDiv.style.display = (subphase === "Build" ? "inline-block" : "none");
+    dividendsDiv.style.display = (subphase === "Dividends" ? "inline-block" : "none");
+    presidentialHeader.innerHTML = state.stage.turn + " ($" + nation.cash + " B)";
 
     const num_shares = utils.num_shares_already_auctioned_for_nation(state)[state.stage.turn] + 4;
     dividendSlider.step = num_shares;
     dividendSlider.max = nation.cash;
     dividendSlider.value = (nation.cash / num_shares | 0) * num_shares;
     dividendValueDiv.innerHTML = dividendSlider.value;
-    presidentDiv.style.display = "block";
 
     if (state.nations[state.stage.turn].president === myUsername) {
       presidentDiv.style.display = "block";
@@ -1092,6 +1130,20 @@ function start_game() {
   }]);
 }
 
+function pay_dividends() {
+  send({
+    "method": "dividends",
+    "args": [parseInt(dividendSlider.value)]
+  });
+}
+
+function finish_building() {
+  send({
+    "method": "done",
+    "args": []
+  });
+}
+
 </script>
 
 </head>
@@ -1147,18 +1199,26 @@ function start_game() {
     <div id="presidentDiv" style="position:relative; background-color:#555; border-radius:0.2em; margin:0.5em;">
       <img src="assets/president.png" style="filter:invert(100%); height:4em; position:absolute; right:0; top:0;">
 
-      <h2 id="presidentialHeader" align="center">Asia ($200)</h2>
+      <h2 id="presidentialHeader"></h2>
 
       <div id="finishMovingButton" class="button">Finish Moving</div><br>
       <div id="finishAttackingButton" class="button">Finish Attacking</div><br>
       <div id="finishSpawningButton" class="button">Finish Recruiting</div><br>
-      <div id="finishBuildingButton" class="button">Finish Building</div><br>
+      <div id="buildingDiv">
+
+        <input name="buildForm" id="factoryRadio" type="radio"><label for="factoryRadio">Factory ($10B)</label>
+        <br>
+        <input name="buildForm" id="barracksRadio" type="radio"><label for="barracksRadio">Barracks ($25B)</label>
+        <br>
+
+        <div onclick="finish_building()" class="button">Finish Building</div>
+      </div>
       <div id="dividendsDiv">
         <div style="display:flex; flex-direction:row; width:100%; padding:0.5em;">
           <input id="dividendSlider" type="range" min=0 max=100 step=3 style="width:100%" onchange="dividendValueDiv.innerHTML = this.value;" onmousemove="dividendValueDiv.innerHTML = this.value;">
           <div id="dividendValueDiv" style="width:3em;"></div>
         </div>
-        <div id="finishDividendsButton" class="button">Pay Dividends</div><br>
+        <div onclick="pay_dividends()" class="button">Pay Dividends</div><br>
       </div>
     </div>
     <div id="currentVotesDiv"></div>
@@ -1340,7 +1400,11 @@ function start_game() {
 
 <div id="lobbyDiv">
   <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); text-align: center;">
-    <h1 align="center">In Lobby...</h1>
+    <h1 align="center">Oligarch</h1>
+    <br/><br/><br/><br/>
+    <p>
+      waiting for players to join...
+    </p>
     <div class="button" onclick="start_game();" style="margin: 2em auto;">
       Start Game
     </div>
