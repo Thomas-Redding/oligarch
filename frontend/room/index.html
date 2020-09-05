@@ -904,9 +904,9 @@ function render_presidential_div(state) {
 
     finishMovingButton.style.display = (subphase === "Move" ? "inline-block" : "none");
     finishAttackingButton.style.display = (subphase === "Attack" ? "inline-block" : "none");
-    finishSpawningButton.style.display = (subphase === "Spawn" ? "inline-block" : "none");
-    buildingDiv.style.display = (subphase === "Build" ? "inline-block" : "none");
-    dividendsDiv.style.display = (subphase === "Dividends" ? "inline-block" : "none");
+    spwaningDiv.style.display = (subphase === "Spawn" ? "block" : "none")
+    buildingDiv.style.display = (subphase === "Build" ? "block" : "none");
+    dividendsDiv.style.display = (subphase === "Dividends" ? "block" : "none");
     presidentialHeader.innerHTML = state.stage.turn + " ($" + nation.cash + " B)";
 
     const num_shares = utils.num_shares_already_auctioned_for_nation(state)[state.stage.turn] + 4;
@@ -1204,14 +1204,20 @@ function finish_building() {
 
       <div id="finishMovingButton" class="button">Finish Moving</div><br>
       <div id="finishAttackingButton" class="button">Finish Attacking</div><br>
-      <div id="finishSpawningButton" class="button">Finish Recruiting</div><br>
+      <div id="spwaningDiv">
+        <input name="spawnForm" id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($10B)</label>
+        <br>
+        <input name="spawnForm" id="calvaryRadio" type="radio"><label for="calvaryRadio">Calvary ($15B)</label>
+        <br>
+        <input name="spawnForm" id="artilleryRadio" type="radio"><label for="artilleryRadio">Artillery ($15B)</label>
+        <br>
+        <div class="button">Finish Recruiting</div><br>
+      </div>
       <div id="buildingDiv">
-
         <input name="buildForm" id="factoryRadio" type="radio"><label for="factoryRadio">Factory ($10B)</label>
         <br>
         <input name="buildForm" id="barracksRadio" type="radio"><label for="barracksRadio">Barracks ($10B)</label>
         <br>
-
         <div onclick="finish_building()" class="button">Finish Building</div>
       </div>
       <div id="dividendsDiv">
