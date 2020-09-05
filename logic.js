@@ -162,10 +162,10 @@ class Game
         }
     }
 
-    vote(username, player)
+    vote(username, candidate_username)
     {
         if (this.mother_state.players[username].vote == null) {
-            this._register_vote(username, player)
+            this._register_vote(username, candidate_username)
         }
         this.rdyUp(username)
     }
@@ -399,10 +399,10 @@ class Game
         this._prayer('start_election', nation)
     }
 
-    _register_vote(username, player)
+    _register_vote(username, candidate_username)
     {
-        
-        this.mother_state.players[username].vote = player
+        console.log("QQQ", candidate_username);
+        this.mother_state.players[username].vote = candidate_username
         let nation = this.mother_state.stage.turn
         //check majority
         let voters = utils.owners(this.mother_state, nation)
