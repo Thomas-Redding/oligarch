@@ -97,7 +97,7 @@ wss.on('connection', ws => {
     }
     let errorMessage = rooms[data.room].tryToJoin(data.username, data.password, ws);
     if (errorMessage) {
-      ws.close(errorMessage)
+      ws.close(1000, errorMessage)
       return;
     } else {
       ws.send("");
