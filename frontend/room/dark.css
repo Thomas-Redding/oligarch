@@ -26,10 +26,6 @@ body {
 #leftPanel {
 }
 
-#gameLogDiv {
-  border-top: solid white 1px;
-}
-
 #lobbyDiv {
 	color: white;
   background-color: #222;
@@ -53,6 +49,18 @@ body {
 .button {
 	color: black;
 	background-color: hsl(50, 100%, 45%);
+}
+
+#popupDivBackground {
+  background-color: black;
+  opacity: 0.5;
+}
+
+#popupDivForeground {
+	color: white;
+  background-color: #222;
+  border: solid #888 1px;
+  opacity: 1;
 }
 
 .nationRect {
