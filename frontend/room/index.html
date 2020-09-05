@@ -270,6 +270,8 @@ function render_table(state) {
     tbody.appendChild(tr);
   }
 
+  let shares = num_shares_already_auctioned_for_nation(state);
+
   nationRects.innerHTML = "";
   for (let name in nations) {
     let nation = state.nations[name];
@@ -282,21 +284,26 @@ function render_table(state) {
     rect.classList.add("nationRect");
     nationRects.appendChild(rect);
 
-    let cash = svg.text("$" + nation.cash, coords.x + 4, coords.y + 14);
-    nationRects.appendChild(cash);
+    let cashText = svg.text("$" + nation.cash, coords.x + 4, coords.y + 14);
+    nationRects.appendChild(cashText);
 
-    let income = svg.text("$" + nation.income + "/turn", coords.x + 4, coords.y + 28);
-    nationRects.appendChild(income);
+    let incomeText = svg.text("$" + nation.income + "/turn", coords.x + 4, coords.y + 28);
+    nationRects.appendChild(incomeText);
 
-    let shares = svg.text(num_shares_already_auctioned_for_nation(state, name) + "/" + nation.territories.length + " shares", coords.x + 4, coords.y + 42);
-    nationRects.appendChild(shares);
+    let sharesText = svg.text(shares[name] + "/" + nation.territories.length + " shares", coords.x + 4, coords.y + 42);
+    nationRects.appendChild(sharesText);
   }
 }
 
-function num_shares_already_auctioned_for_nation(state, nation_name) {
-  let r = 0;
+function num_shares_already_auctioned_for_nation(state) {
+  let r = {};
+  for (let name in state.nations) {
+    r[name] = 0;
+  }
   for (let player of Object.values(state.players)) {
-    r += player.shares[nation_name];
+    for (let nation in player.shares) {
+      r[nation] += player.shares[nation];
+    }
   }
   return r;
 }
@@ -419,10 +426,6 @@ window.onload = () => {
   });
 
   window.onresize();
-
-  onstagechange({stage: {
-    phase: "deliberation",
-  }});
 };
 
 const kTabMap = 'kTabMap';
@@ -564,6 +567,8 @@ function onstagechange(model) {
     bidButton.style.display = "none";
   }
 
+  console.log('onstagechange', stage);
+
   if (stage.phase === "deliberation") {
     endDeliberationButton.style.display = "inline-block";
   } else {
@@ -603,7 +608,9 @@ function show_modal(type) {
 }
 
 function end_deliberation() {
-  // TODO(mredding)
+  gSocket.send({
+    "action": "ready_up"
+  });
 }
 
 function send(obj) {
