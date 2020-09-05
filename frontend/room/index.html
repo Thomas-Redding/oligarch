@@ -284,13 +284,31 @@ window.onload = () => {
       return;
     }
 
-    const r = 10;
+    const r = 8;
+    const s = 20;
     const tau = Math.PI * 2;
-    for (let angle of [0, tau * .2, tau * .4, tau * .6, tau * .8].map(angle => angle - Math.PI / 2)) {
+    for (let t of [0, 1, 2, 3, 4]) {
+      let angle = tau * t / 5 - Math.PI / 2;
+      if (Math.random() < 0.7) {
+        continue;
+      }
       let [x, y] = territories[territory].center;
       x += Math.cos(angle) * r * 1.7;
       y += Math.sin(angle) * r * 1.7;
-      let circ = create_circle(x, y, r);
+      let circ;
+      if (t === 2) {
+        circ = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
+      } else if (t === 3) {
+        circ = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
+      } else if (t === 0) {
+        circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
+      } else if (t === 1) {
+        circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
+      } else if (t === 4) {
+        circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
+      } else {
+        circ = create_circle(x, y, r);
+      }
       riskMap.appendChild(circ);
     }
 
@@ -316,7 +334,7 @@ let stage = {
   subphase: null,
 };
 
-let tab = kTabLobby;
+let tab = kTabInfo;
 
 const kIsBoard = false;
 
@@ -358,11 +376,12 @@ window.onresize = () => {
     gameLogDiv.style.display = (tab === kTabLog ? "block" : "none");
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
     mainTable.style.display = (tab == kTabInfo ? "block" : "none");
-    lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
 
     mainTable.style.width = '100%';
     bottomNavBarDiv.style.display = 'flex';
   }
+
+  lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
 
   if (kIsBoard) {
     actionPanel.style.display = "none";
