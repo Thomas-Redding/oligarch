@@ -31,7 +31,7 @@ body {
   background-color: white;
 }
 
-#bottomNavBarDiv {
+.tab-button {
   border-top: solid black 1px;
 }
 

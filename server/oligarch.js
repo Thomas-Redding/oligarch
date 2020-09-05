@@ -25,7 +25,7 @@ class OligarchRoom extends Room {
     console.log('>>>', data)
     data = JSON.parse(data);
     if (data.action == "state") {
-      this.sendDataToAll(this.game.mother_state);
+      this.sendDataToAll(["state", null, this.game.mother_state]);
     } else if (data.action == "endLobby") {
       this.game.endLobby(username)
       this.game.startGame()
