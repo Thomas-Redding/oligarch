@@ -50,3 +50,12 @@ body {
 	color: black;
 	background-color: hsl(50, 100%, 45%);
 }
+
+.nationRect {
+  stroke: #888;
+  fill: #333;
+}
+
+text {
+  fill: white;
+}

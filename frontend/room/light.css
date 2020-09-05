@@ -50,3 +50,8 @@ body {
   color: white;
   box-shadow: 0 0 0.5em #888;
 }
+
+.nationRect {
+  stroke: #888;
+  stroke: #ccc;
+}
