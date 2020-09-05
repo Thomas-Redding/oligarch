@@ -139,12 +139,10 @@ path {
 
 #play-icon {
   display: none;
-  cursor: pointer;
 }
 
 #pause-icon {
-  display: none;
-  cursor: pointer;
+  display: block;
 }
 
 #tradeTbody > tr > td {
@@ -629,9 +627,15 @@ class Clock {
 }
 
 function areAdminFetched(areAdmin) {
-  let playIcon = document.getElementById("play-icon");
-  let pauseIcon = document.getElementById("pause-icon");
-  playIcon.display = "block";
+  console.log("areAdminFetched", areAdmin);
+  if (areAdmin) {
+    let playIcon = document.getElementById("play-icon");
+    let pauseIcon = document.getElementById("pause-icon");
+    playIcon.style.cursor = "pointer";
+    pauseIcon.style.cursor = "pointer";
+    playIcon.classList.add("clickable-svg")
+    pauseIcon.classList.add("clickable-svg")
+  }
 }
 
 let clock = new Clock();
@@ -665,6 +669,11 @@ login().then((socket) => {
       }
       main();
       render_table(state);
+      console.log("QQQ", gLatestState.is_paused)
+      let playIcon = document.getElementById("play-icon");
+      let pauseIcon = document.getElementById("pause-icon");
+      playIcon.style.display = gLatestState.is_paused ? "block" : "none";
+      pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
     }
     else if (action === "refresh") {
       // Called when an undo is performed.
@@ -672,6 +681,18 @@ login().then((socket) => {
     }
     else if (action === "is_admin") {
       areAdminFetched(details);
+    }
+    else if (action === "pause") {
+      let playIcon = document.getElementById("play-icon");
+      let pauseIcon = document.getElementById("pause-icon");
+      playIcon.style.display = "block";
+      pauseIcons.style.display = "none";
+    }
+    else if (action === "resume") {
+      let playIcon = document.getElementById("play-icon");
+      let pauseIcon = document.getElementById("pause-icon");
+      playIcon.style.display = "none";
+      pauseIcons.style.display = "block";
     }
     else if (action === "end_lobby") {
       // Equivalent to game_start

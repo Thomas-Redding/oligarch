@@ -105,3 +105,11 @@ text {
 #pause-icon {
   fill: white;
 }
+
+#playIcon.clickable-svg {
+  fill: hsl(50, 100%, 45%);
+}
+
+#pauseIcon.clickable-svg {
+  fill: hsl(50, 100%, 45%);
+}

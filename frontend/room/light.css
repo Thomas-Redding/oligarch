@@ -85,3 +85,11 @@ body {
 .column-AU {
   color: red;
 }
+
+#playIcon.clickable-svg {
+  fill: hsl(231, 100%, 45%);
+}
+
+#pauseIcon.clickable-svg {
+  fill: hsl(231, 100%, 45%);
+}
