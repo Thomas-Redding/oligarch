@@ -579,13 +579,22 @@ function login() {
 }
 
 function render_status_bar(state) {
+  const turn2label = {
+    "North America": "N America",
+    "South America": "N America",
+    "Europe":        "Europe",
+    "Africa":        "Africa",
+    "Asia":          "Asia",
+    "Australia":     "Australia",
+  };
+
   statusBarRoundDiv.innerHTML = "Round " + state.stage.round;
   if (state.stage.phase === "Action") {
     statusBarPhaseDiv.innerHTML = state.stage.subphase;
   } else {
     statusBarPhaseDiv.innerHTML = state.stage.phase;
   }
-  statusBarNationDiv.innerHTML = state.stage.turn;
+  statusBarNationDiv.innerHTML = turn2label[state.stage.turn];
   if (state.stage.phase === "action") {
     statusBarSubphaseDiv.previousElementSibling.style.display = "block";
     statusBarSubphaseDiv.innerHTML = state.stage.subphase;
@@ -733,8 +742,11 @@ login().then((socket) => {
       currentBidDiv.style.opacity = 0;
       currentVotesDiv.innerHTML = "";
     }
-    else if (action === "election_received") {
+    else if (action === "vote_tallied") {
       // TODO(mredding): update currentVotesDiv when this exists on the backend.
+      console.log("xxxxxx");
+      console.log(details);
+      console.log("xxxxxx");
       currentVotesDiv.innerHTML = "";
     }
     else if (action === "conclude_bidding") {
@@ -786,7 +798,7 @@ function update_buttons(state) {
     bid1Button.style.display = "none";
   }
 
-  if (stage.phase === "Deliberation") {
+  if (stage.phase === "Discuss") {
     endDeliberationButton.style.display = "inline-block";
   } else {
     endDeliberationButton.style.display = "none";

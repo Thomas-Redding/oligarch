@@ -8,7 +8,7 @@ Array.prototype.fromback = function(i=1) {
 //global lists and macros defined here
 const TOTAL_INIT_CASH = 600
 const ROUNDS = [1,2,3,4,5,6] 
-const PHASES = ['Taxation','Deliberation','Auction','Action']
+const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America', 
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
@@ -238,7 +238,7 @@ class Game
             this._transition()
         }
     
-        else if (this.mother_state.stage.phase === 'Deliberation') {
+        else if (this.mother_state.stage.phase === 'Discuss') {
             this._begin_deliberation()
         }
 
@@ -316,7 +316,7 @@ class Game
                 this.mother_state.stage.subphase = SUBPHASES[0]
             }
 
-        else if (phase == 'Deliberation'){
+        else if (phase == 'Discuss'){
             this.mother_state.stage.phase = next(phase, PHASES)
         }
 
@@ -432,17 +432,19 @@ class Game
 
     _register_vote(username, candidate_username)
     {
+        this.mother_state.players[username].vote = candidate_username
+        let nat = this.mother_state.stage.turn
         let candidate_votes = utils.candidate_votes(this.mother_state)
-        //check majority
-        let voters = utils.owners(this.mother_state, nation)
         this._prayer('vote_tallied', candidate_votes)
         let n_votes = 0
-        for (let player in voters) {
-            n_votes += voters[player]
+        for (let player in candidate_votes) {
+            if (candidate_votes[player] >= n_votes) {
+                console.log(player)
+                this.mother_state.nations[nat].president = player
+                this.timer.stop(true)
+            }
         }
         n_votes = Math.floor(n_votes/2)+1
-
-
     }
 
     _conclude_election()
