@@ -442,6 +442,23 @@ let utils = {
   },
 
   /*
+   * @returns {Object} a dictionary from usernames to how many votes that user
+   * has received.
+   */
+  candidate_votes: (mother_state) => {
+    let rtn = {};
+    let nation = mother_state.stage.turn;
+    let owners = utils.owners(mother_state, nation);
+    for (let username in owners) {
+      let candidate = mother_state.players[username].vote;
+      if (candidate === null) continue;
+      if (!(candidate in rtn)) rtn[candidate] = 0;
+      rtn[candidate] += owners[username];
+    }
+    return rtn;
+  },
+
+  /*
    * This method returns a dictionary. The keys of the dictionary are the troop
    * types ("infantry" | "calvary" | "cannon"). The values are an array with two
    * natural numbers. The first number represents the number of troops of that
@@ -510,22 +527,7 @@ let utils = {
    * functions.
    */
   deep_copy: (x) => {
-    let type_x = utils._type(x);
-    if (type_x == "object") {
-      let rtn = {};
-      for (key in x) {
-        rtn[key] = utils.deep_copy(x[key]);
-      }
-      return rtn;
-    } else if (type_x == "array") {
-      let rtn = [];
-      for (let i = 0; i < x.length; ++i) {
-        rtn.push(utils.deep_copy(x[i]));
-      }
-      return rtn;
-    } else {
-      return x;
-    }
+  	return JSON.parse(JSON.stringify(x));
   },
 
   uuid: (username="") => {

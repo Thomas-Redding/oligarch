@@ -139,12 +139,10 @@ path {
 
 #play-icon {
   display: none;
-  cursor: pointer;
 }
 
 #pause-icon {
-  display: none;
-  cursor: pointer;
+  display: block;
 }
 
 #tradeTbody > tr > td {
@@ -471,6 +469,8 @@ function main() {
     }
   });
 
+  currentBidDiv.style.opacity = 0;
+
   window.onresize();
 };
 
@@ -528,6 +528,7 @@ window.onresize = () => {
     gameLogContainer.style.display = 'block';
     gameLogContainer.style.maxWidth = '20em';
     bottomNavBarDiv.style.display = 'none';
+    currentVotesDiv.style.display = "block";
   } else {
     console.log('mobile');
     statusBarDiv.style.fontSize = '1em';
@@ -541,8 +542,9 @@ window.onresize = () => {
     gameLogContainer.style.display = (tab === kTabLog ? "block" : "none");
     gameLogContainer.style.maxWidth = 'none';
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
-    mainTable.style.display = (tab == kTabInfo ? "table" : "none");
+    mainTable.style.display = (tab === kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';
+    currentVotesDiv.style.display = (tab === kTabInfo ? "block" : "none");
   }
 
   lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
@@ -565,7 +567,7 @@ function login() {
     username = arr[0];
     password = arr[1];
   } else {
-    while (username.length == 0) {
+    while (username.length == 0 || username.length > 9) {
       username = prompt("username?");
     }
     while (password.length == 0) {
@@ -629,9 +631,15 @@ class Clock {
 }
 
 function areAdminFetched(areAdmin) {
-  let playIcon = document.getElementById("play-icon");
-  let pauseIcon = document.getElementById("pause-icon");
-  playIcon.display = "block";
+  console.log("areAdminFetched", areAdmin);
+  if (areAdmin) {
+    let playIcon = document.getElementById("play-icon");
+    let pauseIcon = document.getElementById("pause-icon");
+    playIcon.style.cursor = "pointer";
+    pauseIcon.style.cursor = "pointer";
+    playIcon.classList.add("clickable-svg")
+    pauseIcon.classList.add("clickable-svg")
+  }
 }
 
 let clock = new Clock();
@@ -655,6 +663,8 @@ login().then((socket) => {
     console.log("Received state:", state);
     console.log("========================");
 
+    const myUsername = network.fetchExistingUsernamePassword()[0];
+
     gameLogDiv.innerHTML += `<div>` + action + `(` + JSON.stringify(details) + `)</div>`;
 
     if (action === "get_state") {
@@ -665,6 +675,11 @@ login().then((socket) => {
       }
       main();
       render_table(state);
+      console.log("QQQ", gLatestState.is_paused)
+      let playIcon = document.getElementById("play-icon");
+      let pauseIcon = document.getElementById("pause-icon");
+      playIcon.style.display = gLatestState.is_paused ? "block" : "none";
+      pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
     }
     else if (action === "refresh") {
       // Called when an undo is performed.
@@ -672,6 +687,18 @@ login().then((socket) => {
     }
     else if (action === "is_admin") {
       areAdminFetched(details);
+    }
+    else if (action === "pause") {
+      let playIcon = document.getElementById("play-icon");
+      let pauseIcon = document.getElementById("pause-icon");
+      playIcon.style.display = "block";
+      pauseIcons.style.display = "none";
+    }
+    else if (action === "resume") {
+      let playIcon = document.getElementById("play-icon");
+      let pauseIcon = document.getElementById("pause-icon");
+      playIcon.style.display = "none";
+      pauseIcons.style.display = "block";
     }
     else if (action === "end_lobby") {
       // Equivalent to game_start
@@ -690,6 +717,14 @@ login().then((socket) => {
     }
     else if (action === "deliberation_over") {
     }
+    else if (action === "start_election") {
+      currentBidDiv.style.opacity = 0;
+      currentVotesDiv.innerHTML = "";
+    }
+    else if (action === "election_received") {
+      // TODO(mredding): update currentVotesDiv when this exists on the backend.
+      currentVotesDiv.innerHTML = "";
+    }
     else if (action === "conclude_bidding") {
       render_table(state);
       render_nation_rects(state);
@@ -699,13 +734,13 @@ login().then((socket) => {
       let modal_type = get_current_modal_type();
       console.log(modal_type)
       if (modal_type === "Bid") {
-        if (parseInt(bidInput.value) < state.current_bid) {
+        if (parseInt(bidInput.value) < state.current_bid && parseInt(bidInput.value) + 1 < state.players[myUsername].cash) {
           bidInput.value = state.current_bid + 1;
         }
       }
 
-      console.log("xx");
-      currentBidDiv.innerHTML = "Current Bid: $" + gLatestState.current_bid + 'B by ' + gLatestState.highest_bidder;
+      currentBidDiv.style.opacity = 1;
+      currentBidDiv.children[1].innerHTML = state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B";
     }
     onstagechange(state);
   });
@@ -771,14 +806,30 @@ function update_buttons(state) {
 function onstagechange(state) {
   update_buttons(state);
   render_status_bar(state);
+
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myCash = state.players[myUsername].cash;
+
+  bidInput.max = myCash;
+  bidInput.value = Math.min(parseInt(bidInput.value), myCash);
+  bribeInput.max = myCash;
+  bribeInput.value = Math.min(parseInt(bribeInput.value), myCash)
 }
 
 function increment_bid_input(delta) {
-  bidInput.value = parseInt(bidInput.value) + delta;
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  let newBid = parseInt(bidInput.value) + delta;
+  newBid = Math.max(newBid, 0);
+  newBid = Math.min(newBid, gLatestState.players[myUsername].cash);
+  bidInput.value = newBid;
 }
 
 function increment_bribe_input(delta) {
-  bribeInput.value = parseInt(bribeInput.value) + delta;
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  let newBribe = parseInt(bribeInput.value) + delta;
+  newBribe = Math.max(newBribe, 0);
+  newBribe = Math.min(newBribe, gLatestState.players[myUsername].cash);
+  bribeInput.value = newBribe;
 }
 
 let gTradeYou = null;
@@ -921,6 +972,17 @@ function show_modal(type) {
     }
   }
 
+  {
+    let button = document.createElement('DIV');
+    button.classList.add("personButton");
+    button.innerHTML = "abstain";
+    button.addEventListener('click', (e) => {
+      close_modal();
+      vote_for();
+    })
+    votePlayerButtonsContainer.appendChild(button);
+  }
+
   tradePopup2Div.style.display = "none";
   bidPopupDiv.style.display = (type === "Bid" ? "block" : "none");
   tradePopupDiv.style.display = (type === "Trade" ? "block" : "none");
@@ -998,7 +1060,10 @@ function start_game() {
         </tr>
       </tbody>
     </table>
-    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%);">
+    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:2em; display:flex; flex-direction:column;">
+      <div style="flex:1"></div>
+      <div></div>
+      <div style="flex:1"></div>
     </div>
     <br>
     <div id="actionPanel">
@@ -1009,6 +1074,7 @@ function start_game() {
       <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1)">Bid +1</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
+    <div id="currentVotesDiv"></div>
     <div id="gameLogContainer">
       <div style="padding:0.5em; display:flex; flex-direction:row;">
         <div style="text-align:center; font-weight:900; font-size: 1.3em;">Game Log</div>

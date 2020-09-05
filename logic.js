@@ -163,10 +163,10 @@ class Game
         }
     }
 
-    vote(username, player)
+    vote(username, candidate_username)
     {
         if (this.mother_state.players[username].vote == null) {
-            this._register_vote(username, player)
+            this._register_vote(username, candidate_username)
         }
         this.rdyUp(username)
     }
@@ -397,7 +397,7 @@ class Game
         if (this.timer) this.timer.stop(false)
             this.timer.start(TIMING.bidding, this._conclude_bidding.bind(this))
         console.log('register bid called')
-        this._prayer('bid_recieved', {'amount' : amount, 'player': username})
+        this._prayer('bid_received', {'amount' : amount, 'player': username})
 
     }
 
@@ -430,9 +430,15 @@ class Game
         this._prayer('start_election', nation)
     }
 
-    _register_vote(username, player)
+    _register_vote(username, candidate_username)
     {
+<<<<<<< HEAD
         let candidate_votes = utils.candidate_votes(this.mother_state)
+=======
+        console.log("QQQ", candidate_username);
+        this.mother_state.players[username].vote = candidate_username
+        let nation = this.mother_state.stage.turn
+>>>>>>> 55b03fbd0efb623a94bb70bdd03b6532f41e9ac2
         //check majority
         let voters = utils.owners(this.mother_state, nation)
         this._prayer('vote_tallied', candidate_votes )
