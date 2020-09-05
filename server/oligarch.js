@@ -24,16 +24,26 @@ class OligarchRoom extends Room {
   didReceiveData(username, data) {
     console.log('>>>', data)
     data = JSON.parse(data);
-    if (data.action == "state") {
-      console.log('<<<', "<state>");
-      this.sendDataToAll(["state", null, this.game.mother_state]);
-    } else if (data.action == "forward") {
-      this.game[data.method](username, ...data.args);
-    } else if (data.action == "end_lobby") {
-      this.game["endLobby"](username)
-      this.game["startGame"](username)
-    } else if (data.action === "ready_up") {
-      this.game["rdyUp"](username);
+    if (!Array.isArray(data)) {
+      data = [data];
+    }
+    for (let x of data) {
+      if (x.action == "state") {
+        console.log('<<<', "<state>");
+        this.sendDataToAll(["state", null, this.game.mother_state]);
+      } else if (x.action == "forward") {
+        if (x.method == "_") {
+          console.log("WARNING: User attempted to call a private method on Game.");
+          continue;
+        }
+        if (x.args) {
+          this.game[x.method](username, ...x.args);
+        } else {
+          this.game[x.method](username);
+        }
+      } else {
+        throw Error("Unrecognized `action` type.")
+      }
     }
   }
 

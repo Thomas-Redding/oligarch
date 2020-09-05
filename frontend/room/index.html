@@ -653,7 +653,9 @@ function show_modal(type) {
 
 function end_deliberation() {
   send({
-    "action": "ready_up"
+    "action": "forward",
+    "method": "rdyUp",
+    "args": [],
   });
 }
 
@@ -662,9 +664,14 @@ function send(obj) {
 }
 
 function start_game() {
-  send({
-    "action": "end_lobby"
-  });
+  send([
+  {
+    "action": "forward",
+    "method": "endLobby",
+  }, {
+    "action": "forward",
+    "method": "startGame",
+  }]);
 }
 
 </script>
