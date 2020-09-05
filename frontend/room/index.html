@@ -605,19 +605,19 @@ function onstagechange(state) {
   let stage = state.stage;
   console.log("onstagechange", stage);
 
-  if (stage.phase === "auction") {
+  if (stage.phase === "Auction") {
     bidButton.style.display = "inline-block";
   } else {
     bidButton.style.display = "none";
   }
 
-  if (stage.phase === "deliberation") {
+  if (stage.phase === "Deliberation") {
     endDeliberationButton.style.display = "inline-block";
   } else {
     endDeliberationButton.style.display = "none";
   }
 
-  if (stage.phase === "action" && stage.subphase == "election") {
+  if (stage.phase === "Action" && stage.subphase == "Election") {
     voteButton.style.display = "inline-block";
   } else {
     voteButton.style.display = "none";
