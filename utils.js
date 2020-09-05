@@ -276,13 +276,8 @@ let utils = {
    */
   num_shares_already_auctioned_for_nation: (mother_state) => {
     let rtn = {};
-    for (let name in mother_state.nations) {
-      rtn[name] = 0;
-    }
-    for (let player of Object.values(mother_state.players)) {
-      for (let nation in player.shares) {
-        rtn[nation] += player.shares[nation];
-      }
+    for (let nation in mother_state.nations) {
+      rtn[nation] = shares_sold(mother_state, nation);
     }
     return rtn;
   },
