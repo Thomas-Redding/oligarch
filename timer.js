@@ -9,16 +9,12 @@ class Timer
         this._id = undefined;
         this._is_paused = false;
         this._time_to_use_when_resumed = undefined;
-        setInterval(() => {
-            console.log("queryTime", this.queryTime());
-        }, 1000);
     }
     /*
      * @param {number} time - number of milliseconds to wait
      * @param {function} callback - function to call when the timer expires
      */
     start(time, callback) {
-        console.log("start()", time);
         this._callback = callback;
         this._startTime = new Date().getTime();
         this._t = time;
@@ -38,7 +34,6 @@ class Timer
      * @param {number} newTime - milliseconds until the timer expires
      */
     extendTime(newTime) {
-        console.log("extendTime()", newTime);
         this._startTime = new Date().getTime();
         this._t = newTime;
         clearTimeout(this._id);
@@ -64,7 +59,6 @@ class Timer
      * `start()`.
      */
     stop(do_callback) {
-        console.log("stop()");
         this._is_running = false;
         if (do_callback) {
             this._callback()
@@ -73,7 +67,6 @@ class Timer
     }
 
     pause() {
-        console.log("pause()");
         if (this._is_paused) return;
         this._is_paused = true;
         this._time_to_use_when_resumed = this.queryTime()
@@ -81,7 +74,6 @@ class Timer
     }
 
     resume() {
-        console.log("resume()");
         if (!this._is_paused) return;
         this._is_paused = false;
         this.extendTime(this._time_to_use_when_resumed)
