@@ -111,6 +111,8 @@ class Game
     {
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
+
+
             this._register_bid(amount, username)
         }
     }
@@ -161,15 +163,7 @@ class Game
                 this.mother_state.nations[nation][terr].n_factories = Math.random() < 0.5 ? 1 :0 
                 this.mother_state.nations[nation][terr].n_baracks = 1
                 this.mother_state.nations[nation][terr].n_baracks = 1
-                /*
-                 * army[i] = {
-                 *   "type": "infanty" | "calvary" | "cannon",
-                 *   "moves": 0 | 1 | 2,
-                 *   "can_attack": true,
-                 *   "territory": <string>
-                 * }
-                 */
-                this.mother_state.nations[nation].army = [];
+                this.mother_state.nations[nation].army = {}
                 terr2nat[terr] = nation
             }
         }
@@ -201,7 +195,6 @@ class Game
         this._prayer('deliberation_over','',this.mother_state)
         this._transition()
     }
-
 
 
     _start_auction(nation)
