@@ -6,15 +6,16 @@ Array.prototype.fromback = function(i=1) {
     return this[this.length - i];
 }
 
-
 //global lists and macros defined here
+const TOTAL_INIT_CASH = 600
 const ROUNDS = [1,2,3,4,5,6] 
 const PHASES = ['Taxation','Deliberation','Auction','Action']
 const TURNS = ['North America', 'South America', 
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000, 'election':120*1000}
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000,
+ 'election':120*1000}
 
 
 //game class defined below
@@ -48,6 +49,7 @@ class Game
     startGame(username)
     {
         this.prayer('game_start', {}, this.mother_state)
+        
         this._act()
     }
 
@@ -152,19 +154,29 @@ class Game
         this.terr2nat = terr2nat
     }
 
+
+    _player_cash_init()
+    {
+        let inicash = (int) (TOTAL_INIT_CASH/this.mother_state.players.length)
+        for (player of this.mother_state.players){
+            this.mother_state.players[player].cash = inicash
+        }
+
+    }
     _register_bid(amount, username)
     {
         this.mother_state.current_bid = amount
         this.mother_state.highest_bidder = username
         if (this.timer) this.timer.terminateTime(false)
             this.timer = new Timer(TIMING.bidding, this._conclude_bidding.bind(this))
+        console.log('register bid called')
         this._prayer('bid_recieved', {'amount' : amount, 'player': username})
 
     }
 
     _register_vote(username, player)
     {
-        this.mother_state
+        this.mother_state.players[username]
 
     }
 
