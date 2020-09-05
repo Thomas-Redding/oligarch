@@ -142,6 +142,14 @@ path {
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
 <script>
 
+let admin = {
+  forgetMe: () => {
+    setTimeout(() => {
+      network.cookie.delete("lorem3216");
+    }, 1000);
+  },
+};
+
 function pad(t, n, c) {
   c = (c ? c : ' ');
   return new Array(Math.max(n - t.length, 0)).fill(c).join(' ') + t;
@@ -539,7 +547,8 @@ window.onresize = () => {
 function login() {
   let username = "";
   let password = "";
-  let arr = network.fetchExistingUsernamePassword();
+  // let arr = network.fetchExistingUsernamePassword();
+  let arr = null;
   if (arr) {
     username = arr[0];
     password = arr[1];
