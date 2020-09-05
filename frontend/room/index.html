@@ -1215,7 +1215,7 @@ function start_game() {
   <div id="logButton" class='tab-button' onclick="tab = kTabLog; window.onresize();">Log</div>
 </div>
 
-<div id='popupDiv' style='display:none; font-size:1.5em;'>
+<div id='popupDiv' style='display:none;'>
   <div id="popupDivBackground"></div>
 
   <div id="tradePopupDiv" class="popup">
@@ -1309,16 +1309,16 @@ function start_game() {
             <input id="bidInput" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
           </td>
           <td>
-            <div class="personButton" onClick="increment_bid_input(5);">+5</div>
+            <div class="button" onClick="increment_bid_input(5);">+5</div>
           </td>
           <td>
-            <div class="personButton" onClick="increment_bid_input(20);">+20</div>
+            <div class="button" onClick="increment_bid_input(20);">+20</div>
           </td>
         </tr>
       </tbody>
     </table>
     <div id="popupBid" style="text-align:center;">
-      <div class='personButton' onclick="bid(parseInt(bidInput.value))">Bid</div>
+      <div class='button' onclick="bid(parseInt(bidInput.value))">Bid</div>
     </div>
   </div>
 </div>
