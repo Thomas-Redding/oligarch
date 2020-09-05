@@ -180,10 +180,9 @@ function create_label(text, x, y) {
 }
 
 function create_circle(x, y, r) {
-  return svg.circle(x, y, r, attrs={
-    'stroke': '#000',
-    'fill': '#000f',
-  });
+  let rtn = svg.circle(x, y, r);
+  rtn.classList.add("piece-circle");
+  return rtn;
 }
 
 function argmax(A) {

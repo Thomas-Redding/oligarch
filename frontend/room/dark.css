@@ -1,0 +1,37 @@
+body {
+  color: white;
+  background-color: black;
+}
+
+.personButton {
+  background-color: white;
+  color: black;
+  border: solid white 1px;
+}
+
+#statusBarDiv {
+	color: white;
+  background-color: black;
+  border-bottom: 1px solid white;
+}
+
+.button {
+  color: white;
+}
+
+#mainTable > tbody > tr:nth-child(2n) {
+  background-color: #222;
+}
+
+#leftPanel {
+  border-right: solid white 1px;
+}
+
+#lobbyDiv {
+	color: white;
+  background-color: black;
+}
+
+.piece-circle {
+  fill: white;
+}
