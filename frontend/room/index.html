@@ -280,6 +280,7 @@ window.onresize = () => {
 
   if (bodyRect.width > bodyRect.height * 1.8) {
     console.log('desktop');
+    statusBarDiv.style.fontSize = '1.5em';
     contentDiv.style.display = 'flex';
     contentDiv.style.flexDirection = 'row';
     leftPanel.style.display = 'block';
@@ -291,6 +292,7 @@ window.onresize = () => {
     bottomNavBarDiv.style.display = 'none';
   } else {
     console.log('mobile');
+    statusBarDiv.style.fontSize = '1em';
     contentDiv.style.display = 'block';
 
     leftPanel.style.display = (tab == kTabMap ? "none" : "block");
