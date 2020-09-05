@@ -866,7 +866,7 @@ function render_presidential_div(state) {
     finishAttackingButton.style.display = (subphase === "Attack" ? "inline-block" : "none");
     finishSpawningButton.style.display = (subphase === "Spawn" ? "inline-block" : "none");
     finishBuildingButton.style.display = (subphase === "Build" ? "inline-block" : "none");
-    finishDividendsButton.style.display = (subphase === "Dividends" ? "inline-block" : "none");
+    dividendsDiv.style.display = (subphase === "Dividends" ? "inline-block" : "none");
     presidentialHeader.innerHTML = state.stage.turn + " ($" + nation.cash + " B)";
 
     const num_shares = utils.num_shares_already_auctioned_for_nation(state)[state.stage.turn] + 4;
