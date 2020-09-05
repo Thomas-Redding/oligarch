@@ -180,6 +180,9 @@ class Game
     }
 
     _start_election()
+    {
+        
+    }
 
     _conclude_bidding()
     {
