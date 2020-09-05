@@ -220,8 +220,7 @@ class Game
         }
 
         else if (this.mother_state.stage.phase === 'Auction') {
-            this._start_auction(nation)
-            
+            this._start_auction(this.mother_state.stage.turn)            
         }
 
     }
