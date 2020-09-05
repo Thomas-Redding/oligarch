@@ -47,7 +47,6 @@ body {
   display: flex;
   flex-direction: row;
   font-size: 1.5em;
-  border-top: solid black 1px;
 }
 
 .tab-button {
@@ -341,14 +340,27 @@ const kIsBoard = false;
 window.onresize = () => {
   const bodyRect = document.body.getBoundingClientRect();
 
-  const kOffColor = theme.get() == "light" ? "white" : "#222";
-  const kOnColor = theme.get() == "light" ? "black" : "#ccc";
-  mapButton.style.backgroundColor = (tab === kTabMap ? kOnColor : kOffColor);
-  infoButton.style.backgroundColor = (tab === kTabInfo ? kOnColor : kOffColor);
-  logButton.style.backgroundColor = (tab === kTabLog ? kOnColor : kOffColor);
-  mapButton.style.color = (tab === kTabMap ? kOffColor : kOnColor);
-  infoButton.style.color = (tab === kTabInfo ? kOffColor : kOnColor);
-  logButton.style.color = (tab === kTabLog ? kOffColor : kOnColor);
+  mapButton.classList.remove("tab-on");
+  infoButton.classList.remove("tab-on");
+  logButton.classList.remove("tab-on");
+  mapButton.classList.remove("tab-off");
+  infoButton.classList.remove("tab-off");
+  logButton.classList.remove("tab-off");
+  if (tab === kTabMap) {
+    mapButton.classList.add("tab-on");
+  } else {
+    mapButton.classList.add("tab-off");
+  }
+  if (tab === kTabInfo) {
+    infoButton.classList.add("tab-on");
+  } else {
+    infoButton.classList.add("tab-off");
+  }
+  if (tab === kTabLog) {
+    logButton.classList.add("tab-on");
+  } else {
+    logButton.classList.add("tab-off");
+  }
 
   if (bodyRect.width > bodyRect.height * 1.8) {
     console.log('desktop');
