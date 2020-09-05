@@ -286,8 +286,7 @@ function update_nation_rects(state) {
     let nation = state.nations[name];
     let coords = nations[name].rect;
 
-    // TODO: remove this dummy line.
-    nation.income = (Math.random() * 16 | 0) + 16;
+    nation.income = utils.income_of_nation(state, name);
 
     let rect = svg.rect(coords.x, coords.y, 100, 48);
     rect.classList.add("nationRect");
