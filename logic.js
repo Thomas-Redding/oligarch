@@ -307,6 +307,14 @@ class Game
             this.mother_state.stage.turn = next(turn, TURNS)
         }
 
+        else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback() 
+            && turn == TURNS.fromback()) {
+                this.mother_state.stage.round += 1
+                this.mother_state.stage.phase = PHASES[0]
+                this.mother_state.stage.turn = TURNS[0]
+                this.mother_state.stage.subphase = SUBPHASES[0]
+            }
+
         else if (phase == 'Deliberation'){
             this.mother_state.stage.phase = next(phase, PHASES)
         }
@@ -440,13 +448,12 @@ class Game
             if (!(this.mother_state.players[player].vote in v_in_favor)) {
                 v_in_favor[player] = voters[player]
             }
-            else {
-                v_in_favor[player] += voters[player]
-                if (v_in_favor[player] >= n_votes) { 
-                    this.mother_state.nations[nation].president = winner
-                    this.timer.stop(true)
-                    break
-                }
+            else v_in_favor[player] += voters[player]
+
+            if (v_in_favor[player] >= n_votes) { 
+                this.mother_state.nations[nation].president = player
+                this.timer.stop(true)
+                break
             }
         }
         console.log(v_in_favor)
