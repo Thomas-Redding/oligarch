@@ -26,7 +26,7 @@ let utils = {
     },
     "Asia": {
       "capital": "Japan",
-      "base_income_per_territory" : 5,
+      "base_income_per_territory" : 3,
       "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"],
       "total_shares": 8
     },
