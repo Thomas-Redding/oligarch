@@ -14,7 +14,7 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000,
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 15*1000,
  'election':120*1000}
 
 
@@ -55,7 +55,6 @@ class Game
 
     addPlayer(username, auth='admin')
     {
-        console.log('addPlayer')
         let player = {}
         let rtn = true
         if (this.mother_state.stage.phase !== 'lobby') {
