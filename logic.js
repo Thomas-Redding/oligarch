@@ -172,7 +172,7 @@ class Game
         if (this.mother_state.players[username].vote == null) {
             this._register_vote(username, player)
         }
-        this.rdyUp(username)
+        //this.rdyUp(username)
     }
 
     constructor(prayer, timer)
@@ -240,7 +240,7 @@ class Game
 
         else if (this.mother_state.stage.phase === 'Auction') {
             if (utils.shares_sold(this.mother_state, turn) <
-                utils.NATIONS.total_shares) 
+                utils.NATIONS[turn].total_shares) 
                 {
                     this._start_auction(turn)
                 }
@@ -416,16 +416,20 @@ class Game
 
     _register_vote(username, player)
     {
+        console.log(username)
+        console.log(player)
         
         this.mother_state.players[username].vote = player
         let nation = this.mother_state.stage.turn
         //check majority
         let voters = utils.owners(this.mother_state, nation)
+        console.log(voters)
         let n_votes = 0
         let v_in_favor = {}
         for (let player in voters) {
             n_votes += voters[player]
         }
+        console.log(n_votes)
         n_votes = Math.floor(n_votes/2)+1
 
         for (let player in voters){
@@ -441,6 +445,7 @@ class Game
                 }
             }
         }
+        console.log(v_in_favor)
     }
 
     _conclude_election()
