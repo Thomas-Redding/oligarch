@@ -631,6 +631,10 @@ login().then((socket) => {
       main();
       render_table(state);
     }
+    else if (action === "refresh") {
+      // Called when an undo is performed.
+      window.location.reload(true);
+    }
     else if (action === "end_lobby") {
       // Equivalent to game_start
     }
