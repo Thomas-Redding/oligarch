@@ -479,7 +479,7 @@ class Game
     _start_presidential_command()
     {
         let nat = this.mother_state.stage.turn
-        let prez = this.mother_state.nations[turn].president
+        let prez = this.mother_state.nations[nat].president
         details = {'president':prez, 'nation':nat}
         let tau = this.timer.queryTime() + TIMING.actions
         details['time'] = tau
