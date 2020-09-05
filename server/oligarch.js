@@ -8,8 +8,12 @@ class OligarchRoom extends Room {
     this.game = Game()
   }
 
+  sendData(data) {
+    super.sendData(JSON.stringify(data));
+  }
+
   prayer(action, details, newModel) {
-    super.sendData({
+    sendData({
       "action": action,
       "details": details,
       "model": newModel,
@@ -19,7 +23,9 @@ class OligarchRoom extends Room {
   didReceiveData(username, data) {
     console.log('didReceiveData("' + username + '", ' + data + '")')
     data = JSON.parse(data);
-    if (data.action == "endLobby") {
+    if (data.action == "state") {
+      super.sendData(this.game.mother_state);
+    } else if (data.action == "endLobby") {
       this.game.endLobby(username)
     }
   }
