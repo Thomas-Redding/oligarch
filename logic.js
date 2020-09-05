@@ -50,7 +50,7 @@ class Game
         this.mother_state = { }
         this.mother_state.players = { }
         this.mother_state.nations = geography.nations
-        this.mother_state.blacklisted_names = turns.concat(blacklisted_names)
+        this.mother_state.blacklisted_names = TURNS.concat(BLACKLISTED_NAMES)
         this.mother_state.phase = PHASES
         this.mother_state.subphase = SUBPHASES
         this.mother_state.turn = TURNS
