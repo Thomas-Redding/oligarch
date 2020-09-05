@@ -205,7 +205,7 @@ class Game
     _act()
     {
         if (this.mother_state.stage.phase === 'Taxation') {
-            utils.compute_income(this.mother_state, this.mother_state.stage.turn)
+            utils.income_of_nation(this.mother_state, this.mother_state.stage.turn)
             this._transition()
         }
     
