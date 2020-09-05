@@ -115,6 +115,10 @@ class Game
             this._transition()
         }
 
+        else if (this.mother_state.stage.phase === 'taxation') {
+
+        }
+
     }
 
     startAuction(nation)
@@ -140,7 +144,7 @@ class Game
     }
 
 
-    addPlayer(username, auth='player')
+    addPlayer(username, auth='admin')
     {
         player = {}
         rtn = true
