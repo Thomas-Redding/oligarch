@@ -617,14 +617,12 @@ class Clock {
     }, 100);
   }
   set_time_remaining(timeRemaining) {
-    console.log("set_time_remaining");
     this._startTime = new Date();
     this._totalTime = timeRemaining;
     this._paused = false;
     this.update();
   }
   pause() {
-    console.log('PAUSE');
     this._totalTime = this._totalTime - (new Date() - this._startTime);
     this.startTime = new Date();
     this._paused = true;
@@ -687,7 +685,6 @@ login().then((socket) => {
   gSocket.addEventListener("message", (event) => {
     let [action, details, state] = JSON.parse(event.data);
     gLatestState = state;
-    // console.log(state);
     console.log("========================");
     console.log("Received action:", action);
     console.log("Received details:", details);
@@ -774,7 +771,6 @@ login().then((socket) => {
 
       // Update bid price if the modal is showing.
       let modal_type = get_current_modal_type();
-      console.log(modal_type)
       if (modal_type === "Bid") {
         if (parseInt(bidInput.value) < state.current_bid && parseInt(bidInput.value) + 1 < state.players[myUsername].cash) {
           bidInput.value = state.current_bid + 1;
