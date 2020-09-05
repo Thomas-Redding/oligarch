@@ -163,7 +163,7 @@ class Game
         while (this.mother_state.stage.phase == 'deliberation'){
             this._transition()
         }
-        this.prayer()
+        this.prayer('deliberation_over','',this.mother_state)
     }
 
     _act()
