@@ -237,8 +237,8 @@ class Game
         }
 
         else if (this.mother_state.stage.subphase == 'Move') {
-            nat = this.mother_state.stage.turn
-            prez = this.mother_state.nations[nat].president
+            let nat = this.mother_state.stage.turn
+            let prez = this.mother_state.nations[nat].president
             if (prez === null || prez === 'abstain'){
                 this.mother_state.subphase = 'Dividends'
                 this._transition()
@@ -400,7 +400,7 @@ class Game
     {
         
         this.mother_state.players[username].vote = player
-        nation = this.mother_state.stage.turn
+        let nation = this.mother_state.stage.turn
         //check majority
         let voters = utils.owners(this.mother_state, nation)
         let n_votes = 0
@@ -427,7 +427,8 @@ class Game
 
     _conclude_election()
     {
-        let details = {'winner' : this.mother_state.nations[nation].president}
+        let nat = this.mother_state.stage.turn
+        let details = {'winner' : this.mother_state.nations[nat].president}
         this._prayer('conclude_election', details)
         this._transition()  
     }
