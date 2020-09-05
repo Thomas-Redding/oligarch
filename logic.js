@@ -53,7 +53,7 @@ class Game
         this.mother_state.turn = turns
         this.mother_state.round = rounds
         this.mother_state.order = ['round', 'phase', 'turn', 'subphase']
-        this.mother_state.time = {}
+        this.mother_state.time = 0
         //this.mother_state.phase = 'lobby'
         this.mother_state.stage.round = 0
         this.mother_state.stage.phase = 'lobby'
@@ -115,7 +115,8 @@ class Game
             this._transition()
         }
 
-        else if (this.mother_state.stage.phase === 'taxation') {
+        else if (this.mother_state.stage.phase === 'auction') {
+
 
         }
 
