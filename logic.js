@@ -135,7 +135,8 @@ class Game
         let terr2nat = {}
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
-            for (let terr in this.mother_state.nations[nation].territories) {
+            
+            for (let terr of this.mother_state.nations[nation].territories) {
                 this.mother_state.nations[nation].owns = terr
                 terr2nat[terr] = nation
             }
@@ -147,10 +148,11 @@ class Game
     {
         let inc = 0
         for (let terr of this.mother_state.nations[nation].owns) {
+            console.log('hi')
             console.log(terr)
             console.log(this.terr2nat)
             let defnat = geography.nations[this.terr2nat[terr]]
-            console.log(defnat)
+            console.log(this.mother_state.nations[nation].territories)
             inc += defnat.base_income_per_territory  
         }
         this.nations.cash += inc
