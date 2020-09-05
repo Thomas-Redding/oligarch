@@ -21,7 +21,8 @@ const UNITS = ['Cavalry','Infantry','Artillery']
 //game class defined below
 
 class History {
-  constructor() {
+  constructor(prayer) {
+    this._prayer = prayer
     this._states = [];
     this._args = [];
     this._actions = [];
@@ -32,6 +33,7 @@ class History {
     this._args.push(args);
     this._states.push(utils.deep_copy(mother_state));
     this._logs.push(log);
+    this._prayer("log", log, mother_state)
   }
   logs() {
     return utils.deep_copy(this._logs);
@@ -52,14 +54,12 @@ class Game
 {
     fetchGameState()
     {
-        if (this.timer && this.timer.isRunning())
-        this.mother_state.clock = this.timer.queryTime();
-        return this.mother_state
-    }
-
-    logs(username)
-    {
-        return this._history.logs();
+        if (this.timer && this.timer.isRunning()) {
+            this.mother_state.clock = this.timer.queryTime();
+        }
+        let state = utils.deep_copy(this.mother_state)
+        state.logs = this._history.logs();
+        return state
     }
 
     is_admin(username) {
@@ -199,7 +199,7 @@ class Game
     {
         this.prayer = prayer
         this.timer = timer
-        this._history = new History();
+        this._history = new History(this.prayer);
         this.mother_state = { }
         this.mother_state.players = { }
         this.mother_state.nations = utils.NATIONS
