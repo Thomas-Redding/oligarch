@@ -214,6 +214,8 @@ class Game
             this._start_auction(this.mother_state.stage.turn)            
         }
 
+        
+
         else if (this.mother_state.stage.subphase === 'Election') {
             this._start_election(this.mother_state.stage.turn)            
         }
@@ -228,6 +230,11 @@ class Game
             else{
                 //this._movement
             }
+        }
+
+        else if (this.mother_state.stage.phase === 'Action'){
+            this._transition()
+
         }
     }
 
