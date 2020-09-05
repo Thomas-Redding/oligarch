@@ -144,9 +144,11 @@ class Game
 
     _compute_income(nation)
     {
-        inc = 0
-        for (terr of this.mother_state.nations[nation].owns) {
-            defnat = geography.nations[this.terr2nat[terr]]
+        let inc = 0
+        console.log("QQQ", nation)
+        console.log(this.mother_state.nations)
+        for (let terr of this.mother_state.nations[nation].owns) {
+            let defnat = geography.nations[this.terr2nat[terr]]
             inc += defnat.base_income_per_territory  
         }
         this.nations.cash += inc
