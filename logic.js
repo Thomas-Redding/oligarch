@@ -11,9 +11,9 @@ const ROUNDS = [1,2,3,4,5,6]
 const PHASES = ['taxation','deliberation','auction','action']
 const TURNS = ['North America', 'South America', 
     'Europe', 'Africa', 'Asia', 'Australia']
-const SUBPHASES = ['election','move','attack','spawn','build','dividends']
+const SUBPHASES = [null, 'election','move','attack','spawn','build','dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90}
+const TIMING = {'deliberation' : 90*1000}
 
 //game logic classes below
 class Timer
@@ -63,8 +63,8 @@ class Game
 
     startGame()
     {
-        this._act()
         this.prayer('game_start', {}, this.mother_state)
+        this._act()
     }
 
     addPlayer(username, auth='admin')
@@ -158,24 +158,17 @@ class Game
 
     _finish_deliberation()
     {
-        while (this.mother_state.stage.phase == 'deliberation'){
-            this._transition()
-        }
         this.prayer('deliberation_over','',this.mother_state)
+        this._transition()
     }
 
     _act()
     {
         if (this.mother_state.stage.phase === 'taxation') {
-            let isDone = this.mother_state.stage.turn === TURNS.fromback()
-            this._compute_income(this.mother_state.stage.turn)
-            this._transition()
-            if (isDone) {
-                this.prayer('taxes_collected','',this.mother_state)
-            }
-            
+                this._compute_income(this.mother_state.stage.turn)
+                this._transition()
         }
-
+    
         else if (this.mother_state.stage.phase === 'deliberation') {
             this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
 
@@ -211,23 +204,41 @@ class Game
 
     _transition()
     {
-        function _transition(cur, table)
-        {
+        function next(cur, table) {
             let next_idx = (table.indexOf(cur) + 1) % table.length
-            return [table[next_idx], cur === table.fromback()] 
+            return table[next_idx]
         }
-        for (let ord of this.mother_state.order) {
 
-            let popup;
-            [this.mother_state.stage[ord], popup] = _transition(
-                this.mother_state.stage[ord], this.mother_state[ord])
+        function is_last(cur, table){
+            return table.indexOf(cur) == table.length - 1
+        }
 
-            if (!popup) {
-                break
+        function parse_stage(stage){
+            return [stage.round, stage.phase, stage.turn, stage.subphase]
+        }
+
+        let [round, phase, turn, subphase] = parse_stage(this.mother_state.stage)
+
+        if (['taxation','auction'].includes(phase)){
+            if (is_last(turn, TURNS)) {
+                if (phase == 'taxation'){
+                    this.prayer('taxes_collected','',this.mother_state)
+                }
+                else{
+                    this.prayer('auctions_complete','',this.mother_state)
+                }
+                this.mother_state.stage.phase = next(phase, PHASES)
             }
+            this.mother_state.stage.turn = next(turn, TURNS)
         }
-        this._act()
-    } 
-}
 
+        else if (phase == 'deliberation'){
+            this.mother_state.stage.phase = next(phase, PHASES)
+        }
+
+        //else if (this.mother_state.stage.phase )
+
+        this._act()
+    }
+}
 module.exports = Game;
