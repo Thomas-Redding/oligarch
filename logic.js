@@ -92,6 +92,11 @@ class Game
         return rtn
     }
 
+    startGame()
+    {
+        this._act()
+    }
+
     _compute_income(nation)
     {
         inc = 0
