@@ -68,7 +68,6 @@ body {
   margin-top: 1em;
   flex: 1;
   overflow-y: auto;
-  max-width: 20em;
 }
 
 #bottomNavBarDiv {
@@ -479,7 +478,7 @@ window.onresize = () => {
     mapDiv.style.display = 'block';
     mapDiv.style.flex = 1;
     gameLogContainer.style.display = 'block';
-    gameLogContainer.style.display = 'block';
+    gameLogContainer.style.maxWidth = '20em';
     bottomNavBarDiv.style.display = 'none';
   } else {
     console.log('mobile');
@@ -492,6 +491,7 @@ window.onresize = () => {
     mapDiv.style.maxWidth = "100%";
     mapDiv.style.maxHeight = "100%";
     gameLogContainer.style.display = (tab === kTabLog ? "block" : "none");
+    gameLogContainer.style.maxWidth = 'none';
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
     mainTable.style.display = (tab == kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';

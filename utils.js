@@ -277,7 +277,7 @@ let utils = {
   num_shares_already_auctioned_for_nation: (mother_state) => {
     let rtn = {};
     for (let nation in mother_state.nations) {
-      rtn[nation] = shares_sold(mother_state, nation);
+      rtn[nation] = utils.shares_sold(mother_state, nation);
     }
     return rtn;
   },
