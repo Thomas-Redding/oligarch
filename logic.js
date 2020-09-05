@@ -440,7 +440,7 @@ class Game
         for (let player in candidate_votes) {
             if (candidate_votes[player] >= n_votes) {
                 console.log(player)
-                this.mother_state.nations[turn].president = player
+                this.mother_state.nations[nat].president = player
                 this.timer.stop(true)
             }
         }
