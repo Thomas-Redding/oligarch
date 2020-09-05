@@ -24,6 +24,10 @@ html, body {
   overflow: hidden;
 }
 
+body {
+  opacity: 0;
+}
+
 .personButton {
   border: solid black 1px;
   display: inline-block;
@@ -259,6 +263,8 @@ let stage = {
 
 let tab = kTabMap;
 
+const kIsBoard = true;
+
 window.onresize = () => {
   const bodyRect = document.body.getBoundingClientRect();
 
@@ -301,6 +307,15 @@ window.onresize = () => {
     mainTable.style.width = '100%';
     bottomNavBarDiv.style.display = 'flex';
   }
+
+  if (kIsBoard) {
+    transferDiv.style.display = "none";
+  }
+
+  // When the page first loads we set body opacity to 0 so the user
+  // doesn't see a weird UI flash before window.onresize is called.
+  // Setting opacity to 1 here makes it visible.
+  document.body.style.opacity = 1;
 }
 
 // function login() {
