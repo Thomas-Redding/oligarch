@@ -39,6 +39,7 @@ body {
   height: 100%;
   overflow: hidden;
   text-shadow: 0 0 0.25em #888;
+  background-color: #222;
 }
 
 .personButton {
@@ -438,7 +439,7 @@ function build(territory, building_type) {
   })
 }
 
-window.addEventListener("load", () => {
+window.addEventListener("DOMContentLoaded", () => {
   let path = "/room/lobby/" + Math.floor(5*Math.random()) + ".jpg";
   let lobbyDiv = document.getElementById("lobbyDiv");
   lobbyDiv.style.background = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('" + path + "')";
