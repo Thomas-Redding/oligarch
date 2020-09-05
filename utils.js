@@ -294,11 +294,37 @@ let utils = {
   compute_score: (mother_state, terr2nat, username) => {
     let player = mother_state.players[username];
     let rtn = player.cash;
-    for (nation in player[shares]) {
+    for (nation in player.shares) {
       let income = compute_income(mother_state, terr2nat, nation);
-      rtn += 2 * player[shares] * income;
+      let shares_sold = utils.shares_sold(mother_state, nation);
+      if (shares_sold) continue;
+      let percent_owned = player.shares[nation] / shares_sold;
+      rtn += 2 * percent_owned * income;
     }
     return rtn;
+  },
+  shares_sold: (mother_state, nation) => {
+    let rtn = 0;
+    for (let username in mother_state.players) {
+      rtn += mother_state.players[username].shares[nation];
+    }
+    return rtn;
+  },
+  nation_of_territory: (mother_state, territory) => {
+  	let owner = null;
+    for (let nation in mother_state.nations) {
+      if (mother_state.nations[nation].army.filter(x => x.territory == territory).length > 0) {
+        if (owner !== null) return null;
+        owner = nation;
+      }
+    }
+    if (owner) return owner;
+    for (let nation in utils.NATIONS) {
+    	if (utils.NATIONS[nation].territories.includes(territories)) {
+    		return nation;
+    	}
+    }
+    throw Error("Something went wrong in `utils.nation_of_territory()`.");
   },
   /*
    * This method returns a dictionary. The keys of the dictionary are the troop
