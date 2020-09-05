@@ -64,7 +64,7 @@ class Game
         return rtn
     }
 
-    startGame()
+    startGame(username)
     {
         this.prayer('game_start', {}, this.mother_state)
         this._act()
@@ -150,18 +150,6 @@ class Game
         }
         this.terr2nat = terr2nat
     }
-
-    _compute_income(nation)
-    {
-        let inc = 0
-        for (let terr of this.mother_state.nations[nation].owns) {
-            let defnat = utils.NATIONS[this.terr2nat[terr]]
-            inc += defnat.base_income_per_territory  
-        }
-        this.mother_state.nations[nation].cash += inc
-        return inc
-    }
-
 
     _finish_deliberation()
     {
