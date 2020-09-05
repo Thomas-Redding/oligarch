@@ -497,16 +497,22 @@ login().then((socket) => {
   console.log("CONNECTED");
   gSocket = socket;
   gSocket.addEventListener("message", (event) => {
-    let [action, details, model] = JSON.parse(event.data);
+    let [action, details, state] = JSON.parse(event.data);
     console.log("Received action:", action);
     if (action === "end_lobby") {
+      // Equivalent to game_start
+    }
+    else if (action === "game_start") {
       tab = kTabInfo;
       window.onresize();
     }
     else if (action === "buy_share") {
-      render_table();
+      render_table(state);
     }
-    onstagechange(model);
+    else if (action === "taxes_collected") {
+      render_table(state);
+    }
+    onstagechange(state);
   });
   gSocket.addEventListener("close", () => {
     console.log("CLOSED");
