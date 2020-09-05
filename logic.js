@@ -52,7 +52,7 @@ class Game
         this.mother_state.subphase = subphases
         this.mother_state.turn = turns
         this.mother_state.round = rounds
-        this.mother_state.order = ['round', 'phase', 'turn', 'subphase']
+        this.mother_state.order = ['subphase', 'turn', 'phase', 'round']
         this.mother_state.time = 0
         //this.mother_state.phase = 'lobby'
         this.mother_state.stage = {}
