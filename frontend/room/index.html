@@ -339,7 +339,7 @@ window.onresize = () => {
     contentDiv.style.flexDirection = 'row';
     leftPanel.style.display = 'flex';
     mainTable.style.display = 'block';
-    transferDiv.style.display = 'block';
+    actionPanel.style.display = 'block';
     mapDiv.style.display = 'block';
     mapDiv.style.flex = 1;
     gameLogDiv.style.display = 'block';
@@ -356,7 +356,7 @@ window.onresize = () => {
     mapDiv.style.maxWidth = "100%";
     mapDiv.style.maxHeight = "100%";
     gameLogDiv.style.display = (tab === kTabLog ? "block" : "none");
-    transferDiv.style.display = (tab === kTabInfo ? "block" : "none");
+    actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
     mainTable.style.display = (tab == kTabInfo ? "block" : "none");
     lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
 
@@ -365,7 +365,7 @@ window.onresize = () => {
   }
 
   if (kIsBoard) {
-    transferDiv.style.display = "none";
+    actionPanel.style.display = "none";
   }
 
   // When the page first loads we set body opacity to 0 so the user
@@ -398,9 +398,12 @@ login().then((socket) => {
   console.log("CONNECTED");
   gSocket = socket;
   gSocket.addEventListener("message", (event) => {
-    console.log("MESSAGE:", event.data);
     let [action, details, model] = JSON.parse(event.data);
-    console.log(action);
+    console.log("Received action:", action);
+    if (action === "endLobby") {
+      tab = kTabInfo;
+      window.onresize();
+    }
   });
   gSocket.addEventListener("close", () => {
     console.log("CLOSED");
@@ -480,10 +483,11 @@ function start_game() {
       </tbody>
     </table>
     <br>
-    <div id="transferDiv" style="text-align:center; border-top:solid black 1px; padding:0.5em; font-size:1.5em;">
+    <div id="actionPanel" style="text-align:center; border-top:solid black 1px; padding:0.5em; font-size:1.5em;">
       <div class='button' style="display:inline-block;" onclick="show_modal('Give')">Give</div>
       <div class='button' style="display:inline-block;" onclick="show_modal('Vote')">Vote</div>
       <div class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
+      <div class='button' style="display:inline-block;">End Deliberation</div>
     </div>
     <div id="gameLogDiv" style="display:flex; flex-direction:column; flex:1; min-height:0; overflow:auto; border-top: solid black 1px;">
       <div style="padding:0.5em; display:flex; flex-direction:row;">
