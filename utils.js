@@ -1,5 +1,5 @@
 let utils = {
-  "NATIONS": {
+  NATIONS: {
     "Africa": {
       "base_income_per_territory" : 6,
       "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"]
@@ -25,7 +25,7 @@ let utils = {
       "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"]
     }
   },
-  "NEIGHBORS": {
+  NEIGHBORS: {
     "Afghanistan": {
       "Ural": 1,
       "Siberia": 1,
@@ -269,7 +269,20 @@ let utils = {
       "Irkutsk": 1,
       "Kamchatka": 1,
     }
-  }
+  },
+  num_shares_already_auctioned_for_nation: (state) => {
+	  let r = {};
+	  for (let name in state.nations) {
+	    r[name] = 0;
+	  }
+	  for (let player of Object.values(state.players)) {
+	    for (let nation in player.shares) {
+	      r[nation] += player.shares[nation];
+	    }
+	  }
+	  return r;
+	}
 };
 
-module.exports = utils;
+// Terrible hack so this can be included on frontend.
+try { module.exports = utils; } catch (err) {}
