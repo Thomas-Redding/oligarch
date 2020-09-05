@@ -205,8 +205,9 @@ class Vec2 {
 function bid() {
   send({
     "method": "bid",
-    "amount": transferInput.value
-  })
+    "args": [transferInput.value]
+  });
+  close_modal();
 }
 
 function create_label(text, x, y) {
@@ -619,6 +620,7 @@ login().then((socket) => {
     }
     else if (action === "bid_received") {
       let modal_type = get_current_modal_type();
+      console.log(modal_type)
       if (modal_type === "Bid") {
         transferInput.value = state.current_bid + 1;
       }
@@ -689,10 +691,12 @@ function show_modal(type) {
     popupBid.style.display = "none";
   }
 
-  popupDiv.children[0].onclick = () => {
-    popupDiv.style.display = 'none';
-  }
+  popupDiv.children[0].onclick = close_modal;
   popupDiv.style.display = 'block';
+}
+
+function close_modal() {
+  popupDiv.style.display = 'none';
 }
 
 function end_deliberation() {
