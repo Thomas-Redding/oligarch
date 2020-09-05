@@ -136,9 +136,8 @@ class Game
             for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
                 this.mother_state.nations[nation][terr] = {}
-                this.mother_state.nations[nation][terr].n_factories = Math.random() < 0.5 ? 1 :0 
-                this.mother_state.nations[nation][terr].n_baracks = 1
-                this.mother_state.nations[nation][terr].n_baracks = 1
+                this.mother_state.nations[nation][terr].n_factories = 0
+                this.mother_state.nations[nation][terr].n_barracks = 0
                 this.mother_state.nations[nation].army = []
                 terr2nat[terr] = nation
             }
@@ -153,6 +152,12 @@ class Game
         if (this.timer) this.timer.terminateTime(false)
             this.timer = new Timer(TIMING.bidding, this._conclude_bidding.bind(this))
         this._prayer('bid_recieved', {'amount' : amount, 'player': username})
+
+    }
+
+    _register_vote(username, player)
+    {
+        this.mother_state
 
     }
 
@@ -173,7 +178,18 @@ class Game
 
     }
 
-    //_conclude_
+    _conclude_election()
+    {
+        let voters = utils.owners(this.mother_state, nation)
+        for (let player in voters){
+            if (voters[player] == 0) this.mother_state.player.ready = true
+            else this.mother_state.player.ready = false
+        }
+        if (this.timer.isRunning) this.timer.terminateTime(false)
+        this.timer = new Timer(TIMING.election, this._finish_deliberation.bind(this))
+            this._prayer('begin_deliberation',TIMING.election)
+        this._prayer('start_election', nation)
+    }
 
     _conclude_bidding()
     {
