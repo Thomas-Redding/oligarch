@@ -450,7 +450,7 @@ class Game
     {
         this.mother_state.players[username].vote = candidate_username
         let nat = this.mother_state.stage.turn
-        let candidate_votes = utils.(this.mother_state)
+        let candidate_votes = utils.candidate_votes(this.mother_state)
         console.log(utils.candidate_votes(this.mother_state))
         this._prayer('vote_tallied', candidate_votes)
         let n_votes = 0
