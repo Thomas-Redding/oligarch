@@ -1,4 +1,3 @@
-let GEOGRAPHY = require('./geography.js')
 let utils = require('./utils.js')
 
 //macro for pythonic list indexing
@@ -84,7 +83,7 @@ class Game
             player.curbid = 0
             player.vote = null
             player.ready = false
-            for (let key in GEOGRAPHY.nations) {
+            for (let key in utils.NATIONS) {
                 player.shares[key] = 0
             }        
             this.mother_state.players[username] = player
@@ -113,7 +112,7 @@ class Game
         this.timer = null
         this.mother_state = { }
         this.mother_state.players = { }
-        this.mother_state.nations = GEOGRAPHY.nations
+        this.mother_state.nations = utils.NATIONS
         this.mother_state.blacklisted_names = TURNS.concat(BLACKLISTED_NAMES)
         this.mother_state.phase = PHASES
         this.mother_state.subphase = SUBPHASES
@@ -137,7 +136,7 @@ class Game
             this.mother_state.nations[nation].cash = 0
             this.mother_state.nations[nation].owns = []
             
-            for (let terr of GEOGRAPHY.nations[nation].territories) {
+            for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
                 terr2nat[terr] = nation
             }
@@ -149,7 +148,7 @@ class Game
     {
         let inc = 0
         for (let terr of this.mother_state.nations[nation].owns) {
-            let defnat = GEOGRAPHY.nations[this.terr2nat[terr]]
+            let defnat = utils.NATIONS[this.terr2nat[terr]]
             inc += defnat.base_income_per_territory  
         }
         this.mother_state.nations[nation].cash += inc
