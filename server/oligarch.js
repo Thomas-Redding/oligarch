@@ -31,7 +31,7 @@ class OligarchRoom extends Room {
       if (x.action == "state") {
         console.log('<<<', "<state>");
         this.sendDataToAll(["state", null, this.game.mother_state]);
-      } else if (x.action == "forward") {
+      } else  {
         if (x.method == "_") {
           console.log("WARNING: User attempted to call a private method on Game.");
           continue;
@@ -41,8 +41,6 @@ class OligarchRoom extends Room {
         } else {
           this.game[x.method](username);
         }
-      } else {
-        throw Error("Unrecognized `action` type.")
       }
     }
   }
