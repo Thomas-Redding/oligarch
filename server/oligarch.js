@@ -6,7 +6,7 @@ var Game = require("../logic.js");
 class OligarchRoom extends Room {
   constructor() {
     super()
-    this.game = Game()
+    this.game = new Game()
   }
 
   sendData(data) {

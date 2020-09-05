@@ -55,6 +55,7 @@ class Game
         this.mother_state.order = ['round', 'phase', 'turn', 'subphase']
         this.mother_state.time = {}
         //this.mother_state.phase = 'lobby'
+        this.mother_state.stage = {}
         this.mother_state.stage.round = 0
         this.mother_state.stage.phase = 'lobby'
         this.mother_state.stage.turn = null
@@ -64,10 +65,11 @@ class Game
 
     _nation_init()
     {
-        terr2nat = {}
-        for (nation of this.mother_state.nations) {
+        let terr2nat = {}
+        console.log(this.mother_state.nations)
+        for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
-            for (terr of this.mother_state.nations[nation].territories) {
+            for (let terr in this.mother_state.nations[nation].territories) {
                 this.mother_state.nations[nation].owns = terr
                 terr2nat[terr] = nation
             }
