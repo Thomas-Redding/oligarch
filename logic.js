@@ -46,7 +46,7 @@ class Game
         this.prayer = prayer
         this.mother_state = { }
         this.mother_state.players = { }
-        this.mother_state.nations = nations
+        this.mother_state.nations = geography.nations
         this.mother_state.blacklisted_names = turns.concat(blacklisted_names)
         this.mother_state.phase = phases
         this.mother_state.subphase = subphases
@@ -59,6 +59,16 @@ class Game
         this.mother_state.stage.phase = 'lobby'
         this.mother_state.stage.turn = null
         this.mother_state.stage.subphase = null
+        this._defaultOwnership()
+    }
+
+    _defaultOwnership()
+    {
+        for (nation of this.mother_state.nations) {
+            for (terr of this.mother_state.nations[nation].territories) {
+                this.mother_state.nations[nation].owns = terr
+            }
+        }
     }
 
 
@@ -77,6 +87,16 @@ class Game
         }
         this.prayer('end_lobby', {}, this.mother_state)
         return rtn
+    }
+
+    _act()
+    {
+        if (this.mother_state.stage.phase === 'taxation') {
+            
+
+        }
+
+
     }
 
     startAuction(nation)
@@ -143,7 +163,7 @@ class Game
                 break
             }
         }
-        
+
         this.prayer('transition')
     }
 

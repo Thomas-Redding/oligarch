@@ -315,7 +315,7 @@ window.onresize = () => {
     statusBarDiv.style.fontSize = '1.5em';
     contentDiv.style.display = 'flex';
     contentDiv.style.flexDirection = 'row';
-    leftPanel.style.display = 'block';
+    leftPanel.style.display = 'flex';
     mainTable.style.display = 'block';
     transferDiv.style.display = 'block';
     mapDiv.style.display = 'block';
@@ -390,6 +390,19 @@ function increment_transfer_input(delta) {
 }
 
 function show_modal(type) {
+  popupTitle.innerHTML = type;
+
+  if (type === "Give" || type === "Vote") {
+    popupPlayers.style.display = "block";
+  } else {
+    popupPlayers.style.display = "none";
+  }
+  if (type === "Give" || type === "Bid") {
+    popupNations.style.display = "block";
+  } else {
+    popupNations.style.display = "none";
+  }
+
   popupDiv.children[0].onclick = () => {
     popupDiv.style.display = 'none';
   }
@@ -481,17 +494,17 @@ function show_modal(type) {
     </table>
     <br>
     <div id="transferDiv" style="text-align:center; border-top:solid black 1px; padding:0.5em; font-size:1.5em;">
-      <div class='button' style="display:inline-block;" onclick="show_modal('transfer')">Transfer</div>
-      <div class='button' style="display:inline-block;" onclick="show_modal('vote')">Vote</div>
-      <div class='button' style="display:inline-block;" onclick="show_modal('bid')">Bid</div>
+      <div class='button' style="display:inline-block;" onclick="show_modal('Give')">Give</div>
+      <div class='button' style="display:inline-block;" onclick="show_modal('Vote')">Vote</div>
+      <div class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
     </div>
-    <div id="gameLogDiv" style="display:flex; flex-direction:column;">
-      <div style="padding:0.5em; border-top: solid black 1px; display:flex; flex-direction:row;">
+    <div id="gameLogDiv" style="display:flex; flex-direction:column; flex:1; min-height:0; overflow:auto; border-top: solid black 1px;">
+      <div style="padding:0.5em; display:flex; flex-direction:row;">
         <div style="text-align:center; font-weight:900;">Game Log</div>
         <div style="flex:1"></div>
         <button>Undo</button>
       </div>
-      <div style="overflow-y:auto; flex:1; padding:0.5em;">
+      <div style="flex:1; padding:0.5em;">
         <div>Morgan gave Thomas $19</div>
         <div>NA auctioned to Thomas for $73</div>
         <div>SA auctioned to Tony for $56</div>
@@ -599,6 +612,7 @@ function show_modal(type) {
   </div>
 
   <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); background-color:white; border:solid black 1px; opacity:1; padding:1em;">
+    <h2 id="popupTitle" align="center">Vote</h2>
     <table style='text-align:center; margin: 0 auto;'>
       <tbody>
         <tr>
@@ -614,18 +628,21 @@ function show_modal(type) {
         </tr>
       </tbody>
     </table>
-    <div class='personButton'>Abby</div>
-    <div class='personButton'>Morgan</div>
-    <div class='personButton'>Thomas</div>
-    <div class='personButton'>Tony</div>
-    <br>
-    <div class='personButton'>NA</div>
-    <div class='personButton'>EU</div>
-    <div class='personButton'>AS</div>
-    <br>
-    <div class='personButton'>SA</div>
-    <div class='personButton'>AF</div>
-    <div class='personButton'>AU</div>
+    <div id="popupPlayers">
+      <div class='personButton'>Abby</div>
+      <div class='personButton'>Morgan</div>
+      <div class='personButton'>Thomas</div>
+      <div class='personButton'>Tony</div>
+    </div>
+    <div id="popupNations" style="text-align:center;">
+      <div class='personButton'>NA</div>
+      <div class='personButton'>EU</div>
+      <div class='personButton'>AS</div>
+      <br>
+      <div class='personButton'>SA</div>
+      <div class='personButton'>AF</div>
+      <div class='personButton'>AU</div>
+    </div>
   </div>
 </div>
 
