@@ -119,6 +119,8 @@ path {
 }
 
 </style>
+<link rel="stylesheet" class="theme" id="stylesheet-light" href="light.css">
+<link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
 <script>
 
 function pad(t, n, c) {
@@ -235,7 +237,15 @@ let theme = {
     if (theme._validThemes.indexOf(newTheme) == -1) {
       newTheme = "dark";
     }
-    network.cookie.set("theme", newTheme)
+    network.cookie.set("theme", newTheme);
+    let themeStyleSheets = document.getElementsByClassName("theme");
+    for (let themeStyleSheet of themeStyleSheets) {
+      if (themeStyleSheet.id == "stylesheet-" + newTheme) {
+        themeStyleSheet.disabled = false;
+      } else {
+        themeStyleSheet.disabled = true;
+      }
+    }
     for (let i = 0; i < theme["_callbacks"].length; ++i) {
       theme._callbacks[i](newTheme);
     }
@@ -252,6 +262,7 @@ let theme = {
     theme["_callbacks"].push(callback);
   }
 }
+theme.set(theme.get());
 
 window.onload = () => {
   Array.from(document.getElementsByTagName('path')).map(path => {
