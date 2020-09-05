@@ -80,22 +80,22 @@ text {
 }
 
 .column-NA {
-  color: rgb(224, 210, 107);
+  color: #e08060;
 }
 .column-SA {
-  color: rgb(116, 242, 233);
+  color: #e0e060;
 }
 .column-EU {
-  color: rgb(94, 143, 222);
+  color: #60ffff;
 }
 .column-AF {
-  color: rgb(200, 110, 111);
+  color: #6080ff;
 }
 .column-AS {
-  color: rgb(92, 221, 93);
+  color: #60ff60;
 }
 .column-AU {
-  color: rgb(254, 102, 226);
+  color: #ff60ff;
 }
 
 .unclickable-svg {
