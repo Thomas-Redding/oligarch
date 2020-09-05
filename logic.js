@@ -8,12 +8,12 @@ Array.prototype.fromback = function(i=1) {
 
 //global lists and macros defined here
 const ROUNDS = [1,2,3,4,5,6] 
-const PHASES = ['taxation','deliberation','auction','action']
+const PHASES = ['Taxation','Deliberation','Auction','Action']
 const TURNS = ['North America', 'South America', 
     'Europe', 'Africa', 'Asia', 'Australia']
-const SUBPHASES = [null, 'election','move','attack','spawn','build','dividends']
+const SUBPHASES = [null, 'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90*1000}
+const TIMING = {'Deliberation' : 90*1000}
 
 //game logic classes below
 class Timer
@@ -144,14 +144,14 @@ class Game
                 this.mother_state.nations[nation][terr].n_factories = Math.random() < 0.5 ? 1 :0 
                 this.mother_state.nations[nation][terr].n_baracks = 1
                 this.mother_state.nations[nation][terr].n_baracks = 1
-
+                this.mother_state.nations[nation].army = {}
                 terr2nat[terr] = nation
             }
         }
         this.terr2nat = terr2nat
     }
 
-    _finish_deliberation()
+    _finish_Deliberation()
     {
         this.prayer('deliberation_over','',this.mother_state)
         this._transition()
@@ -159,20 +159,20 @@ class Game
 
     _act()
     {
-        if (this.mother_state.stage.phase === 'taxation') {
+        if (this.mother_state.stage.phase === 'Taxation') {
             utils.compute_income(this.mother_state, this.terr2nat, this.mother_state.stage.turn)
             this._transition()
         }
     
-        else if (this.mother_state.stage.phase === 'deliberation') {
-            this.mother_state.clock = TIMING.deliberation
+        else if (this.mother_state.stage.phase === 'Deliberation') {
+            this.mother_state.clock = TIMING.Deliberation
             if (this.timer) this.timer.terminateTime(false)
-            this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
-            this.prayer('begin_deliberation',TIMING.deliberation,this.mother_state)
+            this.timer = new Timer(TIMING.Deliberation, this._finish_Deliberation.bind(this))
+            this.prayer('begin_deliberation',TIMING.Deliberation,this.mother_state)
 
         }
 
-        else if (this.mother_state.stage.phase === 'action') {
+        else if (this.mother_state.stage.phase === 'Action') {
             
         }
 
@@ -203,9 +203,9 @@ class Game
 
         let [round, phase, turn, subphase] = parse_stage(this.mother_state.stage)
 
-        if (['taxation','auction'].includes(phase)){
+        if (['Taxation','Auction'].includes(phase)){
             if (is_last(turn, TURNS)) {
-                if (phase == 'taxation'){
+                if (phase == 'Taxation'){
                     this.prayer('taxes_collected','',this.mother_state)
                 }
                 else{
@@ -216,7 +216,7 @@ class Game
             this.mother_state.stage.turn = next(turn, TURNS)
         }
 
-        else if (phase == 'deliberation'){
+        else if (phase == 'Deliberation'){
             this.mother_state.stage.phase = next(phase, PHASES)
         }
 
