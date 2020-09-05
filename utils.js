@@ -284,7 +284,9 @@ let utils = {
   },
 
   /*
-   * @return
+   * Find how many shares have already been auctioned off for each nation.
+   * @returns {Object} a dictionary with nation names as keys and number of
+   * shares as values.
    */
   num_shares_already_auctioned_for_nation: (mother_state) => {
     let rtn = {};
