@@ -39,6 +39,7 @@ body {
   height: 100%;
   overflow: hidden;
   text-shadow: 0 0 0.25em #888;
+  background-color: #222;
 }
 
 .personButton {
@@ -438,7 +439,7 @@ function build(territory, building_type) {
   })
 }
 
-window.addEventListener("load", () => {
+window.addEventListener("DOMContentLoaded", () => {
   let path = "/room/lobby/" + Math.floor(5*Math.random()) + ".jpg";
   let lobbyDiv = document.getElementById("lobbyDiv");
   lobbyDiv.style.background = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('" + path + "')";
@@ -1208,7 +1209,7 @@ function finish_building() {
 
         <input name="buildForm" id="factoryRadio" type="radio"><label for="factoryRadio">Factory ($10B)</label>
         <br>
-        <input name="buildForm" id="barracksRadio" type="radio"><label for="barracksRadio">Barracks ($25B)</label>
+        <input name="buildForm" id="barracksRadio" type="radio"><label for="barracksRadio">Barracks ($10B)</label>
         <br>
 
         <div onclick="finish_building()" class="button">Finish Building</div>
@@ -1226,7 +1227,7 @@ function finish_building() {
       <div style="padding:0.5em; display:flex; flex-direction:row;">
         <div style="text-align:center; font-weight:900; font-size: 1.3em;">Game Log</div>
         <div style="flex:1"></div>
-        <div class="button">Undo</div>
+        <div class="button" onclick="send({'method': 'undo'});">Undo</div>
       </div>
       <div id="gameLogDiv" style="flex:1; padding:0.5em;"></div>
     </div>
