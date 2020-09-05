@@ -28,11 +28,11 @@ class OligarchRoom extends Room {
       data = [data];
     }
     for (let x of data) {
-      if (x.action == "state") {
+      if (x.method === "get_state") {
         console.log('<<<', "<state>");
-        this.sendDataToAll(["state", null, this.game.mother_state]);
+        super.sendData(username, JSON.stringify(["get_state", null, this.game.mother_state]));
       } else  {
-        if (x.method == "_") {
+        if (x.method.startsWith("_")) {
           console.log("WARNING: User attempted to call a private method on Game.");
           continue;
         }

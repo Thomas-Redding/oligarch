@@ -347,10 +347,6 @@ let theme = {
 }
 theme.set(theme.get());
 
-window.onload = () => {
-  main();
-};
-
 function main() {
   riskMap.addEventListener('click', (e) => {
     let pt = riskMap.createSVGPoint();
@@ -601,7 +597,16 @@ login().then((socket) => {
 
     gameLogDiv.innerHTML += `<div>` + action + `</div>`;
 
-    if (action === "end_lobby") {
+    if (action === "get_state") {
+      // We assume get_state is only called when the user
+      // reloads the page.
+      if (state.stage.phase !== "lobby") {
+        tab = kTabInfo;
+      }
+      main();
+      render_table(state);
+    }
+    else if (action === "end_lobby") {
       // Equivalent to game_start
     }
     else if (action === "game_start") {
@@ -629,6 +634,9 @@ login().then((socket) => {
   });
   gSocket.addEventListener("close", () => {
     console.log("CLOSED");
+  });
+  send({
+    "method": "get_state"
   });
 }, (error) => {
   console.log("ERROR:", error);
