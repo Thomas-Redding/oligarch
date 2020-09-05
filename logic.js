@@ -14,7 +14,7 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000}
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000, 'election':120*1000}
 
 
 //game class defined below
@@ -167,11 +167,13 @@ class Game
             else this.mother_state.player.ready = false
         }
         if (this.timer.isRunning) this.timer.terminateTime(false)
-        this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
-            this._prayer('begin_deliberation',TIMING.deliberation)
+        this.timer = new Timer(TIMING.election, this._finish_deliberation.bind(this))
+            this._prayer('begin_deliberation',TIMING.election)
         this._prayer('start_election', nation)
 
     }
+
+    _conclude_
 
     _conclude_bidding()
     {
@@ -206,7 +208,7 @@ class Game
     _act()
     {
         if (this.mother_state.stage.phase === 'Taxation') {
-            utils.income_of_nation(this.mother_state, this.mother_state.stage.turn)
+            this.mother_state.cash = utils.income_of_nation(this.mother_state, this.mother_state.stage.turn)
             this._transition()
         }
     
