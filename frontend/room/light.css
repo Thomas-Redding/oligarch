@@ -68,22 +68,22 @@ body {
 }
 
 .column-NA {
-  color: red;
+  color: #e08060;
 }
 .column-SA {
-  color: red;
+  color: #e0e060;
 }
 .column-EU {
-  color: red;
+  color: #60ffff;
 }
 .column-AF {
-  color: red;
+  color: #6080ff;
 }
 .column-AS {
-  color: red;
+  color: #60ff60;
 }
 .column-AU {
-  color: red;
+  color: #ff60ff;
 }
 
 .unclickable-svg {
