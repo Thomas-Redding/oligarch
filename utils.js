@@ -349,17 +349,21 @@ let utils = {
    * @param username - the user whose score we are computing
    * @returns {int} the score the given user would have if the game ended now
    */
-  compute_score: (mother_state, username) => {
+  score_of_player: (mother_state, username) => {
     let player = mother_state.players[username];
     let rtn = player.cash;
     for (let nation in player.shares) {
-      let income = income_of_nation(mother_state, nation);
+      let income = utils.income_of_nation(mother_state, nation);
       let shares_sold = utils.shares_sold(mother_state, nation);
-      if (shares_sold) continue;
+      if (shares_sold == 0) continue;
       let percent_owned = player.shares[nation] / shares_sold;
-      rtn += 2 * percent_owned * income;
+      rtn += (2 + utils.rounds_left(mother_state)) * percent_owned * income;
     }
     return rtn;
+  },
+
+  rounds_left: (mother_state) => {
+    return 6 - mother_state.round;
   },
 
   /*
@@ -396,8 +400,8 @@ let utils = {
    * `null`` if the territory is contested.
    */
   nation_of_territory: (mother_state, territory) => {
-  	// If a territory is contested, return `null`. If a territory has one
-  	// nation's troops, it is owned by that nation.
+    // If a territory is contested, return `null`; if a territory has one
+    // nation's troops, it is owned by that nation.
     let owner = null;
     for (let nation in mother_state.nations) {
       if (mother_state.nations[nation].army.filter(x => x.territory == territory).length > 0) {
@@ -410,7 +414,7 @@ let utils = {
     // Otherwise, choose the default owner (or their puppeteer).
     for (let nation in utils.NATIONS) {
       if (utils.NATIONS[nation].territories.includes(territory)) {
-      	return utils.puppeteer(mother_state, nation);
+        return utils.puppeteer(mother_state, nation);
       }
     }
     throw Error("Something went wrong in `utils.nation_of_territory()`.");
@@ -472,6 +476,39 @@ let utils = {
      }
      return rtn;
   },
+
+  /*
+   * @param {int} troop_id - the id of the desired troop
+   * @returns {Object} troop - the json representing the desired troop
+   */
+  toop_from_id: (mother_state, troop_id) => {
+    for (let nation in mother_state.nations) {
+      let arr = mother_state.nations[nation].army.filter(x => x.id == troop_id);
+      if (arr.length == 0) continue;
+      if (arr.length > 1) throw Error("Multiple troops share an ID.");
+      return arr[0];
+    }
+    throw Error("Troop not found with the given ID.");
+  },
+
+  /*
+   * @param {int} troop_id - id of the troop whose allegiance you want to know
+   * @returns {string} the nation owning the troop
+   */
+  allegiance_from_troop_id: (mother_state, troop_id) => {
+    for (let nation in mother_state.nations) {
+      let arr = mother_state.nations[nation].army.filter(x => x.id == troop_id);
+      if (arr.length == 0) continue;
+      if (arr.length > 1) throw Error("Multiple troops share an ID.");
+      return nation;
+    }
+    throw Error("Troop not found with the given ID.");
+  },
+
+  /*
+   * Perform a deep copy of a json object. This method does not support
+   * functions.
+   */
   deep_copy: (x) => {
     let type_x = utils._type(x);
     if (type_x == "object") {
@@ -490,6 +527,14 @@ let utils = {
       return x;
     }
   },
+
+  uuid: (username="") => {
+    if (this._counter === undefined) this._counter = 0;
+    ++this._counter;
+    let usernameHash = username.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+    return usernameHash + (this._counter - 1);
+  },
+
   _type: (x) => {
     if (Array.isArray(x)) return "array";
     if (typeof(x) == "object") return "object";

@@ -2,11 +2,13 @@ const WebSocket = require('ws')
 
 var Room = require("./room.js");
 var Game = require("../logic.js");
+let Timer = require('../timer.js')
 
 class OligarchRoom extends Room {
   constructor() {
     super()
-    this.game = new Game(this.prayer.bind(this))
+    this.timer = new Timer()
+    this.game = new Game(this.prayer.bind(this), this.timer)
   }
 
   sendDataToAll(data) {
