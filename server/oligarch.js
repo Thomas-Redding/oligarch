@@ -26,7 +26,7 @@ class OligarchRoom extends Room {
   }
 
   fetchGameState() {
-    let rtn = utils.deep_copy(this.game.fetchGameState())
+    let rtn = this.game.fetchGameState()
     rtn.is_paused = this.timer.isPaused()
     return rtn
   }

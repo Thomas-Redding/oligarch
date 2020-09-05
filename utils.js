@@ -363,7 +363,7 @@ let utils = {
   },
 
   rounds_left: (mother_state) => {
-    return 6 - mother_state.round;
+    return 6 - mother_state.stage.round;
   },
 
   /*
