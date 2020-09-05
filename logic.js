@@ -35,7 +35,10 @@ class Timer
         clearTimeout(this._id);
         this._id = setTimeout(this._callback, time);
     }
-    terminateTime() {
+    terminateTime(do_callback) {
+        if (do_callback) {
+            this._callback()
+        }
         clearTimeout(this._id);
     }
 }
@@ -102,7 +105,7 @@ class Game
 
         if (all_ready){
             this.mother_state.clock = this.timer.queryTime 
-            this.timer.terminateTime()
+            this.timer.terminateTime(do_callback)
         }
     }
 
@@ -170,6 +173,7 @@ class Game
         }
     
         else if (this.mother_state.stage.phase === 'deliberation') {
+            this.prayer('begin_deliberation','',this.mother_state)
             this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
 
         }
@@ -189,18 +193,7 @@ class Game
 
     //player auctions 
     rdyUp(username)
-    {
-        this.mother_state.players.username['ready'] = true
-        
-        all_ready = true
-        for (let player of this.mother_state.players) {
-            all_ready = all_ready && player.ready
-        }
 
-        if (all_ready){
-
-        }
-    }
 
     _transition()
     {
