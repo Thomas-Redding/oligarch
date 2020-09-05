@@ -8,6 +8,7 @@ class Timer
         this._is_running = false;
         this._id = undefined;
         this._is_paused = false;
+        this._time_to_use_when_resumed = undefined;
     }
     /*
      * @param {number} time - number of milliseconds to wait
@@ -37,7 +38,7 @@ class Timer
         this._t = newTime;
         clearTimeout(this._id);
         this._id = setTimeout(() => {
-            this._is_running = false; this._callback();}, time);
+            this._is_running = false; this._callback();}, newTime);
     }
 
     /*
@@ -66,11 +67,17 @@ class Timer
     }
 
     pause() {
+        if (this._is_paused) return;
         this._is_paused = true;
+        this._time_to_use_when_resumed = this.queryTime()
+        clearTimeout(this._id);
     }
 
     resume() {
+        if (!this._is_paused) return;
         this._is_paused = false;
+        this.extendTime(this._time_to_use_when_resumed)
+        this._time_to_use_when_resumed = undefined;
     }
 
     isPaused() {
