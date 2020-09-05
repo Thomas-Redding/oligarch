@@ -43,6 +43,51 @@ class Timer
 
 class Game
 {
+    endLobby(username)
+    {
+        let rtn;
+        if (this.mother_state.players[username].auth !== 'admin') {
+            rtn = false
+        }
+        else {
+            for (let ord of this.mother_state.order) {
+                this.mother_state.stage[ord] = this.mother_state[ord][0]
+            }
+            rtn = true
+            
+        }
+        this.prayer('end_lobby', {}, this.mother_state)
+        return rtn
+    }
+
+    startGame()
+    {
+        this._act()
+    }
+
+    addPlayer(username, auth='admin')
+    {
+        player = {}
+        rtn = true
+        if (this.stage.phase !== 'lobby') {
+            return !rtn
+        }
+        else {
+            player.username = username
+            player.cash = 0
+            player.auth = auth  
+            player.shares = {}
+            player.ready = false
+            player.curbid = 0
+            player.vote = null
+            for (let key in geography.nations) {
+                this.shares[key] = 0
+            }        
+            this.mother_state.players.username = player
+        }
+        return rtn
+    }
+
     constructor(prayer) 
     {
         this.prayer = prayer
@@ -50,7 +95,7 @@ class Game
         this.mother_state = { }
         this.mother_state.players = { }
         this.mother_state.nations = geography.nations
-        this.mother_state.blacklisted_names = turns.concat(blacklisted_names)
+        this.mother_state.blacklisted_names = TURNS.concat(BLACKLISTED_NAMES)
         this.mother_state.phase = PHASES
         this.mother_state.subphase = SUBPHASES
         this.mother_state.turn = TURNS
@@ -79,27 +124,7 @@ class Game
         this.terr2nat = this.terr2nat
     }
 
-    endLobby(username)
-    {
-        let rtn;
-        if (this.mother_state.players[username].auth !== 'admin') {
-            rtn = false
-        }
-        else {
-            for (let ord of this.mother_state.order) {
-                this.mother_state.stage[ord] = this.mother_state[ord][0]
-            }
-            rtn = true
-            
-        }
-        this.prayer('end_lobby', {}, this.mother_state)
-        return rtn
-    }
-
-    startGame()
-    {
-        this._act()
-    }
+    
 
     _compute_income(nation)
     {
@@ -150,29 +175,6 @@ class Game
         }
     }
 
-
-    addPlayer(username, auth='admin')
-    {
-        player = {}
-        rtn = true
-        if (this.stage.phase !== 'lobby') {
-            return !rtn
-        }
-        else {
-            player.username = username
-            player.cash = 0
-            player.auth = auth  
-            player.shares = {}
-            player.ready = false
-            player.curbid = 0
-            player.vote = null
-            for (let key in geography.nations) {
-                this.shares[key] = 0
-            }        
-            this.mother_state.players.username = player
-        }
-        return rtn
-    }
 
     _transition()
     {
