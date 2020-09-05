@@ -425,10 +425,6 @@ window.onload = () => {
   });
 
   window.onresize();
-
-  onstagechange({stage: {
-    phase: "deliberation",
-  }});
 };
 
 const kTabMap = 'kTabMap';
@@ -570,6 +566,8 @@ function onstagechange(model) {
     bidButton.style.display = "none";
   }
 
+  console.log('onstagechange', stage);
+
   if (stage.phase === "deliberation") {
     endDeliberationButton.style.display = "inline-block";
   } else {
@@ -609,7 +607,9 @@ function show_modal(type) {
 }
 
 function end_deliberation() {
-  // TODO(mredding)
+  gSocket.send({
+    "action": "ready_up"
+  });
 }
 
 function send(obj) {

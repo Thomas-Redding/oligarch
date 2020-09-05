@@ -30,6 +30,8 @@ class OligarchRoom extends Room {
     } else if (data.action == "endLobby") {
       this.game.endLobby(username)
       this.game.startGame()
+    } else if (data.action === "readyUp") {
+      this.game.rdyUp(username);
     }
   }
 
