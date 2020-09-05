@@ -410,9 +410,12 @@ login().then((socket) => {
   console.log("CONNECTED");
   gSocket = socket;
   gSocket.addEventListener("message", (event) => {
-    console.log("MESSAGE:", event.data);
     let [action, details, model] = JSON.parse(event.data);
-    console.log(action);
+    console.log("Received action:", action);
+    if (action === "endLobby") {
+      tab = kTabInfo;
+      window.onresize();
+    }
   });
   gSocket.addEventListener("close", () => {
     console.log("CLOSED");
