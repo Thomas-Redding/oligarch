@@ -890,7 +890,7 @@ function trade_with(playername) {
 function vote_for(playername) {
   send({
     "method": "vote",
-    "username": playername,
+    "args": [playername],
   })
 }
 
