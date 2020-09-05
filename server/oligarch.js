@@ -3,13 +3,31 @@ const WebSocket = require('ws')
 var Room = require("./room.js");
 
 class OligarchRoom extends Room {
+  constructor() {
+    super()
+    this.game = Game()
+  }
+
+  sendData(data) {
+    super.sendData(JSON.stringify(data));
+  }
+
+  prayer(action, details, newModel) {
+    sendData({
+      "action": action,
+      "details": details,
+      "model": newModel,
+    })
+  }
+
   didReceiveData(username, data) {
     console.log('didReceiveData("' + username + '", ' + data + '")')
-    if (data == "ping") {
-      super.sendData(username, "pong");
-      return;
-    }
     data = JSON.parse(data);
+    if (data.action == "state") {
+      super.sendData(this.game.mother_state);
+    } else if (data.action == "endLobby") {
+      this.game.endLobby(username)
+    }
   }
 
   tryToJoin(username, password, ws) {
