@@ -176,6 +176,7 @@ class Game
         let is_int = amount % n_shares == 0
         let can_afford = amount <= this.mother_state.nations[nat]
         if (is_prez && is_int && can_afford){
+            this.mother_state.nations[nat].cash -= amount
             income_per_share = amount / n_shares
             let owners = utils.owners(this.mother_state, nat)
             for (let owner in owners){
