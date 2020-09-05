@@ -253,7 +253,7 @@ let theme = {
   "get": () => {
     let newTheme = network.cookie.get("theme");
     if (!newTheme) {
-      newTheme.set("dark");
+      theme.set("dark");
       newTheme = "dark";
     }
     return newTheme;
