@@ -10,7 +10,7 @@ body {
 }
 
 #statusBarDiv {
-  background-color: black;
+  background-color: #282828;
   color: white;
 }
 
@@ -48,5 +48,21 @@ body {
 .button {
   background-color: hsl(231, 100%, 45%);
   color: white;
-  box-shadow: 0 0 0.5em #888;
+  box-shadow: 0 0 0.25em #888;
+}
+
+#popupDivBackground {
+  background-color: black;
+  opacity: 0.5;
+}
+
+#popupDivForeground {
+  background-color: white;
+  border: solid black 1px;
+  opacity: 1;
+}
+
+.nationRect {
+  fill: #888;
+  stroke: #ccc;
 }

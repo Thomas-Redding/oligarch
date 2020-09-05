@@ -1,26 +1,32 @@
 const nations = {
   "Africa": {
     "color": new Color(224, 128, 96),
+    "rect": {"x": 430, "y": 514},
     "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"]
   },
   "North America": {
     "color": new Color(224, 224, 96),
+    "rect": {"x": 140, "y": 260},
     "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"]
   },
   "South America": {
     "color": new Color(96, 255, 255),
+    "rect": {"x": 220, "y": 507},
     "territories": ["Venezuela", "Brazil", "Argentina", "Peru"]
   },
   "Europe": {
     "color": new Color(96, 128, 255),
+    "rect": {"x": 578, "y": 135},
     "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"]
   },
   "Asia": {
     "color": new Color(96, 255, 96),
+    "rect": {"x": 893, "y": 235},
     "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"]
   },
   "Australia": {
     "color": new Color(255, 96, 255),
+    "rect": {"x": 895, "y": 450},
     "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"]
   }
 };

@@ -12,7 +12,7 @@ body {
 #statusBarDiv {
 	color: white;
   background-color: #222;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid #888;
 }
 
 .button {
@@ -28,7 +28,7 @@ body {
 
 #lobbyDiv {
 	color: white;
-  background-color: black;
+  background-color: #222;
 }
 
 .tab-on {
@@ -49,4 +49,25 @@ body {
 .button {
 	color: black;
 	background-color: hsl(50, 100%, 45%);
+}
+
+#popupDivBackground {
+  background-color: black;
+  opacity: 0.5;
+}
+
+#popupDivForeground {
+	color: white;
+  background-color: #222;
+  border: solid #888 1px;
+  opacity: 1;
+}
+
+.nationRect {
+  stroke: #888;
+  fill: #333;
+}
+
+text {
+  fill: white;
 }
