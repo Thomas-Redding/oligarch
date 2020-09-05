@@ -145,9 +145,6 @@ class Game
 
     bid(username, amount)
     {
-        //console.log(username)
-        //console.log(this.mother_state.players)
-        //console.log(this.mother_state.players[username])
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
             this._history.save("bid", [username], this.mother_state, "<b>" + username +  "</b> bid $" + amount);
@@ -169,6 +166,25 @@ class Game
             this._register_vote(username, candidate_username)
         }
         this.rdyUp(username)
+    }
+
+    dividends(username, amount)
+    {
+        let nat = this.mother_state.stage.turn
+        let is_prez = username === this.mother_state.nations[nat].president
+        let n_shares = utils.shares_sold(this.mother_state, nat)
+        let is_int = amount % n_shares == 0
+        let can_afford = amount <= this.mother_state.nations[nat]
+        if (is_prez && is_int && can_afford){
+            this.mother_state.nations[nat].cash -= amount
+            income_per_share = amount / n_shares
+            let owners = utils.owners(this.mother_state, nat)
+            for (let owner in owners){
+                inc = owners[owner] * income_per_share
+                this.mother_state.players[owner].cash += inc
+            }
+        }
+        this._prayer('dividends_paid',amount,this.mother_state)
     }
 
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
@@ -230,7 +246,6 @@ class Game
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
         
-        console.log(this.mother_state.stage.phase)
         if (this.mother_state.stage.phase === 'Taxation') {
             let nat = this.mother_state.stage.turn
             this.mother_state.nations[nat].cash = utils.income_of_nation(
@@ -281,7 +296,6 @@ class Game
     //always calls act on end
     _transition()
     {
-        console.log(this.mother_state.stage)
         function next(cur, table) {
             let next_idx = (table.indexOf(cur) + 1) % table.length
             return table[next_idx]
@@ -321,12 +335,10 @@ class Game
         }
 
         else if (phase == 'Action'){
-            console.log('action transition')
             if (subphase == SUBPHASES.fromback()) {
                 this.mother_state.stage.turn = next(turn, TURNS)
             }
             this.mother_state.stage.subphase = next(subphase, SUBPHASES)
-            console.log(this.mother_state.stage.subphase)
         }
         this._act()
     }
@@ -357,8 +369,6 @@ class Game
         let n_players = Object.keys(this.mother_state.players).length
         let inicash = Math.floor(TOTAL_INIT_CASH/n_players)
         for (let player in this.mother_state.players){
-            console.log(inicash)
-            console.log(player)
             this.mother_state.players[player].cash = inicash
         }
 
@@ -435,11 +445,11 @@ class Game
         this.mother_state.players[username].vote = candidate_username
         let nat = this.mother_state.stage.turn
         let candidate_votes = utils.candidate_votes(this.mother_state)
+        console.log(utils.candidate_votes(this.mother_state))
         this._prayer('vote_tallied', candidate_votes)
         let n_votes = 0
         for (let player in candidate_votes) {
             if (candidate_votes[player] >= n_votes) {
-                console.log(player)
                 this.mother_state.nations[nat].president = player
                 this.timer.stop(true)
             }
@@ -447,8 +457,12 @@ class Game
         n_votes = Math.floor(n_votes/2)+1
     }
 
+
     _conclude_election()
     {
+        for (let player in this.mother_state.players){
+            this.mother_state.players[player].vote = null
+        }
         let nat = this.mother_state.stage.turn
         let details = {'winner' : this.mother_state.nations[nat].president}
         this._prayer('conclude_election', details)
