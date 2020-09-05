@@ -50,6 +50,14 @@ body {
   padding: 0.5em;
 }
 
+#gameLogDiv {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
 #bottomNavBarDiv {
   display: flex;
   flex-direction: row;
@@ -609,7 +617,7 @@ function start_game() {
       <div id="bidButton" class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
-    <div id="gameLogDiv" style="display:flex; flex-direction:column; flex:1; min-height:0; overflow:auto; border-top: solid black 1px;">
+    <div id="gameLogDiv">
       <div style="padding:0.5em; display:flex; flex-direction:row;">
         <div style="text-align:center; font-weight:900;">Game Log</div>
         <div style="flex:1"></div>
