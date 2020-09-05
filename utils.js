@@ -441,6 +441,18 @@ let utils = {
     return nation;
   },
 
+  candidate_votes: (mother_state) => {
+  	let rtn = {};
+    let nation = mother_state.stage.turn;
+    let owners = utils.owners(mother_state, nation);
+    for (let username in owners) {
+      let candidate = mother_state.players[username].vote;
+      if (!(candidate in rtn)) rtn[candidate] = 0;
+      rtn[candidate] += owners[username];
+    }
+    return rtn;
+  },
+
   /*
    * This method returns a dictionary. The keys of the dictionary are the troop
    * types ("infantry" | "calvary" | "cannon"). The values are an array with two
