@@ -45,14 +45,26 @@ body {
   background-color: black;
   color: white;
   border-bottom: solid black 1px;
+  padding: 0.4em 1em;
 }
 
 #bottomNavBarDiv {
   display: flex;
   flex-direction: row;
   font-size: 1.5em;
-  border-bottom: solid black 1px;
-  padding: 0.25em;
+  border-top: solid black 1px;
+}
+
+.tab-button {
+  cursor: pointer;
+  width: 33.3%;
+  text-align: center;
+  line-height: 1.5em;
+}
+
+#infoButton {
+  border-left: 1px solid black;
+  border-right: 1px solid black;
 }
 
 .button {
@@ -60,9 +72,6 @@ body {
   border-radius: 0.25em;  
   border: solid black 1px;
   color: black;
-}
-
-.button {
   cursor: pointer;
 }
 
@@ -560,11 +569,9 @@ function increment_transfer_input(delta) {
 </div>
 
 <div id='bottomNavBarDiv'>
-  <div id="mapButton" class='button' onclick="tab = kTabMap; window.onresize();">Map</div>
-  <div style='flex:1'></div>
-  <div id="infoButton" class='button' onclick="tab = kTabInfo; window.onresize();">Info</div>
-  <div style='flex:1'></div>
-  <div id="logButton" class='button' onclick="tab = kTabLog; window.onresize();">Log</div>
+  <div id="mapButton" class='tab-button' onclick="tab = kTabMap; window.onresize();">Map</div>
+  <div id="infoButton" class='tab-button' onclick="tab = kTabInfo; window.onresize();">Info</div>
+  <div id="logButton" class='tab-button' onclick="tab = kTabLog; window.onresize();">Log</div>
 </div>
 
 </body>
