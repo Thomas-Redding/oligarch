@@ -290,8 +290,8 @@ function render_table(state) {
     tr.innerHTML += '<td class="column-AF">' + player.shares["Africa"] + "</td>";
     tr.innerHTML += '<td class="column-AS">' + player.shares["Asia"] + "</td>";
     tr.innerHTML += '<td class="column-AU">' + player.shares["Australia"] + "</td>";
-    tr.innerHTML += "<td>" + player.cash + "</td>";
-    tr.innerHTML += "<td>TODO</td>";
+    tr.innerHTML += "<td>$" + player.cash + "B</td>";
+    tr.innerHTML += "<td>$" + utils.score_of_player(state, player.username) + "B</td>";
 
     tbody.appendChild(tr);
   }
