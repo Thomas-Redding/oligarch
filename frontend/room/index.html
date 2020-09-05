@@ -119,6 +119,8 @@ path {
 }
 
 </style>
+<link rel="stylesheet" class="theme" id="stylesheet-light" href="light.css">
+<link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
 <script>
 
 function pad(t, n, c) {
@@ -235,7 +237,15 @@ let theme = {
     if (theme._validThemes.indexOf(newTheme) == -1) {
       newTheme = "dark";
     }
-    network.cookie.set("theme", newTheme)
+    network.cookie.set("theme", newTheme);
+    let themeStyleSheets = document.getElementsByClassName("theme");
+    for (let themeStyleSheet of themeStyleSheets) {
+      if (themeStyleSheet.id == "stylesheet-" + newTheme) {
+        themeStyleSheet.disabled = false;
+      } else {
+        themeStyleSheet.disabled = true;
+      }
+    }
     for (let i = 0; i < theme["_callbacks"].length; ++i) {
       theme._callbacks[i](newTheme);
     }
@@ -252,6 +262,7 @@ let theme = {
     theme["_callbacks"].push(callback);
   }
 }
+theme.set(theme.get());
 
 window.onload = () => {
   Array.from(document.getElementsByTagName('path')).map(path => {
@@ -375,38 +386,38 @@ window.onresize = () => {
   document.body.style.opacity = 1;
 }
 
-// function login() {
-//   let username = "";
-//   let password = "";
-//   let arr = network.fetchExistingUsernamePassword();
-//   if (arr) {
-//     username = arr[0];
-//     password = arr[1];
-//   } else {
-//     while (username.length == 0) {
-//       username = prompt("username?");
-//     }
-//     while (password.length == 0) {
-//       password = prompt("password?");
-//     }
-//   }
-//   return network.makeWebSocket("chat", username, password);
-//   // return network.makeWebSocket("oligarch", username, password);
-// }
+function login() {
+  let username = "";
+  let password = "";
+  let arr = network.fetchExistingUsernamePassword();
+  if (arr) {
+    username = arr[0];
+    password = arr[1];
+  } else {
+    while (username.length == 0) {
+      username = prompt("username?");
+    }
+    while (password.length == 0) {
+      password = prompt("password?");
+    }
+  }
+  // return network.makeWebSocket("chat", username, password);
+  return network.makeWebSocket("oligarch", username, password);
+}
 
-// let gSocket;
-// login().then((socket) => {
-//   console.log("CONNECTED");
-//   gSocket = socket;
-//   gSocket.addEventListener("message", (event) => {
-//     console.log("MESSAGE:", event.data);
-//   });
-//   gSocket.addEventListener("close", () => {
-//     console.log("CLOSED");
-//   });
-// }, (error) => {
-//   console.log("ERROR:", error);
-// });
+let gSocket;
+login().then((socket) => {
+  console.log("CONNECTED");
+  gSocket = socket;
+  gSocket.addEventListener("message", (event) => {
+    console.log("MESSAGE:", event.data);
+  });
+  gSocket.addEventListener("close", () => {
+    console.log("CLOSED");
+  });
+}, (error) => {
+  console.log("ERROR:", error);
+});
 
 function increment_transfer_input(delta) {
   let elem = document.getElementById("transferInput");
