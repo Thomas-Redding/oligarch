@@ -92,7 +92,6 @@ body {
   flex: 1;
   display: flex;
   flex-direction: row;
-  /*overflow-y: auto;*/
 }
 
 #mainTable {
@@ -118,12 +117,8 @@ path {
   overflow-y: auto;
 }
 
-#mainTable > tbody {
-  width: 100%;
-}
-
-#mainTable > tbody > tr {
-  width: 100%;
+#mainTable {
+  margin: auto;
 }
 
 </style>
@@ -235,7 +230,6 @@ function render_table(state) {
       <td>AU</td>
       <td>Cash</td>
       <td>Score</td>
-      <td style="width:100%"></td>
     </tr>
   `;
 
@@ -446,7 +440,7 @@ window.onresize = () => {
     contentDiv.style.display = 'flex';
     contentDiv.style.flexDirection = 'row';
     leftPanel.style.display = 'flex';
-    mainTable.style.display = 'block';
+    mainTable.style.display = 'table';
     actionPanel.style.display = 'block';
     mapDiv.style.display = 'block';
     mapDiv.style.flex = 1;
@@ -465,9 +459,7 @@ window.onresize = () => {
     mapDiv.style.maxHeight = "100%";
     gameLogDiv.style.display = (tab === kTabLog ? "block" : "none");
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
-    mainTable.style.display = (tab == kTabInfo ? "block" : "none");
-
-    mainTable.style.width = '100%';
+    mainTable.style.display = (tab == kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';
   }
 
