@@ -199,7 +199,7 @@ class Game
 
     _start_auction(nation)
     {
-        //this.timer = new Timer()
+        this.mother_state.clock = 0
         this._prayer('auction_start', nation, this.mother_state)
 
     }

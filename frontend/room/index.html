@@ -576,11 +576,13 @@ class Clock {
 let clock = new Clock();
 
 let gSocket;
+let gState_DO_NOT_USE;
 login().then((socket) => {
   console.log("CONNECTED");
   gSocket = socket;
   gSocket.addEventListener("message", (event) => {
     let [action, details, state] = JSON.parse(event.data);
+    gState_DO_NOT_USE = state;
     // console.log(state);
     console.log("========================");
     console.log("Received action:", action);
