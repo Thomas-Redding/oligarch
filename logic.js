@@ -1,5 +1,4 @@
 let utils = require('./utils.js')
-let Timer = require('./timer.js')
 
 //macro for pythonic list indexing
 Array.prototype.fromback = function(i=1) {
@@ -70,9 +69,9 @@ class Game
         if (this.mother_state.players[username].auth !== 'admin') return;
         [action, args, state] = this._history.undo();
         this.mother_state = state;
-        if (this.timer) this.timer.terminateTime();
+        if (this.timer) this.timer.stop();
         if (action)
-        this.timer = new Timer(this.mother_state.clock);
+        this.timer.start(this.mother_state.clock);
     }
 
     endLobby(username)
@@ -135,7 +134,7 @@ class Game
         }
         if (all_ready) {
             this.mother_state.clock = this.timer.queryTime 
-            this.timer.terminateTime(true);
+            this.timer.stop(true);
         }
     }
 
@@ -167,6 +166,7 @@ class Game
         this.rdyUp(username)
     }
 
+<<<<<<< HEAD
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
         if (this.mother_state.players[username].vote == null) {
@@ -176,9 +176,12 @@ class Game
     }
 
     constructor(prayer) 
+=======
+    constructor(prayer, timer)
+>>>>>>> dfe4963e8b614f1ffd69abf7c0a6b61b04509757
     {
         this.prayer = prayer
-        this.timer = null
+        this.timer = timer
         this._history = new History();
         this.mother_state = { }
         this.mother_state.players = { }
@@ -334,9 +337,9 @@ class Game
     _begin_deliberation()
     {
         this.mother_state.clock = TIMING.deliberation
-            if (this.isRunning) this.timer.terminateTime(false)
-            this.timer = new Timer(TIMING.deliberation,
-                 this._finish_deliberation.bind(this))
+            if (this.isRunning) this.timer.stop(false)
+            this.timer.start(TIMING.deliberation,
+                this._finish_deliberation.bind(this))
             this._prayer('begin_deliberation',TIMING.deliberation)
     }
 
@@ -350,7 +353,7 @@ class Game
     _start_auction(nation)
     {
         this.mother_state.clock = 0
-        this.timer.terminateTime(false)
+        this.timer.stop(false)
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this._prayer('auction_start', nation)
@@ -360,8 +363,8 @@ class Game
     {
         this.mother_state.current_bid = amount
         this.mother_state.highest_bidder = username
-        if (this.timer) this.timer.terminateTime(false)
-            this.timer = new Timer(TIMING.bidding, this._conclude_bidding.bind(this))
+        if (this.timer) this.timer.stop(false)
+            this.timer.start(TIMING.bidding, this._conclude_bidding.bind(this))
         console.log('register bid called')
         this._prayer('bid_recieved', {'amount' : amount, 'player': username})
 
@@ -391,8 +394,8 @@ class Game
         for (let player in voters){
             this.mother_state.players[player].ready = (voters[player] == 0)
         }
-        if (this.timer.isRunning) this.timer.terminateTime(false)
-        this.timer = new Timer(TIMING.election, this._conclude_election.bind(this))
+        if (this.timer.isRunning) this.timer.stop(false)
+        this.timer.start(TIMING.election, this._conclude_election.bind(this))
         this._prayer('start_election', nation)
     }
 
@@ -418,7 +421,7 @@ class Game
                 v_in_favor[player] += voters[player]
                 if (v_in_favor[player] >= n_votes) { 
                     this.mother_state.nations[nation].president = winner
-                    this.timer.terminateTime(true)
+                    this.timer.stop(true)
                     break
                 }
             }
