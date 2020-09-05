@@ -8,7 +8,7 @@ Array.prototype.fromback = function(i=1) {
 //global lists and macros defined here
 const TOTAL_INIT_CASH = 600
 const ROUNDS = [1,2,3,4,5,6] 
-const PHASES = ['Taxation','Deliberation','Auction','Action']
+const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America', 
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
@@ -238,7 +238,7 @@ class Game
             this._transition()
         }
     
-        else if (this.mother_state.stage.phase === 'Deliberation') {
+        else if (this.mother_state.stage.phase === 'Discuss') {
             this._begin_deliberation()
         }
 
@@ -316,7 +316,7 @@ class Game
                 this.mother_state.stage.subphase = SUBPHASES[0]
             }
 
-        else if (phase == 'Deliberation'){
+        else if (phase == 'Discuss'){
             this.mother_state.stage.phase = next(phase, PHASES)
         }
 
