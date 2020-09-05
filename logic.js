@@ -280,7 +280,7 @@ class Game
                 this._transition()
             }
             else if(no_army){
-                this.mother_state.subphase = 'Attack'
+                this.mother_state.subphase = 'Spawn'
                 this._transition()
             }
             else{
@@ -345,6 +345,7 @@ class Game
                 this.mother_state.stage.turn = next(turn, TURNS)
             }
             this.mother_state.stage.subphase = next(subphase, SUBPHASES)
+            this._prayer('begin_' + this.mother_state.stage.subphase,'')
         }
         this._act()
     }
