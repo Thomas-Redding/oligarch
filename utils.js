@@ -441,6 +441,10 @@ let utils = {
     return nation;
   },
 
+  /*
+   * @returns {Object} a dictionary from usernames to how many votes that user
+   * has received.
+   */
   candidate_votes: (mother_state) => {
     let rtn = {};
     let nation = mother_state.stage.turn;
