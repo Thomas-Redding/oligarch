@@ -317,8 +317,6 @@ function render_map(state) {
 
     let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, "move");
 
-    console.log(army);
-
     let icon_drawers = [];
 
     if (sum(army.infanty) > 0) {

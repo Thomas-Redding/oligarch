@@ -29,8 +29,9 @@ class OligarchRoom extends Room {
     }
     for (let x of data) {
       if (x.method === "get_state") {
-        console.log('<<<', "<state clock:" + this.game.mother_state.clock + ">");
-        super.sendData(username, JSON.stringify(["get_state", null, this.game.mother_state]));
+        let mother_state = this.game.fetchGameState()
+        console.log('<<<', "<state clock:" + mother_state.clock + ">");
+        super.sendData(username, JSON.stringify(["get_state", null, mother_state]));
       } else  {
         if (x.method.startsWith("_")) {
           console.log("WARNING: User attempted to call a private method on Game.");
