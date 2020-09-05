@@ -640,14 +640,26 @@ class Clock {
 }
 
 function areAdminFetched(areAdmin) {
-  console.log("areAdminFetched", areAdmin);
+  let playIcon = document.getElementById("play-icon");
+  let pauseIcon = document.getElementById("pause-icon");
   if (areAdmin) {
-    let playIcon = document.getElementById("play-icon");
-    let pauseIcon = document.getElementById("pause-icon");
-    playIcon.style.cursor = "pointer";
-    pauseIcon.style.cursor = "pointer";
-    playIcon.classList.add("clickable-svg")
-    pauseIcon.classList.add("clickable-svg")
+    playIcon.classList.add("clickable-svg");
+    pauseIcon.classList.add("clickable-svg");
+    playIcon.classList.remove("unclickable-svg");
+    pauseIcon.classList.remove("unclickable-svg");
+    playIcon.onclick = () => {
+      send({"method": "resume" });
+    };
+    pauseIcon.onclick = () => {
+      send({"method": "pause" });
+    };
+  } else {
+    playIcon.classList.remove("clickable-svg");
+    pauseIcon.classList.remove("clickable-svg");
+    playIcon.classList.add("unclickable-svg");
+    pauseIcon.classList.add("unclickable-svg");
+    playIcon.onclick = () => {};
+    pauseIcon.onclick = () => {};
   }
 }
 
@@ -701,13 +713,13 @@ login().then((socket) => {
       let playIcon = document.getElementById("play-icon");
       let pauseIcon = document.getElementById("pause-icon");
       playIcon.style.display = "block";
-      pauseIcons.style.display = "none";
+      pauseIcon.style.display = "none";
     }
     else if (action === "resume") {
       let playIcon = document.getElementById("play-icon");
       let pauseIcon = document.getElementById("pause-icon");
       playIcon.style.display = "none";
-      pauseIcons.style.display = "block";
+      pauseIcon.style.display = "block";
     }
     else if (action === "end_lobby") {
       // Equivalent to game_start
