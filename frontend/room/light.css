@@ -67,6 +67,6 @@ body {
 }
 
 .nationRect {
-  stroke: #888;
+  fill: #888;
   stroke: #ccc;
 }
