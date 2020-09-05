@@ -478,6 +478,34 @@ let utils = {
   },
 
   /*
+   * @param {int} troop_id - the id of the desired troop
+   * @returns {Object} troop - the json representing the desired troop
+   */
+  toop_from_id: (mother_state, troop_id) => {
+    for (let nation in mother_state.nations) {
+      let arr = mother_state.nations[nation].army.filter(x => x.id == troop_id);
+      if (arr.length == 0) continue;
+      if (arr.length > 1) throw Error("Multiple troops share an ID.");
+      return arr[0];
+    }
+    throw Error("Troop not found with the given ID.");
+  },
+
+  /*
+   * @param {int} troop_id - id of the troop whose allegiance you want to know
+   * @returns {string} the nation owning the troop
+   */
+  allegiance_from_troop_id: (mother_state, troop_id) => {
+    for (let nation in mother_state.nations) {
+      let arr = mother_state.nations[nation].army.filter(x => x.id == troop_id);
+      if (arr.length == 0) continue;
+      if (arr.length > 1) throw Error("Multiple troops share an ID.");
+      return nation;
+    }
+    throw Error("Troop not found with the given ID.");
+  },
+
+  /*
    * Perform a deep copy of a json object. This method does not support
    * functions.
    */
