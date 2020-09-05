@@ -254,9 +254,7 @@ class Game
     //OR it can ensure that another method called by _act
     //will eventually call _transition (i.e. timer events)
     _act()
-    {
-
-    
+    {    
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
         
@@ -375,9 +373,7 @@ class Game
                 this.mother_state.stage.turn = next(turn, TURNS)
                 this.timer.stop(true)
             }
-            else {
-                this._prayer('begin_'+nextsubphase,'')
-            }
+            this.mother_state.stage.subphase = nextsubphase
         }
         this._act()
     }
