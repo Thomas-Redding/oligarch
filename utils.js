@@ -2,27 +2,33 @@ let utils = {
   NATIONS: {
     "Africa": {
       "base_income_per_territory" : 6,
-      "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"]
+      "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"],
+      "total_shares": 5
     },
     "North America": {
       "base_income_per_territory" : 4,
-      "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"]
+      "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"],
+      "total_shares": 7
     },
     "South America": {
       "base_income_per_territory" : 9,
-      "territories": ["Venezuela", "Brazil", "Argentina", "Peru"]
+      "territories": ["Venezuela", "Brazil", "Argentina", "Peru"],
+      "total_shares": 4
     },
     "Europe": {
       "base_income_per_territory" : 5,
-      "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"]
+      "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"],
+      "total_shares": 6
     },
     "Asia": {
       "base_income_per_territory" : 5,
-      "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"]
+      "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"],
+      "total_shares": 8
     },
     "Australia": {
       "base_income_per_territory" : 9,
-      "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"]
+      "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"],
+      "total_shares": 3
     }
   },
   NEIGHBORS: {
