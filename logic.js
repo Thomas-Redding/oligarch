@@ -121,7 +121,7 @@ class Game
     _prayer(prayer_id, signal)
     {
         let tau = 0;
-        if (this.isRunning) tau = this.timer.queryTime()
+        if (this.time && this.timer.isRunning()) tau = this.timer.queryTime()
         this.mother_state.clock = tau
         this.prayer(prayer_id, signal, this.mother_state)
     }
