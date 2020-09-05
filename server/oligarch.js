@@ -10,7 +10,7 @@ class OligarchRoom extends Room {
   }
 
   sendDataToAll(data) {
-    console.log("sendDataToAll", JSON.stringify(data))
+    console.log('<<<', JSON.stringify(data))
     let users = super.connectedUsers();
     for (let user of users) {
       super.sendData(user, JSON.stringify(data));
@@ -22,10 +22,10 @@ class OligarchRoom extends Room {
   }
 
   didReceiveData(username, data) {
-    console.log('didReceiveData("' + username + '", ' + data + '")')
+    console.log('>>>', data)
     data = JSON.parse(data);
     if (data.action == "state") {
-      this.sendDataToAll(this.game.mother_state);
+      this.sendDataToAll(["state", null, this.game.mother_state]);
     } else if (data.action == "endLobby") {
       this.game.endLobby(username)
       this.game.startGame()
@@ -33,6 +33,7 @@ class OligarchRoom extends Room {
   }
 
   tryToJoin(username, password, ws) {
+    console.log('tryToJoin("' + username + '", "' + password + '")');
     if (super.users().indexOf(username) > -1) {
       return super.tryToJoin(username, password, ws);
     } else {

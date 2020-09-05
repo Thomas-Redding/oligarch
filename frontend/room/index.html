@@ -353,8 +353,8 @@ const kIsBoard = false;
 window.onresize = () => {
   const bodyRect = document.body.getBoundingClientRect();
 
-  const kOffColor = "white";
-  const kOnColor = "black";
+  const kOffColor = theme.get() == "light" ? "white" : "#222";
+  const kOnColor = theme.get() == "light" ? "black" : "#ccc";
   mapButton.style.backgroundColor = (tab === kTabMap ? kOnColor : kOffColor);
   infoButton.style.backgroundColor = (tab === kTabInfo ? kOnColor : kOffColor);
   logButton.style.backgroundColor = (tab === kTabLog ? kOnColor : kOffColor);
