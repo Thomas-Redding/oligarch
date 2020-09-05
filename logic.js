@@ -92,6 +92,11 @@ class Game
         return rtn
     }
 
+    startGame()
+    {
+        this._act()
+    }
+
     _compute_income(nation)
     {
         inc = 0
@@ -108,6 +113,10 @@ class Game
         if (this.mother_state.stage.phase === 'taxation') {
             this._compute_income(this.mother_state.stage.turn)
             this._transition()
+        }
+
+        else if (this.mother_state.stage.phase === 'taxation') {
+
         }
 
     }
@@ -135,7 +144,7 @@ class Game
     }
 
 
-    addPlayer(username, auth='player')
+    addPlayer(username, auth='admin')
     {
         player = {}
         rtn = true
