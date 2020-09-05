@@ -480,7 +480,7 @@ class Game
     {
         let nat = this.mother_state.stage.turn
         let prez = this.mother_state.nations[nat].president
-        details = {'president':prez, 'nation':nat}
+        let details = {'president':prez, 'nation':nat}
         let tau = this.timer.queryTime() + TIMING.actions
         details['time'] = tau
         this._prayer('begin_presidential_command',details)
