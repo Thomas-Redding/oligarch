@@ -762,7 +762,7 @@ login().then((socket) => {
       // TODO(mredding): update currentVotesDiv when this exists on the backend.
       currentVotesDiv.innerHTML = "";
     }
-    else if (accumulate === "begin_build") {
+    else if (action === "begin_build") {
       factoryRadio.checked = true;
     }
     else if (action === "conclude_bidding") {
