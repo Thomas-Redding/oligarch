@@ -48,8 +48,8 @@ class Game
 
     startGame(username)
     {
+        this._player_cash_init()
         this.prayer('game_start', {}, this.mother_state)
-        
         this._act()
     }
 
