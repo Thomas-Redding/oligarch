@@ -8,7 +8,6 @@ const ChatRoom = require("./chat.js");
 /********** Serving Files **********/
 
 function sendFile(response, filePath) {
-  console.log(`sendFile(*, '` + filePath + `')`)
   fs.readFile(filePath, function (err, data) {
     if (err) {
       fs.readFile(filePath + "/index.html", function (err2, data) {
@@ -56,7 +55,6 @@ function sendCode(response, code, specific_message=undefined) {
 
 // Create an instance of the http server to handle HTTP requests
 let app = http.createServer((request, response) => {
-  console.log("handle('" + request.url + "')")
   if (request.url.startsWith('/api/')) {
     sendCode(response, 501);
   } else if (request.url.startsWith('/room/')) {

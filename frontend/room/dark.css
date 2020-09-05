@@ -1,6 +1,6 @@
 body {
   color: white;
-  background-color: black;
+  background-color: #222;
 }
 
 .personButton {
@@ -11,7 +11,7 @@ body {
 
 #statusBarDiv {
 	color: white;
-  background-color: black;
+  background-color: #222;
   border-bottom: 1px solid white;
 }
 
@@ -24,12 +24,22 @@ body {
 }
 
 #leftPanel {
-  border-right: solid white 1px;
 }
 
 #lobbyDiv {
 	color: white;
   background-color: black;
+}
+
+.tab-on {
+	font-weight: bold;
+  background-color: #222;
+  border-top: none;
+}
+
+.tab-off {
+	border-top: solid white 1px;
+  background-color: #111;
 }
 
 .piece-circle {

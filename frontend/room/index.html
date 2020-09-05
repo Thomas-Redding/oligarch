@@ -47,7 +47,6 @@ body {
   display: flex;
   flex-direction: row;
   font-size: 1.5em;
-  border-top: solid black 1px;
 }
 
 .tab-button {
@@ -284,13 +283,39 @@ window.onload = () => {
       return;
     }
 
-    const r = 10;
+    {
+      let [x, y] = territories[territory].center;
+      circ = create_circle(x, y, 20);
+      circ.style.fill = 'none';
+      circ.style.stroke = 'white';
+      riskMap.appendChild(circ);
+    }
+
+    const r = 12;
+    const s = 20;
     const tau = Math.PI * 2;
-    for (let angle of [0, tau * .2, tau * .4, tau * .6, tau * .8].map(angle => angle - Math.PI / 2)) {
+    for (let t of [0, 1, 2, 3, 4, 5, 6, 7]) {
+      let angle = tau * t / 8 - Math.PI / 2;
+      if (Math.random() < 0.7) {
+        continue;
+      }
       let [x, y] = territories[territory].center;
       x += Math.cos(angle) * r * 1.7;
       y += Math.sin(angle) * r * 1.7;
-      let circ = create_circle(x, y, r);
+      let circ;
+      if (t === 2) {
+        circ = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
+      } else if (t === 3) {
+        circ = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
+      } else if (t === 0) {
+        circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
+      } else if (t === 1) {
+        circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
+      } else if (t === 4) {
+        circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
+      } else {
+        circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
+      }
       riskMap.appendChild(circ);
     }
 
@@ -302,6 +327,10 @@ window.onload = () => {
   add_player("Tony");
 
   window.onresize();
+
+  onstagechange({stage: {
+    phase: "deliberation",
+  }});
 };
 
 const kTabMap = 'kTabMap';
@@ -316,21 +345,34 @@ let stage = {
   subphase: null,
 };
 
-let tab = kTabLobby;
+let tab = kTabInfo;
 
 const kIsBoard = false;
 
 window.onresize = () => {
   const bodyRect = document.body.getBoundingClientRect();
 
-  const kOffColor = "white";
-  const kOnColor = "black";
-  mapButton.style.backgroundColor = (tab === kTabMap ? kOnColor : kOffColor);
-  infoButton.style.backgroundColor = (tab === kTabInfo ? kOnColor : kOffColor);
-  logButton.style.backgroundColor = (tab === kTabLog ? kOnColor : kOffColor);
-  mapButton.style.color = (tab === kTabMap ? kOffColor : kOnColor);
-  infoButton.style.color = (tab === kTabInfo ? kOffColor : kOnColor);
-  logButton.style.color = (tab === kTabLog ? kOffColor : kOnColor);
+  mapButton.classList.remove("tab-on");
+  infoButton.classList.remove("tab-on");
+  logButton.classList.remove("tab-on");
+  mapButton.classList.remove("tab-off");
+  infoButton.classList.remove("tab-off");
+  logButton.classList.remove("tab-off");
+  if (tab === kTabMap) {
+    mapButton.classList.add("tab-on");
+  } else {
+    mapButton.classList.add("tab-off");
+  }
+  if (tab === kTabInfo) {
+    infoButton.classList.add("tab-on");
+  } else {
+    infoButton.classList.add("tab-off");
+  }
+  if (tab === kTabLog) {
+    logButton.classList.add("tab-on");
+  } else {
+    logButton.classList.add("tab-off");
+  }
 
   if (bodyRect.width > bodyRect.height * 1.8) {
     console.log('desktop');
@@ -358,11 +400,12 @@ window.onresize = () => {
     gameLogDiv.style.display = (tab === kTabLog ? "block" : "none");
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
     mainTable.style.display = (tab == kTabInfo ? "block" : "none");
-    lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
 
     mainTable.style.width = '100%';
     bottomNavBarDiv.style.display = 'flex';
   }
+
+  lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
 
   if (kIsBoard) {
     actionPanel.style.display = "none";
@@ -412,6 +455,27 @@ login().then((socket) => {
   console.log("ERROR:", error);
 });
 
+function onstagechange(model) {
+  let stage = model.stage;
+  if (stage.phase === "auction") {
+    bidButton.style.display = "inline-block";
+  } else {
+    bidButton.style.display = "none";
+  }
+
+  if (stage.phase === "deliberation") {
+    endDeliberationButton.style.display = "inline-block";
+  } else {
+    endDeliberationButton.style.display = "none";
+  }
+
+  if (stage.phase === "action" && stage.subphase == "election") {
+    voteButton.style.display = "inline-block";
+  } else {
+    voteButton.style.display = "none";
+  }
+}
+
 function increment_transfer_input(delta) {
   let elem = document.getElementById("transferInput");
   elem.value = parseInt(elem.value) + delta;
@@ -435,6 +499,10 @@ function show_modal(type) {
     popupDiv.style.display = 'none';
   }
   popupDiv.style.display = 'block';
+}
+
+function end_deliberation() {
+  // TODO(mredding)
 }
 
 function send(obj) {
@@ -484,10 +552,10 @@ function start_game() {
     </table>
     <br>
     <div id="actionPanel" style="text-align:center; border-top:solid black 1px; padding:0.5em; font-size:1.5em;">
-      <div class='button' style="display:inline-block;" onclick="show_modal('Give')">Give</div>
-      <div class='button' style="display:inline-block;" onclick="show_modal('Vote')">Vote</div>
-      <div class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
-      <div class='button' style="display:inline-block;">End Deliberation</div>
+      <div id="giveButton" class='button' style="display:inline-block;" onclick="show_modal('Give')">Give</div>
+      <div id="voteButton" class='button' style="display:inline-block;" onclick="show_modal('Vote')">Vote</div>
+      <div id="bidButton" class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
+      <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
     <div id="gameLogDiv" style="display:flex; flex-direction:column; flex:1; min-height:0; overflow:auto; border-top: solid black 1px;">
       <div style="padding:0.5em; display:flex; flex-direction:row;">

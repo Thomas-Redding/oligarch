@@ -31,6 +31,16 @@ body {
   background-color: white;
 }
 
+.tab-on {
+  font-weight: bold;
+  background-color: white;
+}
+
+.tab-off {
+  background-color: #ddd;
+  border-top: solid black 1px;
+}
+
 .piece-circle {
   fill: black;
 }

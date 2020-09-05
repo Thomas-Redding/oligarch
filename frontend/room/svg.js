@@ -167,4 +167,12 @@ let svg = {
     for (key in attrs) rtn.setAttribute(key, attrs[key]);
     return rtn;
   },
+  image: (src, x, y, attrs={}) => {
+    let rtn = document.createElementNS("http://www.w3.org/2000/svg", "image");
+    rtn.setAttributeNS('http://www.w3.org/1999/xlink','href', src);
+    rtn.setAttribute("x", x);
+    rtn.setAttribute("y", y);
+    for (key in attrs) rtn.setAttribute(key, attrs[key]);
+    return rtn;
+  }
 };
