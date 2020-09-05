@@ -10,7 +10,7 @@ body {
 }
 
 #statusBarDiv {
-	color: white;
+  color: white;
   background-color: #222;
   border-bottom: 1px solid #888;
 }
@@ -27,18 +27,18 @@ body {
 }
 
 #lobbyDiv {
-	color: white;
+  color: white;
   background-color: #222;
 }
 
 .tab-on {
-	font-weight: bold;
+  font-weight: bold;
   background-color: #222;
   border-top: none;
 }
 
 .tab-off {
-	border-top: solid white 1px;
+  border-top: solid white 1px;
   background-color: #111;
 }
 
@@ -47,8 +47,8 @@ body {
 }
 
 .button {
-	color: black;
-	background-color: hsl(50, 100%, 45%);
+  color: black;
+  background-color: hsl(50, 100%, 45%);
 }
 
 #popupDivBackground {
@@ -57,7 +57,7 @@ body {
 }
 
 .popup {
-	color: white;
+  color: white;
   background-color: #222;
   border: solid #888 1px;
   opacity: 1;
@@ -96,4 +96,12 @@ text {
 }
 .column-AU {
   color: rgb(254, 102, 226);
+}
+
+#play-icon {
+  fill: white;
+}
+
+#pause-icon {
+  fill: white;
 }

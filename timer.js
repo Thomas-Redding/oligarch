@@ -7,6 +7,7 @@ class Timer
         this._t = 0;
         this._is_running = false;
         this._id = undefined;
+        this._is_paused = false;
     }
     /*
      * @param {number} time - number of milliseconds to wait
@@ -62,6 +63,18 @@ class Timer
             this._callback()
         }
         clearTimeout(this._id);
+    }
+
+    pause() {
+        this._is_paused = true;
+    }
+
+    resume() {
+        this._is_paused = false;
+    }
+
+    isPaused() {
+        return this._is_paused;
     }
 }
 
