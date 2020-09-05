@@ -7,7 +7,7 @@ Array.prototype.fromback = function(i=1) {
 
 //global lists defined here
 const rounds = [1,2,3,4,5,6] 
-const phases = ['taxation','auction','action']
+const phases = ['taxation','deliberation','auction','action']
 const turns = ['NA','SA','EU','AF','AS','AU']
 const subphases = ['election','move','attack','spawn','build','dividends']
 const blacklisted_names = []
@@ -117,6 +117,7 @@ class Game
         }
 
         else if (this.mother_state.stage.phase === 'auction') {
+
 
 
         }
