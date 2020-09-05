@@ -25,16 +25,22 @@ class History {
     this._states = [];
     this._args = [];
     this._actions = [];
+    this._logs = [];
   }
-  save(action, args, mother_state) {
+  save(action, args, mother_state, log) {
     this._actions.push(action);
     this._args.push(args);
     this._states.push(utils.deep_copy(mother_state));
+    this._logs.push(log);
+  }
+  logs() {
+    return utils.deep_copy(this._logs);
   }
   undo() {
     let action = this._actions.pop();
     let args = this._args.pop();
     let state = this._actions.pop();
+    this._logs.pop();
     if (this._historicalStates.length <= 1) {
         throw Exception("Attempted to undo witha history of length 1.")
     }
@@ -49,6 +55,11 @@ class Game
         if (this.timer && this.timer.isRunning())
         this.mother_state.clock = this.timer.queryTime();
         return this.mother_state
+    }
+
+    logs(username)
+    {
+        return this._history.logs();
     }
 
     undo(username) {
@@ -71,7 +82,7 @@ class Game
             rtn = false
         }
         else {
-            this._history.save("endLobby", [username], this.mother_state);
+            this._history.save("endLobby", [username], this.mother_state, "<b>" + username + "</b> closed the lobby.");
             for (let ord of this.mother_state.order) {
                 this.mother_state.stage[ord] = this.mother_state[ord][0]
             }
@@ -84,7 +95,7 @@ class Game
 
     startGame(username)
     {
-        this._history.save("startGame", [username], this.mother_state);
+        this._history.save("startGame", [username], this.mother_state, "<b>" + username + "</b> started the game.");
         this._player_cash_init()
         this.prayer('game_start', {}, this.mother_state)
         this._act()
@@ -116,7 +127,7 @@ class Game
     rdyUp(username)
     {
         if (this.mother_state.players[username].ready) return;
-        this._history.save("rdyUp", [username], this.mother_state);
+        this._history.save("rdyUp", [username], this.mother_state, "<b>" + username + "</b> readied up");
         this.mother_state.players[username].ready = true
         let all_ready = true
         for (let player of Object.values(this.mother_state.players)) {
@@ -135,7 +146,7 @@ class Game
         //console.log(this.mother_state.players[username])
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
-            this._history.save("bid", [username], this.mother_state);
+            this._history.save("bid", [username], this.mother_state, "<b>" + username +  "</b> bid $" + amount);
             this._register_bid(amount, username)
         }
     }
