@@ -157,7 +157,8 @@ class Game
 
     _player_cash_init()
     {
-        let inicash = Math.floor(TOTAL_INIT_CASH/this.mother_state.players.length)
+        n_players = Object.keys(this.mother_state.players).length
+        let inicash = Math.floor(TOTAL_INIT_CASH/n_players)
         for (let player in this.mother_state.players){
             console.log(inicash)
             console.log(player)
