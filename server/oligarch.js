@@ -17,7 +17,7 @@ class OligarchRoom extends Room {
   }
 
   prayer(action, details, newModel) {
-    console.log('<<<', JSON.stringify([action, details, "<state>"]));
+    console.log('<<<', JSON.stringify([action, details, "<state clock:" + newModel.clock + ">"]));
     this.sendDataToAll([ action, details, newModel ]);
   }
 
@@ -29,7 +29,7 @@ class OligarchRoom extends Room {
     }
     for (let x of data) {
       if (x.method === "get_state") {
-        console.log('<<<', "<state>");
+        console.log('<<<', "<state clock:" + this.game.mother_state.clock + ">");
         super.sendData(username, JSON.stringify(["get_state", null, this.game.mother_state]));
       } else  {
         if (x.method.startsWith("_")) {
