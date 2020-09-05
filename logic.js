@@ -484,9 +484,7 @@ class Game
         let tau = this.timer.queryTime() + TIMING.actions
         details['time'] = tau
         this._prayer('begin_presidential_command',details)
-        this.timer.start(tau, () => {
-            this._end_presidential_command();
-        }) 
+        this.timer.start(tau, this._end_presidential_command) 
     }
 
     _end_presidential_command()
