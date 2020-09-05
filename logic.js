@@ -468,6 +468,7 @@ class Game
     {
         for (let player in this.mother_state.players){
             this.mother_state.players[player].vote = null
+            this.mother_state.players[player].ready = false
         }
         let nat = this.mother_state.stage.turn
         let details = {'winner' : this.mother_state.nations[nat].president}
