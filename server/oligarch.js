@@ -7,7 +7,9 @@ class OligarchRoom extends Room {
     console.log('didReceiveData("' + username + '", ' + data + '")')
     if (data == "ping") {
       super.sendData(username, "pong");
+      return;
     }
+    let data = JSON.parse(data);
   }
 
   tryToJoin(username, password, ws) {
