@@ -48,8 +48,8 @@ class Game
 
     startGame(username)
     {
+        this._player_cash_init()
         this.prayer('game_start', {}, this.mother_state)
-        
         this._act()
     }
 
@@ -157,8 +157,10 @@ class Game
 
     _player_cash_init()
     {
-        let inicash = (int) (TOTAL_INIT_CASH/this.mother_state.players.length)
-        for (player of this.mother_state.players){
+        let inicash = Math.floor(TOTAL_INIT_CASH/this.mother_state.players.length)
+        for (let player in this.mother_state.players){
+            console.log(inicash)
+            console.log(player)
             this.mother_state.players[player].cash = inicash
         }
 
