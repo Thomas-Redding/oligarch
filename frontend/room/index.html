@@ -251,12 +251,12 @@ let theme = {
     }
   },
   "get": () => {
-    let theme = network.cookie.get("theme");
-    if (!theme) {
+    let newTheme = network.cookie.get("theme");
+    if (!newTheme) {
       theme.set("dark");
-      theme = "dark";
+      newTheme = "dark";
     }
-    return theme;
+    return newTheme;
   },
   "subscribe": (callback) => {
     theme["_callbacks"].push(callback);
