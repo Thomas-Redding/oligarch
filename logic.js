@@ -433,13 +433,14 @@ class Game
     _register_vote(username, candidate_username)
     {
         this.mother_state.players[username].vote = candidate_username
+        let nat = this.mother_state.stage.turn
         let candidate_votes = utils.candidate_votes(this.mother_state)
         this._prayer('vote_tallied', candidate_votes)
         let n_votes = 0
         for (let player in candidate_votes) {
             if (candidate_votes[player] >= n_votes) {
                 console.log(player)
-                this.mother_state.nations[nation].president = player
+                this.mother_state.nations[turn].president = player
                 this.timer.stop(true)
             }
         }
