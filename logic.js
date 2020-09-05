@@ -280,8 +280,8 @@ class Game
                 this._prayer('begin_dividends','')
             }
             else if(no_army){
-                this.mother_state.stage.subphase = 'Spawn'
-                this._prayer('begin_spawn','')
+                this.mother_state.stage.subphase = 'Build'
+                this._prayer('begin_build','')
             }
             else{
             }
