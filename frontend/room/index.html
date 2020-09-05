@@ -385,7 +385,7 @@ let stage = {
   subphase: null,
 };
 
-let tab = kTabInfo;
+let tab = kTabLobby;
 
 const kIsBoard = false;
 
@@ -490,7 +490,7 @@ login().then((socket) => {
     else if (action === "buy_share") {
       render_table();
     }
-    onstagechange();
+    onstagechange(model);
   });
   gSocket.addEventListener("close", () => {
     console.log("CLOSED");
