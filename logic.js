@@ -97,15 +97,15 @@ class Game
     rdyUp(username)
     {
         this.mother_state.players[username]['ready'] = true
-        
-        all_ready = true
-        for (let player of this.mother_state.players) {
-            all_ready = all_ready && player.ready
+        let all_ready = true
+        console.log(this.mother_state);
+        for (let player of Object.values(this.mother_state.players)) {
+            all_ready &= player.ready
         }
 
         if (all_ready){
             this.mother_state.clock = this.timer.queryTime 
-            this.timer.terminateTime(do_callback)
+            this.timer.terminateTime(true);
         }
     }
 
