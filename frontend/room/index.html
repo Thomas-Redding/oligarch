@@ -595,7 +595,7 @@ function show_modal(type) {
 }
 
 function end_deliberation() {
-  gSocket.send({
+  send({
     "action": "ready_up"
   });
 }
