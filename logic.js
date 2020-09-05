@@ -142,6 +142,10 @@ class Game
             
             for (let terr of GEOGRAPHY.nations[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
+                this.mother_state.nations[nation][terr].n_factories = Math.random() < 0.5 ? 1 :0 
+
+                this.mother_state.nations[nation][terr].n_baracks = 1
+
                 terr2nat[terr] = nation
             }
         }
