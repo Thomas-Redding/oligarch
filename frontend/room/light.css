@@ -65,3 +65,8 @@ body {
   border: solid black 1px;
   opacity: 1;
 }
+
+.nationRect {
+  stroke: #888;
+  stroke: #ccc;
+}

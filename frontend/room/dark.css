@@ -66,3 +66,12 @@ body {
   border: solid #888 1px;
   opacity: 1;
 }
+
+.nationRect {
+  stroke: #888;
+  fill: #333;
+}
+
+text {
+  fill: white;
+}
