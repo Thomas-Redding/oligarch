@@ -121,7 +121,7 @@ class Game
     _prayer(prayer_id, signal)
     {
         let tau = 0;
-        if (this.isRunning) tau = this.timer.queryTime()
+        if (this.timer && this.timer.isRunning()) tau = this.timer.queryTime()
         this.mother_state.clock = tau
         this.prayer(prayer_id, signal, this.mother_state)
     }
@@ -204,6 +204,15 @@ class Game
         this._prayer('auction_start', nation)
     }
 
+    _begin_deliberation()
+    {
+        this.mother_state.clock = TIMING.deliberation
+            if (this.isRunning) this.timer.terminateTime(false)
+            this.timer = new Timer(TIMING.deliberation,
+                 this._finish_deliberation.bind(this))
+            this._prayer('begin_deliberation',TIMING.deliberation)
+    }
+
     _act()
     {
         if (this.mother_state.stage.phase === 'Taxation') {
@@ -214,11 +223,7 @@ class Game
         }
     
         else if (this.mother_state.stage.phase === 'Deliberation') {
-            this.mother_state.clock = TIMING.deliberation
-            if (this.timer) this.timer.terminateTime(false)
-            this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
-            this._prayer('begin_deliberation',TIMING.deliberation)
-
+            this._begin_deliberation()
         }
 
         else if (this.mother_state.stage.phase === 'Auction') {

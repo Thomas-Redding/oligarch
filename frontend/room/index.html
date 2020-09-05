@@ -275,10 +275,10 @@ function render_table(state) {
     tbody.appendChild(tr);
   }
 
-  update_map(state);
+  render_map(state);
 }
 
-function update_nation_rects(state) {
+function render_nation_rects(state) {
   let shares = utils.num_shares_already_auctioned_for_nation(state);
   nationRects.innerHTML = "";
   for (let name in nations) {
@@ -297,13 +297,13 @@ function update_nation_rects(state) {
     let incomeText = svg.text("$" + nation.income + "/turn", coords.x + 4, coords.y + 28);
     nationRects.appendChild(incomeText);
 
-    let sharesText = svg.text(shares[name] + "/" + nation.territories.length + " shares", coords.x + 4, coords.y + 42);
+    let sharesText = svg.text(shares[name] + "/" + utils.NATIONS[name].total_shares + " shares", coords.x + 4, coords.y + 42);
     nationRects.appendChild(sharesText);
   }
 }
 
-function update_map(state) {
-  update_nation_rects(state);
+function render_map(state) {
+  render_nation_rects(state);
   // TODO(mredding): update armies/factories/barracks
 }
 
@@ -359,9 +359,10 @@ function main() {
     let nation = territory2nation[territory];
     let nationColor = nations[nation].color;
     let randColor = Color.random().scale(0.15);
+    let color = nationColor.scale(0.85).plus(randColor);
 
     path.style = '';
-    path.style.fill = nationColor.scale(0.85).plus(randColor).hex();
+    path.style.fill = color.hex();
     path.style.stroke = 'black';
 
     let onclick = (e) => {
@@ -374,12 +375,14 @@ function main() {
     path.addEventListener('click', onclick);
 
     let onmouseover = (e) => {
-      path.style.fill = color.plus(new Color(255,255,255)).scale(0.5).hex();
+      path.style.fill = color.plus(new Color(255, 255, 255)).scale(0.5).hex();
     }
+    path.addEventListener("mouseover", onmouseover);
 
     let onmouseleave = (e) => {
       path.style.fill = color.hex();
     };
+    path.addEventListener("mouseleave", onmouseleave);
 
     if (!(territory in territories)) {
       return;
