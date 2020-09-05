@@ -289,7 +289,7 @@ class Game
         }
 
         else if (this.mother_state.stage.subphase == 'Dividends') {
-            this._dividends()
+            //this._dividends()
         }
 
         else if (this.mother_state.stage.phase === 'Action'){
