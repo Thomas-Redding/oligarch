@@ -10,7 +10,7 @@ body {
 }
 
 #statusBarDiv {
-  background-color: black;
+  background-color: #282828;
   color: white;
 }
 
@@ -24,6 +24,10 @@ body {
 
 #leftPanel {
   border-right: solid black 1px;
+}
+
+#gameLogDiv {
+  border-top: solid black 1px;
 }
 
 #lobbyDiv {
@@ -48,7 +52,7 @@ body {
 .button {
   background-color: hsl(231, 100%, 45%);
   color: white;
-  box-shadow: 0 0 0.5em #888;
+  box-shadow: 0 0 0.25em #888;
 }
 
 .nationRect {

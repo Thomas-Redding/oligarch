@@ -16,6 +16,7 @@
   user-select: none;
 
 }
+
 html, body {
   width: 100%;
   height: 100%;
@@ -25,7 +26,16 @@ html, body {
 }
 
 body {
+  font-family: sans-serif;
   opacity: 0;
+}
+
+#lobbyDiv {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .personButton {
@@ -41,6 +51,20 @@ body {
   flex-direction: row;
   border-bottom: solid black 1px;
   padding: 0.4em 1em;
+}
+
+#actionPanel {
+  text-align: center;
+  margin: 1em 0;
+  padding: 0.5em;
+}
+
+#gameLogDiv {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
 #bottomNavBarDiv {
@@ -61,13 +85,13 @@ body {
   margin: 0 0.5em;
   border-radius: 0.25em;  
   cursor: pointer;
+  display: inline-block;
 }
 
 #contentDiv {
   flex: 1;
   display: flex;
   flex-direction: row;
-  /*overflow-y: auto;*/
 }
 
 #mainTable {
@@ -93,12 +117,8 @@ path {
   overflow-y: auto;
 }
 
-#mainTable > tbody {
-  width: 100%;
-}
-
-#mainTable > tbody > tr {
-  width: 100%;
+#mainTable {
+  margin: auto;
 }
 
 </style>
@@ -209,7 +229,6 @@ function render_table(state) {
       <td>AU</td>
       <td>Cash</td>
       <td>Score</td>
-      <td style="width:100%"></td>
     </tr>
   `;
 
@@ -434,7 +453,7 @@ window.onresize = () => {
     contentDiv.style.display = 'flex';
     contentDiv.style.flexDirection = 'row';
     leftPanel.style.display = 'flex';
-    mainTable.style.display = 'block';
+    mainTable.style.display = 'table';
     actionPanel.style.display = 'block';
     mapDiv.style.display = 'block';
     mapDiv.style.flex = 1;
@@ -453,9 +472,7 @@ window.onresize = () => {
     mapDiv.style.maxHeight = "100%";
     gameLogDiv.style.display = (tab === kTabLog ? "block" : "none");
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
-    mainTable.style.display = (tab == kTabInfo ? "block" : "none");
-
-    mainTable.style.width = '100%';
+    mainTable.style.display = (tab == kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';
   }
 
@@ -616,17 +633,17 @@ function start_game() {
       </tbody>
     </table>
     <br>
-    <div id="actionPanel" style="text-align:center; border-top:solid black 1px; padding:0.5em;">
+    <div id="actionPanel">
       <div id="giveButton" class='button' style="display:inline-block;" onclick="show_modal('Give')">Give</div>
       <div id="voteButton" class='button' style="display:inline-block;" onclick="show_modal('Vote')">Vote</div>
       <div id="bidButton" class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
-    <div id="gameLogDiv" style="display:flex; flex-direction:column; flex:1; min-height:0; overflow:auto; border-top: solid black 1px;">
+    <div id="gameLogDiv">
       <div style="padding:0.5em; display:flex; flex-direction:row;">
-        <div style="text-align:center; font-weight:900;">Game Log</div>
+        <div style="text-align:center; font-weight:900; font-size: 1.3em;">Game Log</div>
         <div style="flex:1"></div>
-        <button>Undo</button>
+        <div class="button">Undo</div>
       </div>
       <div style="flex:1; padding:0.5em;">
         <div>Morgan gave Thomas $19</div>
@@ -767,10 +784,12 @@ function start_game() {
   </div>
 </div>
 
-<div id="lobbyDiv" style="position:absolute; left:0; top:0; width:100%; height:100%;">
-  <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%);">
+<div id="lobbyDiv">
+  <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); text-align: center;">
     <h1 align="center">In Lobby...</h1>
-    <input type="button" value="Start Game" onclick="start_game();">
+    <div class="button" onclick="start_game();" style="margin: 2em auto;">
+      Start Game
+    </div>
   </div>
 </div>
 
