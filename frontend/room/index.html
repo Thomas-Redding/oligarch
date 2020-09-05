@@ -213,6 +213,31 @@ for (let nation in nations) {
   }
 }
 
+let theme = {
+  "_validThemes": ["light", "dark"],
+  "_callbacks": [],
+  "set": (newTheme) => {
+    if (theme._validThemes.indexOf(newTheme) == -1) {
+      newTheme = "dark";
+    }
+    network.cookie.set("theme", newTheme)
+    for (let i = 0; i < theme["_callbacks"].length; ++i) {
+      theme._callbacks[i](newTheme);
+    }
+  },
+  "get": () => {
+    let theme = network.cookie.get("theme");
+    if (!theme) {
+      theme.set("dark");
+      theme = "dark";
+    }
+    return theme;
+  },
+  "subscribe": (callback) => {
+    theme["_callbacks"].push(callback);
+  }
+}
+
 window.onload = () => {
   Array.from(document.getElementsByTagName('path')).map(path => {
     let territory = path.id;
