@@ -59,18 +59,21 @@ class Game
         this.mother_state.stage.phase = 'lobby'
         this.mother_state.stage.turn = null
         this.mother_state.stage.subphase = null
-        this._defaultOwnership()
+        this._nation_init()
     }
 
-    _defaultOwnership()
+    _nation_init()
     {
+        terr2nat = {}
         for (nation of this.mother_state.nations) {
+            this.mother_state.nations[nation].cash = 0
             for (terr of this.mother_state.nations[nation].territories) {
                 this.mother_state.nations[nation].owns = terr
+                terr2nat[terr] = nation
             }
         }
+        this.terr2nat = this.terr2nat
     }
-
 
     endLobby(username)
     {
@@ -89,13 +92,32 @@ class Game
         return rtn
     }
 
+    startGame()
+    {
+        this._act()
+    }
+
+    _compute_income(nation)
+    {
+        inc = 0
+        for (terr of this.mother_state.nations[nation].owns) {
+            defnat = geography.nations[this.terr2nat[terr]]
+            inc += defnat.base_income_per_territory  
+        }
+        this.nations.cash += inc
+        return inc
+    }
+
     _act()
     {
         if (this.mother_state.stage.phase === 'taxation') {
-            
-
+            this._compute_income(this.mother_state.stage.turn)
+            this._transition()
         }
 
+        else if (this.mother_state.stage.phase === 'taxation') {
+
+        }
 
     }
 
@@ -122,7 +144,7 @@ class Game
     }
 
 
-    addPlayer(username, auth='player')
+    addPlayer(username, auth='admin')
     {
         player = {}
         rtn = true

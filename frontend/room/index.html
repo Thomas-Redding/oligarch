@@ -319,6 +319,7 @@ window.onload = () => {
 const kTabMap = 'kTabMap';
 const kTabInfo = 'kTabInfo';
 const kTabLog = 'kTabLog';
+const kTabLobby = 'kTabLobby';
 
 let stage = {
   round: 0,
@@ -327,7 +328,7 @@ let stage = {
   subphase: null,
 };
 
-let tab = kTabInfo;
+let tab = kTabLobby;
 
 const kIsBoard = false;
 
@@ -369,6 +370,7 @@ window.onresize = () => {
     gameLogDiv.style.display = (tab === kTabLog ? "block" : "none");
     transferDiv.style.display = (tab === kTabInfo ? "block" : "none");
     mainTable.style.display = (tab == kTabInfo ? "block" : "none");
+    lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
 
     mainTable.style.width = '100%';
     bottomNavBarDiv.style.display = 'flex';
@@ -384,38 +386,38 @@ window.onresize = () => {
   document.body.style.opacity = 1;
 }
 
-// function login() {
-//   let username = "";
-//   let password = "";
-//   let arr = network.fetchExistingUsernamePassword();
-//   if (arr) {
-//     username = arr[0];
-//     password = arr[1];
-//   } else {
-//     while (username.length == 0) {
-//       username = prompt("username?");
-//     }
-//     while (password.length == 0) {
-//       password = prompt("password?");
-//     }
-//   }
-//   return network.makeWebSocket("chat", username, password);
-//   // return network.makeWebSocket("oligarch", username, password);
-// }
+function login() {
+  let username = "";
+  let password = "";
+  let arr = network.fetchExistingUsernamePassword();
+  if (arr) {
+    username = arr[0];
+    password = arr[1];
+  } else {
+    while (username.length == 0) {
+      username = prompt("username?");
+    }
+    while (password.length == 0) {
+      password = prompt("password?");
+    }
+  }
+  // return network.makeWebSocket("chat", username, password);
+  return network.makeWebSocket("oligarch", username, password);
+}
 
-// let gSocket;
-// login().then((socket) => {
-//   console.log("CONNECTED");
-//   gSocket = socket;
-//   gSocket.addEventListener("message", (event) => {
-//     console.log("MESSAGE:", event.data);
-//   });
-//   gSocket.addEventListener("close", () => {
-//     console.log("CLOSED");
-//   });
-// }, (error) => {
-//   console.log("ERROR:", error);
-// });
+let gSocket;
+login().then((socket) => {
+  console.log("CONNECTED");
+  gSocket = socket;
+  gSocket.addEventListener("message", (event) => {
+    console.log("MESSAGE:", event.data);
+  });
+  gSocket.addEventListener("close", () => {
+    console.log("CLOSED");
+  });
+}, (error) => {
+  console.log("ERROR:", error);
+});
 
 function increment_transfer_input(delta) {
   let elem = document.getElementById("transferInput");
@@ -625,6 +627,13 @@ function show_modal(type) {
     </div>
   </div>
 </div>
+
+<div id="lobbyDiv" style="position:absolute; left:0; top:0; width:100%; height:100%; background-color:white;">
+  <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%);">
+    <h1 align="center">In Lobby...</h1>
+  </div>
+</div>
+
 
 </body>
 </html>
