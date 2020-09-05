@@ -56,11 +56,18 @@ body {
   opacity: 0.5;
 }
 
-#popupDivForeground {
+.popup {
 	color: white;
   background-color: #222;
   border: solid #888 1px;
   opacity: 1;
+  position: absolute;
+  position:absolute;
+  left:50vw;
+  top:50vh;
+  transform:translate(-50%, -50%);
+  text-align: center;
+  padding: 1em;
 }
 
 .nationRect {
