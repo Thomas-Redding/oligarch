@@ -276,16 +276,20 @@ class Game
             let prez = this.mother_state.nations[turn].president
             let no_army = this.mother_state.nations[turn].army.length === 0
             if (prez === null || prez === 'abstain') {
-                this.mother_state.subphase = 'Dividends'
-                this._transition()
+                this.mother_state.stage.subphase = 'Dividends'
+                this._prayer('begin_dividends','')
             }
             else if(no_army){
-                this.mother_state.subphase = 'Spawn'
-                this._transition()
+                this.mother_state.stage.subphase = 'Spawn'
+                this._prayer('begin_spawn','')
             }
             else{
-                this._movement()
             }
+        }
+
+
+        else if (this.mother_state.stage.subphase == 'Dividends') {
+            //this._dividends()
         }
 
         else if (this.mother_state.stage.subphase == 'Dividends') {
@@ -515,6 +519,13 @@ class Game
 
     _spawn_unit()
     {
+
+    }
+
+    //building routines
+    _building()
+    {
+
 
     }
     
