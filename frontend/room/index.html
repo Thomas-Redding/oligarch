@@ -530,7 +530,7 @@ window.onresize = () => {
     gameLogContainer.style.display = 'block';
     gameLogContainer.style.maxWidth = '20em';
     bottomNavBarDiv.style.display = 'none';
-    currentVotes.style.display = "block";
+    currentVotesDiv.style.display = "block";
   } else {
     console.log('mobile');
     statusBarDiv.style.fontSize = '1em';
@@ -546,7 +546,7 @@ window.onresize = () => {
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
     mainTable.style.display = (tab === kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';
-    currentVotes.style.display = (tab === kTabInfo ? "block" : "none");
+    currentVotesDiv.style.display = (tab === kTabInfo ? "block" : "none");
   }
 
   lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
