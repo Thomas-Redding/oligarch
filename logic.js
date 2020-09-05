@@ -14,7 +14,7 @@ const TURNS = ['North America', 'South America',
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
 const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
- 'election':120*1000}
+ 'election':120*1000, 'actions':120*100}
 const UNITS = ['Cavalry','Infantry','Artillery']
 
 
@@ -270,7 +270,9 @@ class Game
             this._start_election(this.mother_state.stage.turn)            
         }
 
+
         else if (this.mother_state.stage.subphase == 'Move') {
+            this._start_presidential_command()
             let prez = this.mother_state.nations[turn].president
             let no_army = this.mother_state.nations[turn].army.length === 0
             if (prez === null || prez === 'abstain') {
@@ -284,6 +286,10 @@ class Game
             else{
                 this._movement()
             }
+        }
+
+        else if (this.mother_state.stage.subphase == 'Dividends') {
+            this._dividends()
         }
 
         else if (this.mother_state.stage.phase === 'Action'){
@@ -469,7 +475,23 @@ class Game
         this._transition()  
     }
 
-    //movement routines
+    //start presidential command & clock
+    _start_presidential_command()
+    {
+        let nat = this.mother_state.stage.turn
+        let prez = this.mother_state.nations[turn].president
+        details = {'president':prez, 'nation':nat}
+        let tau = this.timer.queryTime() + TIMING.actions
+        details['time'] = tau
+        this._prayer('begin_presidential_command',details)
+        this.timer.start(tau, this._end_presidential_command()) 
+    }
+
+    _end_presidential_command()
+    {
+        this._prayer('end_presidential_command','')
+        this._transition()
+    }
 
     //_find
 
@@ -491,6 +513,7 @@ class Game
 
     }
     
+   
     
     
 }
