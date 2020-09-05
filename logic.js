@@ -101,6 +101,14 @@ class Game
         }
     }
 
+    move(username, unit_id)
+    {
+        nat = this.mother_state.stage.turn
+        if (this.mother_state.nations[nat].president === username) {
+            //TODO
+        }
+    }
+
     constructor(prayer) 
     {
         this.prayer = prayer
@@ -126,6 +134,8 @@ class Game
         this._nation_init()
     }
 
+
+    //prayer wrapper for automatic timing
     _prayer(prayer_id, signal)
     {
         let tau = 0;
@@ -134,123 +144,7 @@ class Game
         this.prayer(prayer_id, signal, this.mother_state)
     }
 
-    _nation_init()
-    {
-        let terr2nat = {}
-        for (let nation in this.mother_state.nations) {
-            this.mother_state.nations[nation].cash = 0
-            this.mother_state.nations[nation].owns = []
-            this.mother_state.nations[nation].army = []
-            for (let terr of utils.NATIONS[nation].territories) {
-                this.mother_state.nations[nation].owns.push(terr)
-                this.mother_state.nations[nation][terr] = {}
-                this.mother_state.nations[nation][terr].n_factories = 0
-                this.mother_state.nations[nation][terr].n_barracks = 0
-                this.mother_state.nations[nation].army = []
-                terr2nat[terr] = nation
-            }
-        }
-        this.terr2nat = terr2nat
-    }
-
-
-    _player_cash_init()
-    {
-        let n_players = Object.keys(this.mother_state.players).length
-        let inicash = Math.floor(TOTAL_INIT_CASH/n_players)
-        for (let player in this.mother_state.players){
-            console.log(inicash)
-            console.log(player)
-            this.mother_state.players[player].cash = inicash
-        }
-
-    }
-    _register_bid(amount, username)
-    {
-        this.mother_state.current_bid = amount
-        this.mother_state.highest_bidder = username
-        if (this.timer) this.timer.terminateTime(false)
-            this.timer = new Timer(TIMING.bidding, this._conclude_bidding.bind(this))
-        console.log('register bid called')
-        this._prayer('bid_recieved', {'amount' : amount, 'player': username})
-
-    }
-
-    _register_vote(username, player)
-    {
-        this.mother_state.players[username]
-
-    }
-
-    _start_election(nation)
-    {
-        this.mother_state.clock = 0
-        this.mother_state.current_bid = -1
-        this.mother_state.highest_bidder = null
-        let voters = utils.owners(this.mother_state, nation)
-        for (let player in voters){
-            if (voters[player] == 0) this.mother_state.player.ready = true
-            else this.mother_state.player.ready = false
-        }
-        if (this.timer.isRunning) this.timer.terminateTime(false)
-        this.timer = new Timer(TIMING.election, this._finish_deliberation.bind(this))
-            this._prayer('begin_deliberation',TIMING.election)
-        this._prayer('start_election', nation)
-
-    }
-
-    _conclude_election()
-    {
-        let voters = utils.owners(this.mother_state, nation)
-        for (let player in voters){
-            if (voters[player] == 0) this.mother_state.player.ready = true
-            else this.mother_state.player.ready = false
-        }
-        if (this.timer.isRunning) this.timer.terminateTime(false)
-        this.timer = new Timer(TIMING.election, this._finish_deliberation.bind(this))
-            this._prayer('begin_deliberation',TIMING.election)
-        this._prayer('start_election', nation)
-    }
-
-    _conclude_bidding()
-    {
-        let price = this.mother_state.current_bid
-        let winner = this.mother_state.highest_bidder
-        let curnat = this.mother_state.stage.turn
-        this.mother_state.players[winner].shares[curnat] += 1
-        this.mother_state.players[winner].cash -= price
-        this.mother_state.nations[curnat].cash += price
-        let details = {'winner' : winner, 'nation' : curnat, 'price':price}
-        details.winner = winner
-        this._prayer('conclude_bidding', details)
-        this._transition()
-    }
-
-    _finish_deliberation()
-    {
-        this._prayer('deliberation_over','')
-        this._transition()
-    }
-
-
-    _start_auction(nation)
-    {
-        this.mother_state.clock = 0
-        this.timer.terminateTime(false)
-        this.mother_state.current_bid = -1
-        this.mother_state.highest_bidder = null
-        this._prayer('auction_start', nation)
-    }
-
-    _begin_deliberation()
-    {
-        this.mother_state.clock = TIMING.deliberation
-            if (this.isRunning) this.timer.terminateTime(false)
-            this.timer = new Timer(TIMING.deliberation,
-                 this._finish_deliberation.bind(this))
-            this._prayer('begin_deliberation',TIMING.deliberation)
-    }
-
+    //acts based on current game state
     _act()
     {
         if (this.mother_state.stage.phase === 'Taxation') {
@@ -268,8 +162,24 @@ class Game
             this._start_auction(this.mother_state.stage.turn)            
         }
 
+        else if (this.mother_state.stage.subphase === 'Election') {
+            this._start_election(this.mother_state.stage.turn)            
+        }
+
+        else if (this.mother_state.stage.subphase == 'Move') {
+            nat = this.mother_state.stage.turn
+            prez = this.mother_state.nations[nat].president
+            if (prez === null || prez === 'abstain'){
+                this.mother_state.subphase = 'Dividends'
+                this._transition()
+            }
+            else{
+                //this._movement
+            }
+        }
     }
 
+    //computes the transition based on game state
     _transition()
     {
         function next(cur, table) {
@@ -307,8 +217,148 @@ class Game
         else if (phase == 'Action'){
             this.mother_state.stage.subphase = next(phase, PHASES)
         }
-
         this._act()
     }
+
+    _nation_init()
+    {
+        let terr2nat = {}
+        for (let nation in this.mother_state.nations) {
+            this.mother_state.nations[nation].cash = 0
+            this.mother_state.nations[nation].owns = []
+            this.mother_state.nations[nation].army = []
+            this.mother_state.nations[nation].president = null
+            for (let terr of utils.NATIONS[nation].territories) {
+                this.mother_state.nations[nation].owns.push(terr)
+                this.mother_state.nations[nation][terr] = {}
+                this.mother_state.nations[nation][terr].n_factories = 0
+                this.mother_state.nations[nation][terr].n_barracks = 0
+                this.mother_state.nations[nation].army = []
+                terr2nat[terr] = nation
+            }
+        }
+        this.terr2nat = terr2nat
+    }
+
+
+    _player_cash_init()
+    {
+        let n_players = Object.keys(this.mother_state.players).length
+        let inicash = Math.floor(TOTAL_INIT_CASH/n_players)
+        for (let player in this.mother_state.players){
+            console.log(inicash)
+            console.log(player)
+            this.mother_state.players[player].cash = inicash
+        }
+
+    }
+
+    //deliberation routines
+    _begin_deliberation()
+    {
+        this.mother_state.clock = TIMING.deliberation
+            if (this.isRunning) this.timer.terminateTime(false)
+            this.timer = new Timer(TIMING.deliberation,
+                 this._finish_deliberation.bind(this))
+            this._prayer('begin_deliberation',TIMING.deliberation)
+    }
+
+    _finish_deliberation()
+    {
+        this._prayer('deliberation_over','')
+        this._transition()
+    }
+
+    //auction routines
+    _start_auction(nation)
+    {
+        this.mother_state.clock = 0
+        this.timer.terminateTime(false)
+        this.mother_state.current_bid = -1
+        this.mother_state.highest_bidder = null
+        this._prayer('auction_start', nation)
+    }
+
+    _register_bid(amount, username)
+    {
+        this.mother_state.current_bid = amount
+        this.mother_state.highest_bidder = username
+        if (this.timer) this.timer.terminateTime(false)
+            this.timer = new Timer(TIMING.bidding, this._conclude_bidding.bind(this))
+        console.log('register bid called')
+        this._prayer('bid_recieved', {'amount' : amount, 'player': username})
+
+    }
+
+    _conclude_bidding()
+    {
+        let price = this.mother_state.current_bid
+        let winner = this.mother_state.highest_bidder
+        let curnat = this.mother_state.stage.turn
+        this.mother_state.players[winner].shares[curnat] += 1
+        this.mother_state.players[winner].cash -= price
+        this.mother_state.nations[curnat].cash += price
+        let details = {'winner' : winner, 'nation' : curnat, 'price':price}
+        details.winner = winner
+        this._prayer('conclude_bidding', details)
+        this._transition()
+    }
+
+    //election routines
+    _start_election(nation)
+    {
+        this.mother_state.clock = 0
+        this.mother_state.current_bid = -1
+        this.mother_state.highest_bidder = null
+        let voters = utils.owners(this.mother_state, nation)
+        for (let player in voters){
+            if (voters[player] == 0) this.mother_state.player.ready = true
+            else this.mother_state.player.ready = false
+        }
+        if (this.timer.isRunning) this.timer.terminateTime(false)
+        this.timer = new Timer(TIMING.election, this._conclude_election.bind(this))
+        this._prayer('start_election', nation)
+
+    }
+
+    _register_vote(username, player)
+    {
+        
+        this.mother_state.players[username].vote = player
+        //check majority
+        let voters = utils.owners(this.mother_state, nation)
+        let n_votes = 0
+        let v_in_favor = {}
+        for (let player in voters) {
+            n_votes += voters[player]
+        }
+        n_votes = Math.floor(n_votes/2)+1
+
+        for (let player in voters){
+            if (!(this.mother_state.players[player].vote in v_in_favor)) {
+                v_in_favor[player] = voters[player]
+            }
+            else {
+                v_in_favor[player] += voters[player]
+                if (v_in_favor[player] >= n_votes) { 
+                    this.mother_state.nations[nation].president = winner
+                    this.timer.terminateTime(true)
+                    break
+                }
+            }
+        }
+    }
+
+
+    _conclude_election()
+    {
+        let details = {'winner' : this.mother_state.nations[nation].president}
+        this._prayer('conclude_election', details)
+        this._transition()  
+    }
+
+    
+    
+    
 }
 module.exports = Game;
