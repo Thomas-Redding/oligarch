@@ -204,7 +204,7 @@ class Vec2 {
 function bid() {
   send({
     "method": "bid",
-    "args": [transferInput.value]
+    "args": [parseInt(transferInput.value)]
   });
   close_modal();
 }
@@ -654,7 +654,7 @@ login().then((socket) => {
       let modal_type = get_current_modal_type();
       console.log(modal_type)
       if (modal_type === "Bid") {
-        transferInput.value = state.current_bid + 1;
+        transferInput.value = parseInt(state.current_bid) + 1;
       }
     }
     onstagechange(state);
