@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Oligarchy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oligarch</title>
 <style>
 * {
   margin: 0;
@@ -140,6 +141,14 @@ path {
 <link rel="stylesheet" class="theme" id="stylesheet-light" href="light.css">
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
 <script>
+
+let admin = {
+  forgetMe: () => {
+    setTimeout(() => {
+      network.cookie.delete("lorem3216");
+    }, 1000);
+  },
+};
 
 function pad(t, n, c) {
   c = (c ? c : ' ');
@@ -538,7 +547,8 @@ window.onresize = () => {
 function login() {
   let username = "";
   let password = "";
-  let arr = network.fetchExistingUsernamePassword();
+  // let arr = network.fetchExistingUsernamePassword();
+  let arr = null;
   if (arr) {
     username = arr[0];
     password = arr[1];
