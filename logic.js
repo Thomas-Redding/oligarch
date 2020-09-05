@@ -305,8 +305,7 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
             let nat = this.mother_state.stage.turn
-            if (this.mother_state.nations[nat].army.filter(
-                x => x.can_move).length == 0)
+            if (this.mother_state.nations[nat].n_barracks_can_spawn)
                 {
                     this._transition()
 
@@ -396,7 +395,7 @@ class Game
                 this.mother_state.nations[nation][terr] = {}
                 this.mother_state.nations[nation][terr].n_factories = 0
                 this.mother_state.nations[nation][terr].n_barracks = 0
-                this.mother_state.nation[nation][terr].n_barracks_can_spawn = 0
+                this.mother_state.nations[nation][terr].n_barracks_can_spawn = 0
                 this.mother_state.nations[nation].army = []
                 terr2nat[terr] = nation
             }
