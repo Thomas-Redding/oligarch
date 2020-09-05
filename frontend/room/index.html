@@ -602,29 +602,37 @@ function render_status_bar(state) {
     statusBarSubphaseDiv.previousElementSibling.style.display = "none";
     statusBarSubphaseDiv.innerHTML = "";
   }
-
-  if ("clock" in state) {
-    clock.set_time_remaining(state.clock);
-  }
 }
 
 // Singleton class.
 class Clock {
   constructor() {
-    this.startTime = new Date();
-    this.totalTime = 0;
+    this._startTime = new Date();
+    this._totalTime = 0;
+    this._paused = false;
     setInterval(() => {
       this.update();
     }, 100);
   }
   set_time_remaining(timeRemaining) {
-    this.startTime = new Date();
-    this.totalTime = timeRemaining;
+    console.log("set_time_remaining");
+    this._startTime = new Date();
+    this._totalTime = timeRemaining;
+    this._paused = false;
     this.update();
   }
+  pause() {
+    console.log('PAUSE');
+    this._totalTime = this._totalTime - (new Date() - this._startTime);
+    this.startTime = new Date();
+    this._paused = true;
+  }
   update() {
-    let timeElapsed = new Date() - this.startTime;
-    let secsRemaining = (this.totalTime - timeElapsed) / 1000;
+    let timeElapsed = new Date() - this._startTime;
+    if (this._paused) {
+      timeElapsed = 0;
+    }
+    let secsRemaining = (this._totalTime - timeElapsed) / 1000;
     secsRemaining = Math.max(secsRemaining, 0);
     let minsRemaining = secsRemaining / 60 | 0;
     secsRemaining -= minsRemaining * 60;
@@ -696,11 +704,11 @@ login().then((socket) => {
       }
       main();
       render_table(state);
-      console.log("QQQ", gLatestState.is_paused)
       let playIcon = document.getElementById("play-icon");
       let pauseIcon = document.getElementById("pause-icon");
       playIcon.style.display = gLatestState.is_paused ? "block" : "none";
       pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
+      clock.set_time_remaining(state.clock);
     }
     else if (action === "refresh") {
       // Called when an undo is performed.
@@ -714,12 +722,14 @@ login().then((socket) => {
       let pauseIcon = document.getElementById("pause-icon");
       playIcon.style.display = "block";
       pauseIcon.style.display = "none";
+      clock.pause();
     }
     else if (action === "resume") {
       let playIcon = document.getElementById("play-icon");
       let pauseIcon = document.getElementById("pause-icon");
       playIcon.style.display = "none";
       pauseIcon.style.display = "block";
+      clock.set_time_remaining(state.clock);
     }
     else if (action === "end_lobby") {
       // Equivalent to game_start
@@ -735,18 +745,17 @@ login().then((socket) => {
       render_table(state);
     }
     else if (action === "begin_deliberation") {
+      clock.set_time_remaining(state.clock);
     }
     else if (action === "deliberation_over") {
     }
     else if (action === "start_election") {
       currentBidDiv.style.opacity = 0;
       currentVotesDiv.innerHTML = "";
+      clock.set_time_remaining(state.clock);
     }
     else if (action === "vote_tallied") {
       // TODO(mredding): update currentVotesDiv when this exists on the backend.
-      console.log("xxxxxx");
-      console.log(details);
-      console.log("xxxxxx");
       currentVotesDiv.innerHTML = "";
     }
     else if (action === "conclude_bidding") {
@@ -1002,7 +1011,7 @@ function show_modal(type) {
     button.innerHTML = "abstain";
     button.addEventListener('click', (e) => {
       close_modal();
-      vote_for();
+      vote_for("abstain");
     })
     votePlayerButtonsContainer.appendChild(button);
   }
