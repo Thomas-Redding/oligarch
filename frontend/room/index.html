@@ -202,6 +202,13 @@ class Vec2 {
   }
 }
 
+function bid() {
+  send({
+    "method": "bid",
+    "amount": transferInput.value
+  })
+}
+
 function create_label(text, x, y) {
   return svg.text(txt, x, y, {
     'style': 'font-style:normal;font-weight:normal;fill:black;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1',
@@ -298,6 +305,7 @@ function update_nation_rects(state) {
 
 function update_map(state) {
   update_nation_rects(state);
+  // TODO(mredding): update armies/factories/barracks
 }
 
 function add_player(details, state) {
@@ -339,7 +347,10 @@ let theme = {
 theme.set(theme.get());
 
 window.onload = () => {
+  main();
+};
 
+function main() {
   riskMap.addEventListener('click', (e) => {
     let pt = riskMap.createSVGPoint();
     pt.x = e.clientX;
@@ -562,7 +573,10 @@ class Clock {
     secsRemaining -= minsRemaining * 60;
     secsRemaining = Math.round(secsRemaining * 10) / 10 + '';
     if (!secsRemaining.includes('.')) {
-      secsRemaining += '.0';
+      secsRemaining += ".0";
+    }
+    if (secsRemaining.indexOf('.') === 1) {
+      secsRemaining = '0' + secsRemaining;
     }
     statusBarTimeDiv.innerHTML = minsRemaining + ':' + secsRemaining;
   }
@@ -570,13 +584,13 @@ class Clock {
 let clock = new Clock();
 
 let gSocket;
-let gState_DO_NOT_USE;
+let gLatestState;
 login().then((socket) => {
   console.log("CONNECTED");
   gSocket = socket;
   gSocket.addEventListener("message", (event) => {
     let [action, details, state] = JSON.parse(event.data);
-    gState_DO_NOT_USE = state;
+    gLatestState = state;
     // console.log(state);
     console.log("========================");
     console.log("Received action:", action);
@@ -603,6 +617,12 @@ login().then((socket) => {
     }
     else if (action === "deliberation_over") {
     }
+    else if (action === "bid_received") {
+      let modal_type = get_current_modal_type();
+      if (modal_type === "Bid") {
+        transferInput.value = state.current_bid + 1;
+      }
+    }
     onstagechange(state);
   });
   gSocket.addEventListener("close", () => {
@@ -611,6 +631,13 @@ login().then((socket) => {
 }, (error) => {
   console.log("ERROR:", error);
 });
+
+function get_current_modal_type() {
+  if (popupDiv.style.display === "none") {
+    return null;
+  }
+  return popupTitle.innerHTML;
+}
 
 function onstagechange(state) {
   let stage = state.stage;
@@ -650,10 +677,16 @@ function show_modal(type) {
   } else {
     popupPlayers.style.display = "none";
   }
-  if (type === "Give" || type === "Bid") {
+  if (type === "Give") {
     popupNations.style.display = "block";
   } else {
     popupNations.style.display = "none";
+  }
+  if (type === "Bid") {
+    transferInput.value = gLatestState.current_bid + 1;
+    popupBid.style.display = "block";
+  } else {
+    popupBid.style.display = "none";
   }
 
   popupDiv.children[0].onclick = () => {
@@ -825,6 +858,9 @@ function start_game() {
       <div class='personButton'>SA</div>
       <div class='personButton'>AF</div>
       <div class='personButton'>AU</div>
+    </div>
+    <div id="popupBid" style="text-align:center;">
+      <div class='personButton' onclick="bid()">Bid</div>
     </div>
   </div>
 </div>

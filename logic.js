@@ -111,8 +111,6 @@ class Game
     {
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
-
-
             this._register_bid(amount, username)
         }
     }
@@ -137,7 +135,7 @@ class Game
         this.mother_state.stage.phase = 'lobby'
         this.mother_state.stage.turn = null
         this.mother_state.stage.subphase = null
-        this.mother_state.current_bid = 0
+        this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this._nation_init()
     }
@@ -176,7 +174,14 @@ class Game
         this.mother_state.highest_bidder = username
         if (this.timer) this.timer.terminateTime(false)
             this.timer = new Timer(TIMING.bidding, this._conclude_bidding.bind(this))
+            
+        this._prayer('bid_recieved', {'amount' : amount, 'player': username})
 
+    }
+
+    _start_election()
+    {
+        
     }
 
     _conclude_bidding()
@@ -185,14 +190,17 @@ class Game
         winner = this.mother_state.highest_bidder
         curnat = this.mother_state.stage.turn
         this.mother_state.players[winner].shares[curnat] += 1
+        this.mother_state.players[winner].cash -= price
+        this.mother_state.nations[curnat].cash += price
         details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
-        this._prayer('conclude_bidding', details, this.mother_state)
+        this._prayer('conclude_bidding', details)
+        this._transition()
     }
 
     _finish_deliberation()
     {
-        this._prayer('deliberation_over','',this.mother_state)
+        this._prayer('deliberation_over','')
         this._transition()
     }
 
@@ -200,8 +208,9 @@ class Game
     _start_auction(nation)
     {
         this.mother_state.clock = 0
-        this._prayer('auction_start', nation, this.mother_state)
-
+        this.mother_state.current_bid = -1
+        this.mother_state.highest_bidder = null
+        this._prayer('auction_start', nation)
     }
 
     _act()
@@ -215,7 +224,7 @@ class Game
             this.mother_state.clock = TIMING.deliberation
             if (this.timer) this.timer.terminateTime(false)
             this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
-            this._prayer('begin_deliberation',TIMING.deliberation,this.mother_state)
+            this._prayer('begin_deliberation',TIMING.deliberation)
 
         }
 
@@ -224,7 +233,6 @@ class Game
         }
 
     }
-
 
     _transition()
     {
@@ -246,10 +254,10 @@ class Game
         if (['Taxation','Auction'].includes(phase)){
             if (is_last(turn, TURNS)) {
                 if (phase == 'Taxation'){
-                    this.prayer('taxes_collected','',this.mother_state)
+                    this._prayer('taxes_collected','')
                 }
                 else{
-                    this.prayer('auctions_complete','',this.mother_state)
+                    this._prayer('auctions_complete','')
                 }
                 this.mother_state.stage.phase = next(phase, PHASES)
             }
@@ -259,8 +267,6 @@ class Game
         else if (phase == 'Deliberation'){
             this.mother_state.stage.phase = next(phase, PHASES)
         }
-
-        //else if (this.mother_state.stage.phase )
 
         this._act()
     }
