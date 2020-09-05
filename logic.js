@@ -154,9 +154,9 @@ class Game
         }
 
         else if (this.mother_state.stage.phase === 'deliberation') {
-            function 
+            //function 
 
-            this.timer = new Timer(TIMING.deliberation, )
+            //this.timer = new Timer(TIMING.deliberation, )
 
         }
 
