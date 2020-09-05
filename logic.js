@@ -13,7 +13,7 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null, 'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'Deliberation' : 90*1000}
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000}
 
 //game logic classes below
 class Timer
@@ -83,7 +83,6 @@ class Game
             player.auth = auth  
             player.shares = {}
             player.ready = false
-            player.curbid = 0
             player.vote = null
             player.ready = false
             for (let key in utils.NATIONS) {
@@ -96,7 +95,7 @@ class Game
 
     rdyUp(username)
     {
-        this.mother_state.players[username]['ready'] = true
+        this.mother_state.players[username].ready = true
         let all_ready = true
         for (let player of Object.values(this.mother_state.players)) {
             all_ready &= player.ready
@@ -105,6 +104,16 @@ class Game
         if (all_ready){
             this.mother_state.clock = this.timer.queryTime 
             this.timer.terminateTime(true);
+        }
+    }
+
+    bid(amount, username)
+    {
+        if (this.mother_state.players[username].cash >= amount &&
+            this.mother_state.current_bid < amount) {
+
+
+            this._register_bid(amount, username)
         }
     }
 
@@ -128,7 +137,17 @@ class Game
         this.mother_state.stage.phase = 'lobby'
         this.mother_state.stage.turn = null
         this.mother_state.stage.subphase = null
+        this.mother_state.current_bid = 0
+        this.mother_state.highest_bidder = null
         this._nation_init()
+    }
+
+    _prayer(prayer_id, signal)
+    {
+        let tau;
+        if (this.timer) tau = this.timer.queryTime()
+        this.mother_state.clock = tau
+        this.prayer(prayer_id, signal, this.mother_state)
     }
 
     _nation_init()
@@ -144,25 +163,45 @@ class Game
                 this.mother_state.nations[nation][terr].n_factories = Math.random() < 0.5 ? 1 :0 
                 this.mother_state.nations[nation][terr].n_baracks = 1
                 this.mother_state.nations[nation][terr].n_baracks = 1
-                /*
-                 * army[i] = {
-                 *   "type": "infanty" | "calvary" | "cannon",
-                 *   "moves": 0 | 1 | 2,
-                 *   "can_attack": true,
-                 *   "territory": <string>
-                 * }
-                 */
-                this.mother_state.nations[nation].army = [];
+                this.mother_state.nations[nation].army = {}
                 terr2nat[terr] = nation
             }
         }
         this.terr2nat = terr2nat
     }
 
-    _finish_Deliberation()
+    _register_bid(amount, username)
     {
-        this.prayer('deliberation_over','',this.mother_state)
+        this.mother_state.current_bid = amount
+        this.mother_state.highest_bidder = username
+        if (this.timer) this.timer.terminateTime(false)
+            this.timer = new Timer(TIMING.bidding, this._conclude_bidding.bind(this))
+
+    }
+
+    _conclude_bidding()
+    {
+        price = this.mother_state.current_bid
+        winner = this.mother_state.highest_bidder
+        curnat = this.mother_state.stage.turn
+        this.mother_state.players[winner].shares[curnat] += 1
+        details = {'winner' : winner, 'nation' : curnat, 'price':price}
+        details.winner = winner
+        this._prayer('conclude_bidding', details, this.mother_state)
+    }
+
+    _finish_deliberation()
+    {
+        this._prayer('deliberation_over','',this.mother_state)
         this._transition()
+    }
+
+
+    _start_auction(nation)
+    {
+        //this.timer = new Timer()
+        this._prayer('auction_start', nation, this.mother_state)
+
     }
 
     _act()
@@ -173,23 +212,16 @@ class Game
         }
     
         else if (this.mother_state.stage.phase === 'Deliberation') {
-            this.mother_state.clock = TIMING.Deliberation
+            this.mother_state.clock = TIMING.deliberation
             if (this.timer) this.timer.terminateTime(false)
-            this.timer = new Timer(TIMING.Deliberation, this._finish_Deliberation.bind(this))
-            this.prayer('begin_deliberation',TIMING.Deliberation,this.mother_state)
+            this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
+            this._prayer('begin_deliberation',TIMING.deliberation,this.mother_state)
 
         }
 
-        else if (this.mother_state.stage.phase === 'Action') {
-            
+        else if (this.mother_state.stage.phase === 'Auction') {
+            this._start_auction(this.mother_state.stage.turn)            
         }
-
-    }
-
-    startAuction(nation)
-    {
-        //this.timer = new Timer()
-        this.prayer('auction_start', 'nation', this.mother_state)
 
     }
 
