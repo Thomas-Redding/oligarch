@@ -345,7 +345,7 @@ function render_map(state) {
         riskMap.appendChild(circ);
       });
     }
-    if (territory.n_baracks > 0) {
+    if (territory.n_barracks > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
         riskMap.appendChild(circ);
