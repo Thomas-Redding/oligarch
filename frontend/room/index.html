@@ -296,14 +296,14 @@ function render_nation_rects(state) {
 
     nation.income = utils.income_of_nation(state, name);
 
-    let rect = svg.rect(coords.x, coords.y, 100, 48);
+    let rect = svg.rect(coords.x, coords.y, 110, 48);
     rect.classList.add("nationRect");
     nationRects.appendChild(rect);
 
-    let cashText = svg.text("$" + nation.cash, coords.x + 4, coords.y + 14);
+    let cashText = svg.text("Cash: $" + nation.cash + "B", coords.x + 4, coords.y + 14);
     nationRects.appendChild(cashText);
 
-    let incomeText = svg.text("$" + nation.income + "/turn", coords.x + 4, coords.y + 28);
+    let incomeText = svg.text("Income: $" + nation.income + "B", coords.x + 4, coords.y + 28);
     nationRects.appendChild(incomeText);
 
     let sharesText = svg.text(shares[name] + "/" + utils.NATIONS[name].total_shares + " shares", coords.x + 4, coords.y + 42);
@@ -564,8 +564,12 @@ function login() {
 }
 
 function render_status_bar(state) {
-  statusBarRoundDiv.innerHTML = state.stage.round;
-  statusBarPhaseDiv.innerHTML = state.stage.phase;
+  statusBarRoundDiv.innerHTML = "Round " + state.stage.round;
+  if (state.stage.phase === "Action") {
+    statusBarPhaseDiv.innerHTML = state.stage.subphase;
+  } else {
+    statusBarPhaseDiv.innerHTML = state.stage.phase;
+  }
   statusBarNationDiv.innerHTML = state.stage.turn;
   if (state.stage.phase === "action") {
     statusBarSubphaseDiv.previousElementSibling.style.display = "block";
@@ -574,8 +578,6 @@ function render_status_bar(state) {
     statusBarSubphaseDiv.previousElementSibling.style.display = "none";
     statusBarSubphaseDiv.innerHTML = "";
   }
-
-  console.log('render_status_bar');
 
   if ("clock" in state) {
     clock.set_time_remaining(state.clock);
@@ -673,8 +675,8 @@ login().then((socket) => {
       let modal_type = get_current_modal_type();
       console.log(modal_type)
       if (modal_type === "Bid") {
-        if (parseInt(transferInput.value) < state.current_bid) {
-          transferInput.value = state.current_bid + 1;
+        if (parseInt(bidInput.value) < state.current_bid) {
+          bidInput.value = state.current_bid + 1;
         }
       }
 
@@ -718,6 +720,14 @@ function onstagechange(state) {
     endDeliberationButton.style.display = "none";
   }
 
+  if (!["Election", "Auction"].includes(state.phase)) {
+    tradeButton.style.display = "inline-block";
+  } else {
+    tradeButton.style.display = "none";
+  }
+
+  bribeButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
+
   if (stage.phase === "Action" && stage.subphase == "Election") {
     voteButton.style.display = "inline-block";
   } else {
@@ -728,29 +738,63 @@ function onstagechange(state) {
 }
 
 function increment_transfer_input(delta) {
-  let elem = document.getElementById("transferInput");
+  let elem = document.getElementById("bidInput");
   elem.value = parseInt(elem.value) + delta;
 }
 
-function show_modal(type) {
-  popupTitle.innerHTML = type;
+function trade_with(playername) {
+  tradeWithDiv.innerHTML = "Trading with " + playername;
 
-  if (type === "Give" || type === "Vote") {
-    popupPlayers.style.display = "block";
-  } else {
-    popupPlayers.style.display = "none";
+  let you = gLatestState.players[network.fetchExistingUsernamePassword()[0]];
+  let them = gLatestState.players[playername];
+
+  tradeTable.innerHTML = "";
+  tradeTable.innerHTML += `<tr><td>TODO</td></tr>`;
+
+  tradePopupDiv.style.display = "none";
+  tradePopup2Div.style.display = "flex";
+}
+
+function vote_for(playername) {
+  // TODO: change to send({...}) when backend supports.
+  send({
+    "method": "vote",
+    "username": playername,
+  })
+}
+
+function show_modal(type) {
+  // Update divs that need a button per player
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  tradePlayerButtonsContainer.innerHTML = "";
+  votePlayerButtonsContainer.innerHTML = "";
+  for (let playername of Object.keys(gLatestState.players)) {
+    if (playername !== myUsername) {
+      let button = document.createElement('DIV');
+      button.classList.add("personButton");
+      button.innerHTML = playername;
+      button.addEventListener('click', (e) => {
+        trade_with(playername);
+      })
+      tradePlayerButtonsContainer.appendChild(button);
+    }
+    {
+      let button = document.createElement('DIV');
+      button.classList.add("personButton");
+      button.innerHTML = playername;
+      button.addEventListener('click', (e) => {
+        close_modal();
+        vote_for(playername);
+      })
+      votePlayerButtonsContainer.appendChild(button);
+    }
   }
-  if (type === "Give") {
-    popupNations.style.display = "block";
-  } else {
-    popupNations.style.display = "none";
-  }
-  if (type === "Bid") {
-    transferInput.value = gLatestState.current_bid + 1;
-    popupBid.style.display = "block";
-  } else {
-    popupBid.style.display = "none";
-  }
+
+  tradePopup2Div.style.display = "none";
+  bidPopupDiv.style.display = (type === "Bid" ? "block" : "none");
+  tradePopupDiv.style.display = (type === "Trade" ? "block" : "none");
+  votePopupDiv.style.display = (type === "Vote" ? "block" : "none");
+  bribePopupDiv.style.display = (type === "Bribe" ? "block" : "none");
 
   popupDiv.children[0].onclick = close_modal;
   popupDiv.style.display = 'block';
@@ -789,7 +833,7 @@ function start_game() {
 <body>
 
 <div id='statusBarDiv'>
-  <div id="statusBarRoundDiv">Round 3</div>
+  <div id="statusBarTimeDiv">01:34</div>
   <div style='flex:1'></div>
   <div id="statusBarPhaseDiv">Action</div>
   <div style='flex:1'></div>
@@ -797,7 +841,7 @@ function start_game() {
   <div style='flex:1'></div>
   <div id="statusBarSubphaseDiv">Build</div>
   <div style='flex:1'></div>
-  <div id="statusBarTimeDiv">01:34</div>
+  <div id="statusBarRoundDiv">Round 3</div>
 </div>
 
 <div id='contentDiv'>
@@ -822,9 +866,10 @@ function start_game() {
     </div>
     <br>
     <div id="actionPanel">
-      <div id="giveButton" class='button' style="display:inline-block;" onclick="show_modal('Give')">Give</div>
+      <div id="tradeButton" class='button' style="display:inline-block;" onclick="show_modal('Trade')">Trade</div>
       <div id="voteButton" class='button' style="display:inline-block;" onclick="show_modal('Vote')">Vote</div>
       <div id="bidButton" class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
+      <div id="bribeButton" class='button' style="display:inline-block;" onclick="show_modal('Bribe')">Bribe</div>
       <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1)">Bid +1</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
@@ -897,16 +942,34 @@ function start_game() {
 </div>
 
 <div id='popupDiv' style='display:none; font-size:1.5em;'>
-  <div id="popupDivBackground">
+  <div id="popupDivBackground"></div>
+
+  <div id="tradePopupDiv" class="popup">
+    <h2 align="center">Trade with</h2>
+    <div id="tradePlayerButtonsContainer"></div>
   </div>
 
-  <div id="popupDivForeground">
-    <h2 id="popupTitle" align="center">Vote</h2>
+  <div id="tradePopup2Div" class="popup" style="flex-direction:column;">
+    <h2 id="tradeWithDiv" align="center"></h2>
+    <div style="width:100%; flex:1;">
+      <table>
+        <tbody id="tradeTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="votePopupDiv" class="popup">
+    <h2 align="center">Vote</h2>
+    <div id="votePlayerButtonsContainer"></div>
+  </div>
+
+  <div id="bribePopupDiv" class="popup">
+    <h2 align="center">Bribe</h2>
     <table style='text-align:center; margin: 0 auto;'>
       <tbody>
         <tr>
           <td>
-            <input id="transferInput" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
+            <input id="bidInput" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
           </td>
           <td>
             <div class="personButton" onClick="increment_transfer_input(5);">+5</div>
@@ -917,8 +980,8 @@ function start_game() {
         </tr>
       </tbody>
     </table>
-    <div id="popupPlayers"></div>
-    <div id="popupNations" style="text-align:center;">
+    <hr>
+    <div style="text-align:center;">
       <div class='personButton'>NA</div>
       <div class='personButton'>EU</div>
       <div class='personButton'>AS</div>
@@ -927,8 +990,27 @@ function start_game() {
       <div class='personButton'>AF</div>
       <div class='personButton'>AU</div>
     </div>
+  </div>
+
+  <div id="bidPopupDiv" class="popup">
+    <h2 align="center">Bid</h2>
+    <table style='text-align:center; margin: 0 auto;'>
+      <tbody>
+        <tr>
+          <td>
+            <input id="bidInput" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
+          </td>
+          <td>
+            <div class="personButton" onClick="increment_transfer_input(5);">+5</div>
+          </td>
+          <td>
+            <div class="personButton" onClick="increment_transfer_input(20);">+20</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <div id="popupBid" style="text-align:center;">
-      <div class='personButton' onclick="bid(parseInt(transferInput.value))">Bid</div>
+      <div class='personButton' onclick="bid(parseInt(bidInput.value))">Bid</div>
     </div>
   </div>
 </div>

@@ -13,7 +13,7 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 15*1000,
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
  'election':120*1000}
 
 
@@ -158,7 +158,15 @@ class Game
         }
     }
 
-    constructor(prayer, timer) 
+    vote(username, player)
+    {
+        if (this.mother_state.players[username].vote == null) {
+            this._register_vote(username, player)
+        }
+        this.rdyUp(username)
+    }
+
+    constructor(prayer, timer)
     {
         this.prayer = prayer
         this.timer = timer
@@ -346,7 +354,7 @@ class Game
         if (this.timer) this.timer.stop(false)
             this.timer.start(TIMING.bidding, this._conclude_bidding.bind(this))
         console.log('register bid called')
-        this._prayer('bid_received', {'amount' : amount, 'player': username})
+        this._prayer('bid_recieved', {'amount' : amount, 'player': username})
 
     }
 
@@ -407,7 +415,6 @@ class Game
             }
         }
     }
-
 
     _conclude_election()
     {

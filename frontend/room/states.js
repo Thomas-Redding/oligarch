@@ -16,7 +16,7 @@ const nations = {
   },
   "Europe": {
     "color": new Color(96, 128, 255),
-    "rect": {"x": 578, "y": 135},
+    "rect": {"x": 530, "y": 135},
     "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"]
   },
   "Asia": {
