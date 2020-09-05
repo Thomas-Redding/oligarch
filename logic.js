@@ -178,8 +178,10 @@ class Game
         }
     
         else if (this.mother_state.stage.phase === 'deliberation') {
-            this.prayer('begin_deliberation','',this.mother_state)
+            this.mother_state.clock = TIMING.deliberation
+            if (this.timer) this.timer.terminateTime(false)
             this.timer = new Timer(TIMING.deliberation, this._finish_deliberation.bind(this))
+            this.prayer('begin_deliberation',TIMING.deliberation,this.mother_state)
 
         }
 
