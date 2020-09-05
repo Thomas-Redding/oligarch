@@ -13,7 +13,6 @@ class OligarchRoom extends Room {
     console.log("sendDataToAll", JSON.stringify(data))
     let users = super.connectedUsers();
     for (let user of users) {
-      console.log(user);
       super.sendData(user, JSON.stringify(data));
     }
   }
