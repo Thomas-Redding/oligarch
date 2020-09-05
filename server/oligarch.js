@@ -14,11 +14,7 @@ class OligarchRoom extends Room {
   }
 
   prayer(action, details, newModel) {
-    sendData({
-      "action": action,
-      "details": details,
-      "model": newModel,
-    })
+    sendData([ action, details, newModel ]);
   }
 
   didReceiveData(username, data) {
