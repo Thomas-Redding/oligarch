@@ -291,6 +291,15 @@ let utils = {
     mother_state.nations[nation].cash += inc;
     return inc;
   },
+  compute_score: (mother_state, terr2nat, username) => {
+    let player = mother_state.players[username];
+    let rtn = player.cash;
+    for (nation in player[shares]) {
+      let income = compute_income(mother_state, terr2nat, nation);
+      rtn += 2 * player[shares] * income;
+    }
+    return rtn;
+  },
   /*
    * This method returns a dictionary. The keys of the dictionary are the troop
    * types ("infantry" | "calvary" | "cannon"). The values are an array with two
