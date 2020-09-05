@@ -387,12 +387,15 @@ let utils = {
   },
 
   /*
+   * TODO: Support puppeteering.
    * @param {Object} mother_state - the mother state
    * @param {string} territory
    * @returns {string} the name of the nation that owns the territory. Returns
-   * null if the territory is contested.
+   * `null`` if the territory is contested.
    */
   nation_of_territory: (mother_state, territory) => {
+  	// If a territory is contested, return `null`. If a territory has one
+  	// nation's troops, it is owned by that nation.
     let owner = null;
     for (let nation in mother_state.nations) {
       if (mother_state.nations[nation].army.filter(x => x.territory == territory).length > 0) {
@@ -401,9 +404,11 @@ let utils = {
       }
     }
     if (owner) return owner;
+
+    // Otherwise, choose the default owner (or their puppeteer).
     for (let nation in utils.NATIONS) {
       if (utils.NATIONS[nation].territories.includes(territory)) {
-        return nation;
+      	return utils.puppeteer(mother_state, nation);
       }
     }
     throw Error("Something went wrong in `utils.nation_of_territory()`.");
