@@ -201,20 +201,59 @@ for (let nation in nations) {
   }
 }
 
-function add_player(name) {
-  {
-    let button = document.createElement("DIV");
-    button.className = "personButton";
-    button.innerHTML = name;
-    popupPlayers.appendChild(button);
-  }
+function render_table(state) {
 
-  {
-    let tbody = mainTable.children[0];
+  let tbody = mainTable.children[0];
+  tbody.innerHTML = `
+    <tr>
+      <td></td>
+      <td>NA</td>
+      <td>SA</td>
+      <td>EU</td>
+      <td>AF</td>
+      <td>AS</td>
+      <td>AU</td>
+      <td>Cash</td>
+      <td>Score</td>
+      <td style="width:100%"></td>
+    </tr>
+  `;
+
+  let playernames = Object.keys(state.players);
+  playernames.sort();
+  for (let name of playernames) {
+    let player = state.players[name];
+
     let tr = document.createElement("TR");
-    tr.innerHTML = "<td>" + name + "</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>";
+    tr.innerHTML += "<td>" + player.username + "</td>";
+    tr.innerHTML += "<td>" + player.shares["North America"] + "</td>";
+    tr.innerHTML += "<td>" + player.shares["South America"] + "</td>";
+    tr.innerHTML += "<td>" + player.shares["Europe"] + "</td>";
+    tr.innerHTML += "<td>" + player.shares["Africa"] + "</td>";
+    tr.innerHTML += "<td>" + player.shares["Asia"] + "</td>";
+    tr.innerHTML += "<td>" + player.shares["Australia"] + "</td>";
+    tr.innerHTML += "<td>" + player.cash + "</td>";
+    tr.innerHTML += "<td>TODO</td>";
+
     tbody.appendChild(tr);
   }
+}
+
+function add_player(details, state) {
+  render_table(state);
+  // {
+  //   let button = document.createElement("DIV");
+  //   button.className = "personButton";
+  //   button.innerHTML = name;
+  //   popupPlayers.appendChild(button);
+  // }
+
+  // {
+  //   let tbody = mainTable.children[0];
+  //   let tr = document.createElement("TR");
+  //   tr.innerHTML = "<td>" + name + "</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>";
+  //   tbody.appendChild(tr);
+  // }
 }
 
 let theme = {
@@ -321,10 +360,17 @@ window.onload = () => {
 
   });
 
-  add_player("Abby");
-  add_player("Morgan");
-  add_player("Thomas");
-  add_player("Tony");
+  // add_player(["add_player", {"name": "Abby"}, {}]);
+  // add_player(["add_player", {"name": "Morgan"}, {}]);
+  // add_player(["add_player", {"name": "Thomas"}, {}]);
+  add_player({"name": "Tony"}, {
+    "players":{
+      "abby":{"username":"abby","cash":0,"auth":"admin","shares":{"Africa":0,"North America":0,"South America":0,"Europe":0,"Asia":0,"Australia":0},"ready":false,"curbid":0,"vote":null},
+      "morgan":{"username":"morgan","cash":0,"auth":"admin","shares":{"Africa":0,"North America":0,"South America":0,"Europe":0,"Asia":0,"Australia":0},"ready":false,"curbid":0,"vote":null},
+      "thomas":{"username":"thomas","cash":0,"auth":"admin","shares":{"Africa":0,"North America":0,"South America":0,"Europe":0,"Asia":0,"Australia":0},"ready":false,"curbid":0,"vote":null},
+      "tony":{"username":"tony","cash":0,"auth":"admin","shares":{"Africa":0,"North America":0,"South America":0,"Europe":0,"Asia":0,"Australia":0},"ready":false,"curbid":0,"vote":null}
+    }
+  });
 
   window.onresize();
 
@@ -447,6 +493,10 @@ login().then((socket) => {
       tab = kTabInfo;
       window.onresize();
     }
+    else if (action === "buy_share") {
+      render_table();
+    }
+    onstagechange();
   });
   gSocket.addEventListener("close", () => {
     console.log("CLOSED");
