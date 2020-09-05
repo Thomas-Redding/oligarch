@@ -26,10 +26,6 @@ body {
   border-right: solid black 1px;
 }
 
-#gameLogDiv {
-  border-top: solid black 1px;
-}
-
 #lobbyDiv {
   color: black;
   background-color: white;
