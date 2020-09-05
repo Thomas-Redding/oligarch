@@ -66,3 +66,22 @@ body {
   fill: #888;
   stroke: #ccc;
 }
+
+.column-NA {
+  color: red;
+}
+.column-SA {
+  color: red;
+}
+.column-EU {
+  color: red;
+}
+.column-AF {
+  color: red;
+}
+.column-AS {
+  color: red;
+}
+.column-AU {
+  color: red;
+}
