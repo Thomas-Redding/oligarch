@@ -3,13 +3,25 @@ const WebSocket = require('ws')
 var Room = require("./room.js");
 
 class OligarchRoom extends Room {
+  constructor() {
+    super()
+    this.game = Game()
+  }
+
+  prayer(action, details, newModel) {
+    super.sendData({
+      "action": action,
+      "details": details,
+      "model": newModel,
+    })
+  }
+
   didReceiveData(username, data) {
     console.log('didReceiveData("' + username + '", ' + data + '")')
-    if (data == "ping") {
-      super.sendData(username, "pong");
-      return;
-    }
     data = JSON.parse(data);
+    if (data.action == "endLobby") {
+      this.game.endLobby(username)
+    }
   }
 
   tryToJoin(username, password, ws) {

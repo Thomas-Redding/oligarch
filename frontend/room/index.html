@@ -212,6 +212,7 @@ for (let nation in nations) {
   }
 }
 
+<<<<<<< HEAD
 function add_player(name) {
   {
     let button = document.createElement("DIV");
@@ -225,6 +226,30 @@ function add_player(name) {
     let tr = document.createElement("TR");
     tr.innerHTML = "<td>" + name + "</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>";
     tbody.appendChild(tr);
+=======
+let theme = {
+  "_validThemes": ["light", "dark"],
+  "_callbacks": [],
+  "set": (newTheme) => {
+    if (theme._validThemes.indexOf(newTheme) == -1) {
+      newTheme = "dark";
+    }
+    network.cookie.set("theme", newTheme)
+    for (let i = 0; i < theme["_callbacks"].length; ++i) {
+      theme._callbacks[i](newTheme);
+    }
+  },
+  "get": () => {
+    let theme = network.cookie.get("theme");
+    if (!theme) {
+      theme.set("dark");
+      theme = "dark";
+    }
+    return theme;
+  },
+  "subscribe": (callback) => {
+    theme["_callbacks"].push(callback);
+>>>>>>> c09f3105694cbe04834ee733b14113ac22212b07
   }
 }
 

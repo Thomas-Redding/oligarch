@@ -85,7 +85,7 @@ class Game
             rtn = true
             
         }
-        this.prayer('end_lobby','', this.mother_state)
+        this.prayer('end_lobby', {}, this.mother_state)
         return rtn
     }
 
