@@ -483,7 +483,7 @@ login().then((socket) => {
   gSocket.addEventListener("message", (event) => {
     let [action, details, model] = JSON.parse(event.data);
     console.log("Received action:", action);
-    if (action === "endLobby") {
+    if (action === "end_lobby") {
       tab = kTabInfo;
       window.onresize();
     }
