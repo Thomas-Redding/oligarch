@@ -290,8 +290,8 @@ function render_table(state) {
     tr.innerHTML += '<td class="column-AF">' + player.shares["Africa"] + "</td>";
     tr.innerHTML += '<td class="column-AS">' + player.shares["Asia"] + "</td>";
     tr.innerHTML += '<td class="column-AU">' + player.shares["Australia"] + "</td>";
-    tr.innerHTML += "<td>$" + player.cash + "B</td>";
-    tr.innerHTML += "<td>$" + utils.score_of_player(state, player.username) + "B</td>";
+    tr.innerHTML += "<td>" + player.cash + "</td>";
+    tr.innerHTML += "<td>" + utils.score_of_player(state, player.username) + "</td>";
 
     tbody.appendChild(tr);
   }
@@ -867,7 +867,7 @@ function render_presidential_div(state) {
     finishSpawningButton.style.display = (subphase === "Spawn" ? "inline-block" : "none");
     finishBuildingButton.style.display = (subphase === "Build" ? "inline-block" : "none");
     finishDividendsButton.style.display = (subphase === "Dividends" ? "inline-block" : "none");
-    presidentialHeader.innerHTML = state.stage.turn + "($" + nation.cash + " B)";
+    presidentialHeader.innerHTML = state.stage.turn + " ($" + nation.cash + " B)";
 
     const num_shares = utils.num_shares_already_auctioned_for_nation(state)[state.stage.turn] + 4;
     dividendSlider.step = num_shares;
@@ -1092,6 +1092,13 @@ function start_game() {
   }]);
 }
 
+function pay_dividends() {
+  send({
+    "method": "dividends",
+    "args": [parseInt(dividendSlider.value)]
+  });
+}
+
 </script>
 
 </head>
@@ -1147,7 +1154,7 @@ function start_game() {
     <div id="presidentDiv" style="position:relative; background-color:#555; border-radius:0.2em; margin:0.5em;">
       <img src="assets/president.png" style="filter:invert(100%); height:4em; position:absolute; right:0; top:0;">
 
-      <h2 id="presidentialHeader" align="center">Asia ($200)</h2>
+      <h2 id="presidentialHeader"></h2>
 
       <div id="finishMovingButton" class="button">Finish Moving</div><br>
       <div id="finishAttackingButton" class="button">Finish Attacking</div><br>
@@ -1158,7 +1165,7 @@ function start_game() {
           <input id="dividendSlider" type="range" min=0 max=100 step=3 style="width:100%" onchange="dividendValueDiv.innerHTML = this.value;" onmousemove="dividendValueDiv.innerHTML = this.value;">
           <div id="dividendValueDiv" style="width:3em;"></div>
         </div>
-        <div id="finishDividendsButton" class="button">Pay Dividends</div><br>
+        <div onclick="pay_dividends()" id="finishDividendsButton" class="button">Pay Dividends</div><br>
       </div>
     </div>
     <div id="currentVotesDiv"></div>
