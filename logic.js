@@ -175,11 +175,7 @@ class Game
         this.rdyUp(username)
     }
 
-<<<<<<< HEAD
-    constructor(prayer) 
-=======
     constructor(prayer, timer)
->>>>>>> ef754a76e82283f63a33a192b89995d3b0f3e9da
     {
         this.prayer = prayer
         this.timer = timer
@@ -216,8 +212,20 @@ class Game
     }
 
     //acts based on current game state
+    _parse_stage(stage){
+        return [stage.round, stage.phase, stage.turn, stage.subphase]
+    }
+
+    //act mutates the state as necessary for the game
+    //this method must either call _transition to update to the next state
+    //OR it can ensure that another method called by _act
+    //will eventually call _transition (i.e. timer events)
     _act()
     {
+    
+        let [round, phase, turn, subphase] = this._parse_stage(
+            this.mother_state.stage)
+        
         console.log(this.mother_state.stage.phase)
         if (this.mother_state.stage.phase === 'Taxation') {
             let nat = this.mother_state.stage.turn
@@ -231,19 +239,27 @@ class Game
         }
 
         else if (this.mother_state.stage.phase === 'Auction') {
-            this._start_auction(this.mother_state.stage.turn)            
+            if (utils.shares_sold(this.mother_state, turn) <
+                utils.NATIONS.total_shares) 
+                {
+                    this._start_auction(turn)
+                }
+            else this._transition()
         }
 
-        
         else if (this.mother_state.stage.subphase === 'Election') {
             this._start_election(this.mother_state.stage.turn)            
         }
 
         else if (this.mother_state.stage.subphase == 'Move') {
-            let nat = this.mother_state.stage.turn
-            let prez = this.mother_state.nations[nat].president
-            if (prez === null || prez === 'abstain'){
+            let prez = this.mother_state.nations[turn].president
+            let no_army = this.mother_state.nations[turn].army.length === 0
+            if (prez === null || prez === 'abstain') {
                 this.mother_state.subphase = 'Dividends'
+                this._transition()
+            }
+            else if(no_army){
+                this.mother_state.subphase = 'Attack'
                 this._transition()
             }
             else{
@@ -258,6 +274,7 @@ class Game
     }
 
     //computes the transition based on game state
+    //always calls act on end
     _transition()
     {
         function next(cur, table) {
@@ -268,12 +285,10 @@ class Game
         function is_last(cur, table){
             return table.indexOf(cur) == table.length - 1
         }
+      
 
-        function parse_stage(stage){
-            return [stage.round, stage.phase, stage.turn, stage.subphase]
-        }
-
-        let [round, phase, turn, subphase] = parse_stage(this.mother_state.stage)
+        let [round, phase, turn, subphase] = this._parse_stage(
+            this.mother_state.stage)
 
         if (['Taxation','Auction'].includes(phase)){
             if (is_last(turn, TURNS)) {
