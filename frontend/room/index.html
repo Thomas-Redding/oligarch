@@ -137,6 +137,16 @@ path {
   padding: 1em;
 }
 
+#play-icon {
+  display: none;
+  cursor: pointer;
+}
+
+#pause-icon {
+  display: none;
+  cursor: pointer;
+}
+
 </style>
 <link rel="stylesheet" class="theme" id="stylesheet-light" href="light.css">
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
@@ -422,7 +432,7 @@ function main() {
   Array.from(document.getElementsByTagName('path')).forEach(path => {
     let territory = path.id;
     let nation = territory2nation[territory];
-    let nationColor = nations[nation].color;
+    let nationColor = utils.NATIONS[nation].color;
     let randColor = Color.random().scale(0.15);
     let color = nationColor.scale(0.85).plus(randColor);
 
@@ -614,10 +624,18 @@ class Clock {
     statusBarTimeDiv.innerHTML = minsRemaining + ':' + secsRemaining;
   }
 }
+
+function areAdminFetched(areAdmin) {
+  let playIcon = document.getElementById("play-icon");
+  let pauseIcon = document.getElementById("pause-icon");
+  playIcon.display = "block";
+}
+
 let clock = new Clock();
 
 let gSocket;
 let gLatestState;
+let gAreAdmin = undefined;
 login().then((socket) => {
   console.log("CONNECTED");
   gSocket = socket;
@@ -648,6 +666,9 @@ login().then((socket) => {
     else if (action === "refresh") {
       // Called when an undo is performed.
       window.location.reload(true);
+    }
+    else if (action === "is_admin") {
+      areAdminFetched(details);
     }
     else if (action === "end_lobby") {
       // Equivalent to game_start
@@ -688,9 +709,10 @@ login().then((socket) => {
   gSocket.addEventListener("close", () => {
     console.log("CLOSED");
   });
-  send({
-    "method": "get_state"
-  });
+  send([
+    {"method": "get_state"},
+    {"method": "is_admin"},
+  ]);
 }, (error) => {
   console.log("ERROR:", error);
 });
@@ -842,6 +864,9 @@ function start_game() {
   <div id="statusBarSubphaseDiv">Build</div>
   <div style='flex:1'></div>
   <div id="statusBarRoundDiv">Round 3</div>
+  <div style='flex:1'></div>
+  <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>
+  <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
 </div>
 
 <div id='contentDiv'>

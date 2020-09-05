@@ -61,6 +61,10 @@ class Game
         return this._history.logs();
     }
 
+    is_admin(username) {
+        return this.mother_state.players[username].auth === 'admin';
+    }
+
     undo(username) {
         throw Exception("Game.undo() is not implemented yet.");
         if (this._historicalStates.length !== this._historicalActions.length) {
