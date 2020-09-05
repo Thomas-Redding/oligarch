@@ -208,8 +208,9 @@ class Game
     _act()
     {
         if (this.mother_state.stage.phase === 'Taxation') {
-            this.mother_state.cash = utils.income_of_nation(
-                this.mother_state, this.mother_state.stage.turn)
+            let nat = this.mother_state.stage.turn
+            this.mother_state.nations[nat].cash = utils.income_of_nation(
+                this.mother_state, nat)
             this._transition()
         }
     
