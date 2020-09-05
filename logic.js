@@ -15,6 +15,7 @@ const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
 const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
  'election':120*1000}
+const UNITS = ['Cavalry','Infantry','Artillery']
 
 
 //game class defined below
@@ -150,11 +151,11 @@ class Game
         }
     }
 
-    move(username, unit_id)
+    move(username, unit_id, target_territory)
     {
         nat = this.mother_state.stage.turn
         if (this.mother_state.nations[nat].president === username) {
-            //TODO
+            this._register_move(unit_id, target_territory)
         }
     }
 
@@ -166,7 +167,6 @@ class Game
         this.rdyUp(username)
     }
 
-<<<<<<< HEAD
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
         if (this.mother_state.players[username].vote == null) {
@@ -176,9 +176,6 @@ class Game
     }
 
     constructor(prayer) 
-=======
-    constructor(prayer, timer)
->>>>>>> dfe4963e8b614f1ffd69abf7c0a6b61b04509757
     {
         this.prayer = prayer
         this.timer = timer
@@ -234,7 +231,6 @@ class Game
         }
 
         
-
         else if (this.mother_state.stage.subphase === 'Election') {
             this._start_election(this.mother_state.stage.turn)            
         }
@@ -247,7 +243,7 @@ class Game
                 this._transition()
             }
             else{
-                //this._movement
+                this._movement()
             }
         }
 
@@ -436,6 +432,27 @@ class Game
         this._transition()  
     }
 
+    //movement routines
+
+    //_find
+
+    _move_is_valid( uid, target_territory)
+    {
+        
+
+
+    }
+    _movement()
+    {
+
+    }
+
+    //spawn routines
+
+    _spawn_unit()
+    {
+
+    }
     
     
     
