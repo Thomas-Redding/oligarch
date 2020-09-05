@@ -461,6 +461,7 @@ class Game
             }
         }
         n_votes = Math.floor(n_votes/2)+1
+        //this.rdyUp(username)
     }
 
 
