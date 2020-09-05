@@ -421,6 +421,21 @@ let theme = {
 }
 theme.set(theme.get());
 
+function build(territory, building_type) {
+  const nationName = state.stage.turn;
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  if (state.nations[nationName].president !== myUsername) {
+    return;
+  }
+  if (utils.nation_of_territory(gLatestState, territory) !== nationName) {
+    return;
+  }
+  send({
+    "method": "build_factory",
+    "args": [building_type]
+  })
+}
+
 function main() {
   riskMap.addEventListener('click', (e) => {
     let pt = riskMap.createSVGPoint();
@@ -442,11 +457,22 @@ function main() {
     path.style.stroke = 'black';
 
     let onclick = (e) => {
-      let pt = riskMap.createSVGPoint();
-      pt.x = e.clientX;
-      pt.y = e.clientY;
-      let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
-      console.log('"' + territory + '": { "center": [' + [Math.round(loc.x), Math.round(loc.y)] + '] },');
+      if (false) {
+        // Print out coordinates.
+        let pt = riskMap.createSVGPoint();
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+        let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
+        console.log('"' + territory + '": { "center": [' + [Math.round(loc.x), Math.round(loc.y)] + '] },');
+      }
+
+      if (gLatestState.stage.phase === "Action" && gLatestState.stage.subphase === "Build") {
+        if (factoryRadio.checked) {
+          build(territory, "factory");
+        } else if (barracksRadio.checked) {
+          build(territory, "barrack");
+        }
+      }
     }
     path.addEventListener('click', onclick);
 
