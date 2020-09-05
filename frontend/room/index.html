@@ -748,6 +748,10 @@ login().then((socket) => {
       clock.set_time_remaining(state.clock);
     }
     else if (action === "deliberation_over") {
+      clock.set_time_remaining(state.clock);
+    }
+    else if (action === "auction_start") {
+      clock.set_time_remaining(state.clock);
     }
     else if (action === "start_election") {
       currentBidDiv.style.opacity = 0;
@@ -763,6 +767,8 @@ login().then((socket) => {
       render_nation_rects(state);
     }
     else if (action === "bid_received") {
+      clock.set_time_remaining(state.clock);
+      
       // Update bid price if the modal is showing.
       let modal_type = get_current_modal_type();
       console.log(modal_type)
