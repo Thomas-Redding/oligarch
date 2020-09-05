@@ -121,6 +121,23 @@ path {
   margin: auto;
 }
 
+#popupDivBackground {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#popupDivForeground {
+  font-family: sans-serif;
+  position: absolute;
+  left: 50vw;
+  top: 50vh;
+  transform: translate(-50%, -50%);
+  padding: 1em;
+}
+
 </style>
 <link rel="stylesheet" class="theme" id="stylesheet-light" href="light.css">
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
@@ -735,10 +752,10 @@ function start_game() {
 </div>
 
 <div id='popupDiv' style='display:none; font-size:1.5em;'>
-  <div style="position:absolute; background-color:black; opacity:0.5; left:0; top:0; width:100%; height:100%;">
+  <div id="popupDivBackground">
   </div>
 
-  <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); background-color:white; border:solid black 2px; opacity:1; padding:1em;">
+  <div id="popupDivForeground">
     <h2 id="popupTitle" align="center">Vote</h2>
     <table style='text-align:center; margin: 0 auto;'>
       <tbody>
