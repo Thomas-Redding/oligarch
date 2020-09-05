@@ -469,7 +469,30 @@ let utils = {
        rtn[troop.type][index] += 1;
      }
      return rtn;
-   }
+  },
+  deep_copy: (x) => {
+    let type_x = utils._type(x);
+    if (type_x == "object") {
+      let rtn = {};
+      for (key in x) {
+        rtn[key] = utils.deep_copy(x[key]);
+      }
+      return rtn;
+    } else if (type_x == "array") {
+      let rtn = [];
+      for (let i = 0; i < x.length; ++i) {
+        rtn.push(utils.deep_copy(x[i]));
+      }
+      return rtn;
+    } else {
+      return x;
+    }
+  },
+  _type: (x) => {
+    if (Array.isArray(x)) return "array";
+    if (typeof(x) == "object") return "object";
+    else return "value";
+  },
 };
 
 // Terrible hack so this can be included on frontend.

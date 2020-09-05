@@ -201,10 +201,10 @@ class Vec2 {
   }
 }
 
-function bid() {
+function bid(val) {
   send({
     "method": "bid",
-    "args": [parseInt(transferInput.value)]
+    "args": [val]
   });
   close_modal();
 }
@@ -620,7 +620,7 @@ login().then((socket) => {
     console.log("Received state:", state);
     console.log("========================");
 
-    gameLogDiv.innerHTML += `<div>` + action + `</div>`;
+    gameLogDiv.innerHTML += `<div>` + action + `(` + JSON.stringify(details) + `)</div>`;
 
     if (action === "get_state") {
       // We assume get_state is only called when the user
@@ -652,12 +652,22 @@ login().then((socket) => {
     }
     else if (action === "deliberation_over") {
     }
+    else if (action === "conclude_bidding") {
+      render_table(state);
+      render_nation_rects(state);
+    }
     else if (action === "bid_received") {
+      // Update bid price if the modal is showing.
       let modal_type = get_current_modal_type();
       console.log(modal_type)
       if (modal_type === "Bid") {
-        transferInput.value = parseInt(state.current_bid) + 1;
+        if (parseInt(transferInput.value) < state.current_bid) {
+          transferInput.value = state.current_bid + 1;
+        }
       }
+
+      console.log("xx");
+      currentBidDiv.innerHTML = "Current Bid: $" + gLatestState.current_bid + 'B by ' + gLatestState.highest_bidder;
     }
     onstagechange(state);
   });
@@ -684,8 +694,10 @@ function onstagechange(state) {
 
   if (stage.phase === "Auction") {
     bidButton.style.display = "inline-block";
+    bid1Button.style.display = "inline-block";
   } else {
     bidButton.style.display = "none";
+    bid1Button.style.display = "none";
   }
 
   if (stage.phase === "Deliberation") {
@@ -794,11 +806,14 @@ function start_game() {
         </tr>
       </tbody>
     </table>
+    <div id="currentBidDiv" style="text-align:center; background-color:red;">
+    </div>
     <br>
     <div id="actionPanel">
       <div id="giveButton" class='button' style="display:inline-block;" onclick="show_modal('Give')">Give</div>
       <div id="voteButton" class='button' style="display:inline-block;" onclick="show_modal('Vote')">Vote</div>
       <div id="bidButton" class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
+      <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1)">Bid +1</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
     <div id="gameLogContainer">
@@ -901,7 +916,7 @@ function start_game() {
       <div class='personButton'>AU</div>
     </div>
     <div id="popupBid" style="text-align:center;">
-      <div class='personButton' onclick="bid()">Bid</div>
+      <div class='personButton' onclick="bid(parseInt(transferInput.value))">Bid</div>
     </div>
   </div>
 </div>
