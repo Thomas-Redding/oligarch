@@ -98,7 +98,6 @@ class Game
     {
         this.mother_state.players[username]['ready'] = true
         let all_ready = true
-        console.log(this.mother_state);
         for (let player of Object.values(this.mother_state.players)) {
             all_ready &= player.ready
         }
