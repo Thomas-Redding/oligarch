@@ -298,6 +298,7 @@ function update_nation_rects(state) {
 
 function update_map(state) {
   update_nation_rects(state);
+  // TODO(mredding): update armies/factories/barracks
 }
 
 function add_player(details, state) {
@@ -540,6 +541,8 @@ function render_status_bar(state) {
   }
 }
 
+// TODO(mredding): when you reload the page, you shouldn't see the lobby
+
 // Singleton class.
 class Clock {
   constructor() {
@@ -562,7 +565,10 @@ class Clock {
     secsRemaining -= minsRemaining * 60;
     secsRemaining = Math.round(secsRemaining * 10) / 10 + '';
     if (!secsRemaining.includes('.')) {
-      secsRemaining += '.0';
+      secsRemaining += ".0";
+    }
+    if (secsRemaining.indexOf('.') === 1) {
+      secsRemaining = '0' + secsRemaining;
     }
     statusBarTimeDiv.innerHTML = minsRemaining + ':' + secsRemaining;
   }
@@ -648,10 +654,16 @@ function show_modal(type) {
   } else {
     popupPlayers.style.display = "none";
   }
-  if (type === "Give" || type === "Bid") {
+  if (type === "Give") {
     popupNations.style.display = "block";
   } else {
     popupNations.style.display = "none";
+  }
+  if (type === "Bid") {
+    // transferInput.value = gModel
+    popupBid.style.display = "block";
+  } else {
+    popupBid.style.display = "none";
   }
 
   popupDiv.children[0].onclick = () => {
@@ -823,6 +835,9 @@ function start_game() {
       <div class='personButton'>SA</div>
       <div class='personButton'>AF</div>
       <div class='personButton'>AU</div>
+    </div>
+    <div id="popupBid">
+      <div class='personButton' style="text-align:center;">Bid</div>
     </div>
   </div>
 </div>
