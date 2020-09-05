@@ -281,6 +281,7 @@ class Game
     //always calls act on end
     _transition()
     {
+        console.log(this.mother_state.stage)
         function next(cur, table) {
             let next_idx = (table.indexOf(cur) + 1) % table.length
             return table[next_idx]
@@ -321,6 +322,9 @@ class Game
 
         else if (phase == 'Action'){
             console.log('action transition')
+            if (subphase == SUBPHASES.fromback()) {
+                this.mother_state.stage.turn = next(turn, TURNS)
+            }
             this.mother_state.stage.subphase = next(subphase, SUBPHASES)
             console.log(this.mother_state.stage.subphase)
         }
@@ -428,21 +432,17 @@ class Game
 
     _register_vote(username, player)
     {
-        console.log(username)
-        console.log(player)
-        
-        this.mother_state.players[username].vote = player
-        let nation = this.mother_state.stage.turn
+        let candidate_votes = utils.candidate_votes(this.mother_state)
         //check majority
         let voters = utils.owners(this.mother_state, nation)
+        this._prayer('vote_tallied', candidate_votes )
         console.log(voters)
         let n_votes = 0
-        let v_in_favor = {}
         for (let player in voters) {
             n_votes += voters[player]
         }
-        console.log(n_votes)
         n_votes = Math.floor(n_votes/2)+1
+
 
         for (let player in voters){
             if (!(this.mother_state.players[player].vote in v_in_favor)) {
