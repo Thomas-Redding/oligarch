@@ -469,6 +469,8 @@ function main() {
     }
   });
 
+  currentBidDiv.style.opacity = 0;
+
   window.onresize();
 };
 
@@ -526,6 +528,7 @@ window.onresize = () => {
     gameLogContainer.style.display = 'block';
     gameLogContainer.style.maxWidth = '20em';
     bottomNavBarDiv.style.display = 'none';
+    currentVotesDiv.style.display = "block";
   } else {
     console.log('mobile');
     statusBarDiv.style.fontSize = '1em';
@@ -539,8 +542,9 @@ window.onresize = () => {
     gameLogContainer.style.display = (tab === kTabLog ? "block" : "none");
     gameLogContainer.style.maxWidth = 'none';
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
-    mainTable.style.display = (tab == kTabInfo ? "table" : "none");
+    mainTable.style.display = (tab === kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';
+    currentVotesDiv.style.display = (tab === kTabInfo ? "block" : "none");
   }
 
   lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
@@ -563,7 +567,7 @@ function login() {
     username = arr[0];
     password = arr[1];
   } else {
-    while (username.length == 0) {
+    while (username.length == 0 || username.length > 9) {
       username = prompt("username?");
     }
     while (password.length == 0) {
@@ -711,6 +715,14 @@ login().then((socket) => {
     }
     else if (action === "deliberation_over") {
     }
+    else if (action === "start_election") {
+      currentBidDiv.style.opacity = 0;
+      currentVotesDiv.innerHTML = "";
+    }
+    else if (action === "election_received") {
+      // TODO(mredding): update currentVotesDiv when this exists on the backend.
+      currentVotesDiv.innerHTML = "";
+    }
     else if (action === "conclude_bidding") {
       render_table(state);
       render_nation_rects(state);
@@ -725,8 +737,8 @@ login().then((socket) => {
         }
       }
 
-      console.log("xx");
-      currentBidDiv.innerHTML = "Current Bid: $" + gLatestState.current_bid + 'B by ' + gLatestState.highest_bidder;
+      currentBidDiv.style.opacity = 1;
+      currentBidDiv.children[1].innerHTML = state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B";
     }
     onstagechange(state);
   });
@@ -911,7 +923,7 @@ function trade_with(playername) {
 function vote_for(playername) {
   send({
     "method": "vote",
-    "username": playername,
+    "args": [playername],
   })
 }
 
@@ -940,6 +952,17 @@ function show_modal(type) {
       })
       votePlayerButtonsContainer.appendChild(button);
     }
+  }
+
+  {
+    let button = document.createElement('DIV');
+    button.classList.add("personButton");
+    button.innerHTML = "abstain";
+    button.addEventListener('click', (e) => {
+      close_modal();
+      vote_for();
+    })
+    votePlayerButtonsContainer.appendChild(button);
   }
 
   tradePopup2Div.style.display = "none";
@@ -1019,7 +1042,10 @@ function start_game() {
         </tr>
       </tbody>
     </table>
-    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%);">
+    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:2em; display:flex; flex-direction:column;">
+      <div style="flex:1"></div>
+      <div></div>
+      <div style="flex:1"></div>
     </div>
     <br>
     <div id="actionPanel">
@@ -1030,6 +1056,7 @@ function start_game() {
       <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1)">Bid +1</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
+    <div id="currentVotesDiv"></div>
     <div id="gameLogContainer">
       <div style="padding:0.5em; display:flex; flex-direction:row;">
         <div style="text-align:center; font-weight:900; font-size: 1.3em;">Game Log</div>
