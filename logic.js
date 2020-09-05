@@ -160,6 +160,14 @@ class Game
         }
     }
 
+    done(username)
+    {
+        let nat = this.mother_state.stage.turn
+        if (username === this.mother_state.nations[nat].president) {
+            this._transition()
+        }
+    }
+
     vote(username, candidate_username)
     {
         if (this.mother_state.players[username].vote == null) {
@@ -235,6 +243,11 @@ class Game
     _parse_stage(stage){
         return [stage.round, stage.phase, stage.turn, stage.subphase]
     }
+    
+    _skip_prez_command(){
+        
+
+    }
 
     //act mutates the state as necessary for the game
     //this method must either call _transition to update to the next state
@@ -242,6 +255,7 @@ class Game
     //will eventually call _transition (i.e. timer events)
     _act()
     {
+
     
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
@@ -275,25 +289,36 @@ class Game
             this._start_presidential_command()
             let prez = this.mother_state.nations[turn].president
             let no_army = this.mother_state.nations[turn].army.length === 0
-            if (prez === null || prez === 'abstain') {
-                this.mother_state.stage.subphase = 'Dividends'
-                this._prayer('begin_dividends','')
-            }
-            else if(no_army){
-                this.mother_state.stage.subphase = 'Build'
-                this._prayer('begin_build','')
-            }
-            else{
+            if (prez === null || prez === 'abstain' || no_army) {
+                tjis._transition()
             }
         }
 
+        else if (this.mother_state.stage.subphase == 'Attack'){
+            let nat = this.mother_state.stage.turn
+            if (this.mother_state.nations[nat].army.filter(
+                x => x.can_move).length == 0)
+                {
+                    this._transition()
 
-        else if (this.mother_state.stage.subphase == 'Dividends') {
-            //this._dividends()
+                }
         }
+        else if (this.mother_state.stage.subphase == 'Spawn'){
+            let nat = this.mother_state.stage.turn
+            if (this.mother_state.nations[nat].n_barracks_can_spawn)
+                {
+                    this._transition()
 
-        else if (this.mother_state.stage.subphase == 'Dividends') {
-            //this._dividends()
+                }
+        }
+        else if (this.mother_state.stage.subphase == 'Build'){
+            let nat = this.mother_state.stage.turn
+            if (this.mother_state.nations[nat].army.filter(
+                x => x.can_move).length == 0)
+                {
+                    this._transition()
+
+                }
         }
 
         else if (this.mother_state.stage.phase === 'Action'){
@@ -345,11 +370,14 @@ class Game
         }
 
         else if (phase == 'Action'){
+            let nextsubphase = next(subphase, SUBPHASES)
             if (subphase == SUBPHASES.fromback()) {
                 this.mother_state.stage.turn = next(turn, TURNS)
+                this.timer.stop(true)
             }
-            this.mother_state.stage.subphase = next(subphase, SUBPHASES)
-            this._prayer('begin_' + this.mother_state.stage.subphase,'')
+            else {
+                this._prayer('begin_'+nextsubphase,'')
+            }
         }
         this._act()
     }
@@ -367,6 +395,7 @@ class Game
                 this.mother_state.nations[nation][terr] = {}
                 this.mother_state.nations[nation][terr].n_factories = 0
                 this.mother_state.nations[nation][terr].n_barracks = 0
+                this.mother_state.nations[nation][terr].n_barracks_can_spawn = 0
                 this.mother_state.nations[nation].army = []
                 terr2nat[terr] = nation
             }
