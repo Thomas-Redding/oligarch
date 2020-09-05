@@ -270,18 +270,36 @@ let utils = {
       "Kamchatka": 1,
     }
   },
-  num_shares_already_auctioned_for_nation: (state) => {
+  num_shares_already_auctioned_for_nation: (mother_state) => {
     let r = {};
-    for (let name in state.nations) {
+    for (let name in mother_state.nations) {
       r[name] = 0;
     }
-    for (let player of Object.values(state.players)) {
+    for (let player of Object.values(mother_state.players)) {
       for (let nation in player.shares) {
         r[nation] += player.shares[nation];
       }
     }
     return r;
   },
+
+  /*
+   * @param {string} nation - the nation whose owners to fetch
+   * @returns {Object} - a dictionary of usernames to number-of-shares owned
+   */
+  owners: (mother_state, nation) => {
+    let rtn = {};
+    for (let username in mother_state.players) {
+      rtn[username] = mother_state.players[username].shares[nation];
+    }
+    return rtn;
+  },
+
+  /*
+   * TODO: Remove terr2nat
+   * @param {string} nation - the nation whose income to compute
+   * @returns {int} the income of the given country
+   */
   compute_income: (mother_state, terr2nat, nation) => {
     let inc = 0;
     for (let terr of mother_state.nations[nation].owns) {
@@ -291,6 +309,12 @@ let utils = {
     mother_state.nations[nation].cash += inc;
     return inc;
   },
+
+  /*
+   * TODO: remove terr2nat
+   * @param username - the user whose score we are computing
+   * @returns {int} the score the given user would have if the game ended now
+   */
   compute_score: (mother_state, terr2nat, username) => {
     let player = mother_state.players[username];
     let rtn = player.cash;
@@ -303,6 +327,11 @@ let utils = {
     }
     return rtn;
   },
+
+  /*
+   * @param {string} nation
+   * @returns {int} the number of shares sold by the given nation.
+   */
   shares_sold: (mother_state, nation) => {
     let rtn = 0;
     for (let username in mother_state.players) {
@@ -310,8 +339,29 @@ let utils = {
     }
     return rtn;
   },
+
+  /*
+   * @param {string} nation - the nation whose territories you want
+   * @returns {Array<string>} the territories that nation owns
+   */
+  territories_of_nation: (mother_state, nation) => {
+    let rtn = [];
+    for (let territory of NATIONS[nation].territories) {
+      if (nation_of_territory(mother_state, territory) == nation) {
+        rtn.push(territory);
+      }
+    }
+    return territory;
+  },
+
+  /*
+   * @param {Object} mother_state - the mother state
+   * @param {string} territory
+   * @returns {string} the name of the nation that owns the territory. Returns
+   * null if the territory is contested.
+   */
   nation_of_territory: (mother_state, territory) => {
-  	let owner = null;
+    let owner = null;
     for (let nation in mother_state.nations) {
       if (mother_state.nations[nation].army.filter(x => x.territory == territory).length > 0) {
         if (owner !== null) return null;
@@ -320,9 +370,9 @@ let utils = {
     }
     if (owner) return owner;
     for (let nation in utils.NATIONS) {
-    	if (utils.NATIONS[nation].territories.includes(territories)) {
-    		return nation;
-    	}
+      if (utils.NATIONS[nation].territories.includes(territories)) {
+        return nation;
+      }
     }
     throw Error("Something went wrong in `utils.nation_of_territory()`.");
   },
@@ -338,7 +388,7 @@ let utils = {
    * @param {Array} army - mother_state.nations[nation].army
    * @param {string} territory - the territory
    * @param {string} stage - either "move" or "attack"
-   * @return the dictionary described above.
+   * @return {Object} the dictionary described above.
    */
    army_in_territory: (army, territory, action) => {
      if (action != "move" && action != "attack") {
