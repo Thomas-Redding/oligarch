@@ -173,8 +173,8 @@ class Game
     _act()
     {
         if (this.mother_state.stage.phase === 'taxation') {
-                this._compute_income(this.mother_state.stage.turn)
-                this._transition()
+            utils.compute_income(this.mother_state, this.terr2nat, this.mother_state.stage.turn)
+            this._transition()
         }
     
         else if (this.mother_state.stage.phase === 'deliberation') {

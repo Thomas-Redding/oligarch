@@ -271,17 +271,26 @@ let utils = {
     }
   },
   num_shares_already_auctioned_for_nation: (state) => {
-	  let r = {};
-	  for (let name in state.nations) {
-	    r[name] = 0;
-	  }
-	  for (let player of Object.values(state.players)) {
-	    for (let nation in player.shares) {
-	      r[nation] += player.shares[nation];
-	    }
-	  }
-	  return r;
-	}
+    let r = {};
+    for (let name in state.nations) {
+      r[name] = 0;
+    }
+    for (let player of Object.values(state.players)) {
+      for (let nation in player.shares) {
+        r[nation] += player.shares[nation];
+      }
+    }
+    return r;
+  },
+  compute_income: (mother_state, terr2nat, nation) => {
+    let inc = 0;
+    for (let terr of mother_state.nations[nation].owns) {
+      let defnat = utils.NATIONS[terr2nat[terr]];
+      inc += defnat.base_income_per_territory;
+    }
+    mother_state.nations[nation].cash += inc;
+    return inc;
+  }
 };
 
 // Terrible hack so this can be included on frontend.
