@@ -150,6 +150,7 @@ class Game
             console.log(terr)
             console.log(this.terr2nat)
             let defnat = geography.nations[this.terr2nat[terr]]
+            console.log(defnat)
             inc += defnat.base_income_per_territory  
         }
         this.nations.cash += inc
