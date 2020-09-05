@@ -1099,6 +1099,13 @@ function pay_dividends() {
   });
 }
 
+function finish_building() {
+  send({
+    "method": "done",
+    "args": ["building"]
+  });
+}
+
 </script>
 
 </head>
@@ -1159,7 +1166,7 @@ function pay_dividends() {
       <div id="finishMovingButton" class="button">Finish Moving</div><br>
       <div id="finishAttackingButton" class="button">Finish Attacking</div><br>
       <div id="finishSpawningButton" class="button">Finish Recruiting</div><br>
-      <div id="finishBuildingButton" class="button">Finish Building</div><br>
+      <div id="finishBuildingButton" onclick="finish_building()" class="button">Finish Building</div><br>
       <div id="dividendsDiv">
         <div style="display:flex; flex-direction:row; width:100%; padding:0.5em;">
           <input id="dividendSlider" type="range" min=0 max=100 step=3 style="width:100%" onchange="dividendValueDiv.innerHTML = this.value;" onmousemove="dividendValueDiv.innerHTML = this.value;">
