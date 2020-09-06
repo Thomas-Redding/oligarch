@@ -395,11 +395,9 @@ class Game
                 this.mother_state, nat)
             this._transition()
         }
-
         else if (this.mother_state.stage.phase === 'Discuss') {
             this._begin_deliberation()
         }
-
         else if (this.mother_state.stage.phase === 'Auction') {
             if (utils.shares_sold(this.mother_state, turn) <
                 utils.NATIONS[turn].total_shares)
@@ -408,11 +406,9 @@ class Game
                 }
             else this._transition()
         }
-
         else if (this.mother_state.stage.subphase === 'Election') {
             this._start_election(this.mother_state.stage.turn)
         }
-
         else if (this.mother_state.stage.subphase == 'Move') {
             this._start_presidential_command()
             this._prayer('begin_move','')
@@ -431,7 +427,6 @@ class Game
                 this._transition()
             }
         }
-
         else if (this.mother_state.stage.subphase == 'Attack'){
             this._prayer('begin_attack','')
             if (this.mother_state.nations[nat].army.filter(
@@ -460,12 +455,10 @@ class Game
                     this._transition()
                 }
         }
-
         else if (this.mother_state.stage.subphase == 'Dividends'){
             this._prayer('begin_dividends','')
             if (noop) this._transition()
         }
-
         else if (this.mother_state.stage.phase === 'Action'){
             this._transition()
 
@@ -481,11 +474,9 @@ class Game
             let next_idx = (table.indexOf(cur) + 1) % table.length
             return table[next_idx]
         }
-
         function is_last(cur, table){
             return table.indexOf(cur) == table.length - 1
         }
-
 
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
@@ -502,7 +493,6 @@ class Game
             }
             this.mother_state.stage.turn = next(turn, TURNS)
         }
-
         else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback()
             && turn == TURNS.fromback()) {
                 this.mother_state.stage.round += 1
@@ -514,7 +504,6 @@ class Game
         else if (phase == 'Discuss'){
             this.mother_state.stage.phase = next(phase, PHASES)
         }
-
         else if (phase == 'Action'){
             let nextsubphase = next(subphase, SUBPHASES)
             if (subphase == SUBPHASES.fromback()) {
@@ -569,7 +558,6 @@ class Game
         for (let player in this.mother_state.players){
             this.mother_state.players[player].cash = inicash
         }
-
     }
 
     //deliberation routines
@@ -592,8 +580,6 @@ class Game
         console.trace()
         this._prayer('deliberation_over','')
         this._transition()
-        
-        
     }
 
     //auction routines
