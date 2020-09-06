@@ -90,3 +90,9 @@ body {
   cursor: pointer;
   fill: hsl(231, 100%, 45%);
 }
+
+hr {
+  margin: 1em;
+  border: none;
+  border-bottom: 1px solid #888;
+}
