@@ -195,8 +195,15 @@ class Game
     }
     attack(username, unit_id, target_id)
     {
-        if (DEBUG_LOG) console.log("Game.attack()", username, unit_id, target_id);
-        if (this.mother_state.stage.subphase == 'Attack') {
+        let nat = this.mother_state.stage.turn
+        if (this.mother_state.stage.subphase == 'Attack' &&
+            this.mother_state.nations[nat].president == username &&
+            this.mother_state.nations[nat].army.filter()) {
+            
+            utils.military_bias(nat)
+
+        }
+        utils.military_bias()
            
         }
     }
@@ -237,7 +244,7 @@ class Game
         if (val_terr.includes(terr) && afford){
             this.mother_state.nations[nat][terr].n_barracks_can_spawn -= 1
             let unit = {"type": type, "territory":terr,
-                "troop_id":utils.uuid(), 'can_move':false, 'can_move':false}
+                "id":utils.uuid(), 'can_move':false, 'can_move':false }
             this.mother_state.nations[nat].army.push(unit)
             this.mother_state.nations[nat].cash -= COSTS[type]
         }
@@ -285,9 +292,11 @@ class Game
     }
 
     //shares_to / shares_from is a list with shares as strings (potential dupes)
+    //first share and cash args (shares_to & cash_to) go to player (second user)
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
         if (DEBUG_LOG) console.log("Game.dividends()", username, player, shares_to, shares_from, cash_to, cash_from);
+        
         let trade = {}
         trade.from = username
         trade.to = player
@@ -295,6 +304,8 @@ class Game
         trade.shares_from = shares_from
         trade.cash_to = cash_to
         trade.cash_from = cash_from
+        let t_pairs = this.mother_state.trading_pairs.push([username, player])
+        t_pairs = t_pairs.reduce((a,b) => a.concat(b), [])   
         this._prayer('trade_proposed',trade,this.mother_state)
     }
 
@@ -337,6 +348,7 @@ class Game
         this.mother_state.stage.subphase = null
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
+        this.mother_state.trading_pairs = []
         this._nation_init()
     }
 
@@ -520,7 +532,7 @@ class Game
                     this.mother_state.nations[nation].army.push({
                         "type": unittype,
                         "territory": terr,
-                        "troop_id": id++,
+                        "id": id++,
                         "can_move": true
                     });
                 }
@@ -705,6 +717,23 @@ class Game
     //building routines
     _building()
     {
+
+
+    }
+    //
+    _trade_verification(p_1, p_2, s_to, s_from, c_to, c_from)
+    {
+        let trade_ok = true
+        for(let share of shares_to) {
+            if this.mother_state.players[p_1].shares[]
+            this.mother_state.players[username].shares[share]--
+            this.mother_state.players[player].shares[share]++
+        }
+        
+        for(let share of shares_from) {
+            this.mother_state.players[username].shares[share]++
+            this.mother_state.players[player].shares[share]--
+        }
 
 
     }
