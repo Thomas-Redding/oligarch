@@ -351,6 +351,7 @@ class Game
     _prayer(prayer_id, signal)
     {
         log("Game._prayer()", prayer_id, signal);
+        this._log([prayer_id, signal]);
         let tau = 0;
         if (this.timer && this.timer.isRunning()) tau = this.timer.queryTime()
         this.mother_state.clock = tau
@@ -737,7 +738,6 @@ class Game
     _log(html) {
         if (!("log" in this.mother_state)) this.mother_state.log = [];
         this.mother_state.log.push(html);
-        this._prayer("log", html, this.mother_state)
     }
 
 }
