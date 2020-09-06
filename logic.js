@@ -109,7 +109,7 @@ class Game
         this._act()
     }
 
-    addPlayer(username, auth='admin')
+    addPlayer(username)
     {
         let player = {}
         let rtn = true
@@ -119,14 +119,20 @@ class Game
         else {
             player.username = username
             player.cash = 0
-            player.auth = auth  
+            // The first player to join is the admin.
+            console.log(Object.keys(this.mother_state.players).length);
+            if (Object.keys(this.mother_state.players).length == 0) {
+                player.auth = 'admin';
+            } else {
+                player.auth = 'user';
+            }
             player.shares = {}
             player.ready = false
             player.vote = null
             player.ready = false
             for (let key in utils.NATIONS) {
                 player.shares[key] = 0
-            }        
+            }
             this.mother_state.players[username] = player
         }
         return rtn
