@@ -16,6 +16,8 @@ const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
 const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
  'election':120*1000, 'actions':120*100}
 const UNITS = ['Cavalry','Infantry','Artillery']
+const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
+    'Artillery':15, 'Cavalry':15 }
 
 
 //game class defined below
@@ -186,24 +188,28 @@ class Game
             this.mother_state, terr)
         console.log(terr_info)
         let n_buildings = terr_info.n_barracks + terr_info.n_factories
-        if (n_buildings < 4 &&
+        let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
+        if (n_buildings < 4 && afford &&
              username === this.mother_state.nations[nat].president) {
-                let type_str = type == 'barracks' ? 'n_barracks' : 'n_factories'
-                this.mother_state.nations[nat][terr][type_str] += 1
+                let t_str = type == 'barracks' ? 'n_barracks' : 'n_factories'
+                this.mother_state.nations[nat][terr][t_str] += 1
+                this.mother_state.nations[nat].cash -= COSTS[type]
         }
         this._prayer('built_infrastructure','')
     }
 
     spawn(username, terr, type)
     {
+        afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         let nat = this.mother_state.stage.turn
         let val_terr = utils.territories_of_nation_that_can_spawn(
             this.mother_state, nat)
-        if (val_terr.includes(terr)){
+        if (val_terr.includes(terr) && afford){
             this.mother_state.nations[nat][terr].n_barracks_can_spawn -= 1
             unit = {"type": type, "territory":terr,
                 "troop_id":utils.uuid(), 'can_move':false, 'can_move':false}
             this.mother_state.nations[nat].army.push(unit)
+            this.mother_state.nations[nat].cash -= COSTS[type]
         }
         this._prayer('spawned_unit','')
     }
