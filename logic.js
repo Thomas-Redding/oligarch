@@ -173,7 +173,7 @@ class Game
             let all_move = true
             for (let uid of unit_id_list){
                 all_move &= this.mother_state.nations[nat].army[uid].can_move
-                }
+            }
             if (all_move){
                 for (let uid of unit_id_list){
                     this.mother_state.nations[nat].army[uid].territory = target
@@ -415,6 +415,12 @@ class Game
         else if (this.mother_state.stage.subphase == 'Move') {
             this._start_presidential_command()
             this._prayer('begin_move','')
+            // for (let nat in this.mother_state) {
+            //     for (let j in this.mother_state.nations[nat].army) {
+            //         this.mother_state.nations[nat].army[j].can_move = false;
+            //         this.mother_state.nations[nat].army[j].can_attack = false;
+            //     }
+            // }
             for (let j in this.mother_state.nations[nat].army) {
                 this.mother_state.nations[nat].army[j].can_move = true
                 this.mother_state.nations[nat].army[j].can_attack = true   
