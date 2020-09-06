@@ -338,6 +338,7 @@ function render_nation_rects(state) {
 function render_map(state) {
   render_nation_rects(state);
 
+  unitIcons.innerHTML = "";
   Array.from(document.getElementById("riskMap").getElementsByTagName('path')).forEach(path => {
     let territory_name = path.id;
     let nation_name = territory2nation[territory_name];
@@ -367,14 +368,24 @@ function render_map(state) {
     }
     if (territory.n_factories > 0) {
       icon_drawers.push((x, y) => {
-        let circ = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(circ);
+        let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
+        riskMap.appendChild(img);
+
+        let text = svg.text(gLatestState.nations[nation_name][territory_name].n_factories, x + 4, y);
+        text.style.fill = 'white';
+        text.style.textShadow = "6px 6px 20px black";
+        riskMap.appendChild(text);
       });
     }
     if (territory.n_barracks > 0) {
       icon_drawers.push((x, y) => {
-        let circ = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(circ);
+        let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
+        riskMap.appendChild(img);
+
+        let text = svg.text(gLatestState.nations[nation_name][territory_name].n_factories, x + 4, y);
+        text.style.fill = 'white';
+        text.style.textShadow = "6px 6px 20px black";
+        riskMap.appendChild(text);
       });
     }
 
@@ -486,7 +497,7 @@ function main() {
         if (factoryRadio.checked) {
           build(gLatestState, territory, "factory");
         } else if (barracksRadio.checked) {
-          build(gLatestState, territory, "barrack");
+          build(gLatestState, territory, "barracks");
         }
       }
     }
@@ -625,7 +636,7 @@ function login() {
 function render_status_bar(state) {
   const turn2label = {
     "North America": "N America",
-    "South America": "N America",
+    "South America": "S America",
     "Europe":        "Europe",
     "Africa":        "Africa",
     "Asia":          "Asia",
@@ -678,10 +689,7 @@ class Clock {
     secsRemaining = Math.max(secsRemaining, 0);
     let minsRemaining = secsRemaining / 60 | 0;
     secsRemaining -= minsRemaining * 60;
-    secsRemaining = Math.round(secsRemaining * 10) / 10 + '';
-    if (!secsRemaining.includes('.')) {
-      secsRemaining += ".0";
-    }
+    secsRemaining = Math.round(secsRemaining) + '';
     if (secsRemaining.indexOf('.') === 1) {
       secsRemaining = '0' + secsRemaining;
     }
@@ -761,6 +769,9 @@ login().then((socket) => {
       // Called when an undo is performed.
       window.location.reload(true);
     }
+    else if (action === "built_infrastructure") {
+      render_table(state);
+    }
     else if (action === "is_admin") {
       areAdminFetched(details);
     }
@@ -811,6 +822,9 @@ login().then((socket) => {
     }
     else if (action === "begin_build") {
       factoryRadio.checked = true;
+    }
+    else if (action === "built_infrastructure") {
+      render_table();
     }
     else if (action === "conclude_bidding") {
       render_table(state);
@@ -1220,8 +1234,8 @@ function undo() {
 
       <h2 id="presidentialHeader"></h2>
 
-      <div id="finishMovingButton" class="button">Finish Moving</div><br>
-      <div id="finishAttackingButton" class="button">Finish Attacking</div><br>
+      <div id="finishMovingButton" class="button">End Moving</div><br>
+      <div id="finishAttackingButton" class="button">End Attacking</div><br>
       <div id="spwaningDiv">
         <input name="spawnForm" id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($10B)</label>
         <br>
@@ -1229,14 +1243,14 @@ function undo() {
         <br>
         <input name="spawnForm" id="artilleryRadio" type="radio"><label for="artilleryRadio">Artillery ($15B)</label>
         <br>
-        <div class="button">Finish Recruiting</div><br>
+        <div class="button">End Recruiting</div><br>
       </div>
       <div id="buildingDiv">
         <input name="buildForm" id="factoryRadio" type="radio"><label for="factoryRadio">Factory ($10B)</label>
         <br>
-        <input name="buildForm" id="barracksRadio" type="radio"><label for="barracksRadio">Barracks ($10B)</label>
+        <input name="buildForm" id="barracksRadio" type="radio"><label for="barracksRadio">Barracks ($15B)</label>
         <br>
-        <div onclick="finish_building()" class="button">Finish Building</div>
+        <div onclick="finish_building()" class="button">End Building</div>
       </div>
       <div id="dividendsDiv">
         <div style="display:flex; flex-direction:row; width:100%; padding:0.5em;">
@@ -1303,7 +1317,7 @@ function undo() {
         <path id="Western Australia" style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.20000005;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4.32165003;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.58527132;visibility:visible;display:inline;overflow:visible;filter:url(#filter14319);enable-background:accumulate" d="M 862.4935,599.88536 L 862.72892,599.61589 C 862.72892,599.61589 862.72892,593.95904 862.9057,592.54482 C 863.08248,591.13061 862.55215,591.30739 861.84504,590.24673 C 861.13793,589.18607 862.72892,547.9971 862.55215,547.11321 C 862.37537,546.22933 832.67689,547.46677 832.67689,547.46677 L 832.08791,509.72925 L 829.96659,508.49181 C 829.96659,508.49181 828.3756,507.43115 827.49171,506.90082 C 826.60783,506.37049 825.90072,508.84536 825.19361,509.19892 C 824.48651,509.55247 822.36519,510.78991 822.36519,510.78991 C 822.36519,510.78991 821.83486,512.55767 821.4813,513.79511 C 821.12775,515.03255 819.53676,513.97189 817.59222,514.679 C 815.64767,515.3861 817.41544,515.3861 816.88511,517.15387 C 816.35478,518.92164 816.35478,517.33065 814.76379,517.33065 C 813.1728,517.33065 814.05668,518.03775 812.99602,519.45197 C 811.93536,520.86618 811.75859,519.80552 810.34437,521.04296 C 808.93016,522.28039 809.99082,522.28039 809.10694,524.04816 C 808.22305,525.81593 808.04628,524.93204 806.98562,525.63915 C 805.92495,526.34626 804.15719,528.11402 803.09653,529.17468 C 802.03587,530.23534 801.50554,529.70501 799.38422,529.52824 C 797.2629,529.35146 798.50033,529.52824 796.90934,529.70501 C 795.31835,529.88179 795.67191,530.94245 794.61125,531.82633 C 793.55059,532.71022 793.02026,533.06377 791.78282,534.30121 C 790.54538,535.53865 791.25249,534.83154 789.30795,535.00832 C 787.3634,535.18509 788.24729,535.18509 786.30274,536.42253 C 784.3582,537.65997 786.12597,538.01352 785.94919,539.42773 C 785.77241,540.84195 785.41886,540.84195 784.88853,542.07938 C 784.3582,543.31682 784.88853,543.67037 785.41886,545.08459 C 785.94919,546.4988 787.00985,545.61492 787.00985,545.61492 C 787.00985,545.61492 786.6563,547.73624 787.00985,548.44334 C 787.3634,549.15045 786.83307,548.44334 785.24208,548.44334 C 783.65109,548.44334 784.53497,548.97367 784.53497,550.21111 C 784.53497,551.44855 784.53497,551.44855 784.53497,551.44855 C 784.53497,551.44855 784.00464,551.62532 783.47431,552.68598 C 782.94398,553.74665 783.47431,553.56987 783.65109,554.80731 C 783.82787,556.04474 784.00464,556.57507 784.53497,557.81251 C 785.0653,559.04995 785.59563,558.69639 786.47952,560.64094 C 787.3634,562.58548 786.83307,562.76226 786.83307,564.53002 C 786.83307,566.29779 786.83307,565.76746 787.00985,568.06556 C 787.18663,570.36365 788.24729,569.65655 788.24729,569.65655 C 788.24729,569.65655 789.48472,570.54043 790.19183,571.07076 C 790.89894,571.60109 790.89894,572.13142 791.25249,573.89919 C 791.60604,575.66696 790.72216,575.3134 790.36861,576.37406 C 790.01505,577.43472 790.36861,577.08117 790.19183,579.20249 C 790.01505,581.32381 789.30795,580.43993 788.60084,581.32381 C 787.89373,582.20769 788.07051,582.20769 787.54018,583.62191 C 787.00985,585.03612 787.54018,584.68257 788.42406,585.38967 C 789.30795,586.09678 790.36861,586.62711 791.42927,587.51099 C 793.87008,590.1838 796.49259,589.50055 799.56099,587.86455 C 801.15198,586.98066 800.44488,586.80389 801.68231,586.27356 C 802.91975,585.74323 802.5662,585.92 803.2733,585.56645 C 803.98041,585.2129 804.51074,584.68257 805.5714,583.62191 C 806.63206,582.56125 805.92495,583.44513 807.16239,582.73802 C 808.39983,582.03092 808.57661,581.50059 810.52115,580.79348 C 812.46569,580.08637 812.99602,580.6167 812.99602,580.6167 C 812.99602,580.6167 812.99602,580.6167 814.58701,580.6167 C 816.178,580.6167 815.29412,580.79348 815.64767,581.50059 C 816.00123,582.20769 817.06189,582.20769 817.76899,582.20769 C 818.4761,582.20769 819.53676,582.03092 820.42064,581.67736 C 821.30453,581.32381 820.24387,580.08637 820.24387,579.37927 C 820.24387,578.67216 820.24387,578.49538 820.7742,577.25795 C 821.30453,576.02051 822.89552,575.66696 823.60262,575.66696 C 824.30973,575.66696 826.0775,575.3134 826.7846,574.6063 C 827.49171,573.89919 827.84527,574.25274 829.25948,574.07597 C 830.67369,573.89919 830.49692,573.54563 831.55758,572.48497 C 832.61824,571.42431 832.61824,571.95464 834.56278,571.95464 C 836.50732,571.95464 835.62344,571.95464 837.56798,571.95464 C 839.51253,571.95464 839.33575,572.13142 840.57319,572.3082 C 841.81062,572.48497 842.51773,573.72241 843.40161,574.25274 C 844.2855,574.78307 843.75517,574.95985 843.75517,576.37406 C 843.75517,577.78828 843.93194,577.96505 845.34616,580.43993 C 846.76037,582.9148 847.46748,582.9148 847.46748,582.9148 C 847.46748,582.9148 848.70492,581.14703 849.76558,579.55604 C 850.82624,577.96505 850.64946,579.02571 852.24045,578.49538 C 853.83144,577.96505 852.77078,577.43472 853.12433,575.13663 C 853.47789,572.83853 854.18499,574.42952 855.42243,574.6063 C 856.65987,574.78307 855.42243,576.90439 855.06888,578.14183 C 854.71532,579.37927 854.00822,579.73282 853.12433,580.6167 C 852.24045,581.50059 852.24045,581.67736 851.17979,582.9148 C 850.11913,584.15224 850.64946,583.97546 850.82624,585.38967 C 851.00301,586.80389 852.77078,584.15224 853.47789,583.09158 C 854.18499,582.03092 854.18499,582.73802 855.06888,582.9148 C 855.95276,583.09158 855.24565,585.2129 855.24565,586.27356 C 855.24565,587.33422 855.42243,587.15744 856.30631,587.68777 C 857.1902,588.2181 857.1902,589.27876 856.65987,590.69297 C 856.12954,592.10719 856.65987,592.10719 856.83664,593.16785 C 857.01342,594.22851 858.95796,596.88016 859.66507,597.58727 C 860.37218,598.29437 860.1954,597.94082 860.90251,598.29437 C 861.60961,598.64793 861.25606,599.00148 862.4935,599.88536 z" sodipodi:nodetypes="ccssscccsscsssssssssssssssssscssscsssssscsssssssccssssscsssssssssssssssscssssssssssssssssc"/>
         <path id="Alberta" style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.20000005;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4.32165003;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.58527132;visibility:visible;display:inline;overflow:visible;filter:url(#filter12879);enable-background:accumulate" d="M 253.37151,214.74788 C 253.37151,214.74788 253.49651,214.87288 253.99651,216.37288 C 254.49651,217.87288 254.87151,218.87288 255.99651,220.87288 C 257.12151,222.87288 256.12151,228.87288 256.12151,228.87288 L 258.12151,231.62288 C 258.12151,231.62288 259.74651,232.37288 260.37151,232.49788 C 260.99651,232.62288 260.74651,235.74788 260.62151,236.99788 C 260.49651,238.24788 258.99651,237.62288 258.12151,237.87288 C 257.24651,238.12288 256.99651,240.24788 256.87151,241.49788 C 256.74651,242.74788 254.5,242.25 254.5,242.25 C 255.125,243.5 256.375,243.625 256.875,245.875 C 257.375,248.125 257.125,247.375 257.75,248.25 C 258.375,249.125 259.5,249.25 259.75,251.25 C 260,253.25 260,252.125 261.375,254.75 C 262.75,257.375 261.5,258.5 261.75,260.875 C 262,263.25 263.25,262.375 264.125,263.625 L 264.49651,264.99788 L 312.49651,264.87288 L 316.49651,216.49788 C 316.49651,216.49788 253.62151,214.74788 253.37151,214.74788 z" sodipodi:nodetypes="cssccsssscsssssc"/>
       </g>
-<!-- username, territory, factory/barracks -->
+
       <g>
         <line x1="403" y1="237" x2="411" y2="222" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
         <line x1="363" y1="190" x2="386" y2="177" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
@@ -1326,7 +1340,11 @@ function undo() {
         <line x1="634" y1="443" x2="625" y2="454" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
         <line x1="564" y1="371" x2="568" y2="390" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
       </g>
+
       <g id="nationRects"></g>
+
+      <g id="unitIcons"></g>
+
     </svg>
   </div>
 </div>
