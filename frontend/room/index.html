@@ -444,7 +444,7 @@ function build(state, territory, building_type) {
   }
   send({
     "method": "build",
-    "args": [building_type]
+    "args": [territory, building_type]
   })
 }
 

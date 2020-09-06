@@ -181,7 +181,10 @@ class Game
     build(username, terr, type)
     {
         let nat = this.mother_state.stage.turn
-        let terr_info = utils.territory_for_territory_name(terr)
+        console.log(terr)
+        let terr_info = utils.territory_for_territory_name(
+            this.mother_state, terr)
+        console.log(terr_info)
         let n_buildings = terr_info.n_barracks + terr_info.n_factories
         if (n_buildings < 4 &&
              username === this.mother_state.nations[nat].president) {
