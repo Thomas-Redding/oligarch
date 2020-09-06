@@ -354,7 +354,6 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
             this._prayer('begin_spawn','')
-
             let terrs = utils.territories_of_nation_that_can_spawn(
                 this.mother_state, nat)
             if (terrs.length == 0)
