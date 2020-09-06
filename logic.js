@@ -1,6 +1,5 @@
 let utils = require('./utils.js')
-
-let DEBUG_LOG = true;
+let log = require('./log.js')
 
 //macro for pythonic list indexing
 Array.prototype.fromback = function(i=1) {
