@@ -378,10 +378,26 @@ function unit_clicked(territory_name, unit_type, nation_name) {
     if (!moveState) {
       moveState = {
         "territory": territory_name,
-        nation_name: army[0]
       }
-    } else {
-      moveState[nation_name] = army[0];
+    }
+    moveState[nation_name] = army[0];
+    if (Object.keys(moveState).length === 3) {
+      if (!(gLatestState.stage.turn in moveState)) {
+        moveState = null;
+        render_move_state();
+        return;
+      }
+      let other_key = Object.keys(moveState);
+      other_key.splice(other_key.indexOf(gLatestState.stage.turn), 1);
+      other_key.splice(other_key.indexOf("territory"), 1);
+      send({
+        "method": "attack",
+        "args": [
+          moveState[gLatestState.stage.turn].id,
+          other_key.id
+        ]
+      })
+      moveState = null;
     }
     render_move_state();
   }

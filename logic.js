@@ -415,15 +415,12 @@ class Game
         else if (this.mother_state.stage.subphase == 'Move') {
             this._start_presidential_command()
             this._prayer('begin_move','')
-            // for (let nat in this.mother_state) {
-            //     for (let j in this.mother_state.nations[nat].army) {
-            //         this.mother_state.nations[nat].army[j].can_move = false;
-            //         this.mother_state.nations[nat].army[j].can_attack = false;
-            //     }
-            // }
-            for (let j in this.mother_state.nations[nat].army) {
-                this.mother_state.nations[nat].army[j].can_move = true
-                this.mother_state.nations[nat].army[j].can_attack = true   
+            for (let nation_name in this.mother_state.nations) {
+                let army = this.mother_state.nations[nation_name].army
+                for (let unit of army) {
+                    unit.can_move = (nation_name == nat)
+                    unit.can_attack = (nation_name == nat)
+                }
             }
             let no_army = this.mother_state.nations[nat].army.length === 0
             if (noop|| no_army) {
