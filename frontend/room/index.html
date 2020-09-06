@@ -410,27 +410,35 @@ function render_map(state) {
     for (let nation_name in state.nations) {
       let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, "move");
       for (let unit_type in army) {
-        let n = utils.sum(army[unit_type]);
-        if (n > 0) {
-          icon_drawers.push((x, y) => {
-            let onclick = (e) => {
-              unit_clicked(territory_name, unit_type, nation_name);
-            }
+        for (let noaction = 0; noaction < 2; ++noaction) {
+          let n = army[unit_type][noaction];
+          if (n > 0) {
+            icon_drawers.push((x, y) => {
+              let onclick = (e) => {
+                unit_clicked(territory_name, unit_type, nation_name);
+              }
 
-            let circ = svg.image("./assets/" + unittype2icon[unit_type], x - s/2, y - s/2, {width:s, height:s});
-            circ.style.cursor = 'pointer';
-            circ.addEventListener("click", onclick);
-            out.appendChild(circ);
+              let img = svg.image("./assets/" + unittype2icon[unit_type], x - s/2, y - s/2, {width:s, height:s});
+              img.style.cursor = 'pointer';
+              img.addEventListener("click", onclick);
+              out.appendChild(img);
 
-            if (n > 1) {
-              let text = svg.text(n, x - 5, y + 6);
-              text.style.cursor = 'pointer';
-              text.addEventListener("click", onclick);
-              text.style.fill = 'white';
-              text.style.textShadow = "6px 6px 20px black";
-              out.appendChild(text);
-            }
-          });
+              if (!noaction) {
+                let circ = svg.circle(x, y, s * 0.35);
+                circ.style.fill = '#0008';
+                out.appendChild(circ);
+              }
+
+              if (n > 1) {
+                let text = svg.text(n, x - 5, y + 6);
+                text.style.cursor = 'pointer';
+                text.addEventListener("click", onclick);
+                text.style.fill = 'white';
+                text.style.textShadow = "6px 6px 20px black";
+                out.appendChild(text);
+              }
+            });
+          }
         }
       }
     }
