@@ -338,7 +338,8 @@ function render_nation_rects(state) {
 function render_map(state) {
   render_nation_rects(state);
 
-  unitIcons.innerHTML = "";
+  let out = svg.g();
+
   Array.from(document.getElementById("riskMap").getElementsByTagName('path')).forEach(path => {
     let territory_name = path.id;
     let nation_name = territory2nation[territory_name];
@@ -351,44 +352,44 @@ function render_map(state) {
     if (utils.sum(army.Infantry) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
-        unitIcons.appendChild(circ);
+        out.appendChild(circ);
       });
     }
     if (utils.sum(army.Cavalry) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
-        unitIcons.appendChild(circ);
+        out.appendChild(circ);
       });
     }
     if (utils.sum(army.Artillery) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
-        unitIcons.appendChild(circ);
+        out.appendChild(circ);
       });
     }
     if (territory.n_factories > 0) {
       icon_drawers.push((x, y) => {
         let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
-        unitIcons.appendChild(img);
+        out.appendChild(img);
 
         if (territory.n_factories > 1) {
           let text = svg.text(territory.n_factories, x + 4, y);
           text.style.fill = 'white';
           text.style.textShadow = "6px 6px 20px black";
-          unitIcons.appendChild(text);
+          out.appendChild(text);
         }
       });
     }
     if (territory.n_barracks > 0) {
       icon_drawers.push((x, y) => {
         let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
-        unitIcons.appendChild(img);
+        out.appendChild(img);
 
         if (territory.n_barracks > 1) {
           let text = svg.text(territory.n_barracks, x + 4, y);
           text.style.fill = 'white';
           text.style.textShadow = "6px 6px 20px black";
-          unitIcons.appendChild(text);
+          out.appendChild(text);
         }
       });
     }
@@ -411,9 +412,13 @@ function render_map(state) {
         height: 20
       });
       circle.style.fill = 'white';
-      unitIcons.appendChild(circle);
+      out.appendChild(circle);
     }
   });
+
+  riskMap.appendChild(out);
+  riskMap.removeChild(document.getElementById("unitIcons"));
+  out.id = "unitIcons";
 }
 
 function add_player(details, state) {

@@ -456,8 +456,8 @@ class Game
             for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
                 this.mother_state.nations[nation][terr] = {}
-                this.mother_state.nations[nation][terr].n_factories = 0
-                this.mother_state.nations[nation][terr].n_barracks = 0
+                this.mother_state.nations[nation][terr].n_factories = Math.random() * 2 | 0
+                this.mother_state.nations[nation][terr].n_barracks = Math.random() * 2 | 0
                 this.mother_state.nations[nation][terr].n_barracks_can_spawn = 0
                 terr2nat[terr] = nation
             }
@@ -580,8 +580,9 @@ class Game
         let details = {'president':prez, 'nation':nat}
         let tau = this.timer.queryTime() + TIMING.actions
         details['time'] = tau
-        this.timer.start(tau, this._end_presidential_command.bind(this))
+        this.mother_state.clock = tau
         this._prayer('begin_presidential_command',details)
+        this.timer.start(tau, this._end_presidential_command.bind(this))
     }
 
     _end_presidential_command()
