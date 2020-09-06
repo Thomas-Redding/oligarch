@@ -254,9 +254,7 @@ class Game
     //OR it can ensure that another method called by _act
     //will eventually call _transition (i.e. timer events)
     _act()
-    {
-
-    
+    {    
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
         
@@ -287,14 +285,16 @@ class Game
 
         else if (this.mother_state.stage.subphase == 'Move') {
             this._start_presidential_command()
+            this._prayer('begin_attack','')
             let prez = this.mother_state.nations[turn].president
             let no_army = this.mother_state.nations[turn].army.length === 0
             if (prez === null || prez === 'abstain' || no_army) {
-                tjis._transition()
+                this._transition()
             }
         }
 
         else if (this.mother_state.stage.subphase == 'Attack'){
+            this._prayer('begin_attack','')
             let nat = this.mother_state.stage.turn
             if (this.mother_state.nations[nat].army.filter(
                 x => x.can_move).length == 0)
@@ -304,20 +304,23 @@ class Game
                 }
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
+            this._prayer('begin_spawn','')
             let nat = this.mother_state.stage.turn
-            if (this.mother_state.nations[nat].n_barracks_can_spawn)
+            let terrs = utils.territories_of_nation_that_can_spawn(
+                this.mother_state, nat)
+            if (terrs.length == 0)
                 {
                     this._transition()
 
                 }
         }
         else if (this.mother_state.stage.subphase == 'Build'){
+            this._prayer('begin_build','')
             let nat = this.mother_state.stage.turn
             if (this.mother_state.nations[nat].army.filter(
                 x => x.can_move).length == 0)
                 {
                     this._transition()
-
                 }
         }
 
@@ -375,9 +378,7 @@ class Game
                 this.mother_state.stage.turn = next(turn, TURNS)
                 this.timer.stop(true)
             }
-            else {
-                this._prayer('begin_'+nextsubphase,'')
-            }
+            this.mother_state.stage.subphase = nextsubphase
         }
         this._act()
     }
