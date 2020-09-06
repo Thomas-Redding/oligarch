@@ -371,8 +371,14 @@ function render_map(state) {
     }
     if (territory.n_factories > 0) {
       icon_drawers.push((x, y) => {
-        let circ = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(circ);
+        let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
+        riskMap.appendChild(img);
+
+        let text = svg.text(gLatestState.nations[nation_name][territory_name].n_factories, x + 4, y);
+        text.style.fill = 'white';
+        text.style.textShadow = "6px 6px 20px black";
+
+        riskMap.appendChild(text);
       });
     }
     if (territory.n_barracks > 0) {
@@ -490,7 +496,7 @@ function main() {
         if (factoryRadio.checked) {
           build(gLatestState, territory, "factory");
         } else if (barracksRadio.checked) {
-          build(gLatestState, territory, "barrack");
+          build(gLatestState, territory, "barracks");
         }
       }
     }
@@ -762,6 +768,9 @@ login().then((socket) => {
       // Called when an undo is performed.
       window.location.reload(true);
     }
+    else if (action === "built_infrastructure") {
+      render_table(state);
+    }
     else if (action === "is_admin") {
       areAdminFetched(details);
     }
@@ -812,6 +821,9 @@ login().then((socket) => {
     }
     else if (action === "begin_build") {
       factoryRadio.checked = true;
+    }
+    else if (action === "built_infrastructure") {
+      render_table();
     }
     else if (action === "conclude_bidding") {
       render_table(state);
