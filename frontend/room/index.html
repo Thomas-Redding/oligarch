@@ -463,11 +463,13 @@ function render_map(state) {
               out.appendChild(img);
 
               // We use this grayed-out circle to prevent user clicks when an action is not available.
-              if (!can_action && state.stage.phase === "Action" && ["Attack", "Move"].includes(state.stage.subphase)) {
-                let circ = svg.circle(x, y, s * 0.35);
-                circ.style.fill = '#0008';
-                circ.addEventListener("click", onclick);
-                out.appendChild(circ);
+              if (state.stage.phase === "Action") {
+                if ((!can_action && ["Attack", "Move"].includes(state.stage.subphase) || (nation_name !== state.stage.turn))) {
+                  let circ = svg.circle(x, y, s * 0.35);
+                  circ.style.fill = '#0008';
+                  circ.addEventListener("click", onclick);
+                  out.appendChild(circ);
+                }
               }
 
               if (n > 1) {
