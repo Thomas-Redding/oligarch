@@ -181,16 +181,20 @@ class Game
              username === this.mother_state.nations[nat].president) {
                 type_str = type == 'barracks' ? 'n_barracks' : 'n_factories' 
                 this.mother_state.nations[nat][terr][type_str] += 1
-             }
+        }
 
     }
 
     spawn(username, terr, type)
     {
+        let nat = this.mother_state.stage.turn
         let val_terr = utils.territories_of_nation_that_can_spawn(
             this.mother_state, nat)
         if (val_terr.includes(terr)){
-            this.mother_state.nations[nat][terr][type_str] += 1
+            this.mother_state.nations[nat][terr].n_barracks_can_spawn -= 1
+            unit = {"type": type, "territory":terr,
+                "troop_id":utils.uuid(), 'can_move':false, 'can_move':false}
+            this.mother_state.nations[nat].army.push(unit)
         }
 
     }
@@ -418,7 +422,7 @@ class Game
             this.mother_state.nations[nation].owns = []
             /*
              * {
-             * "type": "infantry" | "calvary" | "cannon"
+             * "type": "Infantry" | "Calvary" | "Artillery"
              * "territory": {string},
              * "troop_id": utils.uuid(),
              * "can_move": {bool}
