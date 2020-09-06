@@ -186,18 +186,12 @@ class Game
     }
     attack(username, unit_id, target_id)
     {
+        log("Game.attack()", username, unit_id, target_id);
         let nat = this.mother_state.stage.turn
         if (this.mother_state.stage.subphase == 'Attack' &&
             this.mother_state.nations[nat].president == username &&
             this.mother_state.nations[nat].army.filter()) {
-            
-            utils.military_bias(nat)
-
-        }
-        utils.military_bias()
-        log("Game.attack()", username, unit_id, target_id);
-        if (this.mother_state.stage.subphase == 'Attack') {
-           
+            utils.military_bias(nat);
         }
     }
 
@@ -212,7 +206,7 @@ class Game
 
     build(username, terr, type)
     {
-        log("Game.done()", username, terr, type);
+        log("Game.build()", username, terr, type);
         let nat = this.mother_state.stage.turn
         let terr_info = utils.territory_for_territory_name(
             this.mother_state, terr)
@@ -288,7 +282,7 @@ class Game
     //first share and cash args (shares_to & cash_to) go to player (second user)
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
-        log("Game.dividends()", username, player, shares_to,
+        log("Game.initTrade()", username, player, shares_to,
             shares_from, cash_to, cash_from)
         let t_pairs = this.mother_state.trading_pairs.reduce(
             (a,b) => a.concat(b), []) 
@@ -316,7 +310,11 @@ class Game
         shares_to, shares_from, cash_to, cash_from, accept)
     {
         //if ()
+<<<<<<< HEAD
         log("Game.dividends()", username, player, shares_to, shares_from,
+=======
+        log("Game.respondTrade()", username, player, shares_to, s_from,
+>>>>>>> 5b9289ceef1cea6c539d76208298ebd3daadfe12
             cash_to, cash_from)
 
         if (accept && this._trade_verification(
