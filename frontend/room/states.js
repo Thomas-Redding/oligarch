@@ -34,16 +34,16 @@ const nations = {
 const territories = {
 
 "Alaska": { "center": [216,205] },
-"Northwest Territory": { "center": [300,190] },
+"Northwest Territory": { "center": [295,182] },
 "Greenland": { "center": [430,177] },
 "Quebec": { "center": [388,243] },
 "Ontario": { "center": [336,248] },
-"Alberta": { "center": [285,240] },
+"Alberta": { "center": [279,239] },
 "Western United States": { "center": [285,297] },
 "Central America": { "center": [302,363] },
 "Eastern United States": { "center": [350,312] },
 
-"Venezuela": { "center": [348,386] },
+"Venezuela": { "center": [355,385] },
 "Peru": { "center": [329,460] },
 "Brazil": { "center": [409,446] },
 "Argentina": { "center": [360,531] },
