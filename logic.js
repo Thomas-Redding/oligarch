@@ -306,6 +306,9 @@ class Game
             this.mother_state.stage)
 
             let nat = this.mother_state.stage.turn
+            let prez = this.mother_state.nations[turn].president
+
+            let noop = (prez === null || prez === 'abstain')
 
         if (this.mother_state.stage.phase === 'Taxation') {
             this.mother_state.nations[nat].cash = utils.income_of_nation(
@@ -334,9 +337,8 @@ class Game
         else if (this.mother_state.stage.subphase == 'Move') {
             this._start_presidential_command()
             this._prayer('begin_move','')
-            let prez = this.mother_state.nations[turn].president
             let no_army = this.mother_state.nations[turn].army.length === 0
-            if (prez === null || prez === 'abstain' || no_army) {
+            if (noop|| no_army) {
                 this._transition()
             }
         }
@@ -344,7 +346,7 @@ class Game
         else if (this.mother_state.stage.subphase == 'Attack'){
             this._prayer('begin_attack','')
             if (this.mother_state.nations[nat].army.filter(
-                x => x.can_move).length == 0)
+                x => x.can_move).length == 0 || noop)
                 {
                     this._transition()
 
@@ -358,7 +360,7 @@ class Game
             }
             let terrs = utils.territories_of_nation_that_can_spawn(
                 this.mother_state, nat)
-            if (terrs.length == 0){
+            if (terrs.length == 0 || noop){
                     this._transition()
             }
         }
@@ -366,7 +368,7 @@ class Game
             this._prayer('begin_build','')
             let terr_list = utils.territories_of_nation_that_can_build(
                 this.mother_state, nat)
-            if (terr_list.length == 0)
+            if (terr_list.length == 0 || noop)
                 {
                     this._transition()
                 }
@@ -374,6 +376,7 @@ class Game
 
         else if (this.mother_state.stage.subphase == 'Dividends'){
             this._prayer('begin_dividends','')
+            if (noop) this._transition()
         }
 
         else if (this.mother_state.stage.phase === 'Action'){
