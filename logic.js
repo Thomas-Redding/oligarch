@@ -16,8 +16,8 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 3*1000, 'bidding' : 1*1000,
- 'election':10*1000, 'actions':10*1000}
+const TIMING = {'deliberation' : 10*1000, 'bidding' : 1*1000,
+ 'election':10*1000, 'actions':1200*1000}
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
     'Artillery':15, 'Cavalry':15 }
@@ -179,9 +179,9 @@ class Game
     move(username, unit_id_list, from_territory, target)
     {
         log("Game.move()", username, unit_id_list, from_territory, target);
+        let nat = this.mother_state.stage.turn
         if (this.mother_state.stage.subphase == 'Move' &&
             this.mother_state.nations[nat].president === username) {
-            let nat = this.mother_state.stage.turn
             let all_move = true
             for (let uid of unit_id_list){
                 all_move &= this.mother_state.nations[nat].army[uid].can_move
@@ -474,7 +474,7 @@ class Game
             let nextsubphase = next(subphase, SUBPHASES)
             if (subphase == SUBPHASES.fromback()) {
                 this.mother_state.stage.turn = next(turn, TURNS)
-                this.timer.stop(true)
+                this.timer.stop(false)
             }
             this.mother_state.stage.subphase = nextsubphase
         }
@@ -541,6 +541,7 @@ class Game
     _finish_deliberation()
     {
         log("Game._finish_deliberation()");
+        this.timer.stop(true);
         this._prayer('deliberation_over','')
         this._transition()
     }
