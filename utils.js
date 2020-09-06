@@ -406,6 +406,37 @@ let utils = {
   },
 
   /*
+   * Compute the sum of the given array.
+   */
+  sum: (arr) => {
+    return arr.reduce((a, b) => a + b, 0);
+  },
+
+  /*
+   * Computes the bias towards the given nation for a conflict in the given
+   * territory. This is based on the number of troops in the territory and the
+   * number of cannons in adjacent territories.
+   *
+   * @param {string} nation - the name of the nation
+   * @param {string} territory - the name of the territory
+   * @returns {int} the bias for the nation's military in the territory
+   */
+  military_bias: (mother_state, nation, territory) => {
+    let rtn = 0;
+    let type_to_action_to_count = utils.army_in_territory(mother_state.nations[nation].army, territory, "move");
+    for (let type in type_to_action_to_count) {
+      for (let n of type_to_action_to_count[type]) {
+        rtn += n;
+      }
+    }
+    let neighbors = utils.NEIGHBORS[territory];
+    for (let neighbor in neighbors) {
+      rtn += utils.sum(utils.army_in_territory(mother_state.nations[nation].army, neighbor, "move")["Artillery"]);
+    }
+    return rtn;
+  },
+
+  /*
    * TODO: Support puppeteering.
    * @param {Object} mother_state - the mother state
    * @param {string} territory
@@ -497,7 +528,7 @@ let utils = {
 
   /*
    * This method returns a dictionary. The keys of the dictionary are the troop
-   * types ("infantry" | "calvary" | "cannon"). The values are an array with two
+   * types ("Cavalry" | "Infantry" | "Artillery"). The values are an array with two
    * natural numbers. The first number represents the number of troops of that
    * type in the given territory that have no `action` left; the second number
    * represents the number of troops with an `action` left. In this way, each
@@ -515,9 +546,9 @@ let utils = {
      }
      let arr = army.filter(x => x.territory == territory);
      let rtn = {
-       "infanty": [0, 0],
-       "calvary": [0, 0],
-       "cannon": [0, 0],
+       "Cavalry": [0, 0],
+       "Infantry": [0, 0],
+       "Artillery": [0, 0],
      };
      for (let troop of arr) {
        let index;

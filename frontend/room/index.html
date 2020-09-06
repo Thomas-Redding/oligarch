@@ -335,10 +335,6 @@ function render_nation_rects(state) {
   }
 }
 
-function sum(A) {
-  return A.reduce((a, b) => a + b, 0);
-}
-
 function render_map(state) {
   render_nation_rects(state);
 
@@ -352,19 +348,19 @@ function render_map(state) {
 
     let icon_drawers = [];
 
-    if (sum(army.infanty) > 0) {
+    if (utils.sum(army.infanty) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
         riskMap.appendChild(circ);
       });
     }
-    if (sum(army.calvary) > 0) {
+    if (utils.sum(army.calvary) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
         riskMap.appendChild(circ);
       });
     }
-    if (sum(army.cannon) > 0) {
+    if (utils.sum(army.cannon) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
         riskMap.appendChild(circ);
