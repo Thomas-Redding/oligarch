@@ -200,11 +200,7 @@ class Game
     spawn(username, terr, type)
     {
         let nat = this.mother_state.stage.turn
-<<<<<<< HEAD
-
-=======
         let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
->>>>>>> 9ea2ea8b42f30ce92f4e61a5eb77f38c513a6bc9
         let val_terr = utils.territories_of_nation_that_can_spawn(
             this.mother_state, nat)
         if (val_terr.includes(terr) && afford){
