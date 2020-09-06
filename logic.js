@@ -300,8 +300,7 @@ class Game
     //first share and cash args (shares_to & cash_to) go to player (second user)
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
-        if (DEBUG_LOG) console.log("Game.dividends()", username, player, shares_to, shares_from, cash_to, cash_from);
-        
+        log("Game.dividends()", username, player, shares_to, shares_from, cash_to, cash_from);
         let trade = {}
         trade.from = username
         trade.to = player
