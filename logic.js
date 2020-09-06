@@ -184,10 +184,8 @@ class Game
     build(username, terr, type)
     {
         let nat = this.mother_state.stage.turn
-        console.log(terr)
         let terr_info = utils.territory_for_territory_name(
             this.mother_state, terr)
-        console.log(terr_info)
         let n_buildings = terr_info.n_barracks + terr_info.n_factories
         let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         if (n_buildings < 4 && afford &&
@@ -201,14 +199,17 @@ class Game
 
     spawn(username, terr, type)
     {
-        afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         let nat = this.mother_state.stage.turn
+<<<<<<< HEAD
 
+=======
+        let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
+>>>>>>> 9ea2ea8b42f30ce92f4e61a5eb77f38c513a6bc9
         let val_terr = utils.territories_of_nation_that_can_spawn(
             this.mother_state, nat)
         if (val_terr.includes(terr) && afford){
             this.mother_state.nations[nat][terr].n_barracks_can_spawn -= 1
-            unit = {"type": type, "territory":terr,
+            let unit = {"type": type, "territory":terr,
                 "troop_id":utils.uuid(), 'can_move':false, 'can_move':false}
             this.mother_state.nations[nat].army.push(unit)
             this.mother_state.nations[nat].cash -= COSTS[type]
@@ -444,23 +445,27 @@ class Game
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
             this.mother_state.nations[nation].owns = []
-            /*
-             * {
-             * "type": "Infantry" | "Calvary" | "Artillery"
-             * "territory": {string},
-             * "troop_id": utils.uuid(),
-             * "can_move": {bool}
-             * "can_attack": {bool}
-             * }
-             */
             this.mother_state.nations[nation].army = []
+
+            let id = 0;
+            for (let terr of utils.NATIONS[nation].territories) {
+                for (let unittype of UNITS) {
+                    this.mother_state.nations[nation].army.push({
+                        "type": unittype,
+                        "territory": terr,
+                        "troop_id": id++,
+                        "can_move": true
+                    });
+                }
+            }
+
             this.mother_state.nations[nation].president = null
             for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
                 this.mother_state.nations[nation][terr] = {}
-                this.mother_state.nations[nation][terr].n_factories = Math.random() * 2 | 0
-                this.mother_state.nations[nation][terr].n_barracks = Math.random() * 2 | 0
-                this.mother_state.nations[nation][terr].n_barracks_can_spawn = 0
+                this.mother_state.nations[nation][terr].n_factories = Math.random() * 5 | 0
+                this.mother_state.nations[nation][terr].n_barracks = Math.random() * 5 | 0
+                this.mother_state.nations[nation][terr].n_barracks_can_spawn = this.mother_state.nations[nation][terr].n_barracks
                 terr2nat[terr] = nation
             }
         }

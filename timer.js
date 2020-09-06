@@ -18,7 +18,7 @@ class Timer
      * @param {function} callback - function to call when the timer expires
      */
     start(time, callback) {
-        if (DEBUG_LOG) console.log("timer.start()", time);
+        if (DEBUG_LOG) console.log("timer.start()", time, callback, "*", callback.name);
         this._callback = callback;
         this._startTime = new Date().getTime();
         this._t = time;
@@ -66,13 +66,17 @@ class Timer
      * `start()`.
      */
     stop(do_callback) {
-        if (DEBUG_LOG) console.log("timer.stop()");
+        if (DEBUG_LOG) console.log("timer.stop()", do_callback);
         this._is_running = false;
         if (do_callback) {
-            this._callback()
+            let callback = this._callback;
             this._callback = () => {};
+            clearTimeout(this._id);
+            if (callback) callback();
+        } else {
+            this._callback = () => {};
+            clearTimeout(this._id);
         }
-        clearTimeout(this._id);
     }
 
     pause() {
