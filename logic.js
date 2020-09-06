@@ -1,4 +1,5 @@
 let utils = require('./utils.js')
+let log = require('./log.js')
 
 let DEBUG_LOG = true;
 
@@ -32,12 +33,12 @@ class History {
     this._actions = [];
     this._logs = [];
   }
-  save(action, args, mother_state, log) {
+  save(action, args, mother_state, logString) {
     this._actions.push(action);
     this._args.push(args);
     this._states.push(utils.deep_copy(mother_state));
-    this._logs.push(log);
-    this._prayer("log", log, mother_state)
+    this._logs.push(logString);
+    this._prayer("log", logString, mother_state)
   }
   logs() {
     return utils.deep_copy(this._logs);
@@ -58,7 +59,7 @@ class Game
 {
     fetchGameState()
     {
-        if (DEBUG_LOG) console.log("Game.fetchGameState()");
+        log("Game.fetchGameState()");
         if (this.timer && this.timer.isRunning()) {
             this.mother_state.clock = this.timer.queryTime();
         }
@@ -68,12 +69,12 @@ class Game
     }
 
     is_admin(username) {
-        if (DEBUG_LOG) console.log("Game.is_admin()", username);
+        log("Game.is_admin()", username);
         return this.mother_state.players[username].auth === 'admin';
     }
 
     undo(username) {
-        if (DEBUG_LOG) console.log("Game.undo()", username);
+        log("Game.undo()", username);
         throw Exception("Game.undo() is not implemented yet.");
         if (this.mother_state.players[username].auth !== 'admin') return;
         let [action, args, state] = this._history.undo();
@@ -92,7 +93,7 @@ class Game
 
     endLobby(username)
     {
-        if (DEBUG_LOG) console.log("Game.endLobby()", username);
+        log("Game.endLobby()", username);
         let rtn;
         if (this.mother_state.players[username].auth !== 'admin') {
             rtn = false
@@ -111,7 +112,7 @@ class Game
 
     startGame(username)
     {
-        if (DEBUG_LOG) console.log("Game.startGame()", username);
+        log("Game.startGame()", username);
         this._history.save("startGame", [username], this.mother_state, "<b>" + username + "</b> started the game.");
         this._player_cash_init()
         this.prayer('game_start', {}, this.mother_state)
@@ -120,7 +121,7 @@ class Game
 
     addPlayer(username)
     {
-        if (DEBUG_LOG) console.log("Game.addPlayer()", username);
+        log("Game.addPlayer()", username);
         let player = {}
         let rtn = true
         if (this.mother_state.stage.phase !== 'lobby') {
@@ -150,7 +151,7 @@ class Game
 
     rdyUp(username)
     {
-        if (DEBUG_LOG) console.log("Game.rdyUp()", username);
+        log("Game.rdyUp()", username);
         if (this.mother_state.players[username].ready) return;
         this._history.save("rdyUp", [username], this.mother_state, "<b>" + username + "</b> readied up");
         this.mother_state.players[username].ready = true
@@ -167,7 +168,7 @@ class Game
 
     bid(username, amount)
     {
-        if (DEBUG_LOG) console.log("Game.bid()", username, amount);
+        log("Game.bid()", username, amount);
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
             this._history.save("bid", [username], this.mother_state, "<b>" + username +  "</b> bid $" + amount);
@@ -177,7 +178,7 @@ class Game
 
     move(username, unit_id_list, from_territory, target)
     {
-        if (DEBUG_LOG) console.log("Game.move()", username, unit_id_list, from_territory, target);
+        log("Game.move()", username, unit_id_list, from_territory, target);
         if (this.mother_state.stage.subphase == 'Move' &&
             this.mother_state.nations[nat].president === username) {
             let nat = this.mother_state.stage.turn
@@ -195,7 +196,7 @@ class Game
     }
     attack(username, unit_id, target_id)
     {
-        if (DEBUG_LOG) console.log("Game.attack()", username, unit_id, target_id);
+        log("Game.attack()", username, unit_id, target_id);
         if (this.mother_state.stage.subphase == 'Attack') {
            
         }
@@ -203,7 +204,7 @@ class Game
 
     done(username)
     {
-        if (DEBUG_LOG) console.log("Game.done()", username);
+        log("Game.done()", username);
         let nat = this.mother_state.stage.turn
         if (username === this.mother_state.nations[nat].president) {
             this._transition()
@@ -212,7 +213,7 @@ class Game
 
     build(username, terr, type)
     {
-        if (DEBUG_LOG) console.log("Game.done()", username, terr, type);
+        log("Game.done()", username, terr, type);
         let nat = this.mother_state.stage.turn
         let terr_info = utils.territory_for_territory_name(
             this.mother_state, terr)
@@ -229,7 +230,7 @@ class Game
 
     spawn(username, terr, type)
     {
-        if (DEBUG_LOG) console.log("Game.spawn()", username, terr, type);
+        log("Game.spawn()", username, terr, type);
         let nat = this.mother_state.stage.turn
         let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         let val_terr = utils.territories_of_nation_that_can_spawn(
@@ -246,7 +247,7 @@ class Game
 
     vote(username, candidate_username)
     {
-        if (DEBUG_LOG) console.log("Game.vote()", username, candidate_username);
+        log("Game.vote()", username, candidate_username);
         if (this.mother_state.stage.subphase == 'Election'){
             if (this.mother_state.players[username].vote == null) {
                 this._register_vote(username, candidate_username)
@@ -260,7 +261,7 @@ class Game
 
     dividends(username, amount)
     {
-        if (DEBUG_LOG) console.log("Game.dividends()", username, amount);
+        log("Game.dividends()", username, amount);
         let nat = this.mother_state.stage.turn
         let is_prez = username === this.mother_state.nations[nat].president
         let n_shares = utils.shares_sold(this.mother_state, nat)
@@ -282,7 +283,7 @@ class Game
 
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
-        if (DEBUG_LOG) console.log("Game.dividends()", username, player, shares_to, shares_from, cash_to, cash_from);
+        log("Game.dividends()", username, player, shares_to, shares_from, cash_to, cash_from);
         if (this.mother_state.players[username].vote == null) {
             //this._register_vote(username, player)
         }
@@ -319,7 +320,7 @@ class Game
     //prayer wrapper for automatic timing
     _prayer(prayer_id, signal)
     {
-        if (DEBUG_LOG) console.log("Game._prayer()", prayer_id, signal);
+        log("Game._prayer()", prayer_id, signal);
         let tau = 0;
         if (this.timer && this.timer.isRunning()) tau = this.timer.queryTime()
         this.mother_state.clock = tau
@@ -328,7 +329,7 @@ class Game
 
     //acts based on current game state
     _parse_stage(stage) {
-        if (DEBUG_LOG) console.log("Game._parse_stage()", stage);
+        log("Game._parse_stage()", stage);
         return [stage.round, stage.phase, stage.turn, stage.subphase]
     }
 
@@ -338,7 +339,7 @@ class Game
     //will eventually call _transition (i.e. timer events)
     _act()
     {
-        if (DEBUG_LOG) console.log("Game._act()");
+        log("Game._act()");
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
 
@@ -430,7 +431,7 @@ class Game
     //always calls act on end
     _transition()
     {
-        if (DEBUG_LOG) console.log("Game._transition()");
+        log("Game._transition()");
         function next(cur, table) {
             let next_idx = (table.indexOf(cur) + 1) % table.length
             return table[next_idx]
@@ -482,7 +483,7 @@ class Game
 
     _nation_init()
     {
-        if (DEBUG_LOG) console.log("Game._nation_init()");
+        log("Game._nation_init()");
         let terr2nat = {}
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
@@ -517,7 +518,7 @@ class Game
 
     _player_cash_init()
     {
-        if (DEBUG_LOG) console.log("Game._player_cash_init()");
+        log("Game._player_cash_init()");
         let n_players = Object.keys(this.mother_state.players).length
         let inicash = Math.floor(TOTAL_INIT_CASH/n_players)
         for (let player in this.mother_state.players){
@@ -529,7 +530,7 @@ class Game
     //deliberation routines
     _begin_deliberation()
     {
-        if (DEBUG_LOG) console.log("Game._begin_deliberation()");
+        log("Game._begin_deliberation()");
         this.mother_state.clock = TIMING.deliberation
             if (this.timer.isRunning()) this.timer.stop(false)
             this.timer.start(TIMING.deliberation,
@@ -539,7 +540,7 @@ class Game
 
     _finish_deliberation()
     {
-        if (DEBUG_LOG) console.log("Game._finish_deliberation()");
+        log("Game._finish_deliberation()");
         this._prayer('deliberation_over','')
         this._transition()
     }
@@ -547,7 +548,7 @@ class Game
     //auction routines
     _start_auction(nation)
     {
-        if (DEBUG_LOG) console.log("Game._start_auction()", nation);
+        log("Game._start_auction()", nation);
         this.mother_state.clock = 0
         this.timer.stop(false)
         this.mother_state.current_bid = -1
@@ -557,7 +558,7 @@ class Game
 
     _register_bid(amount, username)
     {
-        if (DEBUG_LOG) console.log("Game._register_bid()", amount, username);
+        log("Game._register_bid()", amount, username);
         this.mother_state.current_bid = amount
         this.mother_state.highest_bidder = username
         if (this.timer) this.timer.stop(false)
@@ -569,7 +570,7 @@ class Game
 
     _conclude_bidding()
     {
-        if (DEBUG_LOG) console.log("Game._conclude_bidding()");
+        log("Game._conclude_bidding()");
         let price = this.mother_state.current_bid
         let winner = this.mother_state.highest_bidder
         let curnat = this.mother_state.stage.turn
@@ -585,7 +586,7 @@ class Game
     //election routines
     _start_election(nation)
     {
-        if (DEBUG_LOG) console.log("Game._start_election()", nation);
+        log("Game._start_election()", nation);
         this.mother_state.clock = 0
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
@@ -600,7 +601,7 @@ class Game
 
     _register_vote(username, candidate_username)
     {
-        if (DEBUG_LOG) console.log("Game._register_vote()", username, candidate_username);
+        log("Game._register_vote()", username, candidate_username);
         this.mother_state.players[username].vote = candidate_username
         let nat = this.mother_state.stage.turn
         let candidate_votes = utils.candidate_votes(this.mother_state)
@@ -619,7 +620,7 @@ class Game
 
     _conclude_election()
     {
-        if (DEBUG_LOG) console.log("Game._conclude_election()");
+        log("Game._conclude_election()");
         for (let player in this.mother_state.players){
             this.mother_state.players[player].vote = null
             this.mother_state.players[player].ready = false
@@ -633,7 +634,7 @@ class Game
     //start presidential command & clock
     _start_presidential_command()
     {
-        if (DEBUG_LOG) console.log("Game._start_presidential_command()");
+        log("Game._start_presidential_command()");
         let nat = this.mother_state.stage.turn
         let prez = this.mother_state.nations[nat].president
         let details = {'president':prez, 'nation':nat}
@@ -646,7 +647,7 @@ class Game
 
     _end_presidential_command()
     {
-        if (DEBUG_LOG) console.log("Game._end_presidential_command()");
+        log("Game._end_presidential_command()");
         this._prayer('end_presidential_command','')
         let nat = this.mother_state.stage.turn
         this.mother_state.nations[nat].president = null
