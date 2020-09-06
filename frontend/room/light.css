@@ -14,10 +14,6 @@ body {
   color: white;
 }
 
-.button {
-  color: black;
-}
-
 #mainTable > tbody > tr:nth-child(2n) {
   background-color: #ccc;
 }

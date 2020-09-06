@@ -684,7 +684,9 @@ class Clock {
   }
 }
 
+let gAreAdmin = undefined;
 function areAdminFetched(areAdmin) {
+  gAreAdmin = areAdmin;
   let playIcon = document.getElementById("play-icon");
   let pauseIcon = document.getElementById("pause-icon");
   if (areAdmin) {
@@ -698,6 +700,7 @@ function areAdminFetched(areAdmin) {
     pauseIcon.onclick = () => {
       send({"method": "pause" });
     };
+    document.getElementById("start-game-button").classList.remove("disabled-button")
   } else {
     playIcon.classList.remove("clickable-svg");
     pauseIcon.classList.remove("clickable-svg");
@@ -705,6 +708,7 @@ function areAdminFetched(areAdmin) {
     pauseIcon.classList.add("unclickable-svg");
     playIcon.onclick = () => {};
     pauseIcon.onclick = () => {};
+    document.getElementById("start-game-button").classList.add("disabled-button")
   }
 }
 
@@ -712,7 +716,6 @@ let clock = new Clock();
 
 let gSocket;
 let gLatestState;
-let gAreAdmin = undefined;
 login().then((socket) => {
   console.log("CONNECTED");
   gSocket = socket;
@@ -1121,14 +1124,16 @@ function send(obj) {
 }
 
 function start_game() {
-  send([
-  {
-    "action": "forward",
-    "method": "endLobby",
-  }, {
-    "action": "forward",
-    "method": "startGame",
-  }]);
+  if (gAreAdmin) {
+    send([
+    {
+      "action": "forward",
+      "method": "endLobby",
+    }, {
+      "action": "forward",
+      "method": "startGame",
+    }]);
+  }
 }
 
 function pay_dividends() {
@@ -1412,7 +1417,7 @@ function finish_building() {
     <p>
       waiting for players to join...
     </p>
-    <div class="button" onclick="start_game();" style="margin: 2em auto;">
+    <div id="start-game-button" class="button disabled-button" onclick="start_game();" style="margin: 2em auto;">
       Start Game
     </div>
   </div>
