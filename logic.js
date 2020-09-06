@@ -293,19 +293,20 @@ class Game
         let t_pairs = this.mother_state.trading_pairs.reduce(
             (a,b) => a.concat(b), []) 
 
+        let trade = {}
+        trade.from = username
+        trade.to = player
+        trade.shares_to = shares_to
+        trade.shares_from = shares_from
+        trade.cash_to = cash_to
+        trade.cash_from = cash_from
+
         if (t_pairs.includes(username)||t_pairs.includes(player)) {
             this._prayer('players_busy',trade,this.mother_state)
         } 
         else if (this._trade_verification(
             username, player, shares_to, shares_from, cash_to, cash_from)) {
-
-            let trade = {}
-            trade.from = username
-            trade.to = player
-            trade.shares_to = shares_to
-            trade.shares_from = shares_from
-            trade.cash_to = cash_to
-            trade.cash_from = cash_from
+        
             this.mother_state.trading_pairs.push([username, player])
             this._prayer('trade_proposed',trade,this.mother_state)
         }       
@@ -314,6 +315,7 @@ class Game
     respondTrade(username, player, 
         shares_to, shares_from, cash_to, cash_from, accept)
     {
+        //if ()
         log("Game.dividends()", username, player, shares_to, s_from,
             cash_to, cash_from)
 
@@ -356,7 +358,7 @@ class Game
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this.mother_state.trading_pairs = []
-        log.enable = false
+        //log.enable = false
         this._nation_init()
     }
 
@@ -475,7 +477,7 @@ class Game
         let cur_ord = (this.mother_state.stage.round % 2 == 1)
         let curTURNS = TURNS
         //let curTURNS = cur_ord ? TURNS : reverse(TURNS)
-        console.log(curTURNS)
+        //console.log(curTURNS)
       
         function next(cur, table) {
             let next_idx = (table.indexOf(cur) + 1) % table.length
