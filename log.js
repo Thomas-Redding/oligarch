@@ -4,7 +4,7 @@ function log(s) {
   if (!log.enable) return false;
   let stack = get_stack();
   let top = stack[0];
-  console.log(timeString(), top.className + "." + top.methodName, ...arguments);
+  console.log(timeString(), top.methodSig + "()", ...arguments);
 }
 
 function timeString() {
@@ -43,14 +43,12 @@ function get_stack() {
     if (stack2 === null) return null;
     return stack2.map(x => {
       x = x.substr(x.indexOf(" at ")+4);
-      let front = x.substr(0, x.indexOf(" "))
+      let front = x.substr(0, x.indexOf(" (")); // "ab.cd" OR "new ab"
       let back = x.substr(front.length+1);
       back = back.substr(1, back.length - 2); // strip paranthese
-      let [className, methodName] = front.split(".");
       let [filePath, lineNum, charNum] = back.split(":");
       return {
-        className: className,
-        methodName: methodName,
+        methodSig: front,
         filePath: filePath,
         lineNum: lineNum,
         charNum: charNum};

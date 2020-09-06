@@ -609,7 +609,7 @@ window.addEventListener("DOMContentLoaded", () => {
   lobbyDiv.style.backgroundPosition = "center center";
 })
 
-function main() {
+function main(state) {
   riskMap.addEventListener('click', (e) => {
     let pt = riskMap.createSVGPoint();
     pt.x = e.clientX;
@@ -617,6 +617,15 @@ function main() {
     let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
     // console.log(Math.round(loc.x), Math.round(loc.y));
   });
+
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  if (state.trading_pairs.map(x => x[1]).includes(myUsername)) {
+    // Automatically decline ongoing trades.
+    send({
+      "method": "respondTrade",
+      "args": [null, null, null, null, null, false]
+    });
+  }
 
   Array.from(document.getElementById("riskMap").getElementsByTagName('path')).forEach(path => {
     let territory = path.id;
@@ -1012,7 +1021,7 @@ login().then((socket) => {
       if (state.stage.phase !== "lobby") {
         tab = kTabInfo;
       }
-      main();
+      main(state);
       render_table(state);
       let playIcon = document.getElementById("play-icon");
       let pauseIcon = document.getElementById("pause-icon");
@@ -1036,6 +1045,9 @@ login().then((socket) => {
       if (details.to === myUsername) {
         show_trade_proposal(details);
       }
+    }
+    else if (action === "trade_accepted") {
+      render_table(state);
     }
     else if (action === "is_admin") {
       areAdminFetched(details);
@@ -1215,7 +1227,8 @@ function respond_trade(accept) {
       tradeProposal.cash_from,
       accept
     ]
-  })
+  });
+  tradeSnackbarContainer.style.display = "none";
 }
 
 function get_current_modal_type() {
