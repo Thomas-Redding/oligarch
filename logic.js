@@ -598,7 +598,8 @@ class Game
         if (this.timer) this.timer.stop(false)
             this.timer.start(TIMING.bidding, this._conclude_bidding.bind(this))
         console.log('register bid called')
-        this._prayer('bid_received', {'amount' : amount, 'player': username})
+        this._prayer('bid_received', {'amount' : amount, 'player': username,
+            'nation': this.mother_state.stage.turn})
 
     }
 

@@ -31,6 +31,14 @@ body {
   opacity: 0;
 }
 
+#gameLogDiv {
+  padding-inline-start: 1.4em;
+}
+
+li {
+  overflow: visible;
+}
+
 #lobbyDiv {
   position: absolute;
   left: 0;
@@ -924,25 +932,42 @@ function htmlFromLog(arr) {
   } else if (arr[0] == "auction_start") {
     return "Auction began for " + arr[1];
   } else if (arr[0] == "bid_received") {
-    return arr[1].player + " bid $" + arr[1].amount + "B";
+    return arr[1].player + " bid $" + arr[1].amount + "B for " + arr[1].nation;
   } else if (arr[0] == "conclude_bidding") {
     return arr[1].winner + " bought a share of " + arr[1].nation + " for $" + arr[1].price + "B";
   } else if (arr[0] == "auctions_complete") {
     return "Auctions concluded.";
   } else if (arr[0] == "start_election") {
     return "Election began in " + arr[1];
+  } else if (arr[0] == "vote_tallied") {
+    let candidate = Object.keys(arr[1])[0];
+    return "Someone voted for " + candidate;
   } else if (arr[0] == "conclude_election") {
-    console.log(arr);
-    return "Election concluded";
+    if (arr[1].winner) {
+      return arr[1].winner + " won the election";
+    } else {
+      return "Election concluded with no winner";
+    }
   } else if (arr[0] == "begin_presidential_command") {
-    console.log(arr);
-    return "The reign of _ began in _."
+    if (arr[1].president) {
+      return "The reign of " + arr[1].president + " began in " + arr[1].nation + "."
+    } else {
+      return undefined;
+    }
   } else if (arr[0] == "begin_move") {
     return "Troop movement began";
   } else if (arr[0] == "begin_attack") {
     return "Troop attacks began";
   } else if (arr[0] == "begin_spawn") {
-    return "Troop recruitment"
+    return "Troop recruitment began"
+  } else if (arr[0] == "begin_build") {
+    return "Construction began";
+  } else if (arr[0] == "begin_dividends") {
+    return "Dividend deliberations began";
+  } else if (arr[0] == "dividends_paid") {
+    return "$" + arr[1] + "B paid in dividends";
+  } else if (arr[0] == "end_presidential_command") {
+    return "The reign has ended.";
   } else {
     return arr.join("@");
   }
@@ -955,7 +980,7 @@ function rewriteActivityLogFromScratch() {
   for (let log of logs) {
     let s = htmlFromLog(log);
     if (s === undefined) continue;
-    html += "<div>" + s + "</div>";
+    html += "<li>" + s + "</li>";
   }
   gameLogDiv.innerHTML = html;
 }
@@ -1660,7 +1685,7 @@ function undo() {
         <div style="flex:1"></div>
         <div id="undo-button" class="button" onclick="undo();">Undo</div>
       </div>
-      <div id="gameLogDiv" style="flex:1; padding:0.5em;"></div>
+      <ul id="gameLogDiv"></ul>
     </div>
   </div>
 
