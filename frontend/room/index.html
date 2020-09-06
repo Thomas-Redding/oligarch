@@ -424,8 +424,8 @@ let theme = {
 }
 theme.set(theme.get());
 
-function build(territory, building_type) {
-  const nationName = state.stage.turn;
+function build(state, territory, building_type) {
+  let nationName = state.stage.turn;
   const myUsername = network.fetchExistingUsernamePassword()[0];
   if (state.nations[nationName].president !== myUsername) {
     return;
@@ -434,7 +434,7 @@ function build(territory, building_type) {
     return;
   }
   send({
-    "method": "build_factory",
+    "method": "build",
     "args": [building_type]
   })
 }
@@ -479,9 +479,9 @@ function main() {
 
       if (gLatestState.stage.phase === "Action" && gLatestState.stage.subphase === "Build") {
         if (factoryRadio.checked) {
-          build(territory, "factory");
+          build(gLatestState, territory, "factory");
         } else if (barracksRadio.checked) {
-          build(territory, "barrack");
+          build(gLatestState, territory, "barrack");
         }
       }
     }
