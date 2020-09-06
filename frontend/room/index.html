@@ -386,7 +386,7 @@ function render_map(state) {
         let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
         riskMap.appendChild(img);
 
-        let text = svg.text(gLatestState.nations[nation_name][territory_name].n_factories, x + 4, y);
+        let text = svg.text(gLatestState.nations[nation_name][territory_name].n_barracks, x + 4, y);
         text.style.fill = 'white';
         text.style.textShadow = "6px 6px 20px black";
         riskMap.appendChild(text);
@@ -828,7 +828,10 @@ login().then((socket) => {
       factoryRadio.checked = true;
     }
     else if (action === "built_infrastructure") {
-      render_table();
+      render_table(state);
+    }
+    else if (action === "dividends_paid") {
+      render_table(state);
     }
     else if (action === "conclude_bidding") {
       render_table(state);
