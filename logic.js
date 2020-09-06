@@ -182,7 +182,7 @@ class Game
     {
         let nat = this.mother_state.stage.turn
         let terr_info = utils.territory_for_territory_name(terr)
-        n_buildings = terr_info.n_barracks + terr_info.n_factories
+        let n_buildings = terr_info.n_barracks + terr_info.n_factories
         if (n_buildings < 4 &&
              username === this.mother_state.nations[nat].president) {
                 type_str = type == 'barracks' ? 'n_barracks' : 'n_factories' 
