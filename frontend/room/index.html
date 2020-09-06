@@ -320,7 +320,7 @@ function render_nation_rects(state) {
 
     nation.income = utils.income_of_nation(state, name);
 
-    let rect = svg.rect(coords.x, coords.y, 110, 48);
+    let rect = svg.rect(coords.x, coords.y, 115, 48);
     rect.classList.add("nationRect");
     nationRects.appendChild(rect);
 
@@ -345,26 +345,83 @@ function render_map(state) {
     let nation_name = territory2nation[territory_name];
     let territory = state.nations[nation_name][territory_name];
 
+    {
+      let [x, y] = territories[territory_name].center;
+      let circle = svg.circle(x, y, 16);
+      circle.style.fill = 'none';
+      circle.style.stroke = '#fff4';
+      out.appendChild(circle);
+    }
+
     let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, "move");
 
     let icon_drawers = [];
+
+    // icon_drawers.push((x, y) => {
+    //   let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
+    //   out.appendChild(circ);
+    // });
+    // icon_drawers.push((x, y) => {
+    //   let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
+    //   out.appendChild(circ);
+    // });
+    // icon_drawers.push((x, y) => {
+    //   let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
+    //   out.appendChild(circ);
+    // });
+    // icon_drawers.push((x, y) => {
+    //   let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
+    //   out.appendChild(circ);
+    // });
+    // icon_drawers.push((x, y) => {
+    //   let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
+    //   out.appendChild(circ);
+    // });
+    // icon_drawers.push((x, y) => {
+    //   let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
+    //   out.appendChild(circ);
+    // });
 
     if (utils.sum(army.Infantry) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
         out.appendChild(circ);
+
+        let n = utils.sum(army.Infantry);
+        if (n > 1) {
+          let text = svg.text(n, x - 5, y + 6);
+          text.style.fill = 'white';
+          text.style.textShadow = "6px 6px 20px black";
+          out.appendChild(text);
+        }
       });
     }
     if (utils.sum(army.Cavalry) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
         out.appendChild(circ);
+
+        let n = utils.sum(army.Cavalry);
+        if (n > 1) {
+          let text = svg.text(n, x - 5, y + 6);
+          text.style.fill = 'white';
+          text.style.textShadow = "6px 6px 20px black";
+          out.appendChild(text);
+        }
       });
     }
     if (utils.sum(army.Artillery) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
         out.appendChild(circ);
+
+        let n = utils.sum(army.Artillery);
+        if (n > 1) {
+          let text = svg.text(n, x - 5, y + 6);
+          text.style.fill = 'white';
+          text.style.textShadow = "6px 6px 20px black";
+          out.appendChild(text);
+        }
       });
     }
     if (territory.n_factories > 0) {
@@ -373,7 +430,7 @@ function render_map(state) {
         out.appendChild(img);
 
         if (territory.n_factories > 1) {
-          let text = svg.text(territory.n_factories, x + 4, y);
+          let text = svg.text(territory.n_factories, x - 5, y + 6);
           text.style.fill = 'white';
           text.style.textShadow = "6px 6px 20px black";
           out.appendChild(text);
@@ -386,7 +443,7 @@ function render_map(state) {
         out.appendChild(img);
 
         if (territory.n_barracks > 1) {
-          let text = svg.text(territory.n_barracks, x + 4, y);
+          let text = svg.text(territory.n_barracks, x - 5, y + 6);
           text.style.fill = 'white';
           text.style.textShadow = "6px 6px 20px black";
           out.appendChild(text);
@@ -394,26 +451,26 @@ function render_map(state) {
       });
     }
 
-    const r = 12;
+    const r = 16;
     const s = 20;
     const tau = Math.PI * 2;
     for (let t = 0; t < icon_drawers.length; ++t) {
       let angle = tau * t / icon_drawers.length - Math.PI / 2;
       let [x, y] = territories[territory_name].center;
-      x += Math.cos(angle) * r * 1.7;
-      y += Math.sin(angle) * r * 1.7;
+      x += Math.cos(angle) * r * 1.3;
+      y += Math.sin(angle) * r * 1.3;
       icon_drawers[t](x, y);
     }
 
-    if (utils.CAPITALS.includes(territory_name)) {
-      let [x, y] = territories[territory_name].center;
-      let circle = svg.image("assets/whitestar.png", x - 10, y - 10, {
-        width: 20,
-        height: 20
-      });
-      circle.style.fill = 'white';
-      out.appendChild(circle);
-    }
+    // if (utils.CAPITALS.includes(territory_name)) {
+    //   let [x, y] = territories[territory_name].center;
+    //   let circle = svg.image("assets/whitestar.png", x - 10, y - 10, {
+    //     width: 20,
+    //     height: 20
+    //   });
+    //   circle.style.fill = 'white';
+    //   out.appendChild(circle);
+    // }
   });
 
   riskMap.appendChild(out);
@@ -459,6 +516,14 @@ let theme = {
 }
 theme.set(theme.get());
 
+function spawn(state, territory, unit_type) {
+  send({
+    "method": "spawn",
+    "args": [territory, unit_type]
+  });
+}
+
+
 function build(state, territory, building_type) {
   let nationName = state.stage.turn;
   const myUsername = network.fetchExistingUsernamePassword()[0];
@@ -488,7 +553,7 @@ function main() {
     pt.x = e.clientX;
     pt.y = e.clientY;
     let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
-    console.log(Math.round(loc.x), Math.round(loc.y));
+    // console.log(Math.round(loc.x), Math.round(loc.y));
   });
 
   Array.from(document.getElementById("riskMap").getElementsByTagName('path')).forEach(path => {
@@ -503,7 +568,7 @@ function main() {
     path.style.stroke = 'black';
 
     let onclick = (e) => {
-      if (false) {
+      if (true) {
         // Print out coordinates.
         let pt = riskMap.createSVGPoint();
         pt.x = e.clientX;
@@ -512,11 +577,21 @@ function main() {
         console.log('"' + territory + '": { "center": [' + [Math.round(loc.x), Math.round(loc.y)] + '] },');
       }
 
-      if (gLatestState.stage.phase === "Action" && gLatestState.stage.subphase === "Build") {
-        if (factoryRadio.checked) {
-          build(gLatestState, territory, "factory");
-        } else if (barracksRadio.checked) {
-          build(gLatestState, territory, "barracks");
+      if (gLatestState.stage.phase === "Action") {
+        if (gLatestState.stage.subphase === "Build") {
+          if (factoryRadio.checked) {
+            build(gLatestState, territory, "factory");
+          } else if (barracksRadio.checked) {
+            build(gLatestState, territory, "barracks");
+          }
+        } else if (gLatestState.stage.subphase === "Spawn") {
+          if (soldierRadio.checked) {
+            spawn(gLatestState, territory, "Infantry");
+          } else if (artilleryRadio.checked) {
+            spawn(gLatestState, territory, "Artillery");
+          } else if (calvaryRadio.checked) {
+            spawn(gLatestState, territory, "Cavalry");
+          }
         }
       }
     }
@@ -795,6 +870,9 @@ login().then((socket) => {
       window.location.reload(true);
     }
     else if (action === "built_infrastructure") {
+      render_table(state);
+    }
+    else if (action === "spawned_unit") {
       render_table(state);
     }
     else if (action === "is_admin") {

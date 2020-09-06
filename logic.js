@@ -184,10 +184,8 @@ class Game
     build(username, terr, type)
     {
         let nat = this.mother_state.stage.turn
-        console.log(terr)
         let terr_info = utils.territory_for_territory_name(
             this.mother_state, terr)
-        console.log(terr_info)
         let n_buildings = terr_info.n_barracks + terr_info.n_factories
         let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         if (n_buildings < 4 && afford &&
@@ -201,13 +199,13 @@ class Game
 
     spawn(username, terr, type)
     {
-        afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         let nat = this.mother_state.stage.turn
+        let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         let val_terr = utils.territories_of_nation_that_can_spawn(
             this.mother_state, nat)
         if (val_terr.includes(terr) && afford){
             this.mother_state.nations[nat][terr].n_barracks_can_spawn -= 1
-            unit = {"type": type, "territory":terr,
+            let unit = {"type": type, "territory":terr,
                 "troop_id":utils.uuid(), 'can_move':false, 'can_move':false}
             this.mother_state.nations[nat].army.push(unit)
             this.mother_state.nations[nat].cash -= COSTS[type]
@@ -456,9 +454,9 @@ class Game
             for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
                 this.mother_state.nations[nation][terr] = {}
-                this.mother_state.nations[nation][terr].n_factories = Math.random() * 2 | 0
-                this.mother_state.nations[nation][terr].n_barracks = Math.random() * 2 | 0
-                this.mother_state.nations[nation][terr].n_barracks_can_spawn = 0
+                this.mother_state.nations[nation][terr].n_factories = Math.random() * 5 | 0
+                this.mother_state.nations[nation][terr].n_barracks = Math.random() * 5 | 0
+                this.mother_state.nations[nation][terr].n_barracks_can_spawn = this.mother_state.nations[nation][terr].n_barracks
                 terr2nat[terr] = nation
             }
         }
