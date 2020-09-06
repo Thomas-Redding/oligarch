@@ -348,19 +348,19 @@ function render_map(state) {
 
     let icon_drawers = [];
 
-    if (utils.sum(army.infanty) > 0) {
+    if (utils.sum(army.Infantry) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
         riskMap.appendChild(circ);
       });
     }
-    if (utils.sum(army.calvary) > 0) {
+    if (utils.sum(army.Cavalry) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
         riskMap.appendChild(circ);
       });
     }
-    if (utils.sum(army.cannon) > 0) {
+    if (utils.sum(army.Artillery) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
         riskMap.appendChild(circ);
