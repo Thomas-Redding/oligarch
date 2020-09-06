@@ -355,7 +355,7 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
             this._prayer('begin_spawn','')
-            for (terr of utils.territories_of_nation(this.mother_state, nat)){
+            for (let terr of utils.territories_of_nation(this.mother_state, nat)){
                 let nb = this.mother_state.nations[nat][terr].n_barracks
                 this.mother_state.nations[nat][terr].n_barracks_can_spawn = nb
             }
