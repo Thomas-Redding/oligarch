@@ -178,6 +178,33 @@ class Game
         }
     }
 
+    build(username, terr, type)
+    {
+        let nat = this.mother_state.stage.turn
+        let terr_info = utils.territory_for_territory_name(terr)
+        n_buildings = terr_info.n_barracks + terr_info.n_factories
+        if (n_buildings < 4 &&
+             username === this.mother_state.nations[nat].president) {
+                type_str = type == 'barracks' ? 'n_barracks' : 'n_factories' 
+                this.mother_state.nations[nat][terr][type_str] += 1
+        }
+
+    }
+
+    spawn(username, terr, type)
+    {
+        let nat = this.mother_state.stage.turn
+        let val_terr = utils.territories_of_nation_that_can_spawn(
+            this.mother_state, nat)
+        if (val_terr.includes(terr)){
+            this.mother_state.nations[nat][terr].n_barracks_can_spawn -= 1
+            unit = {"type": type, "territory":terr,
+                "troop_id":utils.uuid(), 'can_move':false, 'can_move':false}
+            this.mother_state.nations[nat].army.push(unit)
+        }
+
+    }
+
     vote(username, candidate_username)
     {
         if (this.mother_state.players[username].vote == null) {
@@ -268,8 +295,9 @@ class Game
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
         
-        if (this.mother_state.stage.phase === 'Taxation') {
             let nat = this.mother_state.stage.turn
+        
+        if (this.mother_state.stage.phase === 'Taxation') {
             this.mother_state.nations[nat].cash = utils.income_of_nation(
                 this.mother_state, nat)
             this._transition()
@@ -295,7 +323,7 @@ class Game
 
         else if (this.mother_state.stage.subphase == 'Move') {
             this._start_presidential_command()
-            this._prayer('begin_attack','')
+            this._prayer('begin_move','')
             let prez = this.mother_state.nations[turn].president
             let no_army = this.mother_state.nations[turn].army.length === 0
             if (prez === null || prez === 'abstain' || no_army) {
@@ -305,7 +333,6 @@ class Game
 
         else if (this.mother_state.stage.subphase == 'Attack'){
             this._prayer('begin_attack','')
-            let nat = this.mother_state.stage.turn
             if (this.mother_state.nations[nat].army.filter(
                 x => x.can_move).length == 0)
                 {
@@ -315,7 +342,7 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
             this._prayer('begin_spawn','')
-            let nat = this.mother_state.stage.turn
+            
             let terrs = utils.territories_of_nation_that_can_spawn(
                 this.mother_state, nat)
             if (terrs.length == 0)
@@ -326,9 +353,9 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Build'){
             this._prayer('begin_build','')
-            let nat = this.mother_state.stage.turn
-            if (this.mother_state.nations[nat].army.filter(
-                x => x.can_move).length == 0)
+            let terr_list = utils.territories_of_nation_that_can_build(
+                this.mother_state, nat)            
+            if (terr_list.length == 0)
                 {
                     this._transition()
                 }
@@ -401,7 +428,7 @@ class Game
             this.mother_state.nations[nation].owns = []
             /*
              * {
-             * "type": "infantry" | "calvary" | "cannon"
+             * "type": "Infantry" | "Calvary" | "Artillery"
              * "territory": {string},
              * "troop_id": utils.uuid(),
              * "can_move": {bool}
