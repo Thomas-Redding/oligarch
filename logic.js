@@ -735,7 +735,7 @@ class Game
     {
         let trade_ok = true
         for(let share of shares_to) {
-            if (this.mother_state.players[p_1].shares[]) {
+            if (this.mother_state.players[p_1].shares) {
             this.mother_state.players[username].shares[share]--
             this.mother_state.players[player].shares[share]++
             }
@@ -748,8 +748,6 @@ class Game
 
 
     }
-
-
 
 
 }
