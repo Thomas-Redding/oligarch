@@ -415,7 +415,8 @@ let utils = {
   /*
    * Computes the bias towards the given nation for a conflict in the given
    * territory. This is based on the number of troops in the territory and the
-   * number of cannons in adjacent territories.
+   * number of cannons in adjacent territories. To compute the net bias (for the
+   * dice roll), take the difference between the two relevant nation's biases.
    *
    * @param {string} nation - the name of the nation
    * @param {string} territory - the name of the territory

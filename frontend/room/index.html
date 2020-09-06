@@ -820,6 +820,9 @@ login().then((socket) => {
       // TODO(mredding): update currentVotesDiv when this exists on the backend.
       currentVotesDiv.innerHTML = "";
     }
+    else if (action === "begin_presidential_command") {
+      clock.set_time_remaining(state.clock);
+    }
     else if (action === "begin_build") {
       factoryRadio.checked = true;
     }
@@ -936,7 +939,7 @@ function render_presidential_div(state) {
     dividendsDiv.style.display = (subphase === "Dividends" ? "block" : "none");
     presidentialHeader.innerHTML = state.stage.turn + " ($" + nation.cash + " B)";
 
-    const num_shares = utils.num_shares_already_auctioned_for_nation(state)[state.stage.turn] + 4;
+    const num_shares = utils.num_shares_already_auctioned_for_nation(state)[state.stage.turn];
     dividendSlider.step = num_shares;
     dividendSlider.max = nation.cash;
     dividendSlider.value = (nation.cash / num_shares | 0) * num_shares;
