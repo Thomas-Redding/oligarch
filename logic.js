@@ -597,9 +597,8 @@ class Game
 
     //_find
 
-    _move_is_valid( uid, target_territory)
+    _move_is_valid(uid, target_territory)
     {
-
 
 
     }
