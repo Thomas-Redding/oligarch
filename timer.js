@@ -1,5 +1,5 @@
 
-let DEBUG_LOG = false;
+let DEBUG_LOG = true;
 
 class Timer
 {   
@@ -18,13 +18,13 @@ class Timer
      * @param {function} callback - function to call when the timer expires
      */
     start(time, callback) {
-        if (DEBUG_LOG) console.log("timer.start()", time, callback, "*", callback.name);
+        if (DEBUG_LOG) console.log("timer.start()", time, callback.name);
         this._callback = callback;
         this._startTime = new Date().getTime();
         this._t = time;
         this._is_running = true;
         this._id = setTimeout(() => {
-            this._is_running = false; this._callback();}, time);
+            this._is_running = false; let c = this._callback; this._callback = () => {}; c();}, time);
     }
     /*
      * @returns {number} milliseconds until the timer expires
@@ -44,7 +44,7 @@ class Timer
         this._t = newTime;
         clearTimeout(this._id);
         this._id = setTimeout(() => {
-            this._is_running = false; this._callback();}, newTime);
+            this._is_running = false; let c = this._callback; this._callback = () => {}; c();}, newTime);
     }
 
     /*
@@ -72,6 +72,7 @@ class Timer
             let callback = this._callback;
             this._callback = () => {};
             clearTimeout(this._id);
+            // if (callback) setTimeout(callback, 0);
             if (callback) callback();
         } else {
             this._callback = () => {};
