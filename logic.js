@@ -188,7 +188,7 @@ class Game
         let n_buildings = terr_info.n_barracks + terr_info.n_factories
         if (n_buildings < 4 &&
              username === this.mother_state.nations[nat].president) {
-                type_str = type == 'barracks' ? 'n_barracks' : 'n_factories'
+                let type_str = type == 'barracks' ? 'n_barracks' : 'n_factories'
                 this.mother_state.nations[nat][terr][type_str] += 1
         }
         this._prayer('built_infrastructure','')
