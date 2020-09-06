@@ -440,16 +440,20 @@ class Game
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
             this.mother_state.nations[nation].owns = []
-            /*
-             * {
-             * "type": "Infantry" | "Calvary" | "Artillery"
-             * "territory": {string},
-             * "troop_id": utils.uuid(),
-             * "can_move": {bool}
-             * "can_attack": {bool}
-             * }
-             */
             this.mother_state.nations[nation].army = []
+
+            let id = 0;
+            for (let terr of utils.NATIONS[nation].territories) {
+                for (let unittype of UNITS) {
+                    this.mother_state.nations[nation].army.push({
+                        "type": unittype,
+                        "territory": terr,
+                        "troop_id": id++,
+                        "can_move": true
+                    });
+                }
+            }
+
             this.mother_state.nations[nation].president = null
             for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)

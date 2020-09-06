@@ -1243,6 +1243,25 @@ function close_modal() {
   popupDiv.style.display = 'none';
 }
 
+function end_moving() {
+  send({
+    "method": "done",
+    "args": []
+  })
+}
+function end_attacking() {
+  send({
+    "method": "done",
+    "args": []
+  })
+}
+function end_recruiting() {
+  send({
+    "method": "done",
+    "args": []
+  })
+}
+
 function end_deliberation() {
   send({
     "action": "forward",
@@ -1346,8 +1365,8 @@ function undo() {
 
       <h2 id="presidentialHeader"></h2>
 
-      <div id="finishMovingButton" class="button">End Moving</div><br>
-      <div id="finishAttackingButton" class="button">End Attacking</div><br>
+      <div id="finishMovingButton" class="button" onclick="end_moving()">End Moving</div><br>
+      <div id="finishAttackingButton" class="button" onclick="end_attacking()">End Attacking</div><br>
       <div id="spwaningDiv">
         <input name="spawnForm" id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($10B)</label>
         <br>
@@ -1355,7 +1374,7 @@ function undo() {
         <br>
         <input name="spawnForm" id="artilleryRadio" type="radio"><label for="artilleryRadio">Artillery ($15B)</label>
         <br>
-        <div class="button">End Recruiting</div><br>
+        <div onclick="end_recruiting()" class="button">End Recruiting</div><br>
       </div>
       <div id="buildingDiv">
         <input name="buildForm" id="factoryRadio" type="radio"><label for="factoryRadio">Factory ($10B)</label>
