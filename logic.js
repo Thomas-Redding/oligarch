@@ -246,7 +246,7 @@ class Game
 
     vote(username, candidate_username)
     {
-        if (DEBUG_LOG) console.log("Game.vote()", username, candidate_username);
+        if (DEBUG_LOG) console.log("Game.vote()", username, candidate_username)
         let cur_nat = this.mother_state.stage.turn
         let cur_r = this.mother_state.stage.round
         if (this.mother_state.stage.subphase == 'Election'){
@@ -254,7 +254,7 @@ class Game
                 this._register_vote(username, candidate_username)
             }
         }
-            // need to check again in case election is resolved
+        // need to check again in case election is resolved
         if(this.mother_state.stage.subphase == 'Election' && 
             this.mother_state.stage.turn == cur_nat &&
             this.mother_state.stage.round == cur_r)  {
@@ -284,13 +284,34 @@ class Game
         
     }
 
+    //shares_to / shares_from is a list with shares as strings (potential dupes)
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
         if (DEBUG_LOG) console.log("Game.dividends()", username, player, shares_to, shares_from, cash_to, cash_from);
-        if (this.mother_state.players[username].vote == null) {
-            //this._register_vote(username, player)
+        trade = {}
+        trade.from = username
+        trade.to = player
+        trade.shares_to = shares_to
+        trade.shares_from = shares_from
+        trade.cash_to = cash_to
+        trade.cash_from = cash_from
+        this._prayer('trade_proposed',trade,this.mother_state)
+    }
+
+    acceptTrade(username, player, shares_to, shares_from, cash_to, cash_from)
+    {
+        for(let share of shares_to) {
+            this.mother_state.players[username].shares[share]--
+            this.mother_state.players[player].shares[share]++
         }
-        //this.rdyUp(username)
+        
+        for(let share of shares_from) {
+            this.mother_state.players[username].shares[share]++
+            this.mother_state.players[player].shares[share]--
+        }
+        this.mother_state.players[username].cash += cash_to
+        this.mother_state.players[player].cash += cash_from
+        this._prayer('trade_accepted',trade,this.mother_state)
     }
 
     constructor(prayer, timer)
