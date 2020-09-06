@@ -203,6 +203,7 @@ class Game
     {
         afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         let nat = this.mother_state.stage.turn
+
         let val_terr = utils.territories_of_nation_that_can_spawn(
             this.mother_state, nat)
         if (val_terr.includes(terr) && afford){
@@ -354,12 +355,14 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
             this._prayer('begin_spawn','')
+            for (terr of utils.territories_of_nation(this.mother_state, nat)){
+                let nb = this.mother_state.nations[nat][terr].n_barracks
+                this.mother_state.nations[nat][terr].n_barracks_can_spawn = nb
+            }
             let terrs = utils.territories_of_nation_that_can_spawn(
                 this.mother_state, nat)
-            if (terrs.length == 0)
-                {
+            if (terrs.length == 0){
                     this._transition()
-
                 }
         }
         else if (this.mother_state.stage.subphase == 'Build'){
