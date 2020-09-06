@@ -364,6 +364,9 @@ let utils = {
     return rtn;
   },
 
+  /*
+   * @returns the number of rounds left (excluding the current round).
+   */
   rounds_left: (mother_state) => {
     return 6 - mother_state.stage.round;
   },
@@ -396,6 +399,10 @@ let utils = {
     return rtn;
   },
 
+  /*
+   * @param {string} the name of the territory
+   * @returns {Object} the json object representing the territory
+   */
   territory_for_territory_name: (mother_state, territory_name) => {
     for (let nation in mother_state.nations) {
       if (mother_state.nations[nation].territories.includes(territory_name)) {
@@ -439,7 +446,42 @@ let utils = {
   },
 
   /*
-   * TODO: Support puppeteering.
+   * @param {string} nation the nation whose cavalry want to move
+   * @param {string} territory the territory where the cavalry are
+   * @returns {Object} a dictionary whose keys are states a cavalry can move to
+   */
+  valid_moves_for_cavalry: (mother_state, nation, territory) => {
+    let rtn = {};
+    let neighbors = utils.NEIGHBORS[territory];
+    rtn = utils.union_dict(rtn, utils.NEIGHBORS[territory])
+    let uncontested_neighbors = [];
+    for (let neighbor in neighbors) {
+      if (utils.nation_of_territory(mother_state, neighbor) == nation) {
+        uncontested_neighbors.push(neighbor);
+      } else if (!utils.does_territory_have_troops(territory)) {
+        uncontested_neighbors.push(neighbor);
+      }
+    }
+    for (let neighbor of uncontested_neighbors) {
+      rtn = utils.union_dict(rtn, utils.NEIGHBORS[neighbor]);
+    }
+    return rtn;
+  },
+
+  /*
+   * @param {string} the territory to query
+   * @returns {bool} whether the territory has any troops on it
+   */
+  does_territory_have_troops: (mother_state, territory) => {
+    for (let nation in mother_state.nations) {
+      if (mother_state.nations[nation].army.filter(x => x.territory == territory).length > 0) {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  /*
    * @param {Object} mother_state - the mother state
    * @param {string} territory
    * @returns {string} the name of the nation that owns the territory. Returns
@@ -606,6 +648,10 @@ let utils = {
     let usernameHash = username.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
     return usernameHash + (this._counter - 1);
   },
+
+  union_dict: (d1, d2) => {
+    return Object.assign({}, d1, d2);
+  }
 };
 
 // Terrible hack so this can be included on frontend.
