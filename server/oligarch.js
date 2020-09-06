@@ -4,6 +4,7 @@ var Room = require("./room.js");
 var utils = require("../utils.js");
 var Game = require("../logic.js");
 let Timer = require('../timer.js')
+let log = require("../log.js");
 
 class OligarchRoom extends Room {
   constructor() {
@@ -57,7 +58,7 @@ class OligarchRoom extends Room {
       } else  {
         if (this.timer.isPaused()) continue;
         if (x.method.startsWith("_")) {
-          console.log("WARNING: User attempted to call a private method on Game.");
+          log("WARNING: User attempted to call a private method on Game.");
           continue;
         }
         if (x.args) {
@@ -70,7 +71,7 @@ class OligarchRoom extends Room {
   }
 
   tryToJoin(username, password, ws) {
-    console.log('tryToJoin("' + username + '", "' + password + '")');
+    log('tryToJoin("' + username + '", "' + password + '")');
     if (super.users().indexOf(username) > -1) {
       return super.tryToJoin(username, password, ws);
     } else {
