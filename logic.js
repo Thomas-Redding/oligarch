@@ -1,6 +1,8 @@
 let utils = require('./utils.js')
 let log = require('./log.js');
 
+log.enabled = true;
+
 //macro for pythonic list indexing
 Array.prototype.fromback = function(i=1) {
     return this[this.length - i];
@@ -303,13 +305,14 @@ class Game
         
             this.mother_state.trading_pairs.push([username, player])
             this._prayer('trade_proposed',trade,this.mother_state)
-        }       
+        }
     }
 
     respondTrade(username, player, 
         shares_to, shares_from, cash_to, cash_from, accept)
     {
-        //if ()
+        // Swap username/player so we can view this from the same perspective as initTrade
+        [username, player] = [player, username]
         log("Game.respondTrade()", username, player, shares_to, shares_from,
             cash_to, cash_from)
 
@@ -741,10 +744,9 @@ class Game
         
     }
 
-    _trade_verification(p1, p2, shares_to, shares_from, cash_to, cash_from)
+    _trade_verification(user, player, shares_to, shares_from, cash_to, cash_from)
     {
-        function shares_valid(share_list, p) {
-            let rtn = true
+        let shares_valid = (share_list, p) => {
             let share_to_counts = {}
             for(let share of share_list) {
                 if (share in share_to_counts) {
@@ -754,16 +756,17 @@ class Game
                     share_to_counts[share] = 1
                 } 
             }
+            let rtn = true
             for(let s in share_to_counts) {
-                rtn &= (this.mother_state.players[p].shares[s] >= s_from[s])
+                rtn &= (this.mother_state.players[p].shares[s] >= share_to_counts[s])
             }
             return rtn
         }
 
-        let trade_ok = shares_valid(shares_from, p2) 
-        trade_ok &= shares_valid(shares_to,p1)
-        trade_ok &= (this.mother_state.players[p2].cash >= cash_from)
-        trade_ok &= (this.mother_state.players[p1].cash >= cash_to)
+        let trade_ok = shares_valid(shares_from, player)
+        trade_ok &= shares_valid(shares_to, user)
+        trade_ok &= (this.mother_state.players[player].cash >= cash_from)
+        trade_ok &= (this.mother_state.players[user].cash >= cash_to)
         return trade_ok
     }
 
