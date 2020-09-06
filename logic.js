@@ -220,6 +220,9 @@ class Game
             if (this.mother_state.players[username].vote == null) {
                 this._register_vote(username, candidate_username)
             }
+            // need to check again in case election is resolved
+           if(this.mother_state.stage.subphase == 'Election')  {
+               this.rdyUp(username)
         }
     }
 
@@ -556,9 +559,9 @@ class Game
                 this.timer.stop(true)
             }
         }
-        this.rdyUp(username)
+        n_votes = Math.floor(n_votes/2)+1
+        //this.rdyUp(username)
     }
-
 
     _conclude_election()
     {
