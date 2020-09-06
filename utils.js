@@ -606,6 +606,32 @@ let utils = {
      return rtn;
   },
 
+   troop_ids_that_can_act_in_territory(mother_state, territory_name) {
+     if (mother_state.stage.phase !== "Action") {
+       throw Error("");
+     }
+     const subphase = mother_state.stage.subphase;
+     if (!["Attack", "Move"].includes(subphase)) {
+       throw Error("");
+     }
+     let nation_name = mother_state.stage.turn;
+     let army = mother_state.nations[nation_name].army;
+     army = army.filter(x => x.territory === territory_name);
+     if (subphase === "Move") {
+       army = army.filter(x => x.can_move);
+     } else {
+       army = army.filter(x => x.can_attack);
+     }
+     return army;
+  },
+
+  troop_ids_in_territory(mother_state, territory_name, nation_name, unit_type) {
+     let army = mother_state.nations[nation_name].army;
+     army = army.filter(x => x.territory === territory_name);
+     army = army.filter(x => x.type === unit_type);
+     return army;
+  },
+
   /*
    * @param {int} troop_id - the id of the desired troop
    * @returns {Object} troop - the json representing the desired troop

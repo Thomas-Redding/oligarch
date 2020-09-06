@@ -350,27 +350,42 @@ function unit_clicked(territory_name, unit_type, nation_name) {
     render_move_state();
     return;
   }
-  if (!moveState) {
-    moveState = {
-      "from": territory_name,
-      "Infantry": 0,
-      "Cavalry": 0,
-      "Artillery": 0
-    };
-  }
-  if (territory_name !== moveState.from) {
-    return;
+  const subphase = gLatestState.stage.subphase;
+  if (subphase === "Move") {
+    if (!moveState) {
+      moveState = {
+        "from": territory_name,
+        "Infantry": 0,
+        "Cavalry": 0,
+        "Artillery": 0
+      };
+    }
+    if (territory_name !== moveState.from) {
+      return;
+    }
+
+    let army = utils.army_in_territory(gLatestState.nations[nation_name].army, territory_name, "move");
+    let n = utils.sum(army[unit_type]);
+
+    if (unit_type in moveState) {
+      moveState[unit_type] = (moveState[unit_type] + 1) % (n + 1);
+    } else {
+      moveState[unit_type] = 1;
+    }
+    render_move_state();
+  } else if (subphase === "Attack") {
+    let army = utils.troop_ids_in_territory(gLatestState, territory_name, nation_name, unit_type);
+    if (!moveState) {
+      moveState = {
+        "territory": territory_name,
+        nation_name: army[0]
+      }
+    } else {
+      moveState[nation_name] = army[0];
+    }
+    render_move_state();
   }
 
-  let army = utils.army_in_territory(gLatestState.nations[nation_name].army, territory_name, "move");
-  let n = utils.sum(army[unit_type]);
-
-  if (unit_type in moveState) {
-    moveState[unit_type] = (moveState[unit_type] + 1) % (n + 1);
-  } else {
-    moveState[unit_type] = 1;
-  }
-  render_move_state();
 }
 
 function render_move_state() {
@@ -408,10 +423,10 @@ function render_map(state) {
     let icon_drawers = [];
 
     for (let nation_name in state.nations) {
-      let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, "move");
+      let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, state.stage.subphase === "Attack" ? "attack" : "move");
       for (let unit_type in army) {
-        for (let noaction = 0; noaction < 2; ++noaction) {
-          let n = army[unit_type][noaction];
+        for (let can_action = 0; can_action < 2; ++can_action) {
+          let n = army[unit_type][can_action];
           if (n > 0) {
             icon_drawers.push((x, y) => {
               let onclick = (e) => {
@@ -423,16 +438,20 @@ function render_map(state) {
               img.addEventListener("click", onclick);
               out.appendChild(img);
 
-              if (!noaction) {
+              // We use this grayed-out circle to prevent user clicks when an action is not available.
+              if (!can_action && state.stage.phase === "Action" && ["Attack", "Move"].includes(state.stage.subphase)) {
                 let circ = svg.circle(x, y, s * 0.35);
                 circ.style.fill = '#0008';
+                circ.addEventListener("click", onclick);
                 out.appendChild(circ);
               }
 
               if (n > 1) {
                 let text = svg.text(n, x - 5, y + 6);
                 text.style.cursor = 'pointer';
-                text.addEventListener("click", onclick);
+                if (can_action) {
+                  text.addEventListener("click", onclick);
+                }
                 text.style.fill = 'white';
                 text.style.textShadow = "6px 6px 20px black";
                 out.appendChild(text);
@@ -1020,7 +1039,7 @@ login().then((socket) => {
       // TODO(mredding): update currentVotesDiv when this exists on the backend.
       currentVotesDiv.innerHTML = "<table><tbody>";
       for (let key in details) {
-        currentVotesDiv += "<tr><td>" + key + "</td><td>" + details[key] + "</td></tr>";
+        currentVotesDiv.innerHTML += "<tr><td>" + key + "</td><td>" + details[key] + "</td></tr>";
       }
       currentVotesDiv.innerHTML += "</table></tbody>";
     }
@@ -1029,6 +1048,14 @@ login().then((socket) => {
     }
     else if (action === "begin_build") {
       factoryRadio.checked = true;
+    }
+    else if (action === "begin_move") {
+      moveState = null;
+      render_map(state);
+    }
+    else if (action === "begin_attack") {
+      moveState = null;
+      render_map(state);
     }
     else if (action === "built_infrastructure") {
       render_table(state);
