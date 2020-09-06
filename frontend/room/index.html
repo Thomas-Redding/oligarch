@@ -877,6 +877,38 @@ function areAdminFetched(areAdmin) {
   }
 }
 
+function htmlFromLog(arr) {
+  if (arr[0] == "taxes_collected") {
+    return "Taxes collected."
+  } else if (arr[0] == "begin_deliberation") {
+    return "Began deliberation"
+  } else if (arr[0] == "user_ready") {
+    return undefined;
+  } else if (arr[0] == "deliberation_over") {
+    return "Ended deliberation";
+  } else if (arr[0] == "auction_start") {
+    return "Auction began for " + arr[1];
+  } else if (arr[0] == "bid_received") {
+    return arr[1].player + " bid $" + arr[1].amount + "B";
+  } else if (arr[0] == "conclude_bidding") {
+    return arr[1].winner + " bought a share of " + arr[1].nation + " for $" + arr[1].price + "B";
+  } else {
+    return arr.join("@");
+  }
+}
+
+function rewriteActivityLogFromScratch() {
+  let html = "";
+  let logs = gLatestState.logs;
+  if (logs === undefined) logs = [];
+  for (let log of logs) {
+    let s = htmlFromLog(log);
+    if (s === undefined) continue;
+    html += "<div>" + s + "</div>";
+  }
+  gameLogDiv.innerHTML = html;
+}
+
 let clock = new Clock();
 
 let gSocket;
@@ -913,9 +945,6 @@ login().then((socket) => {
       clock.set_time_remaining(state.clock);
     }
     else if (action === "user_ready") {
-    }
-    else if (action === "log") {
-      gameLogDiv.innerHTML += `<div>` + JSON.stringify(details) + `</div>`;
     }
     else if (action === "refresh") {
       // Called when an undo is performed.
@@ -1012,6 +1041,7 @@ login().then((socket) => {
       currentBidDiv.style.opacity = 1;
       currentBidDiv.children[1].innerHTML = state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B";
     }
+    rewriteActivityLogFromScratch()
     onstagechange(state);
   });
   gSocket.addEventListener("close", () => {
