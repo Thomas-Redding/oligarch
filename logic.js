@@ -231,10 +231,10 @@ class Game
         let can_afford = amount <= this.mother_state.nations[nat].cash
         if (is_prez && is_int && can_afford){
             this.mother_state.nations[nat].cash -= amount
-            income_per_share = amount / n_shares
+            let income_per_share = amount / n_shares
             let owners = utils.owners(this.mother_state, nat)
             for (let owner in owners){
-                inc = owners[owner] * income_per_share
+                let inc = owners[owner] * income_per_share
                 this.mother_state.players[owner].cash += inc
             }
         this._prayer('dividends_paid',amount,this.mother_state)
