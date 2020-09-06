@@ -39,13 +39,13 @@ class History {
     return utils.deep_copy(this._logs);
   }
   undo() {
+    if (this._states.length <= 1) {
+        throw Exception("Attempted to undo witha history of length 1.")
+    }
     let action = this._actions.pop();
     let args = this._args.pop();
     let state = this._actions.pop();
     this._logs.pop();
-    if (this._historicalStates.length <= 1) {
-        throw Exception("Attempted to undo witha history of length 1.")
-    }
     return [action, args, state];
   }
 }
@@ -67,16 +67,20 @@ class Game
     }
 
     undo(username) {
-        // throw Exception("Game.undo() is not implemented yet.");
-        if (this._historicalStates.length !== this._historicalActions.length) {
-            throw Exception("Invalid history.");
-        }
+        throw Exception("Game.undo() is not implemented yet.");
         if (this.mother_state.players[username].auth !== 'admin') return;
-        [action, args, state] = this._history.undo();
+        let [action, args, state] = this._history.undo();
         this.mother_state = state;
         if (this.timer) this.timer.stop();
-        if (action)
-        this.timer.start(this.mother_state.clock);
+        if (action === "endLobby") {
+            console.log("UNDO", action, args);
+        } else if (action === "startGame") {
+            console.log("UNDO", action, args);
+        } else if (action === "rdyUp") {
+            console.log("UNDO", action, args);
+        } else if (action === "bid") {
+            console.log("UNDO", action, args);
+        }
     }
 
     endLobby(username)
@@ -412,6 +416,15 @@ class Game
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
             this.mother_state.nations[nation].owns = []
+            /*
+             * {
+             * "type": "infantry" | "calvary" | "cannon"
+             * "territory": {string},
+             * "troop_id": utils.uuid(),
+             * "can_move": {bool}
+             * "can_attack": {bool}
+             * }
+             */
             this.mother_state.nations[nation].army = []
             this.mother_state.nations[nation].president = null
             for (let terr of utils.NATIONS[nation].territories) {
@@ -420,7 +433,6 @@ class Game
                 this.mother_state.nations[nation][terr].n_factories = 0
                 this.mother_state.nations[nation][terr].n_barracks = 0
                 this.mother_state.nations[nation][terr].n_barracks_can_spawn = 0
-                this.mother_state.nations[nation].army = []
                 terr2nat[terr] = nation
             }
         }
