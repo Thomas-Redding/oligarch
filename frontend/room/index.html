@@ -1037,6 +1037,9 @@ login().then((socket) => {
         show_trade_proposal(details);
       }
     }
+    else if (action === "trade_accepted") {
+      render_table(state);
+    }
     else if (action === "is_admin") {
       areAdminFetched(details);
     }
