@@ -288,7 +288,7 @@ class Game
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
         if (DEBUG_LOG) console.log("Game.dividends()", username, player, shares_to, shares_from, cash_to, cash_from);
-        trade = {}
+        let trade = {}
         trade.from = username
         trade.to = player
         trade.shares_to = shares_to
