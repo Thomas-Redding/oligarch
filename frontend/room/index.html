@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name=”viewport” content=”width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no” />
-<title>Oligarch</title>
+<title>The Oligarchs</title>
 <style>
 * {
   margin: 0;
@@ -547,7 +547,7 @@ function build(state, territory, building_type) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  let path = "/room/lobby/" + Math.floor(7*Math.random()) + ".jpg";
+  let path = "/room/lobby/0.jpg";
   let lobbyDiv = document.getElementById("lobbyDiv");
   lobbyDiv.style.background = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('" + path + "')";
   lobbyDiv.style.backgroundSize = "cover"
@@ -1384,7 +1384,7 @@ function undo() {
           <td class="column-AS">AS</td>
           <td class="column-AU">AU</td>
           <td>Cash</td>
-          <td>Score</td>
+          <td>Worth</td>
           <td style="width:100%"></td>
         </tr>
       </tbody>
@@ -1641,10 +1641,10 @@ function undo() {
 
 <div id="lobbyDiv">
   <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); text-align: center;">
-    <h1 align="center">Oligarch</h1>
+    <h1 align="center">The Oligarchs</h1>
     <br/><br/><br/><br/>
     <p>
-      waiting for players to join...
+      Do you have what it takes to rule the world?
     </p>
     <div id="start-game-button" class="button disabled-button" onclick="start_game();" style="margin: 2em auto;">
       Start Game
