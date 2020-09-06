@@ -72,6 +72,7 @@ class Timer
             let callback = this._callback;
             this._callback = () => {};
             clearTimeout(this._id);
+            // if (callback) setTimeout(callback, 0);
             if (callback) callback();
         } else {
             this._callback = () => {};
