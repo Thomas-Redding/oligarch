@@ -239,6 +239,7 @@ class Game
             }
         }
         this._prayer('dividends_paid',amount,this.mother_state)
+        this.timer.stop(true)
     }
 
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
@@ -368,6 +369,10 @@ class Game
                 {
                     this._transition()
                 }
+        }
+
+        else if (this.mother_state.stage.subphase == 'Dividends'){
+            this._prayer('begin_dividends','')
         }
 
         else if (this.mother_state.stage.phase === 'Action'){
