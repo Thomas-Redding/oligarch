@@ -1,7 +1,10 @@
 
+let DEBUG_LOG = true;
+
 class Timer
 {   
     constructor() {
+        if (DEBUG_LOG) console.log("timer.constructor()");
         this._callback = () => {};
         this._startTime = 0;
         this._t = 0;
@@ -15,6 +18,7 @@ class Timer
      * @param {function} callback - function to call when the timer expires
      */
     start(time, callback) {
+        if (DEBUG_LOG) console.log("timer.start()", time);
         this._callback = callback;
         this._startTime = new Date().getTime();
         this._t = time;
@@ -26,6 +30,7 @@ class Timer
      * @returns {number} milliseconds until the timer expires
      */
     queryTime() {
+        if (DEBUG_LOG) console.log("timer.queryTime()");
         let timeElapsed = new Date().getTime() - this._startTime;
         return this._t - timeElapsed;
     }
@@ -34,6 +39,7 @@ class Timer
      * @param {number} newTime - milliseconds until the timer expires
      */
     extendTime(newTime) {
+        if (DEBUG_LOG) console.log("timer.extendTime()", newTime);
         this._startTime = new Date().getTime();
         this._t = newTime;
         clearTimeout(this._id);
@@ -50,6 +56,7 @@ class Timer
      * returns {bool} whether the timer is running
      */
     isRunning() {
+        if (DEBUG_LOG) console.log("timer.isRunning()");
         return this._is_running;
     }
 
@@ -59,6 +66,7 @@ class Timer
      * `start()`.
      */
     stop(do_callback) {
+        if (DEBUG_LOG) console.log("timer.stop()");
         this._is_running = false;
         if (do_callback) {
             this._callback()
@@ -68,6 +76,7 @@ class Timer
     }
 
     pause() {
+        if (DEBUG_LOG) console.log("timer.pause()");
         if (this._is_paused) return;
         this._is_paused = true;
         this._time_to_use_when_resumed = this.queryTime()
@@ -75,6 +84,7 @@ class Timer
     }
 
     resume() {
+        if (DEBUG_LOG) console.log("timer.resume()");
         if (!this._is_paused) return;
         this._is_paused = false;
         this.extendTime(this._time_to_use_when_resumed)
@@ -82,6 +92,7 @@ class Timer
     }
 
     isPaused() {
+        if (DEBUG_LOG) console.log("timer.isPaused()");
         return this._is_paused;
     }
 }
