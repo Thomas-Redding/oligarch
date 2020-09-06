@@ -316,7 +316,7 @@ class Game
         shares_to, shares_from, cash_to, cash_from, accept)
     {
         //if ()
-        log("Game.dividends()", username, player, shares_to, s_from,
+        log("Game.dividends()", username, player, shares_to, shares_from,
             cash_to, cash_from)
 
         if (accept && this._trade_verification(
@@ -334,11 +334,11 @@ class Game
             this.mother_state.players[username].cash += cash_to
             this.mother_state.players[player].cash += cash_from
             this._trade_dequeue(username, player)
-            this._prayer('trade_accepted',trade,this.mother_state)
+            this._prayer('trade_accepted','',this.mother_state)
         }
         else {
             this._trade_dequeue(username, player)
-            this._prayer('trade_rejected',trade,this.mother_state)
+            this._prayer('trade_rejected','',this.mother_state)
         }
     }
 
