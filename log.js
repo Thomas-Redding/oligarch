@@ -2,7 +2,8 @@
 function log(s) {
   if (log.enable === undefined) log.enable = false;
   if (!log.enable) return false;
-  console.log(time(), ...arguments);
+  // console.log(get_stack());
+  console.log(time(), "".padStart(get_stack().length, "-") , ...arguments);
 }
 
 function time() {
@@ -30,7 +31,7 @@ function get_stack() {
       if (methodName.startsWith("tryOnTimeout")) break;
       stack2.push(methodName);
     }
-    return stack2;
+    return stack2.slice(1); // remove log()
   }
 }
 
