@@ -145,6 +145,17 @@ path {
   padding: 1em;
 }
 
+.popup {
+  opacity: 1;
+  position: absolute;
+  position:absolute;
+  left:50vw;
+  top:50vh;
+  transform:translate(-50%, -50%);
+  text-align: center;
+  padding: 1em;
+}
+
 #play-icon {
   display: none;
 }
@@ -1356,7 +1367,7 @@ function undo() {
       <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1)">Bid +1</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
-    <div id="presidentDiv" style="position:relative; background-color:#555; border-radius:0.2em; margin:0.5em;">
+    <div id="presidentDiv" style="position:relative;  border-radius:0.2em; margin:0.5em;">
       <img src="assets/president.png" style="filter:invert(100%); height:3em; position:absolute; right:0; top:0;">
 
       <h2 id="presidentialHeader"></h2>
