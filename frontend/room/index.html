@@ -176,6 +176,17 @@ path {
   width: 50%;
 }
 
+.toast {
+  position: absolute;
+  top: 1em;
+  left: 50vw;
+  transform: translate(-50%, 0%);
+  padding: 0.5em;
+  border: 1px solid #888;
+  background-color: black;
+  color: white;
+}
+
 </style>
 <link rel="stylesheet" class="theme" id="stylesheet-light" href="light.css">
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
@@ -227,6 +238,28 @@ class Color {
 <script src='states.js'></script>
 <script src='svg.js'></script>
 <script>
+
+function toast(html, duration=2000) {
+  if (!("queue" in toast)) {
+    toast.queue = [];
+    toast.lastToastTime = 0;
+    setInterval(() => {
+      if (new Date().getTime() < toast.timeToDismiss) return;
+      let toastDivs = document.getElementsByClassName("toast");
+      for (let toastDiv of toastDivs) {
+        toastDiv.parentElement.removeChild(toastDiv);
+      }
+      if (toast.queue.length == 0) return;
+      let [html, duration] = toast.queue.pop();
+      let rtn = document.createElement("div");
+      rtn.classList.add("toast")
+      rtn.innerHTML = html;
+      document.body.appendChild(rtn);
+      toast.timeToDismiss = new Date().getTime() + duration;
+    }, 100);
+  }
+  toast.queue.push([html, duration]);
+}
 
 class Vec2 {
   constructor(x, y) {
