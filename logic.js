@@ -1,10 +1,11 @@
 let utils = require('./utils.js')
-let log = require('./log.js')
+let log = require('./log.js');
 
 //macro for pythonic list indexing
 Array.prototype.fromback = function(i=1) {
     return this[this.length - i];
 }
+const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
 
 //global lists and macros defined here
 const TOTAL_INIT_CASH = 600
@@ -355,6 +356,7 @@ class Game
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this.mother_state.trading_pairs = []
+        log.enable = false
         this._nation_init()
     }
 
@@ -469,7 +471,12 @@ class Game
     //always calls act on end
     _transition()
     {
-        log("Game._transition()");
+        log("Game._transition()")
+        let cur_ord = (this.mother_state.stage.round % 2 == 1)
+        let curTURNS = TURNS
+        //let curTURNS = cur_ord ? TURNS : reverse(TURNS)
+        console.log(curTURNS)
+      
         function next(cur, table) {
             let next_idx = (table.indexOf(cur) + 1) % table.length
             return table[next_idx]
@@ -482,7 +489,7 @@ class Game
             this.mother_state.stage)
 
         if (['Taxation','Auction'].includes(phase)){
-            if (is_last(turn, TURNS)) {
+            if (is_last(turn, curTURNS)) {
                 if (phase == 'Taxation'){
                     this._prayer('taxes_collected','')
                 }
@@ -491,13 +498,13 @@ class Game
                 }
                 this.mother_state.stage.phase = next(phase, PHASES)
             }
-            this.mother_state.stage.turn = next(turn, TURNS)
+            this.mother_state.stage.turn = next(turn, curTURNS)
         }
         else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback()
-            && turn == TURNS.fromback()) {
+            && turn == curTURNS.fromback()) {
                 this.mother_state.stage.round += 1
                 this.mother_state.stage.phase = PHASES[0]
-                this.mother_state.stage.turn = TURNS[0]
+                this.mother_state.stage.turn = curTURNS.fromback()
                 this.mother_state.stage.subphase = SUBPHASES[0]
             }
 
@@ -505,9 +512,9 @@ class Game
             this.mother_state.stage.phase = next(phase, PHASES)
         }
         else if (phase == 'Action'){
-            let nextsubphase = next(subphase, SUBPHASES)
-            if (subphase == SUBPHASES.fromback()) {
-                this.mother_state.stage.turn = next(turn, TURNS)
+            let nextsubphase = next(subphase, PHASES)
+            if (subphase == PHASES.fromback()) {
+                this.mother_state.stage.turn = next(turn, curTURNS)
                 this.timer.stop(false)
             }
             this.mother_state.stage.subphase = nextsubphase
