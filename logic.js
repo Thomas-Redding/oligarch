@@ -221,6 +221,7 @@ class Game
             if (this.mother_state.players[username].vote == null) {
                 this._register_vote(username, candidate_username)
             }
+        }
             // need to check again in case election is resolved
            if(this.mother_state.stage.subphase == 'Election')  {
                this.rdyUp(username)
