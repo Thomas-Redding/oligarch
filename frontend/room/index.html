@@ -463,11 +463,13 @@ function render_map(state) {
               out.appendChild(img);
 
               // We use this grayed-out circle to prevent user clicks when an action is not available.
-              if (!can_action && state.stage.phase === "Action" && ["Attack", "Move"].includes(state.stage.subphase)) {
-                let circ = svg.circle(x, y, s * 0.35);
-                circ.style.fill = '#0008';
-                circ.addEventListener("click", onclick);
-                out.appendChild(circ);
+              if (state.stage.phase === "Action") {
+                if ((!can_action && ["Attack", "Move"].includes(state.stage.subphase) || (nation_name !== state.stage.turn))) {
+                  let circ = svg.circle(x, y, s * 0.35);
+                  circ.style.fill = '#0008';
+                  circ.addEventListener("click", onclick);
+                  out.appendChild(circ);
+                }
               }
 
               if (n > 1) {
@@ -609,7 +611,7 @@ window.addEventListener("DOMContentLoaded", () => {
   lobbyDiv.style.backgroundPosition = "center center";
 })
 
-function main() {
+function main(state) {
   riskMap.addEventListener('click', (e) => {
     let pt = riskMap.createSVGPoint();
     pt.x = e.clientX;
@@ -617,6 +619,15 @@ function main() {
     let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
     // console.log(Math.round(loc.x), Math.round(loc.y));
   });
+
+  const myUsername = network.fetchExistingUsernamePassword()[0];
+  if (state.trading_pairs.map(x => x[1]).includes(myUsername)) {
+    // Automatically decline ongoing trades.
+    send({
+      "method": "respondTrade",
+      "args": [null, null, null, null, null, false]
+    });
+  }
 
   Array.from(document.getElementById("riskMap").getElementsByTagName('path')).forEach(path => {
     let territory = path.id;
@@ -1012,7 +1023,7 @@ login().then((socket) => {
       if (state.stage.phase !== "lobby") {
         tab = kTabInfo;
       }
-      main();
+      main(state);
       render_table(state);
       let playIcon = document.getElementById("play-icon");
       let pauseIcon = document.getElementById("pause-icon");
@@ -1162,11 +1173,11 @@ function count(A) {
 let tradeProposal = null;
 function show_trade_proposal(proposal) {
   tradeProposal = proposal;
-  let shares_to = count(proposal.shares_to);
-  let shares_from = count(proposal.shares_from);
+  let shares_to_player = count(proposal.shares_to_player);
+  let shares_from_player = count(proposal.shares_from_player);
 
   let foo;
-  if (proposal.shares_to.length === 0) {
+  if (proposal.shares_to_player.length === 0) {
     if (proposal.cash_to === 0) {
       foo = "nothing";
     } else {
@@ -1174,8 +1185,8 @@ function show_trade_proposal(proposal) {
     }
   } else {
     foo = '';
-    for (let nation in shares_to) {
-      foo += nation + 'x' + shares_to[nation];
+    for (let nation in shares_to_player) {
+      foo += nation + 'x' + shares_to_player[nation];
     }
     if (proposal.cash_to > 0) {
       foo += " and $" + proposal.cash_to + "B";
@@ -1183,7 +1194,7 @@ function show_trade_proposal(proposal) {
   }
 
   let bar;
-  if (proposal.shares_from.length === 0) {
+  if (proposal.shares_from_player.length === 0) {
     if (proposal.cash_from === 0) {
       bar = "nothing";
     } else {
@@ -1191,8 +1202,8 @@ function show_trade_proposal(proposal) {
     }
   } else {
     bar = '';
-    for (let nation in shares_from) {
-      bar += nation + 'x' + shares_to[nation];
+    for (let nation in shares_from_player) {
+      bar += nation + 'x' + shares_from_player[nation];
     }
     if (proposal.cash_from > 0) {
       bar += " and $" + proposal.cash_from + "B";
@@ -1208,12 +1219,23 @@ function show_trade_proposal(proposal) {
 
 function respond_trade(accept) {
   const myUsername = network.fetchExistingUsernamePassword()[0];
+
+  let i;
+  for (i = 0; i < gLatestState.trading_pairs.length; ++i) {
+    if (gLatestState.trading_pairs[i].includes(myUsername)) {
+      break;
+    }
+  }
+
+  let pair = gLatestState.trading_pairs[i];
+  let tradingPartner = (pair[0] === myUsername ? pair[1] : pair[0]);
+
   send({
     "method": "respondTrade",
     "args": [
-      myUsername,
-      tradeProposal.shares_to,
-      tradeProposal.shares_from,
+      tradingPartner,
+      tradeProposal.shares_to_player,
+      tradeProposal.shares_from_player,
       tradeProposal.cash_to,
       tradeProposal.cash_from,
       accept
