@@ -191,6 +191,7 @@ class Game
             if (all_move){
                 for (let uid of unit_id_list){
                     this.mother_state.nations[nat].army[uid].territory = target
+                    this.mother_state.nations[nat].army[uid].can_move = false
                 }
             }
             this._prayer('moves_made','')
@@ -300,7 +301,14 @@ class Game
     //first share and cash args (shares_to & cash_to) go to player (second user)
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
-        log("Game.dividends()", username, player, shares_to, shares_from, cash_to, cash_from);
+        log("Game.dividends()", username, player, shares_to,
+            shares_from, cash_to, cash_from)
+
+        let t_pairs = this.mother_state.trading_pairs.reduce(
+            (a,b) => a.concat(b), []) 
+        if (t_pairs.includes(username)||t_pairs.includes(player)) {
+            this._prayer('players_busy',trade,this.mother_state)
+        }        
         let trade = {}
         trade.from = username
         trade.to = player
@@ -308,15 +316,14 @@ class Game
         trade.shares_from = shares_from
         trade.cash_to = cash_to
         trade.cash_from = cash_from
-        let t_pairs = this.mother_state.trading_pairs.push([username, player])
-        t_pairs = t_pairs.reduce((a,b) => a.concat(b), [])   
+        this.mother_state.trading_pairs.push([username, player])
         this._prayer('trade_proposed',trade,this.mother_state)
     }
 
-    acceptTrade(username, player, shares_to, shares_from, cash_to, cash_from)
+    respondTrade(username, player, 
+        shares_to, shares_from, cash_to, cash_from, accept)
     {
-
-        log("Game.dividends()", username, player, shares_to, shares_from,
+        log("Game.dividends()", username, player, shares_to, s_from,
             cash_to, cash_from)
 
         for(let share of shares_to) {
@@ -330,6 +337,7 @@ class Game
         }
         this.mother_state.players[username].cash += cash_to
         this.mother_state.players[player].cash += cash_from
+        this._trade_dequeue(username, player)
         this._prayer('trade_accepted',trade,this.mother_state)
     }
 
@@ -730,24 +738,33 @@ class Game
 
     }
     //
+
+    _trade_dequeue(username, player)
+    {
+        for (let pair of this.mother_state.trading_pairs) {
+            if (pair[0] === username && pair[1] === player) {
+                var idx = this.mother_state.trading_pairs.indexOf(pair)
+                break
+            }
+        }
+        this.mother_state.trading_pairs.splice(idx,1)
+    }
+
     _trade_verification(p_1, p_2, s_to, s_from, c_to, c_from)
     {
         let trade_ok = true
+        share_to_counts = {}
         for(let share of shares_to) {
-            if (this.mother_state.players[p_1].shares) {
-            this.mother_state.players[username].shares[share]--
-            this.mother_state.players[player].shares[share]++
+            if (share_to_counts) {
+
             }
+            share_to_counts[share_to_counts] 
         }
         
         for(let share of shares_from) {
             this.mother_state.players[username].shares[share]++
             this.mother_state.players[player].shares[share]--
         }
-
-
     }
-
-
 }
 module.exports = Game;
