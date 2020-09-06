@@ -319,19 +319,27 @@ class Game
         log("Game.dividends()", username, player, shares_to, s_from,
             cash_to, cash_from)
 
-        for(let share of shares_to) {
-            this.mother_state.players[username].shares[share]--
-            this.mother_state.players[player].shares[share]++
+        if (accept && this._trade_verification(
+            username, player, shares_to, shares_from, cash_to, cash_from)) {
+                
+            for(let share of shares_to) {
+                this.mother_state.players[username].shares[share]--
+                this.mother_state.players[player].shares[share]++
+            }
+            
+            for(let share of shares_from) {
+                this.mother_state.players[username].shares[share]++
+                this.mother_state.players[player].shares[share]--
+            }
+            this.mother_state.players[username].cash += cash_to
+            this.mother_state.players[player].cash += cash_from
+            this._trade_dequeue(username, player)
+            this._prayer('trade_accepted',trade,this.mother_state)
         }
-        
-        for(let share of shares_from) {
-            this.mother_state.players[username].shares[share]++
-            this.mother_state.players[player].shares[share]--
+        else {
+            this._trade_dequeue(username, player)
+            this._prayer('trade_rejected',trade,this.mother_state)
         }
-        this.mother_state.players[username].cash += cash_to
-        this.mother_state.players[player].cash += cash_from
-        this._trade_dequeue(username, player)
-        this._prayer('trade_accepted',trade,this.mother_state)
     }
 
     constructor(prayer, timer)
