@@ -580,7 +580,6 @@ class Game
         let details = {'president':prez, 'nation':nat}
         let tau = this.timer.queryTime() + TIMING.actions
         details['time'] = tau
-        this.mother_state.clock = tau
         this._prayer('begin_presidential_command',details)
         this.timer.start(tau, this._end_presidential_command.bind(this))
     }
