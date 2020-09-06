@@ -539,9 +539,15 @@ class Game
 
     _finish_deliberation()
     {
+        console.trace()
         if (DEBUG_LOG) console.log("Game._finish_deliberation()");
+        this.timer.stop(true);
+        this.timer.stop(true);
+        console.trace()
         this._prayer('deliberation_over','')
         this._transition()
+        
+        
     }
 
     //auction routines
