@@ -165,11 +165,27 @@ class Game
         }
     }
 
-    move(username, unit_id_list, from_territory, target_territory)
+    move(username, unit_id_list, from_territory, target)
     {
-        nat = this.mother_state.stage.turn
-        if (this.mother_state.nations[nat].president === username) {
-            this._register_move(unit_id, target_territory)
+        if (this.mother_state.stage.subphase == 'Move' &&
+            this.mother_state.nations[nat].president === username) {
+            let nat = this.mother_state.stage.turn
+            let all_move = true
+            for (let uid of unit_id_list){
+                all_move &= this.mother_state.nations[nat].army[uid].can_move
+                }
+            if (all_move){
+                for (let uid of unit_id_list){
+                    this.mother_state.nations[nat].army[uid].territory = target
+                }
+            }
+            this._prayer('moves_made','')
+        }
+    }
+    attack(username, unit_id, target_id)
+    {
+        if (this.mother_state.stage.subphase == 'Attack') {
+           
         }
     }
 
@@ -337,7 +353,11 @@ class Game
         else if (this.mother_state.stage.subphase == 'Move') {
             this._start_presidential_command()
             this._prayer('begin_move','')
-            let no_army = this.mother_state.nations[turn].army.length === 0
+            for (let j in this.mother_state.nations[nat].army) {
+                this.mother_state.nations[nat].army[j].can_move = true
+                this.mother_state.nations[nat].army[j].can_attack = true   
+            }
+            let no_army = this.mother_state.nations[nat].army.length === 0
             if (noop|| no_army) {
                 this._transition()
             }
