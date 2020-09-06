@@ -1093,6 +1093,12 @@ function htmlFromLog(arr) {
   }
 }
 
+function possiblyToast(actions, details) {
+  let s = htmlFromLog([actions, details]);
+  if (s === undefined) return;
+  toast(s);
+}
+
 function rewriteActivityLogFromScratch() {
   let html = "";
   let logs = gLatestState.logs;
@@ -1253,6 +1259,7 @@ login().then((socket) => {
       currentBidDiv.style.opacity = 1;
       currentBidDiv.children[1].innerHTML = state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B";
     }
+    possiblyToast(action, details);
     rewriteActivityLogFromScratch()
     onstagechange(state);
   });
