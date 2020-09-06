@@ -1157,7 +1157,46 @@ function increment_offer(delta) {
 }
 
 function offer_trade() {
-  alert("TODO: OFFER TRADE TO SERVER");
+  let player = tradeWithDiv.innerHTML.slice(13);
+
+  let yourOffer = [];
+  for (let div of tradeDivYourOffer.children) {
+    yourOffer.push(div.innerHTML);
+  }
+
+  let theirOffer = [];
+  for (let div of tradeDivTheirOffer.children) {
+    theirOffer.push(div.innerHTML);
+  }
+
+  let arr2val = (val) => {
+    if (val.startsWith("$")) {
+      val = val.slice(1, val.length - 1);
+      return parseInt(val);
+    }
+    return {
+      "NA": "North America",
+      "SA": "South America",
+      "EU": "Europe",
+      "AF": "Africa",
+      "AS": "Asia",
+      "AU": "Australia"
+    }[val];
+  }
+
+  yourOffer = yourOffer.map(arr2val);
+  theirOffer = theirOffer.map(arr2val)
+
+  let yourCashOffer = utils.sum(yourOffer.map(x => typeof(x) === "number" ? x : 0));
+  let theirCashOffer = utils.sum(theirOffer.map(x => typeof(x) === "number" ? x : 0));
+
+  yourOffer = yourOffer.filter(x => typeof(x) !== "number");
+  theirOffer = theirOffer.filter(x => typeof(x) !== "number");
+
+  send({
+    "method": "initTrade",
+    "args": [ player, yourOffer, theirOffer, yourCashOffer, theirCashOffer ]
+  });
   close_modal();
 }
 
