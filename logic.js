@@ -237,7 +237,7 @@ class Game
         if (val_terr.includes(terr) && afford){
             this.mother_state.nations[nat][terr].n_barracks_can_spawn -= 1
             let unit = {"type": type, "territory":terr,
-                "troop_id":utils.uuid(), 'can_move':false, 'can_move':false}
+                "id":utils.uuid(), 'can_move':false, 'can_move':false}
             this.mother_state.nations[nat].army.push(unit)
             this.mother_state.nations[nat].cash -= COSTS[type]
         }
@@ -499,7 +499,7 @@ class Game
                     this.mother_state.nations[nation].army.push({
                         "type": unittype,
                         "territory": terr,
-                        "troop_id": id++,
+                        "id": id++,
                         "can_move": true
                     });
                 }
