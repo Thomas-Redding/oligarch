@@ -352,14 +352,15 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
             this._prayer('begin_spawn','')
-
+            for (let terr of utils.territories_of_nation(this.mother_state, nat)){
+                let nb = this.mother_state.nations[nat][terr].n_barracks
+                this.mother_state.nations[nat][terr].n_barracks_can_spawn = nb
+            }
             let terrs = utils.territories_of_nation_that_can_spawn(
                 this.mother_state, nat)
-            if (terrs.length == 0)
-                {
+            if (terrs.length == 0){
                     this._transition()
-
-                }
+            }
         }
         else if (this.mother_state.stage.subphase == 'Build'){
             this._prayer('begin_build','')
@@ -597,9 +598,8 @@ class Game
 
     //_find
 
-    _move_is_valid( uid, target_territory)
+    _move_is_valid(uid, target_territory)
     {
-
 
 
     }
