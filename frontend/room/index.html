@@ -936,7 +936,7 @@ function render_presidential_div(state) {
     dividendsDiv.style.display = (subphase === "Dividends" ? "block" : "none");
     presidentialHeader.innerHTML = state.stage.turn + " ($" + nation.cash + " B)";
 
-    const num_shares = utils.num_shares_already_auctioned_for_nation(state)[state.stage.turn] + 4;
+    const num_shares = utils.num_shares_already_auctioned_for_nation(state)[state.stage.turn];
     dividendSlider.step = num_shares;
     dividendSlider.max = nation.cash;
     dividendSlider.value = (nation.cash / num_shares | 0) * num_shares;
