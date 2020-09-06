@@ -828,7 +828,11 @@ login().then((socket) => {
     }
     else if (action === "vote_tallied") {
       // TODO(mredding): update currentVotesDiv when this exists on the backend.
-      currentVotesDiv.innerHTML = "";
+      currentVotesDiv.innerHTML = "<table><tbody>";
+      for (let key in details) {
+        currentVotesDiv += "<tr><td>" + key + "</td><td>" + details[key] + "</td></tr>";
+      }
+      currentVotesDiv.innerHTML += "</table></tbody>";
     }
     else if (action === "begin_presidential_command") {
       clock.set_time_remaining(state.clock);
@@ -1157,6 +1161,7 @@ function end_deliberation() {
 }
 
 function send(obj) {
+  console.log("SEND", obj)
   gSocket.send(JSON.stringify(obj));
 }
 
@@ -1246,7 +1251,7 @@ function undo() {
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
     <div id="presidentDiv" style="position:relative; background-color:#555; border-radius:0.2em; margin:0.5em;">
-      <img src="assets/president.png" style="filter:invert(100%); height:4em; position:absolute; right:0; top:0;">
+      <img src="assets/president.png" style="filter:invert(100%); height:3em; position:absolute; right:0; top:0;">
 
       <h2 id="presidentialHeader"></h2>
 
