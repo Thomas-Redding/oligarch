@@ -351,41 +351,45 @@ function render_map(state) {
     if (utils.sum(army.Infantry) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(circ);
+        unitIcons.appendChild(circ);
       });
     }
     if (utils.sum(army.Cavalry) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(circ);
+        unitIcons.appendChild(circ);
       });
     }
     if (utils.sum(army.Artillery) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(circ);
+        unitIcons.appendChild(circ);
       });
     }
     if (territory.n_factories > 0) {
       icon_drawers.push((x, y) => {
         let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(img);
+        unitIcons.appendChild(img);
 
-        let text = svg.text(gLatestState.nations[nation_name][territory_name].n_factories, x + 4, y);
-        text.style.fill = 'white';
-        text.style.textShadow = "6px 6px 20px black";
-        riskMap.appendChild(text);
+        if (territory.n_factories > 1) {
+          let text = svg.text(territory.n_factories, x + 4, y);
+          text.style.fill = 'white';
+          text.style.textShadow = "6px 6px 20px black";
+          unitIcons.appendChild(text);
+        }
       });
     }
     if (territory.n_barracks > 0) {
       icon_drawers.push((x, y) => {
         let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(img);
+        unitIcons.appendChild(img);
 
-        let text = svg.text(gLatestState.nations[nation_name][territory_name].n_barracks, x + 4, y);
-        text.style.fill = 'white';
-        text.style.textShadow = "6px 6px 20px black";
-        riskMap.appendChild(text);
+        if (territory.n_barracks > 1) {
+          let text = svg.text(territory.n_barracks, x + 4, y);
+          text.style.fill = 'white';
+          text.style.textShadow = "6px 6px 20px black";
+          unitIcons.appendChild(text);
+        }
       });
     }
 
@@ -398,6 +402,16 @@ function render_map(state) {
       x += Math.cos(angle) * r * 1.7;
       y += Math.sin(angle) * r * 1.7;
       icon_drawers[t](x, y);
+    }
+
+    if (utils.CAPITALS.includes(territory_name)) {
+      let [x, y] = territories[territory_name].center;
+      let circle = svg.image("assets/whitestar.png", x - 10, y - 10, {
+        width: 20,
+        height: 20
+      });
+      circle.style.fill = 'white';
+      unitIcons.appendChild(circle);
     }
   });
 }
@@ -571,7 +585,7 @@ window.onresize = () => {
   }
 
   if (bodyRect.width > bodyRect.height * 1.8) {
-    console.log('desktop');
+    // Desktop
     statusBarDiv.style.fontSize = '1.5em';
     contentDiv.style.display = 'flex';
     contentDiv.style.flexDirection = 'row';
@@ -584,8 +598,10 @@ window.onresize = () => {
     gameLogContainer.style.maxWidth = '20em';
     bottomNavBarDiv.style.display = 'none';
     currentVotesDiv.style.display = "block";
+
+    mainTable.style.fontSize = '1.3em';
   } else {
-    console.log('mobile');
+    // Mobile
     statusBarDiv.style.fontSize = '1em';
     contentDiv.style.display = 'block';
 
@@ -600,6 +616,8 @@ window.onresize = () => {
     mainTable.style.display = (tab === kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';
     currentVotesDiv.style.display = (tab === kTabInfo ? "block" : "none");
+
+    mainTable.style.fontSize = '1em';
   }
 
   lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
@@ -690,7 +708,7 @@ class Clock {
     let minsRemaining = secsRemaining / 60 | 0;
     secsRemaining -= minsRemaining * 60;
     secsRemaining = Math.round(secsRemaining) + '';
-    if (secsRemaining.indexOf('.') === 1) {
+    if (secsRemaining.length === 1) {
       secsRemaining = '0' + secsRemaining;
     }
     statusBarTimeDiv.innerHTML = minsRemaining + ':' + secsRemaining;
@@ -762,6 +780,8 @@ login().then((socket) => {
       pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
       clock.set_time_remaining(state.clock);
     }
+    else if (action === "user_ready") {
+    }
     else if (action === "log") {
       gameLogDiv.innerHTML += `<div>` + JSON.stringify(details) + `</div>`;
     }
@@ -818,7 +838,11 @@ login().then((socket) => {
     }
     else if (action === "vote_tallied") {
       // TODO(mredding): update currentVotesDiv when this exists on the backend.
-      currentVotesDiv.innerHTML = "";
+      currentVotesDiv.innerHTML = "<table><tbody>";
+      for (let key in details) {
+        currentVotesDiv += "<tr><td>" + key + "</td><td>" + details[key] + "</td></tr>";
+      }
+      currentVotesDiv.innerHTML += "</table></tbody>";
     }
     else if (action === "begin_presidential_command") {
       clock.set_time_remaining(state.clock);
@@ -1142,11 +1166,10 @@ function end_deliberation() {
     "method": "rdyUp",
     "args": [],
   });
-  endDeliberationButton.style.backgroundColor = '#888';
-  endDeliberationButton.style.cursor = 'default';
 }
 
 function send(obj) {
+  console.log("SEND", obj)
   gSocket.send(JSON.stringify(obj));
 }
 
@@ -1189,15 +1212,15 @@ function undo() {
 <body>
 
 <div id='statusBarDiv'>
-  <div id="statusBarTimeDiv">01:34</div>
+  <div id="statusBarTimeDiv" style="min-width:3em; text-align:center;">0:00</div>
   <div style='flex:1'></div>
-  <div id="statusBarPhaseDiv">Action</div>
+  <div id="statusBarPhaseDiv" style="min-width:7em; text-align:center;">Action</div>
   <div style='flex:1'></div>
-  <div id="statusBarNationDiv">Europe</div>
+  <div id="statusBarNationDiv" style="min-width:5em; text-align:center;">Europe</div>
   <div style='flex:1'></div>
   <div id="statusBarSubphaseDiv">Build</div>
   <div style='flex:1'></div>
-  <div id="statusBarRoundDiv">Round 3</div>
+  <div id="statusBarRoundDiv" style="min-width:5em; text-align:center;">Round 3</div>
   <div style='flex:1'></div>
   <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>
   <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -1221,7 +1244,7 @@ function undo() {
         </tr>
       </tbody>
     </table>
-    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:2em; display:flex; flex-direction:column;">
+    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:3em; display:flex; flex-direction:column;">
       <div style="flex:1"></div>
       <div></div>
       <div style="flex:1"></div>
@@ -1236,7 +1259,7 @@ function undo() {
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
     <div id="presidentDiv" style="position:relative; background-color:#555; border-radius:0.2em; margin:0.5em;">
-      <img src="assets/president.png" style="filter:invert(100%); height:4em; position:absolute; right:0; top:0;">
+      <img src="assets/president.png" style="filter:invert(100%); height:3em; position:absolute; right:0; top:0;">
 
       <h2 id="presidentialHeader"></h2>
 
@@ -1345,6 +1368,8 @@ function undo() {
         <line x1="802" y1="513" x2="813" y2="523" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
         <line x1="634" y1="443" x2="625" y2="454" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
         <line x1="564" y1="371" x2="568" y2="390" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
+        <line x1="624" y1="499" x2="648" y2="540" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
+        <line x1="608" y1="564" x2="628" y2="569" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
       </g>
 
       <g id="nationRects"></g>

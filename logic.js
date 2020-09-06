@@ -145,6 +145,7 @@ class Game
         if (this.mother_state.players[username].ready) return;
         this._history.save("rdyUp", [username], this.mother_state, "<b>" + username + "</b> readied up");
         this.mother_state.players[username].ready = true
+        this._prayer('user_ready', '');
         let all_ready = true
         for (let player of Object.values(this.mother_state.players)) {
             all_ready &= player.ready
@@ -216,10 +217,14 @@ class Game
 
     vote(username, candidate_username)
     {
-        if (this.mother_state.players[username].vote == null) {
-            this._register_vote(username, candidate_username)
+        if (this.mother_state.stage.subphase == 'Election'){
+            if (this.mother_state.players[username].vote == null) {
+                this._register_vote(username, candidate_username)
+            }
+            // need to check again in case election is resolved
+           if(this.mother_state.stage.subphase == 'Election')  {
+               this.rdyUp(username)
         }
-        this.rdyUp(username)
     }
 
     dividends(username, amount)
@@ -246,7 +251,7 @@ class Game
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
         if (this.mother_state.players[username].vote == null) {
-            this._register_vote(username, player)
+            //this._register_vote(username, player)
         }
         //this.rdyUp(username)
     }
@@ -559,7 +564,6 @@ class Game
         //this.rdyUp(username)
     }
 
-
     _conclude_election()
     {
         for (let player in this.mother_state.players){
@@ -580,6 +584,7 @@ class Game
         let details = {'president':prez, 'nation':nat}
         let tau = this.timer.queryTime() + TIMING.actions
         details['time'] = tau
+        this.mother_state.clock = tau
         this._prayer('begin_presidential_command',details)
         this.timer.start(tau, this._end_presidential_command.bind(this))
     }

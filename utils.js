@@ -1,4 +1,5 @@
 let utils = {
+  CAPITALS: ["South Africa", "Ontario", "Argentina", "Northern Europe", "Japan", "Eastern Australia"],
   NATIONS: {
     "Africa": {
       "capital": "South Africa",
