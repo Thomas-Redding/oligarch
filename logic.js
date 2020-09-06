@@ -363,7 +363,7 @@ class Game
                 this.mother_state, nat)
             if (terrs.length == 0){
                     this._transition()
-                }
+            }
         }
         else if (this.mother_state.stage.subphase == 'Build'){
             this._prayer('begin_build','')
