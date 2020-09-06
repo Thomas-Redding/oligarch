@@ -29,26 +29,19 @@ class History {
     this._states = [];
     this._args = [];
     this._actions = [];
-    this._logs = [];
   }
-  save(action, args, mother_state, log) {
+  save(action, args, mother_state) {
     this._actions.push(action);
     this._args.push(args);
     this._states.push(utils.deep_copy(mother_state));
-    this._logs.push(log);
-    this._prayer("log", log, mother_state)
-  }
-  logs() {
-    return utils.deep_copy(this._logs);
   }
   undo() {
     if (this._states.length <= 1) {
-        throw Exception("Attempted to undo witha history of length 1.")
+        throw Exception("Attempted to undo with a history of length 1.")
     }
     let action = this._actions.pop();
     let args = this._args.pop();
     let state = this._actions.pop();
-    this._logs.pop();
     return [action, args, state];
   }
 }
@@ -62,7 +55,6 @@ class Game
             this.mother_state.clock = this.timer.queryTime();
         }
         let state = utils.deep_copy(this.mother_state)
-        state.logs = this._history.logs();
         return state
     }
 
@@ -79,10 +71,6 @@ class Game
         this.mother_state = state;
         if (this.timer) this.timer.stop();
         if (action === "endLobby") {
-            console.log("UNDO", action, args);
-        } else if (action === "startGame") {
-            console.log("UNDO", action, args);
-        } else if (action === "rdyUp") {
             console.log("UNDO", action, args);
         } else if (action === "bid") {
             console.log("UNDO", action, args);
@@ -112,8 +100,6 @@ class Game
     startGame(username)
     {
         log("Game.startGame()", username);
-        this._history.save("startGame", [username], this.mother_state,
-            "<b>" + username + "</b> started the game.");
         this._player_cash_init()
         this.prayer('game_start', {}, this.mother_state)
         this._act()
@@ -373,6 +359,7 @@ class Game
     _prayer(prayer_id, signal)
     {
         log("Game._prayer()", prayer_id, signal);
+        this._log([prayer_id, signal]);
         let tau = 0;
         if (this.timer && this.timer.isRunning()) tau = this.timer.queryTime()
         this.mother_state.clock = tau
@@ -766,5 +753,11 @@ class Game
             this.mother_state.players[player].shares[share]--
         }
     }
+
+    _log(html) {
+        if (!("log" in this.mother_state)) this.mother_state.log = [];
+        this.mother_state.log.push(html);
+    }
+
 }
 module.exports = Game;
