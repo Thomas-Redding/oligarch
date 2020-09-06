@@ -682,10 +682,7 @@ class Clock {
     secsRemaining = Math.max(secsRemaining, 0);
     let minsRemaining = secsRemaining / 60 | 0;
     secsRemaining -= minsRemaining * 60;
-    secsRemaining = Math.round(secsRemaining * 10) / 10 + '';
-    if (!secsRemaining.includes('.')) {
-      secsRemaining += ".0";
-    }
+    secsRemaining = Math.round(secsRemaining) + '';
     if (secsRemaining.indexOf('.') === 1) {
       secsRemaining = '0' + secsRemaining;
     }
