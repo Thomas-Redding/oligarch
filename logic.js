@@ -289,7 +289,8 @@ class Game
 
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
-        log("Game.dividends()", username, player, shares_to, shares_from, cash_to, cash_from);
+        log("Game.dividends()", username, player, shares_to, shares_from,
+            cash_to, cash_from);
         if (this.mother_state.players[username].vote == null) {
             //this._register_vote(username, player)
         }
