@@ -145,6 +145,7 @@ class Game
         if (this.mother_state.players[username].ready) return;
         this._history.save("rdyUp", [username], this.mother_state, "<b>" + username + "</b> readied up");
         this.mother_state.players[username].ready = true
+        this._prayer('user_ready', '');
         let all_ready = true
         for (let player of Object.values(this.mother_state.players)) {
             all_ready &= player.ready
