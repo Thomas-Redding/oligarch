@@ -7,9 +7,9 @@ Array.prototype.fromback = function(i=1) {
 
 //global lists and macros defined here
 const TOTAL_INIT_CASH = 600
-const ROUNDS = [1,2,3,4,5,6] 
+const ROUNDS = [1,2,3,4,5,6]
 const PHASES = ['Taxation','Discuss','Auction','Action']
-const TURNS = ['North America', 'South America', 
+const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
@@ -95,7 +95,7 @@ class Game
                 this.mother_state.stage[ord] = this.mother_state[ord][0]
             }
             rtn = true
-            
+
         }
         this.prayer('end_lobby', {}, this.mother_state)
         return rtn
@@ -182,13 +182,13 @@ class Game
     {
         let nat = this.mother_state.stage.turn
         let terr_info = utils.territory_for_territory_name(terr)
-        n_buildings = terr_info.n_barracks + terr_info.n_factories
+        let n_buildings = terr_info.n_barracks + terr_info.n_factories
         if (n_buildings < 4 &&
              username === this.mother_state.nations[nat].president) {
-                type_str = type == 'barracks' ? 'n_barracks' : 'n_factories' 
+                type_str = type == 'barracks' ? 'n_barracks' : 'n_factories'
                 this.mother_state.nations[nat][terr][type_str] += 1
         }
-
+        this._prayer('built_infrastructure','')
     }
 
     spawn(username, terr, type)
@@ -202,7 +202,7 @@ class Game
                 "troop_id":utils.uuid(), 'can_move':false, 'can_move':false}
             this.mother_state.nations[nat].army.push(unit)
         }
-
+        this._prayer('spawned_unit','')
     }
 
     vote(username, candidate_username)
@@ -280,9 +280,9 @@ class Game
     _parse_stage(stage){
         return [stage.round, stage.phase, stage.turn, stage.subphase]
     }
-    
+
     _skip_prez_command(){
-        
+
 
     }
 
@@ -291,25 +291,25 @@ class Game
     //OR it can ensure that another method called by _act
     //will eventually call _transition (i.e. timer events)
     _act()
-    {    
+    {
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
-        
+
             let nat = this.mother_state.stage.turn
-        
+
         if (this.mother_state.stage.phase === 'Taxation') {
             this.mother_state.nations[nat].cash = utils.income_of_nation(
                 this.mother_state, nat)
             this._transition()
         }
-    
+
         else if (this.mother_state.stage.phase === 'Discuss') {
             this._begin_deliberation()
         }
 
         else if (this.mother_state.stage.phase === 'Auction') {
             if (utils.shares_sold(this.mother_state, turn) <
-                utils.NATIONS[turn].total_shares) 
+                utils.NATIONS[turn].total_shares)
                 {
                     this._start_auction(turn)
                 }
@@ -317,7 +317,7 @@ class Game
         }
 
         else if (this.mother_state.stage.subphase === 'Election') {
-            this._start_election(this.mother_state.stage.turn)            
+            this._start_election(this.mother_state.stage.turn)
         }
 
 
@@ -342,7 +342,7 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
             this._prayer('begin_spawn','')
-            
+
             let terrs = utils.territories_of_nation_that_can_spawn(
                 this.mother_state, nat)
             if (terrs.length == 0)
@@ -354,7 +354,7 @@ class Game
         else if (this.mother_state.stage.subphase == 'Build'){
             this._prayer('begin_build','')
             let terr_list = utils.territories_of_nation_that_can_build(
-                this.mother_state, nat)            
+                this.mother_state, nat)
             if (terr_list.length == 0)
                 {
                     this._transition()
@@ -379,7 +379,7 @@ class Game
         function is_last(cur, table){
             return table.indexOf(cur) == table.length - 1
         }
-      
+
 
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
@@ -397,7 +397,7 @@ class Game
             this.mother_state.stage.turn = next(turn, TURNS)
         }
 
-        else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback() 
+        else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback()
             && turn == TURNS.fromback()) {
                 this.mother_state.stage.round += 1
                 this.mother_state.stage.phase = PHASES[0]
@@ -554,7 +554,7 @@ class Game
         let nat = this.mother_state.stage.turn
         let details = {'winner' : this.mother_state.nations[nat].president}
         this._prayer('conclude_election', details)
-        this._transition()  
+        this._transition()
     }
 
     //start presidential command & clock
@@ -566,7 +566,7 @@ class Game
         let tau = this.timer.queryTime() + TIMING.actions
         details['time'] = tau
         this._prayer('begin_presidential_command',details)
-        this.timer.start(tau, this._end_presidential_command.bind(this)) 
+        this.timer.start(tau, this._end_presidential_command.bind(this))
     }
 
     _end_presidential_command()
@@ -581,7 +581,7 @@ class Game
 
     _move_is_valid( uid, target_territory)
     {
-        
+
 
 
     }
@@ -603,9 +603,9 @@ class Game
 
 
     }
-    
-   
-    
-    
+
+
+
+
 }
 module.exports = Game;

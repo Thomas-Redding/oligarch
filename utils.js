@@ -573,12 +573,6 @@ let utils = {
     let usernameHash = username.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
     return usernameHash + (this._counter - 1);
   },
-
-  _type: (x) => {
-    if (Array.isArray(x)) return "array";
-    if (typeof(x) == "object") return "object";
-    else return "value";
-  },
 };
 
 // Terrible hack so this can be included on frontend.
