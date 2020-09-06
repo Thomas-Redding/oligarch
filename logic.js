@@ -216,10 +216,11 @@ class Game
 
     vote(username, candidate_username)
     {
-        if (this.mother_state.players[username].vote == null) {
-            this._register_vote(username, candidate_username)
+        if (this.mother_state.stage.subphase == 'Election'){
+            if (this.mother_state.players[username].vote == null) {
+                this._register_vote(username, candidate_username)
+            }
         }
-        this.rdyUp(username)
     }
 
     dividends(username, amount)
@@ -246,7 +247,7 @@ class Game
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
         if (this.mother_state.players[username].vote == null) {
-            this._register_vote(username, player)
+            //this._register_vote(username, player)
         }
         //this.rdyUp(username)
     }
@@ -555,8 +556,7 @@ class Game
                 this.timer.stop(true)
             }
         }
-        n_votes = Math.floor(n_votes/2)+1
-        //this.rdyUp(username)
+        this.rdyUp(username)
     }
 
 
