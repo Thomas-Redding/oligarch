@@ -188,7 +188,7 @@ class Game
                 type_str = type == 'barracks' ? 'n_barracks' : 'n_factories' 
                 this.mother_state.nations[nat][terr][type_str] += 1
         }
-
+        this._prayer('built_infrastructure','')
     }
 
     spawn(username, terr, type)
