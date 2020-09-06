@@ -613,7 +613,7 @@ function main() {
             };
             for (let unit of gLatestState.nations[nation_name].army) {
               if (unit.can_move && unit.territory === moveState.from) {
-                validIds[unit.type].push(unit.troop_id)
+                validIds[unit.type].push(unit.id)
               }
             }
 
