@@ -239,6 +239,7 @@ let utils = {
       "Ukraine": 1,
       "Middle East": 1,
       "Egypt": 1,
+      "North Africa": 1,
     },
     "Ukraine": {
       "Scandinavia": 1,
