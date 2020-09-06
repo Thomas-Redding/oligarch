@@ -293,13 +293,8 @@ class Game
     }
 
     //acts based on current game state
-    _parse_stage(stage){
+    _parse_stage(stage) {
         return [stage.round, stage.phase, stage.turn, stage.subphase]
-    }
-
-    _skip_prez_command(){
-
-
     }
 
     //act mutates the state as necessary for the game
