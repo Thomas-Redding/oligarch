@@ -327,6 +327,8 @@ class Game
             }
             this.mother_state.players[username].cash += cash_to
             this.mother_state.players[player].cash += cash_from
+            this.mother_state.players[username].cash -= cash_from
+            this.mother_state.players[player].cash -= cash_to
             this._trade_dequeue(username, player)
             this._prayer('trade_accepted','',this.mother_state)
         }
@@ -732,10 +734,11 @@ class Game
         for (let pair of this.mother_state.trading_pairs) {
             if (pair[0] === username && pair[1] === player) {
                 var idx = this.mother_state.trading_pairs.indexOf(pair)
+                this.mother_state.trading_pairs.splice(idx,1)
                 break
             }
         }
-        this.mother_state.trading_pairs.splice(idx,1)
+        
     }
 
     _trade_verification(p1, p2, shares_to, shares_from, cash_to, cash_from)
