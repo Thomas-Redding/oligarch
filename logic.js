@@ -310,11 +310,7 @@ class Game
         shares_to, shares_from, cash_to, cash_from, accept)
     {
         //if ()
-<<<<<<< HEAD
-        log("Game.dividends()", username, player, shares_to, shares_from,
-=======
         log("Game.respondTrade()", username, player, shares_to, s_from,
->>>>>>> 5b9289ceef1cea6c539d76208298ebd3daadfe12
             cash_to, cash_from)
 
         if (accept && this._trade_verification(
