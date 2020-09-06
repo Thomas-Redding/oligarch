@@ -192,7 +192,9 @@ class Game
     {
         log("Game.attack()", username, unit_id, target_id);
         let nat = this.mother_state.stage.turn
-        let [idx2id_cur, idx2id_target, target_nat] = this._attack_helper(nat)
+        let [idx2id_cur, idx2id_target, target_nat] = this._attack_helper(
+            nat, target_id)
+
         if (this.mother_state.stage.subphase == 'Attack' &&
             this.mother_state.nations[nat].president == username) {
                 let terr = utils.troop_from_id(unit_id).territory
@@ -464,6 +466,7 @@ class Game
             }
             let terrs = utils.territories_of_nation_that_can_spawn(
                 this.mother_state, nat)
+            console.log(terrs)
             if (terrs.length == 0 || noop){
                     this._transition()
             }
@@ -551,26 +554,13 @@ class Game
             this.mother_state.nations[nation].cash = 0
             this.mother_state.nations[nation].owns = []
             this.mother_state.nations[nation].army = []
-
-            let id = 0;
-            for (let terr of utils.NATIONS[nation].territories) {
-                for (let unittype of UNITS) {
-                    this.mother_state.nations[nation].army.push({
-                        "type": unittype,
-                        "territory": terr,
-                        "id": id++,
-                        "can_move": true
-                    });
-                }
-            }
-
             this.mother_state.nations[nation].president = null
             for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
                 this.mother_state.nations[nation][terr] = {}
-                this.mother_state.nations[nation][terr].n_factories = Math.random() * 5 | 0
-                this.mother_state.nations[nation][terr].n_barracks = Math.random() * 5 | 0
-                this.mother_state.nations[nation][terr].n_barracks_can_spawn = this.mother_state.nations[nation][terr].n_barracks
+                this.mother_state.nations[nation][terr].n_factories = 0
+                this.mother_state.nations[nation][terr].n_barracks = 0
+                this.mother_state.nations[nation][terr].n_barracks_can_spawn= 0
                 terr2nat[terr] = nation
             }
         }
@@ -721,17 +711,18 @@ class Game
     }
 
     //battle routines
-    _attack_helper(nat)
+    _attack_helper(nat, target_id)
     {
-        for (nats of TURNS){ 
-            if (nats.army.filter(x => x.id == target_id).length == 1) {
+        for (let nats of TURNS){ 
+            let army = this.mother_state.nations[nat].army
+            if (army.filter(x => x.id == target_id).length == 1) {
                 var target_nat = nats
                 var idx2id_target = nats.army.map(x => x.id)
                 let idx = idx2id_target.indexOf(target_id)
                 this.mother_state.army[nats].army[idx].can_attack = false
             }
             else if (nats == nat) {
-                var idx2id_cur = nats.army.map(x => x.id)
+                var idx2id_cur = army.map(x => x.id)
             }
         }
         return [idx2id_cur, idx2id_target, target_nat]
