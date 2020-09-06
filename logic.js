@@ -389,6 +389,15 @@ class Game
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
             this.mother_state.nations[nation].owns = []
+            /*
+             * {
+             * "type": "infantry" | "calvary" | "cannon"
+             * "territory": {string},
+             * "troop_id": utils.uuid(),
+             * "can_move": {bool}
+             * "can_attack": {bool}
+             * }
+             */
             this.mother_state.nations[nation].army = []
             this.mother_state.nations[nation].president = null
             for (let terr of utils.NATIONS[nation].territories) {
@@ -397,7 +406,6 @@ class Game
                 this.mother_state.nations[nation][terr].n_factories = 0
                 this.mother_state.nations[nation][terr].n_barracks = 0
                 this.mother_state.nations[nation][terr].n_barracks_can_spawn = 0
-                this.mother_state.nations[nation].army = []
                 terr2nat[terr] = nation
             }
         }
