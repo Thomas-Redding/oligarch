@@ -581,7 +581,7 @@ window.onresize = () => {
   }
 
   if (bodyRect.width > bodyRect.height * 1.8) {
-    console.log('desktop');
+    // Desktop
     statusBarDiv.style.fontSize = '1.5em';
     contentDiv.style.display = 'flex';
     contentDiv.style.flexDirection = 'row';
@@ -594,8 +594,10 @@ window.onresize = () => {
     gameLogContainer.style.maxWidth = '20em';
     bottomNavBarDiv.style.display = 'none';
     currentVotesDiv.style.display = "block";
+
+    mainTable.style.fontSize = '1.3em';
   } else {
-    console.log('mobile');
+    // Mobile
     statusBarDiv.style.fontSize = '1em';
     contentDiv.style.display = 'block';
 
@@ -610,6 +612,8 @@ window.onresize = () => {
     mainTable.style.display = (tab === kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';
     currentVotesDiv.style.display = (tab === kTabInfo ? "block" : "none");
+
+    mainTable.style.fontSize = '1em';
   }
 
   lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
@@ -700,7 +704,7 @@ class Clock {
     let minsRemaining = secsRemaining / 60 | 0;
     secsRemaining -= minsRemaining * 60;
     secsRemaining = Math.round(secsRemaining) + '';
-    if (secsRemaining.indexOf('.') === 1) {
+    if (secsRemaining.length === 1) {
       secsRemaining = '0' + secsRemaining;
     }
     statusBarTimeDiv.innerHTML = minsRemaining + ':' + secsRemaining;
@@ -771,6 +775,8 @@ login().then((socket) => {
       playIcon.style.display = gLatestState.is_paused ? "block" : "none";
       pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
       clock.set_time_remaining(state.clock);
+    }
+    else if (action === "user_ready") {
     }
     else if (action === "log") {
       gameLogDiv.innerHTML += `<div>` + JSON.stringify(details) + `</div>`;
@@ -1156,8 +1162,6 @@ function end_deliberation() {
     "method": "rdyUp",
     "args": [],
   });
-  endDeliberationButton.style.backgroundColor = '#888';
-  endDeliberationButton.style.cursor = 'default';
 }
 
 function send(obj) {
@@ -1204,15 +1208,15 @@ function undo() {
 <body>
 
 <div id='statusBarDiv'>
-  <div id="statusBarTimeDiv">01:34</div>
+  <div id="statusBarTimeDiv" style="min-width:3em; text-align:center;">0:00</div>
   <div style='flex:1'></div>
-  <div id="statusBarPhaseDiv">Action</div>
+  <div id="statusBarPhaseDiv" style="min-width:7em; text-align:center;">Action</div>
   <div style='flex:1'></div>
-  <div id="statusBarNationDiv">Europe</div>
+  <div id="statusBarNationDiv" style="min-width:5em; text-align:center;">Europe</div>
   <div style='flex:1'></div>
   <div id="statusBarSubphaseDiv">Build</div>
   <div style='flex:1'></div>
-  <div id="statusBarRoundDiv">Round 3</div>
+  <div id="statusBarRoundDiv" style="min-width:5em; text-align:center;">Round 3</div>
   <div style='flex:1'></div>
   <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>
   <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -1236,7 +1240,7 @@ function undo() {
         </tr>
       </tbody>
     </table>
-    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:2em; display:flex; flex-direction:column;">
+    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:3em; display:flex; flex-direction:column;">
       <div style="flex:1"></div>
       <div></div>
       <div style="flex:1"></div>
