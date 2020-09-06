@@ -316,13 +316,13 @@ class Game
 
     acceptTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
+
+        log("Game.dividends()", username, player, shares_to, shares_from,
+            cash_to, cash_from)
+
         for(let share of shares_to) {
             this.mother_state.players[username].shares[share]--
             this.mother_state.players[player].shares[share]++
-        log("Game.dividends()", username, player, shares_to, shares_from,
-            cash_to, cash_from);
-        if (this.mother_state.players[username].vote == null) {
-            //this._register_vote(username, player)
         }
         
         for(let share of shares_from) {
