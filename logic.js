@@ -14,7 +14,7 @@ const TURNS = ['North America', 'South America',
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
 const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
- 'election':120*1000, 'actions':120*100}
+ 'election':120*1000, 'actions':120*1000}
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
     'Artillery':15, 'Cavalry':15 }
@@ -583,8 +583,8 @@ class Game
         let tau = this.timer.queryTime() + TIMING.actions
         details['time'] = tau
         this.mother_state.clock = tau
-        this._prayer('begin_presidential_command',details)
         this.timer.start(tau, this._end_presidential_command.bind(this))
+        this._prayer('begin_presidential_command',details)
     }
 
     _end_presidential_command()
