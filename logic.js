@@ -763,8 +763,8 @@ class Game
     }
 
     _log(html) {
-        if (!("log" in this.mother_state)) this.mother_state.log = [];
-        this.mother_state.log.push(html);
+        if (!("logs" in this.mother_state)) this.mother_state.logs = [];
+        this.mother_state.logs.push(html);
     }
 
 }
