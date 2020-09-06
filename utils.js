@@ -636,7 +636,7 @@ let utils = {
    * @param {int} troop_id - the id of the desired troop
    * @returns {Object} troop - the json representing the desired troop
    */
-  toop_from_id: (mother_state, troop_id) => {
+  troop_from_id: (mother_state, troop_id) => {
     for (let nation in mother_state.nations) {
       let arr = mother_state.nations[nation].army.filter(x => x.id == troop_id);
       if (arr.length == 0) continue;

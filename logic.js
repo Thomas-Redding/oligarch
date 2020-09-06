@@ -1,4 +1,5 @@
 let utils = require('./utils.js')
+let Battle = require('./battle.js')
 let log = require('./log.js');
 
 log.enabled = true;
@@ -186,14 +187,29 @@ class Game
             this._prayer('moves_made','')
         }
     }
+    
     attack(username, unit_id, target_id)
     {
         log("Game.attack()", username, unit_id, target_id);
         let nat = this.mother_state.stage.turn
+        let [idx2id_cur, idx2id_target, target_nat] = this._attack_helper(
+            nat, target_id)
+
         if (this.mother_state.stage.subphase == 'Attack' &&
-            this.mother_state.nations[nat].president == username &&
-            this.mother_state.nations[nat].army.filter()) {
-            utils.military_bias(nat);
+            this.mother_state.nations[nat].president == username) {
+                let terr = utils.troop_from_id(unit_id).territory
+                let atk_pts = utils.military_bias(nat, terr)
+                let def_pts = utils.military_bias(target_nat, terr)
+                let details = this._battle(atk_pts,def_pts)
+                if (details.outcome) {
+                    let idx = idx2id_target.indexOf(target_id)
+                    this.mother_state.nations[target_nat].army.splice(idx,1)
+                }
+                else {
+                    let idx = idx2id_cur.indexOf(unit_id)
+                    this.mother_state.nations[target_nat].army.splice(idx,1)
+                }
+                this._prayer('battle_outcome',details,this.mother_state)
         }
     }
 
@@ -450,6 +466,7 @@ class Game
             }
             let terrs = utils.territories_of_nation_that_can_spawn(
                 this.mother_state, nat)
+            console.log(terrs)
             if (terrs.length == 0 || noop){
                     this._transition()
             }
@@ -537,26 +554,13 @@ class Game
             this.mother_state.nations[nation].cash = 0
             this.mother_state.nations[nation].owns = []
             this.mother_state.nations[nation].army = []
-
-            let id = 0;
-            for (let terr of utils.NATIONS[nation].territories) {
-                for (let unittype of UNITS) {
-                    this.mother_state.nations[nation].army.push({
-                        "type": unittype,
-                        "territory": terr,
-                        "id": id++,
-                        "can_move": true
-                    });
-                }
-            }
-
             this.mother_state.nations[nation].president = null
             for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
                 this.mother_state.nations[nation][terr] = {}
-                this.mother_state.nations[nation][terr].n_factories = Math.random() * 5 | 0
-                this.mother_state.nations[nation][terr].n_barracks = Math.random() * 5 | 0
-                this.mother_state.nations[nation][terr].n_barracks_can_spawn = this.mother_state.nations[nation][terr].n_barracks
+                this.mother_state.nations[nation][terr].n_factories = 0
+                this.mother_state.nations[nation][terr].n_barracks = 0
+                this.mother_state.nations[nation][terr].n_barracks_can_spawn= 0
                 terr2nat[terr] = nation
             }
         }
@@ -706,29 +710,29 @@ class Game
         this._transition()
     }
 
-    //_find
-
-    _move_is_valid(uid, target_territory)
+    //battle routines
+    _attack_helper(nat, target_id)
     {
-
+        for (let nats of TURNS){ 
+            let army = this.mother_state.nations[nat].army
+            if (army.filter(x => x.id == target_id).length == 1) {
+                var target_nat = nats
+                var idx2id_target = nats.army.map(x => x.id)
+                let idx = idx2id_target.indexOf(target_id)
+                this.mother_state.army[nats].army[idx].can_attack = false
+            }
+            else if (nats == nat) {
+                var idx2id_cur = army.map(x => x.id)
+            }
+        }
+        return [idx2id_cur, idx2id_target, target_nat]
     }
-    _movement()
+
+    _battle(atk_pts, def_pts)
     {
-
-    }
-
-    //spawn routines
-
-    _spawn_unit()
-    {
-
-    }
-
-    //building routines
-    _building()
-    {
-
-
+        let battle = new Battle(atk_pts, def_pts)
+        battle.linear_die_battle()
+        return battle.metadata
     }
     //
 
