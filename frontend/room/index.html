@@ -371,10 +371,12 @@ function render_map(state) {
         let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
         unitIcons.appendChild(img);
 
-        let text = svg.text(gLatestState.nations[nation_name][territory_name].n_factories, x + 4, y);
-        text.style.fill = 'white';
-        text.style.textShadow = "6px 6px 20px black";
-        unitIcons.appendChild(text);
+        if (territory.n_factories > 1) {
+          let text = svg.text(territory.n_factories, x + 4, y);
+          text.style.fill = 'white';
+          text.style.textShadow = "6px 6px 20px black";
+          unitIcons.appendChild(text);
+        }
       });
     }
     if (territory.n_barracks > 0) {
@@ -382,10 +384,12 @@ function render_map(state) {
         let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
         unitIcons.appendChild(img);
 
-        let text = svg.text(gLatestState.nations[nation_name][territory_name].n_barracks, x + 4, y);
-        text.style.fill = 'white';
-        text.style.textShadow = "6px 6px 20px black";
-        unitIcons.appendChild(text);
+        if (territory.n_barracks > 1) {
+          let text = svg.text(territory.n_barracks, x + 4, y);
+          text.style.fill = 'white';
+          text.style.textShadow = "6px 6px 20px black";
+          unitIcons.appendChild(text);
+        }
       });
     }
 
