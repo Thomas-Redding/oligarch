@@ -2,7 +2,7 @@
 function log(s) {
   if (log.enable === undefined) log.enable = false;
   if (!log.enable) return false;
-  // console.log(get_stack());
+   console.log(get_stack());
   console.log(time(), "".padStart(get_stack().length, "-") , ...arguments);
 }
 

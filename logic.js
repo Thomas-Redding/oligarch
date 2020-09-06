@@ -360,7 +360,7 @@ class Game
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this.mother_state.trading_pairs = []
-        //log.enable = false
+        log.enable = false
         this._nation_init()
     }
 
@@ -474,8 +474,9 @@ class Game
     {
         log("Game._transition()")
         let cur_ord = (this.mother_state.stage.round % 2 == 1)
-        let curTURNS = TURNS
-        //let curTURNS = cur_ord ? TURNS : reverse(TURNS)
+        //let curTURNS = TURNS
+        console.log(this.mother_state.stage)
+        let curTURNS = cur_ord ? TURNS : reverse(TURNS)
         //console.log(curTURNS)
       
         function next(cur, table) {
@@ -505,7 +506,7 @@ class Game
             && turn == curTURNS.fromback()) {
                 this.mother_state.stage.round += 1
                 this.mother_state.stage.phase = PHASES[0]
-                this.mother_state.stage.turn = curTURNS.fromback()
+                this.mother_state.stage.turn = curTURNS[0]
                 this.mother_state.stage.subphase = SUBPHASES[0]
             }
 
@@ -513,8 +514,8 @@ class Game
             this.mother_state.stage.phase = next(phase, PHASES)
         }
         else if (phase == 'Action'){
-            let nextsubphase = next(subphase, PHASES)
-            if (subphase == PHASES.fromback()) {
+            let nextsubphase = next(subphase, SUBPHASES)
+            if (subphase == SUBPHASES.fromback()) {
                 this.mother_state.stage.turn = next(turn, curTURNS)
                 this.timer.stop(false)
             }
