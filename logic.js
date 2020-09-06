@@ -376,6 +376,7 @@ class Game
 
         else if (this.mother_state.stage.subphase == 'Dividends'){
             this._prayer('begin_dividends','')
+            if (noop) this._transition()
         }
 
         else if (this.mother_state.stage.phase === 'Action'){
