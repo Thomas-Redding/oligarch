@@ -335,15 +335,53 @@ function render_nation_rects(state) {
   }
 }
 
+let moveState = null;
+
+function unit_clicked(territory_name, unit_type, nation_name) {
+  if (gLatestState.stage.phase !== "Action") {
+    moveState = null;
+    render_move_state();
+    return;
+  }
+  if (!moveState) {
+    moveState = {
+      "from": territory_name
+    };
+  }
+  if (territory_name !== moveState.from) {
+    return;
+  }
+  if (unit_type in moveState) {
+    moveState[unit_type]++;
+  } else {
+    moveState[unit_type] = 1;
+  }
+  render_move_state();
+}
+
+function render_move_state() {
+  if (moveState === null) {
+    moveStateDiv.style.display = "none";
+    return;
+  }
+  moveStateDiv.style.display = "block";
+  moveStateDiv.innerHTML = JSON.stringify(moveState, null, 2);
+}
+
 function render_map(state) {
   render_nation_rects(state);
 
   let out = svg.g();
 
+  const unittype2icon = {
+    "Infantry": "helmet.png",
+    "Cavalry": "horse.png",
+    "Artillery": "cannon.png",
+  }
+
   Array.from(document.getElementById("riskMap").getElementsByTagName('path')).forEach(path => {
     let territory_name = path.id;
-    let nation_name = territory2nation[territory_name];
-    let territory = state.nations[nation_name][territory_name];
+    let territory = state.nations[territory2nation[territory_name]][territory_name];
 
     {
       let [x, y] = territories[territory_name].center;
@@ -353,77 +391,37 @@ function render_map(state) {
       out.appendChild(circle);
     }
 
-    let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, "move");
-
     let icon_drawers = [];
 
-    // icon_drawers.push((x, y) => {
-    //   let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
-    //   out.appendChild(circ);
-    // });
-    // icon_drawers.push((x, y) => {
-    //   let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
-    //   out.appendChild(circ);
-    // });
-    // icon_drawers.push((x, y) => {
-    //   let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
-    //   out.appendChild(circ);
-    // });
-    // icon_drawers.push((x, y) => {
-    //   let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
-    //   out.appendChild(circ);
-    // });
-    // icon_drawers.push((x, y) => {
-    //   let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
-    //   out.appendChild(circ);
-    // });
-    // icon_drawers.push((x, y) => {
-    //   let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
-    //   out.appendChild(circ);
-    // });
+    for (let nation_name in state.nations) {
+      let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, "move");
+      for (let unit_type in army) {
+        let n = utils.sum(army[unit_type]);
+        if (n > 0) {
+          icon_drawers.push((x, y) => {
+            let onclick = (e) => {
+              unit_clicked(territory_name, unit_type, nation_name);
+            }
 
-    if (utils.sum(army.Infantry) > 0) {
-      icon_drawers.push((x, y) => {
-        let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
-        out.appendChild(circ);
+            let circ = svg.image("./assets/" + unittype2icon[unit_type], x - s/2, y - s/2, {width:s, height:s});
+            circ.style.cursor = 'pointer';
+            circ.addEventListener("click", onclick);
+            out.appendChild(circ);
 
-        let n = utils.sum(army.Infantry);
-        if (n > 1) {
-          let text = svg.text(n, x - 5, y + 6);
-          text.style.fill = 'white';
-          text.style.textShadow = "6px 6px 20px black";
-          out.appendChild(text);
+            let n = utils.sum(army.Infantry);
+            if (n > 1) {
+              let text = svg.text(n, x - 5, y + 6);
+              text.style.cursor = 'pointer';
+              text.addEventListener("click", onclick);
+              text.style.fill = 'white';
+              text.style.textShadow = "6px 6px 20px black";
+              out.appendChild(text);
+            }
+          });
         }
-      });
+      }
     }
-    if (utils.sum(army.Cavalry) > 0) {
-      icon_drawers.push((x, y) => {
-        let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
-        out.appendChild(circ);
 
-        let n = utils.sum(army.Cavalry);
-        if (n > 1) {
-          let text = svg.text(n, x - 5, y + 6);
-          text.style.fill = 'white';
-          text.style.textShadow = "6px 6px 20px black";
-          out.appendChild(text);
-        }
-      });
-    }
-    if (utils.sum(army.Artillery) > 0) {
-      icon_drawers.push((x, y) => {
-        let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
-        out.appendChild(circ);
-
-        let n = utils.sum(army.Artillery);
-        if (n > 1) {
-          let text = svg.text(n, x - 5, y + 6);
-          text.style.fill = 'white';
-          text.style.textShadow = "6px 6px 20px black";
-          out.appendChild(text);
-        }
-      });
-    }
     if (territory.n_factories > 0) {
       icon_drawers.push((x, y) => {
         let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
@@ -452,7 +450,7 @@ function render_map(state) {
     }
 
     const r = 16;
-    const s = 20;
+    const s = 24;
     const tau = Math.PI * 2;
     for (let t = 0; t < icon_drawers.length; ++t) {
       let angle = tau * t / icon_drawers.length - Math.PI / 2;
@@ -591,6 +589,12 @@ function main() {
             spawn(gLatestState, territory, "Artillery");
           } else if (calvaryRadio.checked) {
             spawn(gLatestState, territory, "Cavalry");
+          }
+        } else if (gLatestState.stage.subphase === "Move") {
+          if (moveState) {
+            alert("TODO");
+            moveState = null;
+            render_move_state();
           }
         }
       }
@@ -1609,6 +1613,8 @@ function undo() {
   </div>
 </div>
 
+<div id="moveStateDiv" style="position:absolute; top:0; right:0; background-color:#555; border:solid white 1px;">
+</div>
 
 </body>
 </html>
