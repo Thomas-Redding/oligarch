@@ -42,14 +42,6 @@ body {
   background-color: #222;
 }
 
-.personButton {
-  display: inline-block;
-  border-radius: 0.5em;
-  padding: 0.25em;
-  margin: 0.25em;
-  cursor: pointer;
-}
-
 #statusBarDiv {
   display: flex;
   flex-direction: row;
@@ -89,10 +81,14 @@ body {
 
 .button {
   padding: 0.6em;
-  margin: 0 0.5em;
+  margin: 0.5em;
   border-radius: 0.25em;  
   cursor: pointer;
   display: inline-block;
+}
+
+input[type=number] {
+  margin: 0.5em;
 }
 
 .unclickable-svg {
@@ -1199,7 +1195,7 @@ function show_modal(type) {
   for (let playername of Object.keys(gLatestState.players)) {
     if (playername !== myUsername) {
       let button = document.createElement('DIV');
-      button.classList.add("personButton");
+      button.classList.add("button");
       button.innerHTML = playername;
       button.addEventListener('click', (e) => {
         trade_with(playername);
@@ -1208,7 +1204,7 @@ function show_modal(type) {
     }
     {
       let button = document.createElement('DIV');
-      button.classList.add("personButton");
+      button.classList.add("button");
       button.innerHTML = playername;
       button.addEventListener('click', (e) => {
         close_modal();
@@ -1220,7 +1216,7 @@ function show_modal(type) {
 
   {
     let button = document.createElement('DIV');
-    button.classList.add("personButton");
+    button.classList.add("button");
     button.innerHTML = "abstain";
     button.addEventListener('click', (e) => {
       close_modal();
@@ -1540,7 +1536,7 @@ function undo() {
   </div>
 
   <div id="votePopupDiv" class="popup">
-    <h2 align="center">Vote</h2>
+    <h2 align="center" style="margin-bottom: 1em;">Vote</h2>
     <div id="votePlayerButtonsContainer"></div>
   </div>
 
@@ -1553,23 +1549,23 @@ function undo() {
             <input id="bribeInput" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
           </td>
           <td>
-            <div class="personButton" onClick="increment_bribe_input(5);">+5</div>
+            <div class="button" onClick="increment_bribe_input(5);">+5</div>
           </td>
           <td>
-            <div class="personButton" onClick="increment_bribe_input(20);">+20</div>
+            <div class="button" onClick="increment_bribe_input(20);">+20</div>
           </td>
         </tr>
       </tbody>
     </table>
     <hr>
     <div style="text-align:center;">
-      <div class='personButton'>NA</div>
-      <div class='personButton'>EU</div>
-      <div class='personButton'>AS</div>
-      <br>
-      <div class='personButton'>SA</div>
-      <div class='personButton'>AF</div>
-      <div class='personButton'>AU</div>
+      <div class='button'>NA</div>
+      <div class='button'>EU</div>
+      <div class='button'>AS</div>
+      <br><br>
+      <div class='button'>SA</div>
+      <div class='button'>AF</div>
+      <div class='button'>AU</div>
     </div>
   </div>
 
