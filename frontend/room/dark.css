@@ -15,10 +15,6 @@ body {
   border-bottom: 1px solid #888;
 }
 
-.button {
-  color: white;
-}
-
 #mainTable > tbody > tr:nth-child(2n) {
   background-color: #222;
 }
@@ -49,6 +45,10 @@ body {
 .button {
   color: black;
   background-color: hsl(50, 100%, 45%);
+}
+
+.button.disabled-button {
+  background-color: #aaa;
 }
 
 #popupDivBackground {
