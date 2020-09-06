@@ -412,6 +412,67 @@ function unit_clicked(territory_name, unit_type, nation_name) {
 
 }
 
+function make_sword(x, y, sw, sh) {
+  x += 6.5;
+  y += 6.5;
+  let path = svg.path({
+    "d": "M 26 0 L 20 2 L 7.59375 15.59375 L 9.3125 16.6875 L 10.40625 18.40625 L 24 6 L 26 0 z M 3.90625 14.09375 L 2.59375 15.40625 L 5.3125 18.125 L 2.09375 22.21875 C 2.0298776 22.212263 1.9718338 22.1875 1.90625 22.1875 C 0.85690896 22.1875 0 23.044409 0 24.09375 C -2.9605947e-16 25.143091 0.85690896 26 1.90625 26 C 2.955591 26 3.8125 25.143091 3.8125 24.09375 C 3.8125 24.028166 3.7877366 23.970122 3.78125 23.90625 L 7.875 20.6875 L 10.59375 23.40625 L 11.90625 22.09375 L 8.59375 17.40625 L 3.90625 14.09375 z",
+    "transform": "translate(" + x + " " +  y + ") scale(" + sw / 28 + " " + sh / 28 + ")"
+  });
+  path.style.fill = 'black';
+  return path;
+}
+
+function make_bow(x, y, sw, sh) {
+  x += 4.5;
+  y += 4.5;
+  let transform = "translate(" + x + " " +  y + ") scale(" + sw / 800 + " " + sh / 800 + ")";
+  let fill = "black";
+  let path1 = svg.path({
+    "d": "M235.8,425.1L458,123.2c0.5,0.1,1.1,0.3,1.6,0.4c9.7,2.4,20.1,5.5,30.8,9.1c21.6,7.3,44.9,17.2,68.4,30.7c23.5,13.5,47.1,30.4,69.2,51c22.1,20.5,42.7,44.6,60.3,71.8c17.6,27.1,32.3,57.1,42.9,88.9c7.7,22.9,13.2,46.8,16.5,71h102c-4.3-36.1-13.2-71.6-26.4-104.9c-15.8-40-37.6-76.7-63.4-108.1c-25.8-31.4-55.5-57.6-86.3-77.8c-30.8-20.3-62.7-34.5-93-43.6c-30.3-9.1-58.9-13.1-84-13.9c-12.5-0.4-24.2,0-34.9,0.8c-2.7,0.2-5.3,0.4-7.8,0.7c-2.6,0.3-5,0.6-7.5,0.9c-2.4,0.3-4.8,0.6-7.1,1l-47.3-28.4l12.1,26L163.8,425.1H235.8z",
+    "transform": transform
+  });
+  path1.style.fill = fill;
+
+  let poly1 = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+  poly1.setAttribute("points", "888.7,422.9 888.7,479.8 182.3,479.8 163.2,453.9 10,454 62.4,500.8 990,500.1");
+  poly1.setAttribute("transform", transform);
+  poly1.style.fill = fill;
+
+  let path2 = svg.path({
+    "d": "M235.8,574.9L458,876.8c0.5-0.1,1.1-0.3,1.6-0.4c9.7-2.4,20.1-5.5,30.8-9.1c21.6-7.3,44.9-17.2,68.4-30.7c23.5-13.5,47.1-30.4,69.2-51c22.1-20.5,42.7-44.6,60.3-71.8c17.6-27.1,32.3-57.1,42.9-88.9c7.7-22.9,13.2-46.8,16.5-71h102c-4.3,36.1-13.2,71.6-26.4,104.9c-15.8,40-37.6,76.7-63.4,108.1c-25.8,31.4-55.5,57.6-86.3,77.8c-30.8,20.3-62.7,34.5-93,43.6c-30.3,9.1-58.9,13.1-84,13.9c-12.5,0.4-24.2,0-34.9-0.8c-2.7-0.2-5.3-0.4-7.8-0.7c-2.6-0.3-5-0.6-7.5-0.9c-2.4-0.3-4.8-0.6-7.1-1l-47.3,28.4l12.1-26L163.8,574.9H235.8z",
+    "transform": transform
+  });
+  path2.style.fill = fill;
+
+
+
+  let poly2 = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+  poly2.setAttribute("points", "888.7,577.1 888.7,520.2 182.3,520.2 163.2,546.1 10,546 62.4,499.2 990,499.9 ");
+  poly2.setAttribute("transform", transform);
+  poly2.style.fill = fill;
+
+  let g = svg.g();
+  g.appendChild(path1);
+  g.appendChild(poly1);
+  g.appendChild(path2);
+  g.appendChild(poly2);
+
+  return g;
+}
+
+function make_horse(x, y, sw, sh) {
+  x += 3;
+  y += 2.5;
+
+  let path = svg.path({
+    "d": "M36,18l2.4,6.1c-5.1,6.1-9.7,11.3-14.8,17.5c-2.1,2.5,3.1,9,6.3,8.7c5-2.1,10.9-4.5,16.2-7.3c2.4,9.5-17,11.6-19.5,22.6h37.9c-1.6-9.2,11.8-13.9,7.3-28.3C66.9,21.3,50.8,19.5,36,18z M23.7,68.8V78h44.1v-9.2H23.7z",
+    "transform": "translate(" + x + " " +  y + ") scale(" + sw / 64 + " " + sh / 64 + ")"
+  });
+  path.style.fill = 'black';
+  return path;
+}
+
 function render_move_state() {
   if (moveState === null) {
     moveStateDiv.style.display = "none";
@@ -427,9 +488,9 @@ function render_map(state) {
   let out = svg.g();
 
   const unittype2icon = {
-    "Infantry": "helmet.png",
-    "Cavalry": "horse.png",
-    "Artillery": "cannon.png",
+    "Infantry": "sword.svg",
+    "Cavalry": "knight.svg",
+    "Artillery": "bow.svg",
   }
 
   Array.from(document.getElementById("riskMap").getElementsByTagName('path')).forEach(path => {
@@ -457,7 +518,22 @@ function render_map(state) {
                 unit_clicked(territory_name, unit_type, nation_name);
               }
 
-              let img = svg.image("./assets/" + unittype2icon[unit_type], x - s/2, y - s/2, {width:s, height:s});
+              let background = svg.circle(x, y, s * 0.35);
+              background.style.fill = nations[nation_name].color.hex();
+              background.style.stroke = "black";
+              background.addEventListener("click", onclick);
+              out.appendChild(background);
+
+              // let src = "./assets/" + unittype2icon[unit_type];
+              // let img = svg.image(src, x - s/2, y - s/2, {width:s, height:s, "xlink:href":src});
+              let img;
+              if (unit_type === "Infantry") {
+                img = make_sword(x - s/2, y - s/2, s/2, s/2);
+              } else if (unit_type === "Cavalry") {
+                img = make_horse(x - s/2, y - s/2, s/2, s/2);
+              } else {
+                img = make_bow(x - s/2, y - s/2, s/2, s/2);
+              }
               img.style.cursor = 'pointer';
               img.addEventListener("click", onclick);
               out.appendChild(img);
