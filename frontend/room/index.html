@@ -1215,7 +1215,8 @@ function respond_trade(accept) {
       tradeProposal.cash_from,
       accept
     ]
-  })
+  });
+  tradeSnackbarContainer.style.display = "none";
 }
 
 function get_current_modal_type() {
