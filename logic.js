@@ -185,18 +185,12 @@ class Game
     }
     attack(username, unit_id, target_id)
     {
+        log("Game.attack()", username, unit_id, target_id);
         let nat = this.mother_state.stage.turn
         if (this.mother_state.stage.subphase == 'Attack' &&
             this.mother_state.nations[nat].president == username &&
             this.mother_state.nations[nat].army.filter()) {
-            
-            utils.military_bias(nat)
-
-        }
-        utils.military_bias()
-        log("Game.attack()", username, unit_id, target_id);
-        if (this.mother_state.stage.subphase == 'Attack') {
-           
+            utils.military_bias(nat);
         }
     }
 
