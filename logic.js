@@ -165,7 +165,7 @@ class Game
         }
     }
 
-    move(username, unit_id, target_territory)
+    move(username, unit_id_list, from_territory, target_territory)
     {
         nat = this.mother_state.stage.turn
         if (this.mother_state.nations[nat].president === username) {
