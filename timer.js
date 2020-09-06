@@ -1,5 +1,5 @@
 
-let DEBUG_LOG = true;
+let DEBUG_LOG = false;
 
 class Timer
 {   
