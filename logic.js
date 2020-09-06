@@ -170,6 +170,7 @@ class Game
 
     build(username, terr, type)
     {
+        let nat = this.mother_state.stage.turn
         let terr_info = utils.territory_for_territory_name(terr)
         n_buildings = terr_info.n_barracks + terr_info.n_factories
         if (n_buildings < 4 &&
@@ -177,6 +178,16 @@ class Game
                 type_str = type == 'barracks' ? 'n_barracks' : 'n_factories' 
                 this.mother_state.nations[nat][terr][type_str] += 1
              }
+
+    }
+
+    spawn(username, terr, type)
+    {
+        let val_terr = utils.territories_of_nation_that_can_spawn(
+            this.mother_state, nat)
+        if (val_terr.includes(terr)){
+            this.mother_state.nations[nat][terr][type_str] += 1
+        }
 
     }
 
