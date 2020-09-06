@@ -202,7 +202,7 @@ class Game
                 "troop_id":utils.uuid(), 'can_move':false, 'can_move':false}
             this.mother_state.nations[nat].army.push(unit)
         }
-
+        this._prayer('spawned_unit','')
     }
 
     vote(username, candidate_username)
