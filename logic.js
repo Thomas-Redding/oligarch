@@ -328,7 +328,7 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Build'){
             this._prayer('begin_build','')
-            terr_list = utils.territories_of_nation_that_can_build(
+            let terr_list = utils.territories_of_nation_that_can_build(
                 this.mother_state, nat)            
             if (terr_list.length == 0)
                 {
