@@ -351,41 +351,41 @@ function render_map(state) {
     if (utils.sum(army.Infantry) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/helmet.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(circ);
+        unitIcons.appendChild(circ);
       });
     }
     if (utils.sum(army.Cavalry) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/horse.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(circ);
+        unitIcons.appendChild(circ);
       });
     }
     if (utils.sum(army.Artillery) > 0) {
       icon_drawers.push((x, y) => {
         let circ = svg.image("./assets/cannon.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(circ);
+        unitIcons.appendChild(circ);
       });
     }
     if (territory.n_factories > 0) {
       icon_drawers.push((x, y) => {
         let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(img);
+        unitIcons.appendChild(img);
 
         let text = svg.text(gLatestState.nations[nation_name][territory_name].n_factories, x + 4, y);
         text.style.fill = 'white';
         text.style.textShadow = "6px 6px 20px black";
-        riskMap.appendChild(text);
+        unitIcons.appendChild(text);
       });
     }
     if (territory.n_barracks > 0) {
       icon_drawers.push((x, y) => {
         let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
-        riskMap.appendChild(img);
+        unitIcons.appendChild(img);
 
         let text = svg.text(gLatestState.nations[nation_name][territory_name].n_barracks, x + 4, y);
         text.style.fill = 'white';
         text.style.textShadow = "6px 6px 20px black";
-        riskMap.appendChild(text);
+        unitIcons.appendChild(text);
       });
     }
 
@@ -398,6 +398,16 @@ function render_map(state) {
       x += Math.cos(angle) * r * 1.7;
       y += Math.sin(angle) * r * 1.7;
       icon_drawers[t](x, y);
+    }
+
+    if (utils.CAPITALS.includes(territory_name)) {
+      let [x, y] = territories[territory_name].center;
+      let circle = svg.image("assets/whitestar.png", x - 10, y - 10, {
+        width: 20,
+        height: 20
+      });
+      circle.style.fill = 'white';
+      unitIcons.appendChild(circle);
     }
   });
 }
@@ -1345,6 +1355,8 @@ function undo() {
         <line x1="802" y1="513" x2="813" y2="523" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
         <line x1="634" y1="443" x2="625" y2="454" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
         <line x1="564" y1="371" x2="568" y2="390" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
+        <line x1="624" y1="499" x2="648" y2="540" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
+        <line x1="608" y1="564" x2="628" y2="569" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
       </g>
 
       <g id="nationRects"></g>
