@@ -188,7 +188,7 @@ class Game
                 type_str = type == 'barracks' ? 'n_barracks' : 'n_factories' 
                 this.mother_state.nations[nat][terr][type_str] += 1
         }
-
+        this._prayer('built_infrastructure','')
     }
 
     spawn(username, terr, type)
@@ -202,7 +202,7 @@ class Game
                 "troop_id":utils.uuid(), 'can_move':false, 'can_move':false}
             this.mother_state.nations[nat].army.push(unit)
         }
-
+        this._prayer('spawned_unit','')
     }
 
     vote(username, candidate_username)
