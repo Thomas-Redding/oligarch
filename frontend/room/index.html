@@ -95,6 +95,10 @@ body {
   display: inline-block;
 }
 
+.button.disabled-button {
+  cursor: default;
+}
+
 #contentDiv {
   flex: 1;
   display: flex;
@@ -689,7 +693,7 @@ function areAdminFetched(areAdmin) {
   gAreAdmin = areAdmin;
   let playIcon = document.getElementById("play-icon");
   let pauseIcon = document.getElementById("pause-icon");
-  if (areAdmin) {
+  if (gAreAdmin) {
     playIcon.classList.add("clickable-svg");
     pauseIcon.classList.add("clickable-svg");
     playIcon.classList.remove("unclickable-svg");
@@ -701,6 +705,7 @@ function areAdminFetched(areAdmin) {
       send({"method": "pause" });
     };
     document.getElementById("start-game-button").classList.remove("disabled-button")
+    document.getElementById("undo-button").classList.remove("disabled-button")
   } else {
     playIcon.classList.remove("clickable-svg");
     pauseIcon.classList.remove("clickable-svg");
@@ -709,6 +714,7 @@ function areAdminFetched(areAdmin) {
     playIcon.onclick = () => {};
     pauseIcon.onclick = () => {};
     document.getElementById("start-game-button").classList.add("disabled-button")
+    document.getElementById("undo-button").classList.add("disabled-button")
   }
 }
 
@@ -1150,6 +1156,12 @@ function finish_building() {
   });
 }
 
+function undo() {
+  if (gAreAdmin) {
+    send({"method": "undo"});
+  }
+}
+
 </script>
 
 </head>
@@ -1238,7 +1250,7 @@ function finish_building() {
       <div style="padding:0.5em; display:flex; flex-direction:row;">
         <div style="text-align:center; font-weight:900; font-size: 1.3em;">Game Log</div>
         <div style="flex:1"></div>
-        <div class="button" onclick="send({'method': 'undo'});">Undo</div>
+        <div id="undo-button" class="button" onclick="undo();">Undo</div>
       </div>
       <div id="gameLogDiv" style="flex:1; padding:0.5em;"></div>
     </div>
