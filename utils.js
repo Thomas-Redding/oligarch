@@ -405,10 +405,22 @@ let utils = {
     return undefined;
   },
 
+  /*
+   * Compute the sum of the given array.
+   */
   sum: (arr) => {
     return arr.reduce((a, b) => a + b, 0);
   },
 
+  /*
+   * Computes the bias towards the given nation for a conflict in the given
+   * territory. This is based on the number of troops in the territory and the
+   * number of cannons in adjacent territories.
+   *
+   * @param {string} nation - the name of the nation
+   * @param {string} territory - the name of the territory
+   * @returns {int} the bias for the nation's military in the territory
+   */
   military_bias: (mother_state, nation, territory) => {
     let rtn = 0;
     let type_to_action_to_count = utils.army_in_territory(mother_state.nations[nation].army, territory, "move");
