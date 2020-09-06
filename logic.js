@@ -289,21 +289,25 @@ class Game
     {
         log("Game.dividends()", username, player, shares_to,
             shares_from, cash_to, cash_from)
-
         let t_pairs = this.mother_state.trading_pairs.reduce(
             (a,b) => a.concat(b), []) 
+
         if (t_pairs.includes(username)||t_pairs.includes(player)) {
             this._prayer('players_busy',trade,this.mother_state)
-        }        
-        let trade = {}
-        trade.from = username
-        trade.to = player
-        trade.shares_to = shares_to
-        trade.shares_from = shares_from
-        trade.cash_to = cash_to
-        trade.cash_from = cash_from
-        this.mother_state.trading_pairs.push([username, player])
-        this._prayer('trade_proposed',trade,this.mother_state)
+        } 
+        else if (this._trade_verification(
+            username, player, shares_to, shares_from, cash_to, cash_from)) {
+
+            let trade = {}
+            trade.from = username
+            trade.to = player
+            trade.shares_to = shares_to
+            trade.shares_from = shares_from
+            trade.cash_to = cash_to
+            trade.cash_from = cash_from
+            this.mother_state.trading_pairs.push([username, player])
+            this._prayer('trade_proposed',trade,this.mother_state)
+        }       
     }
 
     respondTrade(username, player, 
@@ -382,11 +386,9 @@ class Game
         log("Game._act()");
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
-
-            let nat = this.mother_state.stage.turn
-            let prez = this.mother_state.nations[turn].president
-
-            let noop = (prez === null || prez === 'abstain')
+        let nat = this.mother_state.stage.turn
+        let prez = this.mother_state.nations[turn].president
+        let noop = (prez === null || prez === 'abstain')
 
         if (this.mother_state.stage.phase === 'Taxation') {
             this.mother_state.nations[nat].cash = utils.income_of_nation(
@@ -411,7 +413,6 @@ class Game
             this._start_election(this.mother_state.stage.turn)
         }
 
-
         else if (this.mother_state.stage.subphase == 'Move') {
             this._start_presidential_command()
             this._prayer('begin_move','')
@@ -428,10 +429,8 @@ class Game
         else if (this.mother_state.stage.subphase == 'Attack'){
             this._prayer('begin_attack','')
             if (this.mother_state.nations[nat].army.filter(
-                x => x.can_move).length == 0 || noop)
-                {
+                x => x.can_move).length == 0 || noop) {
                     this._transition()
-
                 }
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
@@ -637,7 +636,7 @@ class Game
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         let voters = utils.owners(this.mother_state, nation)
-        for (let player in voters){
+        for (let player in voters) {
             this.mother_state.players[player].ready = (voters[player] == 0)
         }
         if (this.timer.isRunning()) this.timer.stop(false)
@@ -737,21 +736,30 @@ class Game
         this.mother_state.trading_pairs.splice(idx,1)
     }
 
-    _trade_verification(p_1, p_2, s_to, s_from, c_to, c_from)
+    _trade_verification(p1, p2, shares_to, shares_from, cash_to, cash_from)
     {
-        let trade_ok = true
-        share_to_counts = {}
-        for(let share of shares_to) {
-            if (share_to_counts) {
-
+        function shares_valid(share_list, p) {
+            let rtn = true
+            let share_to_counts = {}
+            for(let share of share_list) {
+                if (share in share_to_counts) {
+                    share_to_counts[share]++
+                } 
+                else {
+                    share_to_counts[share] = 1
+                } 
             }
-            share_to_counts[share_to_counts] 
+            for(let s in share_to_counts) {
+                rtn &= (this.mother_state.players[p].shares[s] >= s_from[s])
+            }
+            return rtn
         }
-        
-        for(let share of shares_from) {
-            this.mother_state.players[username].shares[share]++
-            this.mother_state.players[player].shares[share]--
-        }
+
+        let trade_ok = shares_valid(shares_from, p2) 
+        trade_ok &= shares_valid(shares_to,p1)
+        trade_ok &= (this.mother_state.players[p2].cash >= cash_from)
+        trade_ok &= (this.mother_state.players[p1].cash >= cash_to)
+        return trade_ok
     }
 
     _log(html) {
