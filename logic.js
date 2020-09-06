@@ -167,9 +167,9 @@ class Game
 
     move(username, unit_id_list, from_territory, target)
     {
+        let nat = this.mother_state.stage.turn
         if (this.mother_state.stage.subphase == 'Move' &&
             this.mother_state.nations[nat].president === username) {
-            let nat = this.mother_state.stage.turn
             let all_move = true
             for (let uid of unit_id_list){
                 all_move &= this.mother_state.nations[nat].army[uid].can_move

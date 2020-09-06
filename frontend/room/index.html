@@ -352,7 +352,10 @@ function unit_clicked(territory_name, unit_type, nation_name) {
   }
   if (!moveState) {
     moveState = {
-      "from": territory_name
+      "from": territory_name,
+      "Infantry": 0,
+      "Cavalry": 0,
+      "Artillery": 0
     };
   }
   if (territory_name !== moveState.from) {
@@ -599,7 +602,34 @@ function main() {
           }
         } else if (gLatestState.stage.subphase === "Move") {
           if (moveState) {
-            alert("TODO");
+            let nation_name = gLatestState.stage.turn;
+            let validIds = {
+              "Infantry": [],
+              "Cavalry": [],
+              "Artillery": []
+            };
+            for (let unit of gLatestState.nations[nation_name].army) {
+              if (unit.can_move && unit.territory === moveState.from) {
+                validIds[unit.type].push(unit.troop_id)
+              }
+            }
+
+            let unitIds = [];
+            for (let type of ["Infantry", "Cavalry", "Artillery"]) {
+              if (validIds[type].length < moveState[type]) {
+                alert("Invalid Move!");
+                moveState = null;
+                render_move_state();
+                return;
+              }
+              for (let i = 0; i < moveState[type]; ++i) {
+                unitIds.push(validIds[type][i]);
+              }
+            }
+            send({
+              "method": "move",
+              "args": [unitIds, moveState.from, territory]
+            })
             moveState = null;
             render_move_state();
           }
@@ -953,6 +983,9 @@ login().then((socket) => {
     else if (action === "conclude_bidding") {
       render_table(state);
       render_nation_rects(state);
+    }
+    else if (action === "moves_made") {
+      render_map(state);
     }
     else if (action === "bid_received") {
       clock.set_time_remaining(state.clock);
