@@ -1,4 +1,5 @@
 let utils = require('./utils.js')
+let Battle = require('./battle.js')
 let log = require('./log.js');
 
 //macro for pythonic list indexing
@@ -184,14 +185,27 @@ class Game
             this._prayer('moves_made','')
         }
     }
+    
     attack(username, unit_id, target_id)
     {
         log("Game.attack()", username, unit_id, target_id);
         let nat = this.mother_state.stage.turn
+        let [idx2id_cur, idx2id_target, target_nat] = this._attack_helper(nat)
         if (this.mother_state.stage.subphase == 'Attack' &&
-            this.mother_state.nations[nat].president == username &&
-            this.mother_state.nations[nat].army.filter()) {
-            utils.military_bias(nat);
+            this.mother_state.nations[nat].president == username) {
+                let terr = utils.troop_from_id(unit_id).territory
+                let atk_pts = utils.military_bias(nat, terr)
+                let def_pts = utils.military_bias(target_nat, terr)
+                let details = this._battle(atk_pts,def_pts)
+                if (details.outcome) {
+                    let idx = idx2id_target.indexOf(target_id)
+                    this.mother_state.nations[target_nat].army.splice(idx,1)
+                }
+                else {
+                    let idx = idx2id_cur.indexOf(unit_id)
+                    this.mother_state.nations[target_nat].army.splice(idx,1)
+                }
+                this._prayer('battle_outcome',details,this.mother_state)
         }
     }
 
@@ -703,29 +717,28 @@ class Game
         this._transition()
     }
 
-    //_find
-
-    _move_is_valid(uid, target_territory)
+    //battle routines
+    _attack_helper(nat)
     {
-
+        for (nats of TURNS){ 
+            if (nats.army.filter(x => x.id == target_id).length == 1) {
+                var target_nat = nats
+                var idx2id_target = nats.army.map(x => x.id)
+                let idx = idx2id_target.indexOf(target_id)
+                this.mother_state.army[nats].army[idx].can_attack = false
+            }
+            else if (nats == nat) {
+                var idx2id_cur = nats.army.map(x => x.id)
+            }
+        }
+        return [idx2id_cur, idx2id_target, target_nat]
     }
-    _movement()
+
+    _battle(atk_pts, def_pts)
     {
-
-    }
-
-    //spawn routines
-
-    _spawn_unit()
-    {
-
-    }
-
-    //building routines
-    _building()
-    {
-
-
+        let battle = new Battle(atk_pts, def_pts)
+        battle.linear_die_battle()
+        return battle.metadata
     }
     //
 
