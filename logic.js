@@ -310,7 +310,7 @@ class Game
         shares_to, shares_from, cash_to, cash_from, accept)
     {
         //if ()
-        log("Game.respondTrade()", username, player, shares_to, s_from,
+        log("Game.respondTrade()", username, player, shares_to, shares_from,
             cash_to, cash_from)
 
         if (accept && this._trade_verification(
