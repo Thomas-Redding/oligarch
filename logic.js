@@ -228,7 +228,7 @@ class Game
         let is_prez = username === this.mother_state.nations[nat].president
         let n_shares = utils.shares_sold(this.mother_state, nat)
         let is_int = amount % n_shares == 0
-        let can_afford = amount <= this.mother_state.nations[nat]
+        let can_afford = amount <= this.mother_state.nations[nat].cash
         if (is_prez && is_int && can_afford){
             this.mother_state.nations[nat].cash -= amount
             income_per_share = amount / n_shares
@@ -237,9 +237,10 @@ class Game
                 inc = owners[owner] * income_per_share
                 this.mother_state.players[owner].cash += inc
             }
-        }
         this._prayer('dividends_paid',amount,this.mother_state)
         this.timer.stop(true)
+        }
+        
     }
 
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
