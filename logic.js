@@ -247,13 +247,17 @@ class Game
     vote(username, candidate_username)
     {
         if (DEBUG_LOG) console.log("Game.vote()", username, candidate_username);
+        let cur_nat = this.mother_state.stage.turn
+        let cur_r = this.mother_state.stage.round
         if (this.mother_state.stage.subphase == 'Election'){
             if (this.mother_state.players[username].vote == null) {
                 this._register_vote(username, candidate_username)
             }
         }
             // need to check again in case election is resolved
-           if(this.mother_state.stage.subphase == 'Election')  {
+        if(this.mother_state.stage.subphase == 'Election' && 
+            this.mother_state.stage.turn == cur_nat &&
+            this.mother_state.stage.round == cur_r)  {
                this.rdyUp(username)
         }
     }

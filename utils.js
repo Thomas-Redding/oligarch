@@ -471,7 +471,7 @@ let utils = {
     let rtn = [];
     for (let territory_name of territory_names) {
       let territory = utils.territory_for_territory_name(mother_state, territory_name);
-      if (territory.n_barracks_can_spawn) {
+      if (territory.n_barracks_can_spawnb) {
         rtn.push(territory_name);
       }
     }
