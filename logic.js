@@ -53,7 +53,7 @@ class Game
 {
     fetchGameState()
     {
-        log("Game.fetchGameState()");
+        log("");
         if (this.timer && this.timer.isRunning()) {
             this.mother_state.clock = this.timer.queryTime();
         }
@@ -62,27 +62,27 @@ class Game
     }
 
     is_admin(username) {
-        log("Game.is_admin()", username);
+        log(username);
         return this.mother_state.players[username].auth === 'admin';
     }
 
     undo(username) {
-        log("Game.undo()", username);
+        log(username);
         throw Exception("Game.undo() is not implemented yet.");
         if (this.mother_state.players[username].auth !== 'admin') return;
         let [action, args, state] = this._history.undo();
         this.mother_state = state;
         if (this.timer) this.timer.stop();
         if (action === "endLobby") {
-            console.log("UNDO", action, args);
+            log("UNDO", action, args);
         } else if (action === "bid") {
-            console.log("UNDO", action, args);
+            log("UNDO", action, args);
         }
     }
 
     endLobby(username)
     {
-        log("Game.endLobby()", username);
+        log(username);
         let rtn;
         if (this.mother_state.players[username].auth !== 'admin') {
             rtn = false
