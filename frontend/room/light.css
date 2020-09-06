@@ -3,12 +3,6 @@ body {
   background-color: white;
 }
 
-.personButton {
-  background-color: black;
-  color: white;
-  border: solid black 1px;
-}
-
 #statusBarDiv {
   background-color: #282828;
   color: white;
@@ -58,6 +52,12 @@ body {
   opacity: 1;
 }
 
+.popup {
+  color: black;
+  background-color: white;
+  border: solid #333 1px;
+}
+
 .nationRect {
   fill: #888;
   stroke: #ccc;
@@ -89,4 +89,14 @@ body {
 .clickable-svg {
   cursor: pointer;
   fill: hsl(231, 100%, 45%);
+}
+
+hr {
+  margin: 1em;
+  border: none;
+  border-bottom: 1px solid #888;
+}
+
+#presidentDiv {
+  background-color:#ccc;
 }

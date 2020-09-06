@@ -3,12 +3,6 @@ body {
   background-color: #222;
 }
 
-.personButton {
-  background-color: white;
-  color: black;
-  border: solid white 1px;
-}
-
 #statusBarDiv {
   color: white;
   background-color: #222;
@@ -60,14 +54,6 @@ body {
   color: white;
   background-color: #222;
   border: solid #888 1px;
-  opacity: 1;
-  position: absolute;
-  position:absolute;
-  left:50vw;
-  top:50vh;
-  transform:translate(-50%, -50%);
-  text-align: center;
-  padding: 1em;
 }
 
 .nationRect {
@@ -103,6 +89,22 @@ text {
 }
 
 .clickable-svg {
-	cursor: pointer;
+  cursor: pointer;
   fill: hsl(50, 100%, 45%);
+}
+
+input[type=number] {
+  border: 1px solid #888;
+  color: white;
+  background-color: #111;
+}
+
+hr {
+  margin: 1em;
+  border: none;
+  border-bottom: 1px solid #888;
+}
+
+#presidentDiv {
+  background-color:#444;
 }
