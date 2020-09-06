@@ -1,10 +1,11 @@
 let utils = require('./utils.js')
-let log = require('./log.js')
+let log = require('./log.js');
 
 //macro for pythonic list indexing
 Array.prototype.fromback = function(i=1) {
     return this[this.length - i];
 }
+const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
 
 //global lists and macros defined here
 const TOTAL_INIT_CASH = 600
@@ -286,19 +287,20 @@ class Game
         let t_pairs = this.mother_state.trading_pairs.reduce(
             (a,b) => a.concat(b), []) 
 
+        let trade = {}
+        trade.from = username
+        trade.to = player
+        trade.shares_to = shares_to
+        trade.shares_from = shares_from
+        trade.cash_to = cash_to
+        trade.cash_from = cash_from
+
         if (t_pairs.includes(username)||t_pairs.includes(player)) {
             this._prayer('players_busy',trade,this.mother_state)
         } 
         else if (this._trade_verification(
             username, player, shares_to, shares_from, cash_to, cash_from)) {
-
-            let trade = {}
-            trade.from = username
-            trade.to = player
-            trade.shares_to = shares_to
-            trade.shares_from = shares_from
-            trade.cash_to = cash_to
-            trade.cash_from = cash_from
+        
             this.mother_state.trading_pairs.push([username, player])
             this._prayer('trade_proposed',trade,this.mother_state)
         }       
@@ -307,22 +309,31 @@ class Game
     respondTrade(username, player, 
         shares_to, shares_from, cash_to, cash_from, accept)
     {
+        //if ()
         log("Game.dividends()", username, player, shares_to, s_from,
             cash_to, cash_from)
 
-        for(let share of shares_to) {
-            this.mother_state.players[username].shares[share]--
-            this.mother_state.players[player].shares[share]++
+        if (accept && this._trade_verification(
+            username, player, shares_to, shares_from, cash_to, cash_from)) {
+                
+            for(let share of shares_to) {
+                this.mother_state.players[username].shares[share]--
+                this.mother_state.players[player].shares[share]++
+            }
+            
+            for(let share of shares_from) {
+                this.mother_state.players[username].shares[share]++
+                this.mother_state.players[player].shares[share]--
+            }
+            this.mother_state.players[username].cash += cash_to
+            this.mother_state.players[player].cash += cash_from
+            this._trade_dequeue(username, player)
+            this._prayer('trade_accepted',trade,this.mother_state)
         }
-        
-        for(let share of shares_from) {
-            this.mother_state.players[username].shares[share]++
-            this.mother_state.players[player].shares[share]--
+        else {
+            this._trade_dequeue(username, player)
+            this._prayer('trade_rejected',trade,this.mother_state)
         }
-        this.mother_state.players[username].cash += cash_to
-        this.mother_state.players[player].cash += cash_from
-        this._trade_dequeue(username, player)
-        this._prayer('trade_accepted',trade,this.mother_state)
     }
 
     constructor(prayer, timer)
@@ -349,6 +360,7 @@ class Game
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this.mother_state.trading_pairs = []
+        //log.enable = false
         this._nation_init()
     }
 
@@ -460,7 +472,12 @@ class Game
     //always calls act on end
     _transition()
     {
-        log("Game._transition()");
+        log("Game._transition()")
+        let cur_ord = (this.mother_state.stage.round % 2 == 1)
+        let curTURNS = TURNS
+        //let curTURNS = cur_ord ? TURNS : reverse(TURNS)
+        //console.log(curTURNS)
+      
         function next(cur, table) {
             let next_idx = (table.indexOf(cur) + 1) % table.length
             return table[next_idx]
@@ -473,7 +490,7 @@ class Game
             this.mother_state.stage)
 
         if (['Taxation','Auction'].includes(phase)){
-            if (is_last(turn, TURNS)) {
+            if (is_last(turn, curTURNS)) {
                 if (phase == 'Taxation'){
                     this._prayer('taxes_collected','')
                 }
@@ -482,13 +499,13 @@ class Game
                 }
                 this.mother_state.stage.phase = next(phase, PHASES)
             }
-            this.mother_state.stage.turn = next(turn, TURNS)
+            this.mother_state.stage.turn = next(turn, curTURNS)
         }
         else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback()
-            && turn == TURNS.fromback()) {
+            && turn == curTURNS.fromback()) {
                 this.mother_state.stage.round += 1
                 this.mother_state.stage.phase = PHASES[0]
-                this.mother_state.stage.turn = TURNS[0]
+                this.mother_state.stage.turn = curTURNS.fromback()
                 this.mother_state.stage.subphase = SUBPHASES[0]
             }
 
@@ -496,9 +513,9 @@ class Game
             this.mother_state.stage.phase = next(phase, PHASES)
         }
         else if (phase == 'Action'){
-            let nextsubphase = next(subphase, SUBPHASES)
-            if (subphase == SUBPHASES.fromback()) {
-                this.mother_state.stage.turn = next(turn, TURNS)
+            let nextsubphase = next(subphase, PHASES)
+            if (subphase == PHASES.fromback()) {
+                this.mother_state.stage.turn = next(turn, curTURNS)
                 this.timer.stop(false)
             }
             this.mother_state.stage.subphase = nextsubphase
