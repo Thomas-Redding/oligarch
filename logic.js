@@ -73,7 +73,7 @@ class Game
     }
 
     undo(username) {
-        if (DEBUG_LOG) console.log("Game.undo()", username);
+        log("Game.undo()", username);
         throw Exception("Game.undo() is not implemented yet.");
         if (this.mother_state.players[username].auth !== 'admin') return;
         let [action, args, state] = this._history.undo();
@@ -98,7 +98,8 @@ class Game
             rtn = false
         }
         else {
-            this._history.save("endLobby", [username], this.mother_state, "<b>" + username + "</b> closed the lobby.");
+            this._history.save("endLobby", [username], this.mother_state,
+                "<b>" + username + "</b> closed the lobby.");
             for (let ord of this.mother_state.order) {
                 this.mother_state.stage[ord] = this.mother_state[ord][0]
             }
@@ -112,7 +113,8 @@ class Game
     startGame(username)
     {
         if (DEBUG_LOG) console.log("Game.startGame()", username);
-        this._history.save("startGame", [username], this.mother_state, "<b>" + username + "</b> started the game.");
+        this._history.save("startGame", [username], this.mother_state,
+            "<b>" + username + "</b> started the game.");
         this._player_cash_init()
         this.prayer('game_start', {}, this.mother_state)
         this._act()
@@ -152,7 +154,8 @@ class Game
     {
         if (DEBUG_LOG) console.log("Game.rdyUp()", username);
         if (this.mother_state.players[username].ready) return;
-        this._history.save("rdyUp", [username], this.mother_state, "<b>" + username + "</b> readied up");
+        this._history.save("rdyUp", [username], this.mother_state,
+            "<b>" + username + "</b> readied up");
         this.mother_state.players[username].ready = true
         this._prayer('user_ready', '');
         let all_ready = true
@@ -170,7 +173,8 @@ class Game
         if (DEBUG_LOG) console.log("Game.bid()", username, amount);
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
-            this._history.save("bid", [username], this.mother_state, "<b>" + username +  "</b> bid $" + amount);
+            this._history.save("bid", [username], this.mother_state,
+                "<b>" + username +  "</b> bid $" + amount);
             this._register_bid(amount, username)
         }
     }
