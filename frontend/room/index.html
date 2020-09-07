@@ -828,14 +828,11 @@ function main(state) {
             }
 
 
-            console.log(nation, moveState, unitIds);
             let legalMoves = utils.valid_moves_for_troop(
               gLatestState,
               territory2nation[moveState.from],
               moveState.from,
               moveState["Cavalry"] === unitIds.length ? "Cavalry" : "Infantry");
-
-            console.log(legalMoves, moveState.from);
 
             if (territory in legalMoves) {
               send({
