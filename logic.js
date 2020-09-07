@@ -168,20 +168,21 @@ class Game
         }
     }
 
-    move(username, unit_id_list, from_territory, target)
+    move(username, uid_list, from_territory, target)
     {
         log("Game.move()", username, unit_id_list, from_territory, target);
         let nat = this.mother_state.stage.turn
         if (this.mother_state.stage.subphase == 'Move' &&
             this.mother_state.nations[nat].president === username) {
-            let all_move = true
-            for (let uid of unit_id_list){
-                all_move &= this.mother_state.nations[nat].army[uid].can_move
-            }
-            if (all_move){
-                for (let uid of unit_id_list){
-                    this.mother_state.nations[nat].army[uid].territory = target
-                    this.mother_state.nations[nat].army[uid].can_move = false
+            let all_move = uid_list.every(
+                uid => utils.troop_from_id(uid).can_move)
+
+            if (all_move) {
+                for (let uid of uid_list){
+                    let [idx2uid, unat] = this._unit2idx(uid)
+                    let idx = idx2uid.indexOf(uid)
+                    this.mother_state.nations[unat].army[idx].territory = target
+                    this.mother_state.nations[unat].army[idx].can_move = false
                 }
             }
             this._prayer('moves_made','')
@@ -190,10 +191,10 @@ class Game
     
     attack(username, unit_id, target_id)
     {
-        log("Game.attack()", username, unit_id, target_id);
-        let nat = this.mother_state.stage.turn
-        let [idx2id_cur, idx2id_target, target_nat] = this._attack_helper(
-            nat, target_id)
+        log("Game.attack()", username, unit_id, target_id)
+        
+        let [idx2uid_cur, nat] = this._unit2idx(unit_id)
+        let [idx2uid_target, target_nat] = this._unit2idx(target_id)
 
         if (this.mother_state.stage.subphase == 'Attack' &&
             this.mother_state.nations[nat].president == username) {
@@ -202,11 +203,11 @@ class Game
                 let def_pts = utils.military_bias(target_nat, terr)
                 let details = this._battle(atk_pts,def_pts)
                 if (details.outcome) {
-                    let idx = idx2id_target.indexOf(target_id)
+                    let idx = idx2uid_target.indexOf(target_id)
                     this.mother_state.nations[target_nat].army.splice(idx,1)
                 }
                 else {
-                    let idx = idx2id_cur.indexOf(unit_id)
+                    let idx = idx2uid_cur.indexOf(unit_id)
                     this.mother_state.nations[target_nat].army.splice(idx,1)
                 }
                 this._prayer('battle_outcome',details,this.mother_state)
@@ -720,6 +721,18 @@ class Game
     }
 
     //battle routines
+    _unit2idx(unit_id) { 
+        for (let nats of TURNS){ 
+            let army = this.mother_state.nations[nat].army
+            if (army.filter(x => x.id == unit_id).length == 1) {
+                var target_nat = nats
+                var idx2id_target = nats.army.map(x => x.id)
+                let idx = idx2id_target.indexOf(target_id)
+                this.mother_state.army[nats].army[idx].can_attack = false
+            }
+        }
+        return [idx2id_target, target_nat]
+    }
     _attack_helper(nat, target_id)
     {
         for (let nats of TURNS){ 
