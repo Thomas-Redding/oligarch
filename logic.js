@@ -159,7 +159,7 @@ class Game
 
     bid(username, amount)
     {
-        log("Game.bid()", username, amount);
+        //log("Game.bid()", username, amount);
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
             this._history.save("bid", [username], this.mother_state,
@@ -170,7 +170,7 @@ class Game
 
     move(username, uid_list, from_territory, target)
     {
-        log("Game.move()", username, unit_id_list, from_territory, target);
+        //log("Game.move()", username, unit_id_list, from_territory, target);
         let nat = this.mother_state.stage.turn
         if (this.mother_state.stage.subphase == 'Move' &&
             this.mother_state.nations[nat].president === username) {
@@ -191,8 +191,8 @@ class Game
     
     attack(username, unit_id, target_id)
     {
-        log("Game.attack()", username, unit_id, target_id)
-        
+        //log("Game.attack()", username, unit_id, target_id)
+
         let [idx2uid_cur, nat] = this._unit2idx(unit_id)
         let [idx2uid_target, target_nat] = this._unit2idx(target_id)
 
