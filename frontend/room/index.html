@@ -239,7 +239,7 @@ class Color {
 <script src='svg.js'></script>
 <script>
 
-function toast(html, duration=2000) {
+function toast(html, duration=1000) {
   if (!("queue" in toast)) {
     toast.queue = [];
     toast.lastToastTime = 0;
@@ -250,7 +250,8 @@ function toast(html, duration=2000) {
         toastDiv.parentElement.removeChild(toastDiv);
       }
       if (toast.queue.length == 0) return;
-      let [html, duration] = toast.queue.pop();
+      let [html, duration] = toast.queue[0];
+      toast.queue = toast.queue.slice(1);
       let rtn = document.createElement("div");
       rtn.classList.add("toast")
       rtn.innerHTML = html;
