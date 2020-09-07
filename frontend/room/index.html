@@ -582,8 +582,8 @@ function render_map(state) {
               out.appendChild(img);
 
               // We use this grayed-out circle to prevent user clicks when an action is not available.
-              if (state.stage.phase === "Action") {
-                if ((!can_action && ["Attack", "Move"].includes(state.stage.subphase) || (nation_name !== state.stage.turn))) {
+              if (gLatestState.stage.phase === "Action") {
+                if ((!can_action && ["Attack", "Move"].includes(gLatestState.stage.subphase) || (nation_name !== gLatestState.stage.turn))) {
                   let circ = svg.circle(x, y, s * 0.35);
                   circ.style.fill = '#0008';
                   circ.addEventListener("click", onclick);
@@ -609,13 +609,22 @@ function render_map(state) {
 
     if (territory.n_factories > 0) {
       icon_drawers.push((x, y) => {
+        let onclick = () => {
+          document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
+            "view": window,
+            "bubbles": true,
+            "cancelable": false
+          }));
+        }
         let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
+        img.addEventListener("click", onclick);
         out.appendChild(img);
 
         if (territory.n_factories > 1) {
           let text = svg.text(territory.n_factories, x - 5, y + 6);
           text.style.fill = 'white';
           text.style.textShadow = "6px 6px 20px black";
+          text.addEventListener("click", onclick);
           out.appendChild(text);
         }
       });
@@ -817,10 +826,17 @@ function main(state) {
                 unitIds.push(validIds[type][i]);
               }
             }
-            send({
-              "method": "move",
-              "args": [unitIds, moveState.from, territory]
-            })
+
+
+            let legalMoves = utils.valid_moves_for_troop(gLatestState, nation, moveState.from, moveState["Calvary"] === unitIds.length);
+
+            if (territory in legalMoves) {
+              send({
+                "method": "move",
+                "args": [unitIds, moveState.from, territory]
+              })
+            }
+
             moveState = null;
             render_move_state();
           }
