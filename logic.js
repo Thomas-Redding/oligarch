@@ -225,10 +225,11 @@ class Game
                 console.log(details)
                 this.mother_state.nations[nat].army[idx_cur].can_attack = false
                 if (details.outcome) {
-                    this.mother_state.nations[nat].army.splice(idx_cur,1)
+                    this.mother_state.nations[target_nat].army.splice(idx_t,1)
                 }
                 else {
-                    this.mother_state.nations[target_nat].army.splice(idx_t,1)
+                    console.log('defeat')
+                    this.mother_state.nations[nat].army.splice(idx_cur,1)
                 }
                 this._prayer('battle_outcome',details,this.mother_state)
         }

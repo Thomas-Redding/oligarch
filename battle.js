@@ -14,8 +14,8 @@ class Battle {
         let atk = Math.min(this._atk_pts, max_pts)
         let def = Math.min(this._def_pts, max_pts) 
         this.metadata.max_roll = max_pts
-        this.metadata.atk_roll = Math.floor(Math.random()*this.atk) + 1
-        this.metadata.def_roll = Math.floor(Math.random()*this.def) + 1
+        this.metadata.atk_roll = Math.floor(Math.random()*atk) + 1
+        this.metadata.def_roll = Math.floor(Math.random()*def) + 1
         this.metadata.outcome = this.metadata.atk_roll > this.metadata.def_roll
     }
 }
