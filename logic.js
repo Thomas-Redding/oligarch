@@ -168,7 +168,7 @@ class Game
         }
     }
 
-    move(username, uid_list, from_territory, target)
+    move(username, uid_list, from_terr, target)
     {
         //log("Game.move()", username, unit_id_list, from_territory, target);
         let nat = this.mother_state.stage.turn
@@ -186,6 +186,20 @@ class Game
                 }
             }
             this._prayer('moves_made','')
+        }
+    }
+
+    raze(username, unit_id, building, terr)
+    {
+        let target_nat = this.terr2nat(terr)
+        if (this.mother_state.stage.subphase == 'Attack' &&
+        this.mother_state.nations[nat].president == username &&
+        utils.troop_from_id(unit_id).can_attack) {
+            bldg_type = building == 'barracks' ? 'n_barracks' : 'n_factories'
+            if (this.mother_state.nations[target_nat][terr]['bldg_type'] > 0){
+                this.mother_state.nations[target_nat][terr]['bldg_type']--
+                this._prayer('bldg_razed','')
+            }
         }
     }
     
