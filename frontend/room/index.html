@@ -720,7 +720,7 @@ function build(state, territory, building_type) {
   if (state.nations[nationName].president !== myUsername) {
     return;
   }
-  if (utils.nation_of_territory(gLatestState, territory) !== nationName) {
+  if (utils.territory_to_owner(gLatestState, territory) !== nationName) {
     return;
   }
   send({
