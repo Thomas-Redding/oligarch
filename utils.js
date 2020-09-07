@@ -329,7 +329,7 @@ let utils = {
    */
   income_of_territory: (mother_state, territory) => {
     let natural_income = utils.natural_income_of_territory(territory);
-    let nation = utils.nation_of_territory(mother_state, territory);
+    let nation = utils.territory_to_owner(mother_state, territory);
     let factory_income = 5 * mother_state.nations[nation][territory].n_factories;
     return natural_income + factory_income;
   },
@@ -391,7 +391,7 @@ let utils = {
     let rtn = [];
     for (let nat in utils.NATIONS) {
       for (let territory of utils.NATIONS[nat].territories) {
-        if (utils.nation_of_territory(mother_state, territory) == nation) {
+        if (utils.territory_to_owner(mother_state, territory) == nation) {
           rtn.push(territory);
         }
       }
@@ -448,14 +448,14 @@ let utils = {
     if (troop_type == "Cavalry") {
       return utils.valid_moves_for_cavalry(mother_state, nation, territory);
     }
-    let is_territory_uncontested = (utils.nation_of_territory(mother_state, territory) == nation);
+    let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation);
     let neighbors = utils.NEIGHBORS[territory];
     let rtn = {};
     for (let neighbor in neighbors) {
       if (is_territory_uncontested) {
         rtn[neighbor] = 1;
       } else {
-        let doesOwnNeighbor = (utils.nation_of_territory(mother_state, neighbor) == nation);
+        let doesOwnNeighbor = (utils.territory_to_owner(mother_state, neighbor) == nation);
         let doesNeighborHaveTroops = utils.does_territory_have_troops(mother_state, neighbor);
         if (doesOwnNeighbor || !doesNeighborHaveTroops) {
           rtn[neighbor] = 1;
@@ -471,12 +471,12 @@ let utils = {
    * @returns {Object} a dictionary whose keys are states a cavalry can move to
    */
   valid_moves_for_cavalry: (mother_state, nation, territory) => {
-    let is_territory_uncontested = (utils.nation_of_territory(mother_state, territory) == nation);
+    let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation);
     let rtn = {};
     let neighbors = utils.NEIGHBORS[territory];
     let uncontested_neighbors = [];
     for (let neighbor in neighbors) {
-      if (utils.nation_of_territory(mother_state, neighbor) == nation) {
+      if (utils.territory_to_owner(mother_state, neighbor) == nation) {
         // I own the neighbor.
         uncontested_neighbors.push(neighbor);
         rtn[neighbor] = 1;
@@ -515,7 +515,7 @@ let utils = {
    * @returns {string} the name of the nation that owns the territory. Returns
    * `null`` if the territory is contested.
    */
-  nation_of_territory: (mother_state, territory) => {
+  territory_to_owner: (mother_state, territory) => {
     // If a territory is contested, return `null`; if a territory has one
     // nation's troops, it is owned by that nation.
     let owner = null;
@@ -533,7 +533,7 @@ let utils = {
         return utils.puppeteer(mother_state, nation);
       }
     }
-    throw Error("Something went wrong in `utils.nation_of_territory()`.");
+    throw Error("Something went wrong in `utils.territory_to_owner()`.");
   },
 
   territories_of_nation_that_can_spawn: (mother_state, nation) => {
@@ -641,26 +641,26 @@ let utils = {
      return rtn;
   },
 
-   troop_ids_that_can_act_in_territory(mother_state, territory_name) {
-     if (mother_state.stage.phase !== "Action") {
-       throw Error("");
-     }
-     const subphase = mother_state.stage.subphase;
-     if (!["Attack", "Move"].includes(subphase)) {
-       throw Error("");
-     }
-     let nation_name = mother_state.stage.turn;
-     let army = mother_state.nations[nation_name].army;
-     army = army.filter(x => x.territory === territory_name);
-     if (subphase === "Move") {
-       army = army.filter(x => x.can_move);
-     } else {
-       army = army.filter(x => x.can_attack);
-     }
-     return army;
+  troop_ids_that_can_act_in_territory: (mother_state, territory_name) => {
+    if (mother_state.stage.phase !== "Action") {
+      throw Error("");
+    }
+    const subphase = mother_state.stage.subphase;
+    if (!["Attack", "Move"].includes(subphase)) {
+      throw Error("");
+    }
+    let nation_name = mother_state.stage.turn;
+    let army = mother_state.nations[nation_name].army;
+    army = army.filter(x => x.territory === territory_name);
+    if (subphase === "Move") {
+      army = army.filter(x => x.can_move);
+    } else {
+      army = army.filter(x => x.can_attack);
+    }
+    return army;
   },
 
-  troop_ids_in_territory(mother_state, territory_name, nation_name, unit_type) {
+  troop_ids_in_territory: (mother_state, territory_name, nation_name, unit_type) => {
      let army = mother_state.nations[nation_name].army;
      army = army.filter(x => x.territory === territory_name);
      army = army.filter(x => x.type === unit_type);
