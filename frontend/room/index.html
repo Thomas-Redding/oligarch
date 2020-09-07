@@ -816,6 +816,7 @@ function main(state) {
 
             let unitIds = [];
             for (let type of ["Infantry", "Cavalry", "Artillery"]) {
+              console.log(type, validIds, moveState);
               if (validIds[type].length < moveState[type]) {
                 alert("Invalid Move (1)");
                 moveState = null;
