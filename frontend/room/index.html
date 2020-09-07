@@ -400,6 +400,14 @@ function unit_clicked(territory_name, unit_type, nation_name) {
         "Cavalry": 0,
         "Artillery": 0
       };
+    } else if (nation_name !== gLatestState.stage.turn) {
+      // Pretend we clicked the territory
+      document.getElementById("India").dispatchEvent(new MouseEvent("click", {
+        "view": window,
+        "bubbles": true,
+        "cancelable": false
+      }));
+      return;
     }
     if (territory_name !== moveState.from) {
       return;
@@ -554,6 +562,7 @@ function render_map(state) {
               let background = svg.circle(x, y, s * 0.35);
               background.style.fill = nations[nation_name].color.hex();
               background.style.stroke = "black";
+              background.style.cursor = "pointer";
               background.addEventListener("click", onclick);
               out.appendChild(background);
 
@@ -746,7 +755,7 @@ function main(state) {
     let color = nationColor.scale(0.85).plus(randColor);
 
     path.style = '';
-    path.style.fill = color.hex();
+    path.style.fill = color.plus(new Color(255,255,255)).scale(0.5).hex();
     path.style.stroke = 'black';
 
     let onclick = (e) => {

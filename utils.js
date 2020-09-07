@@ -405,8 +405,7 @@ let utils = {
    */
   territory_for_territory_name: (mother_state, territory_name) => {
     for (let nation in mother_state.nations) {
-      if (mother_state.nations[nation].territories.includes(territory_name)) {
-        let i = mother_state.nations[nation].territories.indexOf(territory_name);
+      if (territory_name in mother_state.nations[nation]) {
         return mother_state.nations[nation][territory_name];
       }
     }
@@ -451,20 +450,28 @@ let utils = {
    * @returns {Object} a dictionary whose keys are states a cavalry can move to
    */
   valid_moves_for_cavalry: (mother_state, nation, territory) => {
+    let is_territory_uncontested = (utils.nation_of_territory(mother_state, territory) == nation);
     let rtn = {};
     let neighbors = utils.NEIGHBORS[territory];
-    rtn = utils.union_dict(rtn, utils.NEIGHBORS[territory])
     let uncontested_neighbors = [];
     for (let neighbor in neighbors) {
       if (utils.nation_of_territory(mother_state, neighbor) == nation) {
+        // I own the neighbor.
         uncontested_neighbors.push(neighbor);
-      } else if (!utils.does_territory_have_troops(territory)) {
+        rtn[neighbor] = 1;
+      } else if (!utils.does_territory_have_troops(mother_state, neighbor)) {
+        // I don't own the neighbor, but it is empty.
         uncontested_neighbors.push(neighbor);
+        rtn[neighbor] = 1;
+      } else {
+        // The neighbor has enemy troops.
+        if (is_territory_uncontested) rtn[neighbor] = 1;
       }
     }
     for (let neighbor of uncontested_neighbors) {
       rtn = utils.union_dict(rtn, utils.NEIGHBORS[neighbor]);
     }
+    if (territory in rtn) delete rtn[territory];
     return rtn;
   },
 
@@ -513,7 +520,7 @@ let utils = {
     let rtn = [];
     for (let territory_name of territory_names) {
       let territory = utils.territory_for_territory_name(mother_state, territory_name);
-      if (territory.n_barracks_can_spawnb) {
+      if (territory.n_barracks_can_spawn) {
         rtn.push(territory_name);
       }
     }
