@@ -558,9 +558,18 @@ class Game
             for (let terr of utils.NATIONS[nation].territories) {
                 this.mother_state.nations[nation].owns.push(terr)
                 this.mother_state.nations[nation][terr] = {}
-                this.mother_state.nations[nation][terr].n_factories = 0
-                this.mother_state.nations[nation][terr].n_barracks = 0
-                this.mother_state.nations[nation][terr].n_barracks_can_spawn= 0
+                this.mother_state.nations[nation][terr].n_factories = 2
+                this.mother_state.nations[nation][terr].n_barracks = 2
+                this.mother_state.nations[nation][terr].n_barracks_can_spawn = 2
+                for (let type of ["Infantry", "Cavalry", "Artillery"]) {
+                    this.mother_state.nations[nation].army.push({
+                        "type": type,
+                        "territory": terr,
+                        "id": utils.uuid(),
+                        "can_move": true,
+                        "can_attack": true
+                    });
+                }
                 terr2nat[terr] = nation
             }
         }
