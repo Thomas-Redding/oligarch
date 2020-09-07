@@ -444,7 +444,7 @@ function unit_clicked(territory_name, unit_type, nation_name) {
         "method": "attack",
         "args": [
           moveState[gLatestState.stage.turn].id,
-          other_key.id
+          moveState[other_key].id
         ]
       })
       moveState = null;
