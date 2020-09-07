@@ -259,7 +259,7 @@ function toast(html, duration=1000) {
       toast.timeToDismiss = new Date().getTime() + duration;
     }, 100);
   }
-  toast.queue.push([html, duration]);
+  // toast.queue.push([html, duration]);
 }
 
 class Vec2 {
@@ -817,7 +817,7 @@ function main(state) {
             let unitIds = [];
             for (let type of ["Infantry", "Cavalry", "Artillery"]) {
               if (validIds[type].length < moveState[type]) {
-                alert("Invalid Move!");
+                alert("Invalid Move (1)");
                 moveState = null;
                 render_move_state();
                 return;
@@ -828,13 +828,22 @@ function main(state) {
             }
 
 
-            let legalMoves = utils.valid_moves_for_troop(gLatestState, nation, moveState.from, moveState["Calvary"] === unitIds.length);
+            console.log(nation, moveState, unitIds);
+            let legalMoves = utils.valid_moves_for_troop(
+              gLatestState,
+              territory2nation[territory],
+              moveState.from,
+              moveState["Cavalry"] === unitIds.length ? "Cavalry" : "Infantry");
+
+            console.log(legalMoves, moveState.from);
 
             if (territory in legalMoves) {
               send({
                 "method": "move",
                 "args": [unitIds, moveState.from, territory]
               })
+            } else {
+              alert("Invalid Move (2)");
             }
 
             moveState = null;
@@ -1832,7 +1841,7 @@ function undo() {
       <div id="spwaningDiv">
         <input name="spawnForm" id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($10B)</label>
         <br>
-        <input name="spawnForm" id="calvaryRadio" type="radio"><label for="calvaryRadio">Calvary ($15B)</label>
+        <input name="spawnForm" id="calvaryRadio" type="radio"><label for="calvaryRadio">Cavalry ($15B)</label>
         <br>
         <input name="spawnForm" id="artilleryRadio" type="radio"><label for="artilleryRadio">Artillery ($15B)</label>
         <br>
