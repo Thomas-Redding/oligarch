@@ -182,8 +182,7 @@ class Game
 
             if (all_move) {
                 for (let uid of uid_list){
-                    let [idx2uid, unat] = this._unit2idx(uid)
-                    let idx = idx2uid.indexOf(uid)
+                    let [idx, unat] = this._unit2idx(uid)
                     this.mother_state.nations[unat].army[idx].territory = target
                     this.mother_state.nations[unat].army[idx].can_move = false
                 }
@@ -210,8 +209,8 @@ class Game
     {
         //log("Game.attack()", username, unit_id, target_id)
 
-        let [idx2uid_cur, nat] = this._unit2idx(unit_id)
-        let [idx2uid_target, target_nat] = this._unit2idx(target_id)
+        let [idx_cur, nat] = this._unit2idx(unit_id)
+        let [idx_t, target_nat] = this._unit2idx(target_id)
 
         if (this.mother_state.stage.subphase == 'Attack' &&
             this.mother_state.nations[nat].president == username) {
@@ -221,14 +220,15 @@ class Game
                     this.mother_state, nat, terr)
                 let def_pts = utils.military_bias(
                     this.mother_state, target_nat, terr)
+                //console.log()
                 let details = this._battle(atk_pts,def_pts)
+                console.log(details)
+                this.mother_state.nations[nat].army[idx_cur].can_attack = false
                 if (details.outcome) {
-                    let idx = idx2uid_target.indexOf(target_id)
-                    this.mother_state.nations[target_nat].army.splice(idx,1)
+                    this.mother_state.nations[nat].army.splice(idx_cur,1)
                 }
                 else {
-                    let idx = idx2uid_cur.indexOf(unit_id)
-                    this.mother_state.nations[target_nat].army.splice(idx,1)
+                    this.mother_state.nations[target_nat].army.splice(idx_t,1)
                 }
                 this._prayer('battle_outcome',details,this.mother_state)
         }
@@ -315,6 +315,15 @@ class Game
         this.timer.stop(true)
         }
         
+    }
+
+    bribe(username, amount, nation)
+    {
+        if (this.mother_state.players[username].cash >= amount) {
+            this.mother_state.players[username].cash -= amount
+            this.mother_state.nations[nation].cash += amount
+            this._prayer('bribe','')
+        }
     }
 
     //shares_to / shares_from is a list with shares as strings (potential dupes)
@@ -465,6 +474,9 @@ class Game
                 for (let unit of army) {
                     unit.can_move = (nation_name == nat)
                     unit.can_attack = (nation_name == nat)
+                    if (unit.type == 'Artillery') {
+                        unit.can_attack = false
+                    }
                 }
             }
             let no_army = this.mother_state.nations[nat].army.length === 0
@@ -743,32 +755,13 @@ class Game
     //battle routines
     _unit2idx(unit_id) { 
         for (let nats of TURNS){ 
-            let nation = this.mother_state.nations[nats];
+            let nation = this.mother_state.nations[nats]
             let army = nation.army
             if (army.filter(x => x.id == unit_id).length == 1) {
-                var target_nat = nats
-                var idx2id_target = nation.army.map(x => x.id)
-                let idx = idx2id_target.indexOf(unit_id)
-                nation.army[idx].can_attack = false
+                let idx2id = nation.army.map(x => x.id)
+                return [idx2id.indexOf(unit_id), nats]
             }
         }
-        return [idx2id_target, target_nat]
-    }
-    _attack_helper(nat, target_id)
-    {
-        for (let nats of TURNS){ 
-            let army = this.mother_state.nations[nat].army
-            if (army.filter(x => x.id == target_id).length == 1) {
-                var target_nat = nats
-                var idx2id_target = nats.army.map(x => x.id)
-                let idx = idx2id_target.indexOf(target_id)
-                this.mother_state.army[nats].army[idx].can_attack = false
-            }
-            else if (nats == nat) {
-                var idx2id_cur = army.map(x => x.id)
-            }
-        }
-        return [idx2id_cur, idx2id_target, target_nat]
     }
 
     _battle(atk_pts, def_pts)
