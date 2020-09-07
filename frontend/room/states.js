@@ -48,7 +48,7 @@ const territories = {
 "Brazil": { "center": [409,446] },
 "Argentina": { "center": [360,531] },
 
-"South Africa": { "center": [580,553] },
+"South Africa": { "center": [576,566] },
 "Madagascar": { "center": [644,558] },
 "East Africa": { "center": [622,465] },
 "Congo": { "center": [575,491] },
@@ -56,7 +56,7 @@ const territories = {
 "Egypt": { "center": [572,405] },
 
 "Western Europe": { "center": [493,343] },
-"Southern Europe": { "center": [551,338] },
+"Southern Europe": { "center": [557,340] },
 "Northern Europe": { "center": [538,286] },
 "Ukraine": { "center": [610,263] },
 "Scandinavia": { "center": [549,210] },
@@ -69,17 +69,17 @@ const territories = {
 "Ural": { "center": [682,235] },
 "Afghanistan": { "center": [671,306] },
 "Middle East": { "center": [635,385] },
-"India": { "center": [713,383] },
+"India": { "center": [716,393] },
 "Siam": { "center": [777,409] },
 "Japan": { "center": [851,301] },
 "Mongolia": { "center": [779,298] },
 "Irkutsk": { "center": [764,246] },
-"China": { "center": [752,339] },
+"China": { "center": [744,336] },
 
 "Indonesia": { "center": [768,494] },
 "New Guinea": { "center": [851,466] },
 "Eastern Australia": { "center": [885,548] },
-"Western Australia": { "center": [799,547] },
+"Western Australia": { "center": [802,554] },
 };
 
 

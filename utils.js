@@ -588,6 +588,13 @@ let utils = {
        throw Error("Unrecognized `stage` parameter.");
      }
      let arr = army.filter(x => x.territory == territory);
+     if (action === "join") {
+       return {
+         "Cavalry": arr.filter(x => x.type === "Cavalry").length,
+         "Infantry":  arr.filter(x => x.type === "Infantry").length,
+         "Artillery":  arr.filter(x => x.type === "Artillery").length
+       }
+     }
      let rtn = {
        "Cavalry": [0, 0],
        "Infantry": [0, 0],

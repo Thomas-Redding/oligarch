@@ -402,7 +402,7 @@ function unit_clicked(territory_name, unit_type, nation_name) {
       };
     } else if (nation_name !== gLatestState.stage.turn) {
       // Pretend we clicked the territory
-      document.getElementById("India").dispatchEvent(new MouseEvent("click", {
+      document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
         "view": window,
         "bubbles": true,
         "cancelable": false
@@ -646,12 +646,19 @@ function render_map(state) {
 
     if (utils.CAPITALS.includes(territory_name)) {
       let [x, y] = territories[territory_name].center;
-      let circle = svg.image("assets/whitestar.png", x - 10, y - 10, {
+      let star = svg.image("assets/whitestar.png", x - 10, y - 10, {
         width: 20,
         height: 20
       });
-      circle.style.fill = 'white';
-      out.appendChild(circle);
+      star.addEventListener('click', () => {
+        document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
+          "view": window,
+          "bubbles": true,
+          "cancelable": false
+        }));
+      })
+      star.style.fill = 'white';
+      out.appendChild(star);
     }
   });
 
