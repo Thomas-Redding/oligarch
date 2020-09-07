@@ -178,7 +178,7 @@ class Game
         if (this.mother_state.stage.subphase == 'Move' &&
             this.mother_state.nations[nat].president === username) {
             let all_move = uid_list.every(
-                uid => utils.troop_from_id(uid).can_move)
+                uid => utils.troop_from_id(this.mother_state, uid).can_move)
 
             if (all_move) {
                 for (let uid of uid_list){
@@ -755,12 +755,13 @@ class Game
     //battle routines
     _unit2idx(unit_id) { 
         for (let nats of TURNS){ 
-            let army = this.mother_state.nations[nat].army
+            let nation = this.mother_state.nations[nats];
+            let army = nation.army
             if (army.filter(x => x.id == unit_id).length == 1) {
                 var target_nat = nats
-                var idx2id_target = nats.army.map(x => x.id)
-                let idx = idx2id_target.indexOf(target_id)
-                this.mother_state.army[nats].army[idx].can_attack = false
+                var idx2id_target = nation.army.map(x => x.id)
+                let idx = idx2id_target.indexOf(unit_id)
+                nation.army[idx].can_attack = false
             }
         }
         return [idx2id_target, target_nat]
