@@ -445,7 +445,7 @@ let utils = {
   },
 
   valid_moves_for_troop: (mother_state, nation, territory, troop_type) => {
-    if (troop_type == "cavalry") {
+    if (troop_type == "Cavalry") {
       return utils.valid_moves_for_cavalry(mother_state, nation, territory);
     }
     let is_territory_uncontested = (utils.nation_of_territory(mother_state, territory) == nation);
