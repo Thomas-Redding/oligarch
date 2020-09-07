@@ -450,15 +450,22 @@ let utils = {
    * @returns {Object} a dictionary whose keys are states a cavalry can move to
    */
   valid_moves_for_cavalry: (mother_state, nation, territory) => {
+    let is_territory_uncontested = (utils.nation_of_territory(mother_state, territory) == nation);
     let rtn = {};
     let neighbors = utils.NEIGHBORS[territory];
-    rtn = utils.union_dict(rtn, utils.NEIGHBORS[territory])
     let uncontested_neighbors = [];
     for (let neighbor in neighbors) {
       if (utils.nation_of_territory(mother_state, neighbor) == nation) {
+        // I own the neighbor.
         uncontested_neighbors.push(neighbor);
+        rtn[neighbor] = 1;
       } else if (!utils.does_territory_have_troops(territory)) {
+        // I don't own the neighbor, but it is empty.
         uncontested_neighbors.push(neighbor);
+        rtn[neighbor] = 1;
+      } else {
+        // The neighbor has enemy troops.
+        if (is_territory_uncontested) rtn[neighbor] = 1;
       }
     }
     for (let neighbor of uncontested_neighbors) {
