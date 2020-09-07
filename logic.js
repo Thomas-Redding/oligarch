@@ -191,8 +191,8 @@ class Game
     
     attack(username, unit_id, target_id)
     {
-        log("Game.attack()", username, unit_id, target_id)
-        
+        //log("Game.attack()", username, unit_id, target_id)
+
         let [idx2uid_cur, nat] = this._unit2idx(unit_id)
         let [idx2uid_target, target_nat] = this._unit2idx(target_id)
 
