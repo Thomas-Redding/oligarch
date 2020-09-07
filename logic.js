@@ -760,10 +760,9 @@ class Game
             let army = nation.army
             if (army.filter(x => x.id == unit_id).length == 1) {
                 let idx2id = nation.army.map(x => x.id)
-                return idx2id.indexOf(unit_id), nats 
+                return [idx2id.indexOf(unit_id), nats]
             }
         }
-        return [idx2id_target, target_nat]
     }
 
     _battle(atk_pts, def_pts)
