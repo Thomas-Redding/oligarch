@@ -400,9 +400,14 @@ function unit_clicked(territory_name, unit_type, nation_name) {
         "Cavalry": 0,
         "Artillery": 0
       };
-    } else {
-      // pretend we clicked the territory
-      console.log(document.getElementById(territory_name))
+    } else if (nation_name !== gLatestState.stage.turn) {
+      // Pretend we clicked the territory
+      document.getElementById("India").dispatchEvent(new MouseEvent("click", {
+        "view": window,
+        "bubbles": true,
+        "cancelable": false
+      }));
+      return;
     }
     if (territory_name !== moveState.from) {
       return;
