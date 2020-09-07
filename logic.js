@@ -317,6 +317,15 @@ class Game
         
     }
 
+    bribe(username, amount, nation)
+    {
+        if (this.mother_state.players[username].cash >= amount) {
+            this.mother_state.players[username].cash -= amount
+            this.mother_state.nations[nation].cash += amount
+            this._prayer('bribe','')
+        }
+    }
+
     //shares_to / shares_from is a list with shares as strings (potential dupes)
     //first share and cash args (shares_to & cash_to) go to player (second user)
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
@@ -465,6 +474,9 @@ class Game
                 for (let unit of army) {
                     unit.can_move = (nation_name == nat)
                     unit.can_attack = (nation_name == nat)
+                    if (unit.type == 'Artillery') {
+                        unit.can_attack = false
+                    }
                 }
             }
             let no_army = this.mother_state.nations[nat].army.length === 0
