@@ -182,8 +182,7 @@ class Game
 
             if (all_move) {
                 for (let uid of uid_list){
-                    let [idx2uid, unat] = this._unit2idx(uid)
-                    let idx = idx2uid.indexOf(uid)
+                    let [idx, unat] = this._unit2idx(uid)
                     this.mother_state.nations[unat].army[idx].territory = target
                     this.mother_state.nations[unat].army[idx].can_move = false
                 }
@@ -210,8 +209,8 @@ class Game
     {
         //log("Game.attack()", username, unit_id, target_id)
 
-        let [idx2uid_cur, nat] = this._unit2idx(unit_id)
-        let [idx2uid_target, target_nat] = this._unit2idx(target_id)
+        let [idx_cur, nat] = this._unit2idx(unit_id)
+        let [idx_t, target_nat] = this._unit2idx(target_id)
 
         if (this.mother_state.stage.subphase == 'Attack' &&
             this.mother_state.nations[nat].president == username) {
@@ -221,9 +220,9 @@ class Game
                     this.mother_state, nat, terr)
                 let def_pts = utils.military_bias(
                     this.mother_state, target_nat, terr)
+                //console.log()
                 let details = this._battle(atk_pts,def_pts)
-                let idx_cur = idx2uid_target.indexOf(target_id)
-                let idx_t = idx2uid_cur.indexOf(unit_id)
+                console.log(details)
                 this.mother_state.nations[nat].army[idx_cur].can_attack = false
                 if (details.outcome) {
                     this.mother_state.nations[nat].army.splice(idx_cur,1)
