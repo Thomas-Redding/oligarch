@@ -222,13 +222,14 @@ class Game
                 let def_pts = utils.military_bias(
                     this.mother_state, target_nat, terr)
                 let details = this._battle(atk_pts,def_pts)
+                let idx_cur = idx2uid_target.indexOf(target_id)
+                let idx_t = idx2uid_cur.indexOf(unit_id)
+                this.mother_state.nations[nat].army[idx_cur].can_attack = false
                 if (details.outcome) {
-                    let idx = idx2uid_target.indexOf(target_id)
-                    this.mother_state.nations[target_nat].army.splice(idx,1)
+                    this.mother_state.nations[nat].army.splice(idx_cur,1)
                 }
                 else {
-                    let idx = idx2uid_cur.indexOf(unit_id)
-                    this.mother_state.nations[target_nat].army.splice(idx,1)
+                    this.mother_state.nations[target_nat].army.splice(idx_t,1)
                 }
                 this._prayer('battle_outcome',details,this.mother_state)
         }
@@ -755,32 +756,14 @@ class Game
     //battle routines
     _unit2idx(unit_id) { 
         for (let nats of TURNS){ 
-            let nation = this.mother_state.nations[nats];
+            let nation = this.mother_state.nations[nats]
             let army = nation.army
             if (army.filter(x => x.id == unit_id).length == 1) {
-                var target_nat = nats
-                var idx2id_target = nation.army.map(x => x.id)
-                let idx = idx2id_target.indexOf(unit_id)
-                nation.army[idx].can_attack = false
+                let idx2id = nation.army.map(x => x.id)
+                return idx2id.indexOf(unit_id), nats 
             }
         }
         return [idx2id_target, target_nat]
-    }
-    _attack_helper(nat, target_id)
-    {
-        for (let nats of TURNS){ 
-            let army = this.mother_state.nations[nat].army
-            if (army.filter(x => x.id == target_id).length == 1) {
-                var target_nat = nats
-                var idx2id_target = nats.army.map(x => x.id)
-                let idx = idx2id_target.indexOf(target_id)
-                this.mother_state.army[nats].army[idx].can_attack = false
-            }
-            else if (nats == nat) {
-                var idx2id_cur = army.map(x => x.id)
-            }
-        }
-        return [idx2id_cur, idx2id_target, target_nat]
     }
 
     _battle(atk_pts, def_pts)
