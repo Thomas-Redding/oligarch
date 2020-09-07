@@ -218,7 +218,7 @@ class Game
                 let terr = utils.troop_from_id(
                     this.mother_state, unit_id).territory
                 let atk_pts = utils.military_bias(
-                    his.mother_state, nat, terr)
+                    this.mother_state, nat, terr)
                 let def_pts = utils.military_bias(
                     this.mother_state, target_nat, terr)
                 let details = this._battle(atk_pts,def_pts)

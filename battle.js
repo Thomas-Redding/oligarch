@@ -11,8 +11,8 @@ class Battle {
         return false
     }
     linear_die_battle(max_pts = Infinity) {
-        let atk = math.min(this._atk_pts, max_pts)
-        let def = math.min(this._def_pts, max_pts) 
+        let atk = Math.min(this._atk_pts, max_pts)
+        let def = Math.min(this._def_pts, max_pts) 
         this.metadata.max_roll = max_pts
         this.metadata.atk_roll = Math.floor(Math.random()*this.atk) + 1
         this.metadata.def_roll = Math.floor(Math.random()*this.def) + 1
