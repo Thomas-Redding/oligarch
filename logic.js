@@ -197,7 +197,7 @@ class Game
         let target_nat = this.terr2nat(terr)
         if (this.mother_state.stage.subphase == 'Attack' &&
         this.mother_state.nations[nat].president == username &&
-        utils.troop_from_id(unit_id).can_attack) {
+        utils.troop_from_id(this.mother_state, unit_id).can_attack) {
             bldg_type = building == 'barracks' ? 'n_barracks' : 'n_factories'
             if (this.mother_state.nations[target_nat][terr]['bldg_type'] > 0){
                 this.mother_state.nations[target_nat][terr]['bldg_type']--
@@ -215,9 +215,12 @@ class Game
 
         if (this.mother_state.stage.subphase == 'Attack' &&
             this.mother_state.nations[nat].president == username) {
-                let terr = utils.troop_from_id(unit_id).territory
-                let atk_pts = utils.military_bias(nat, terr)
-                let def_pts = utils.military_bias(target_nat, terr)
+                let terr = utils.troop_from_id(
+                    this.mother_state, unit_id).territory
+                let atk_pts = utils.military_bias(
+                    his.mother_state, nat, terr)
+                let def_pts = utils.military_bias(
+                    this.mother_state, target_nat, terr)
                 let details = this._battle(atk_pts,def_pts)
                 if (details.outcome) {
                     let idx = idx2uid_target.indexOf(target_id)
