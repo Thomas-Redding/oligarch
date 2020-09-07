@@ -444,6 +444,27 @@ let utils = {
     return rtn;
   },
 
+  valid_moves_for_troop: (mother_state, nation, territory, troop_type) => {
+    if (troop_type == "cavalry") {
+      return utils.valid_moves_for_cavalry(mother_state, nation, territory);
+    }
+    let is_territory_uncontested = (utils.nation_of_territory(mother_state, territory) == nation);
+    let neighbors = utils.NEIGHBORS[territory];
+    let rtn = {};
+    for (let neighbor in neighbors) {
+      if (is_territory_uncontested) {
+        rtn[neighbor] = 1;
+      } else {
+        let doesOwnNeighbor = (utils.nation_of_territory(mother_state, neighbor) == nation);
+        let doesNeighborHaveTroops = utils.does_territory_have_troops(mother_state, neighbor);
+        if (doesOwnNeighbor || !doesNeighborHaveTroops) {
+          rtn[neighbor] = 1;
+        }
+      }
+    }
+    return rtn;
+  },
+
   /*
    * @param {string} nation the nation whose cavalry want to move
    * @param {string} territory the territory where the cavalry are
