@@ -29,17 +29,20 @@ const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10,
 
 class History {
   constructor(prayer) {
+    log()
     this._prayer = prayer
     this._states = [];
     this._args = [];
     this._actions = [];
   }
   save(action, args, mother_state) {
+    log(action, args)
     this._actions.push(action);
     this._args.push(args);
     this._states.push(utils.deep_copy(mother_state));
   }
   undo() {
+    log()
     if (this._states.length <= 1) {
         throw Exception("Attempted to undo with a history of length 1.")
     }
@@ -54,7 +57,7 @@ class Game
 {
     fetchGameState()
     {
-        log("");
+        log();
         if (this.timer && this.timer.isRunning()) {
             this.mother_state.clock = this.timer.queryTime();
         }
@@ -103,7 +106,7 @@ class Game
 
     startGame(username)
     {
-        log("Game.startGame()", username);
+        log( username);
         this._player_cash_init()
         this.prayer('game_start', {}, this.mother_state)
         this._act()
@@ -111,7 +114,7 @@ class Game
 
     addPlayer(username)
     {
-        log("Game.addPlayer()", username);
+        log(username);
         let player = {}
         let rtn = true
         if (this.mother_state.stage.phase !== 'lobby') {
