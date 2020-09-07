@@ -459,7 +459,7 @@ let utils = {
         // I own the neighbor.
         uncontested_neighbors.push(neighbor);
         rtn[neighbor] = 1;
-      } else if (!utils.does_territory_have_troops(territory)) {
+      } else if (!utils.does_territory_have_troops(mother_state, neighbor)) {
         // I don't own the neighbor, but it is empty.
         uncontested_neighbors.push(neighbor);
         rtn[neighbor] = 1;
@@ -471,6 +471,7 @@ let utils = {
     for (let neighbor of uncontested_neighbors) {
       rtn = utils.union_dict(rtn, utils.NEIGHBORS[neighbor]);
     }
+    if (territory in rtn) delete rtn[territory];
     return rtn;
   },
 
