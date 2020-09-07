@@ -405,8 +405,7 @@ let utils = {
    */
   territory_for_territory_name: (mother_state, territory_name) => {
     for (let nation in mother_state.nations) {
-      if (mother_state.nations[nation].territories.includes(territory_name)) {
-        let i = mother_state.nations[nation].territories.indexOf(territory_name);
+      if (territory_name in mother_state.nations[nation]) {
         return mother_state.nations[nation][territory_name];
       }
     }
@@ -513,7 +512,7 @@ let utils = {
     let rtn = [];
     for (let territory_name of territory_names) {
       let territory = utils.territory_for_territory_name(mother_state, territory_name);
-      if (territory.n_barracks_can_spawnb) {
+      if (territory.n_barracks_can_spawn) {
         rtn.push(territory_name);
       }
     }
