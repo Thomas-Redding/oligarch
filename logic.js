@@ -23,7 +23,7 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000,
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
  'election':2*60*1000, 'actions':3*60*1000}
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
@@ -173,6 +173,7 @@ class Game
             }
             this.mother_state.players[username] = player
         }
+        setTimeout(() => {this._prayer("player_added", '')}, 0)
         return rtn
     }
 
@@ -594,6 +595,8 @@ class Game
             && turn == curTURNS.fromback()) {
                 this.mother_state.stage.round += 1
                 this.mother_state.stage.phase = PHASES[0]
+                console.log('console is')
+                console.log(PHASES[0])
                 this.mother_state.stage.turn = curTURNS[0]
                 this.mother_state.stage.subphase = SUBPHASES[0]
             }
