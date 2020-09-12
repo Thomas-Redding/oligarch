@@ -314,6 +314,7 @@ function svg_text(text, x, y, attrs={}) {
   if (!("style" in attrs)) {
     attrs["style"] = "";
     attrs["style"] += "; font-family: myfont";
+    attrs["style"] += "; font-size: 16px";
   }
   return svg.text(text, x, y, attrs);
 }
