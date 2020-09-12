@@ -32,8 +32,14 @@ class Timer
      */
     queryTime() {
         log();
-        let timeElapsed = new Date().getTime() - this._startTime;
-        return this._t - timeElapsed;
+        if (this._is_paused) {
+            log("a", this._time_to_use_when_resumed);
+            return this._time_to_use_when_resumed;
+        } else {
+            let timeElapsed = new Date().getTime() - this._startTime;
+            log("b", this._t - timeElapsed);
+            return this._t - timeElapsed;
+        }
     }
     /*
      * Set the number of milliseconds until the timer expires.
@@ -84,8 +90,8 @@ class Timer
     pause() {
         log();
         if (this._is_paused) return;
-        this._is_paused = true;
         this._time_to_use_when_resumed = this.queryTime()
+        this._is_paused = true;
         clearTimeout(this._id);
     }
 
