@@ -383,7 +383,7 @@ class Game
         else if (this._trade_verification(
             username, player, shares_to, shares_from, cash_to, cash_from)) {
         
-            this.mother_state.trading_pairs.push([username, player])
+            this.mother_state.trading_pairs.push([username, player, trade])
             this._prayer('trade_proposed',trade,this.mother_state)
         }
     }
@@ -828,7 +828,6 @@ class Game
                 break
             }
         }
-        
     }
 
     _trade_verification(user, player, shares_to, shares_from, cash_to, cash_from)
