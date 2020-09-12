@@ -341,7 +341,7 @@ let utils = {
    */
   income_of_territory: (mother_state, territory) => {
     let natural_income = utils.natural_income_of_territory(territory);
-    let nation = utils.territory_to_owner(mother_state, territory);
+    let nation = utils.terr2continent[territory];
     let factory_income = 5 * mother_state.nations[nation][territory].n_factories;
     return natural_income + factory_income;
   },
@@ -755,6 +755,16 @@ let utils = {
     return Object.assign({}, d1, d2);
   }
 };
+
+{
+  let terr2continent = {};
+  for (let nation in utils.NATIONS) {
+    for (let territory of utils.NATIONS[nation].territories) {
+      terr2continent[territory] = nation;
+    }
+  }
+  utils.terr2continent = terr2continent;
+}
 
 // Terrible hack so this can be included on frontend.
 try { module.exports = utils; } catch (err) {}

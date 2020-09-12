@@ -350,13 +350,6 @@ function argmax(A) {
   return r;
 }
 
-let territory2nation = {};
-for (let nation in nations) {
-  for (let territory of nations[nation].territories) {
-    territory2nation[territory] = nation;
-  }
-}
-
 function render_table(state) {
   let tbody = mainTable.children[0];
   tbody.innerHTML = `
@@ -691,6 +684,42 @@ function render_move_state(oldState, moveState) {
   }
 }
 
+function structure_clicked(territory_name, structure_type) {
+  console.log('structure_clicked', moveState);
+  if (!moveState) {
+    document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
+      "view": window,
+      "bubbles": true,
+      "cancelable": false
+    }));
+    return;
+  }
+  console.log(gLatestState.stage);
+  if (gLatestState.stage.phase !== "Action") {
+    return;
+  }
+  if (gLatestState.stage.subphase !== "Attack") {
+    return;
+  }
+  alert('raze');
+  send({
+    "method": "raze",
+    "args": [
+      moveState[gLatestState.stage.turn].id,
+      structure_type,
+      territory_name
+    ]
+  })
+}
+
+function factory_clicked(territory_name) {
+  structure_clicked(territory_name, "factory");
+}
+
+function barrack_clicked(territory_name) {
+  structure_clicked(territory_name, "barrack");
+}
+
 function render_map(state) {
   render_nation_rects(state);
 
@@ -704,7 +733,7 @@ function render_map(state) {
 
   Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
     let territory_name = path.id;
-    let territory = state.nations[territory2nation[territory_name]][territory_name];
+    let territory = state.nations[utils.terr2continent[territory_name]][territory_name];
 
     {
       let [x, y] = territories[territory_name].center;
@@ -799,16 +828,11 @@ function render_map(state) {
 
     if (territory.n_factories > 0) {
       icon_drawers.push((x, y) => {
-        let onclick = () => {
-          document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
-            "view": window,
-            "bubbles": true,
-            "cancelable": false
-          }));
-        }
         // let img = make_factory(x - s/2, y - s/2, s, s);
         let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s*0.8, height:s*0.8});
-        img.addEventListener("click", onclick);
+        img.addEventListener("click", () => {
+          factory_clicked(territory_name);
+        });
         out.appendChild(img);
 
         if (territory.n_factories > 1) {
@@ -824,10 +848,16 @@ function render_map(state) {
     if (territory.n_barracks > 0) {
       icon_drawers.push((x, y) => {
         let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s*0.8, height:s*0.8});
+        img.addEventListener("click", () => {
+          barrack_clicked(territory_name);
+        });
         out.appendChild(img);
 
         if (territory.n_barracks > 1) {
           let text = svg_text(territory.n_barracks, x - 5, y + 6);
+          text.addEventListener("click", () => {
+            barrack_clicked(territory_name);
+          })
           text.style.fill = 'white';
           text.style.textShadow = "6px 6px 20px black";
           out.appendChild(text);
@@ -950,7 +980,7 @@ function main(state) {
 
   Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
     let territory = path.id;
-    let nation = territory2nation[territory];
+    let nation = utils.terr2continent[territory];
     let nationColor = nations[nation].color;
     let randColor = Color.random().scale(0.15);
     let color = nationColor.scale(0.85).plus(randColor);
@@ -1014,7 +1044,7 @@ function main(state) {
 
             let legalMoves = utils.valid_moves_for_troop(
               gLatestState,
-              territory2nation[moveState.from],
+              utils.terr2continent[moveState.from],
               moveState.from,
               moveState["Cavalry"] === unitIds.length ? "Cavalry" : "Infantry");
 
