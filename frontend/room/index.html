@@ -1013,7 +1013,8 @@ window.onresize = () => {
     logButton.classList.add("tab-off");
   }
 
-  if (bodyRect.width > bodyRect.height * 1.8 && bodyRect.height > 500) {
+  let emSize = parseFloat(getComputedStyle(document.body).fontSize);
+  if (bodyRect.width > 70*emSize) {
     // Desktop
     statusBarDiv.style.fontSize = '1.5em';
     contentDiv.style.display = 'flex';
