@@ -250,6 +250,7 @@ class Color {
 <script src='states.js'></script>
 <script src='svg.js'></script>
 <script src='trade.js'></script>
+<script src='clock.js'></script>
 <script>
 
 function toast(html, duration=2000) {
@@ -1193,44 +1194,6 @@ function render_status_bar(state) {
   }
 }
 
-// Singleton class.
-class Clock {
-  constructor() {
-    this._startTime = new Date();
-    this._totalTime = 0;
-    this._paused = false;
-    setInterval(() => {
-      this.update();
-    }, 100);
-  }
-  set_time_remaining(timeRemaining) {
-    this._startTime = new Date();
-    this._totalTime = timeRemaining;
-    this._paused = false;
-    this.update();
-  }
-  pause() {
-    this._totalTime = this._totalTime - (new Date() - this._startTime);
-    this.startTime = new Date();
-    this._paused = true;
-  }
-  update() {
-    let timeElapsed = new Date() - this._startTime;
-    if (this._paused) {
-      timeElapsed = 0;
-    }
-    let secsRemaining = (this._totalTime - timeElapsed) / 1000;
-    secsRemaining = Math.max(secsRemaining, 0);
-    let minsRemaining = secsRemaining / 60 | 0;
-    secsRemaining -= minsRemaining * 60;
-    secsRemaining = Math.floor(secsRemaining) + '';
-    if (secsRemaining.length === 1) {
-      secsRemaining = '0' + secsRemaining;
-    }
-    statusBarTimeDiv.innerHTML = minsRemaining + ':' + secsRemaining;
-  }
-}
-
 let gAreAdmin = undefined;
 function areAdminFetched(areAdmin) {
   gAreAdmin = areAdmin;
@@ -1436,9 +1399,6 @@ function updateCurrentActionDivFromState(state) {
   }
 }
 
-
-let clock = new Clock();
-
 let gSocket;
 let gLatestState;
 login().then((socket) => {
@@ -1477,9 +1437,9 @@ login().then((socket) => {
       let pauseIcon = document.getElementById("pause-icon");
       playIcon.style.display = gLatestState.is_paused ? "block" : "none";
       pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
-      clock.set_time_remaining(state.clock);
+      gClock.set_time_remaining(state.clock);
       if (gLatestState.is_paused) {
-        clock.pause();
+        gClock.pause();
       }
       updateLobbyUsernames();
     }
@@ -1520,14 +1480,14 @@ login().then((socket) => {
       let pauseIcon = document.getElementById("pause-icon");
       playIcon.style.display = "block";
       pauseIcon.style.display = "none";
-      clock.pause();
+      gClock.pause();
     }
     else if (action === "resume") {
       let playIcon = document.getElementById("play-icon");
       let pauseIcon = document.getElementById("pause-icon");
       playIcon.style.display = "none";
       pauseIcon.style.display = "block";
-      clock.set_time_remaining(state.clock);
+      gClock.set_time_remaining(state.clock);
     }
     else if (action === "end_lobby") {
       // Equivalent to game_start
@@ -1546,23 +1506,23 @@ login().then((socket) => {
       render_table(state);
     }
     else if (action === "begin_deliberation") {
-      clock.set_time_remaining(state.clock);
+      gClock.set_time_remaining(state.clock);
     }
     else if (action === "deliberation_over") {
-      clock.set_time_remaining(state.clock);
+      gClock.set_time_remaining(state.clock);
     }
     else if (action === "auction_start") {
-      clock.set_time_remaining(state.clock);
+      gClock.set_time_remaining(state.clock);
     }
     else if (action === "start_election") {
-      clock.set_time_remaining(state.clock);
+      gClock.set_time_remaining(state.clock);
     }
     else if (action === "vote_tallied") {
       render_map(state);
       render_vote_table(state);
     }
     else if (action === "begin_presidential_command") {
-      clock.set_time_remaining(state.clock);
+      gClock.set_time_remaining(state.clock);
     }
     else if (action === "begin_build") {
       factoryRadio.checked = true;
@@ -1594,7 +1554,7 @@ login().then((socket) => {
       alert("Trade rejected (either your or that player have an ongoing trade)")
     }
     else if (action === "bid_received") {
-      clock.set_time_remaining(state.clock);
+      gClock.set_time_remaining(state.clock);
     }
 
     if (state.stage.phase === "Action") {
