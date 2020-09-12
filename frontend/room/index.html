@@ -425,7 +425,7 @@ function unit_clicked(territory_name, unit_type, nation_name) {
         "Cavalry": 0,
         "Artillery": 0
       });
-    } else if (nation_name !== gLatestState.stage.turn) {
+    } else if (territory_name !== moveState.from) {
       // Pretend we clicked the territory
       document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
         "view": window,
@@ -680,16 +680,6 @@ function render_map(state) {
               img.style.cursor = 'pointer';
               img.addEventListener("click", onclick);
               out.appendChild(img);
-
-              if (gLatestState.stage.phase === "Action") {
-                // We use this grayed-out circle to prevent user clicks when an action is not available.
-                if ((!can_action && ["Attack", "Move"].includes(gLatestState.stage.subphase) || (nation_name !== gLatestState.stage.turn))) {
-                  let circ = svg.circle(x, y, s * 0.35);
-                  circ.style.fill = '#0008';
-                  circ.addEventListener("click", onclick);
-                  out.appendChild(circ);
-                }
-              }
 
               // This adds the (often invisible) circle indicating how many units from a stack have been
               // selected.
@@ -1288,6 +1278,23 @@ function rewriteActivityLogFromScratch() {
   gameLogDiv.innerHTML = html;
 }
 
+function render_vote_table() {
+  // TODO(mredding): update currentVotesDiv when this exists on the backend.
+  let html = `
+  <table border=1>
+    <tbody>
+      <tr>
+        <td colspan=2>Votes (1 total)</td>
+      </tr>
+  `;
+  let votesFor = utils.candidate_votes(state);
+  for (let player_name in votesFor) {
+    html += "<tr><td>" + player_name + "</td><td>" + votesFor[player_name].vote + " votes</td></tr>";
+  }
+  html += "</table></tbody>";
+  currentVotesDiv.innerHTML = html;
+}
+
 let clock = new Clock();
 
 let gSocket;
@@ -1379,6 +1386,9 @@ login().then((socket) => {
     else if (action === "taxes_collected") {
       render_table(state);
     }
+    else if (action === "bribe") {
+      render_table(state);
+    }
     else if (action === "begin_deliberation") {
       clock.set_time_remaining(state.clock);
     }
@@ -1396,12 +1406,7 @@ login().then((socket) => {
       clock.set_time_remaining(state.clock);
     }
     else if (action === "vote_tallied") {
-      // TODO(mredding): update currentVotesDiv when this exists on the backend.
-      currentVotesDiv.innerHTML = "<table><tbody>";
-      for (let key in details) {
-        currentVotesDiv.innerHTML += "<tr><td>" + key + "</td><td>" + details[key] + "</td></tr>";
-      }
-      currentVotesDiv.innerHTML += "</table></tbody>";
+      render_vote_table();
       render_map(state);
     }
     else if (action === "begin_presidential_command") {
@@ -1948,6 +1953,18 @@ function highlightTerritories(territoryNames) {
   }
 }
 
+function send_bribe(nation_name) {
+  close_modal();
+  send({
+    "method": "bribe",
+    "args": [
+      parseInt(bribeInput.value),
+      nation_name
+    ]
+  });
+  bribeInput.value = 0;
+}
+
 </script>
 
 </head>
@@ -2203,13 +2220,13 @@ function highlightTerritories(territoryNames) {
     </table>
     <hr>
     <div style="text-align:center;">
-      <div class='button'>NA</div>
-      <div class='button'>EU</div>
-      <div class='button'>AS</div>
+      <div onClick="send_bribe('North America')" class='button'>NA</div>
+      <div onClick="send_bribe('South America')" class='button'>EU</div>
+      <div onClick="send_bribe('Asia')" class='button'>AS</div>
       <br><br>
-      <div class='button'>SA</div>
-      <div class='button'>AF</div>
-      <div class='button'>AU</div>
+      <div onClick="send_bribe('South America')" class='button'>SA</div>
+      <div onClick="send_bribe('Africa')" class='button'>AF</div>
+      <div onClick="send_bribe('Australia')" class='button'>AU</div>
     </div>
   </div>
 
