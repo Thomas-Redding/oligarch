@@ -469,7 +469,6 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Move') {
             this._start_presidential_command()
-            this._prayer('begin_move','')
             for (let nation_name in this.mother_state.nations) {
                 let army = this.mother_state.nations[nation_name].army
                 for (let unit of army) {
@@ -480,6 +479,7 @@ class Game
                     }
                 }
             }
+            this._prayer('begin_move','')
             let no_army = this.mother_state.nations[nat].army.length === 0
             if (noop|| no_army) {
                 this._transition()
