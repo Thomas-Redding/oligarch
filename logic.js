@@ -1,6 +1,10 @@
+const fs = require('fs')
+
 let utils = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
+
+SPAWN_BUSY_WORLD = false;
 
 log.enabled = true;
 
@@ -41,11 +45,13 @@ class History {
     this._args.push(args);
     this._states.push(utils.deep_copy(mother_state));
   }
+  last_save() {
+    log()
+    return [this._checkpoint_types.fromback(), this._args.fromback(),
+        this._states.fromback()];
+  }
   undo() {
     log()
-    console.log(this._checkpoint_types);
-    console.log(this._args);
-    console.log(this._states);
     if (this._states.length == 0) {
         throw Exception("Attempted to undo with a history of length 1.")
     }
@@ -95,6 +101,21 @@ class Game
             throw Exception("Can't undo an action of type '%s'" % action);
         }
         this._prayer("get_state", '')
+    }
+
+    save(save_name) {
+        log(save_name);
+        if (!/^[0-9a-zA-Z]+$/.match(save_name)) {
+            // TODO: Tell user saving failed.
+            return;
+        }
+        let [action, args, state] = this._history.last_save();
+        try {
+            fs.writeFileSync("data/" + save_name + ".json", JSON.stringify(data))
+        } catch (err) {
+            log(err)
+            return;
+        }
     }
 
     endLobby(username)
@@ -594,25 +615,32 @@ class Game
     {
         log();
         let terr2nat = {}
-        for (let nation in this.mother_state.nations) {
-            this.mother_state.nations[nation].cash = 0
-            this.mother_state.nations[nation].owns = []
-            this.mother_state.nations[nation].army = []
-            this.mother_state.nations[nation].president = null
-            for (let terr of utils.NATIONS[nation].territories) {
-                this.mother_state.nations[nation].owns.push(terr)
-                this.mother_state.nations[nation][terr] = {}
-                this.mother_state.nations[nation][terr].n_factories = 2
-                this.mother_state.nations[nation][terr].n_barracks = 2
-                this.mother_state.nations[nation][terr].n_barracks_can_spawn = 2
-                for (let type of ["Infantry", "Cavalry", "Artillery"]) {
-                    this.mother_state.nations[nation].army.push({
-                        "type": type,
-                        "territory": terr,
-                        "id": utils.uuid(),
-                        "can_move": true,
-                        "can_attack": true
-                    });
+        for (let nationName in this.mother_state.nations) {
+            let nation = this.mother_state.nations[nationName];
+            nation.cash = 0
+            nation.owns = []
+            nation.army = []
+            nation.president = null
+            for (let terr of utils.NATIONS[nationName].territories) {
+                nation.owns.push(terr)
+                nation[terr] = {}
+                if (SPAWN_BUSY_WORLD) {
+                    nation[terr].n_factories = 2
+                    nation[terr].n_barracks = 2
+                    nation[terr].n_barracks_can_spawn = 2
+                    for (let type of ["Infantry", "Cavalry", "Artillery"]) {
+                        nation.army.push({
+                            "type": type,
+                            "territory": terr,
+                            "id": utils.uuid(),
+                            "can_move": true,
+                            "can_attack": true
+                        });
+                    }
+                } else {
+                    nation[terr].n_factories = 0
+                    nation[terr].n_barracks = 0
+                    nation[terr].n_barracks_can_spawn = 0
                 }
                 terr2nat[terr] = nation
             }
