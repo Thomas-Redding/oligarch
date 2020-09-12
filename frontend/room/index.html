@@ -1226,7 +1226,8 @@ function htmlFromLog(action, details, isToast) {
     if (isToast) return undefined;
     else return "User ready";
   } else if (action == "deliberation_over") {
-    return "Ended deliberation";
+    if (isToast) return undefined;
+    else return "Ended deliberation";
   } else if (action == "auction_start") {
     return "Auction began for " + details;
   } else if (action == "bid_received") {
@@ -1249,7 +1250,7 @@ function htmlFromLog(action, details, isToast) {
     }
   } else if (action == "begin_presidential_command") {
     if (details.president) {
-      return "The reign of " + details.president + " began in " + arr[1].nation + "."
+      return "The reign of " + details.president + " began in " + details.nation + "."
     } else {
       return undefined;
     }
@@ -1289,6 +1290,10 @@ function rewriteActivityLogFromScratch() {
     html += "<li>" + s + "</li>";
   }
   gameLogDiv.innerHTML = html;
+  let rects = gameLogDiv.getClientRects();
+  if (rects.length > 0) {
+    gameLogContainer.scrollTop = rects[0].height + 400;
+  }
 }
 
 function render_vote_table(state) {
