@@ -22,7 +22,7 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000,
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
  'election':2*60*1000, 'actions':3*60*1000}
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
@@ -758,8 +758,6 @@ class Game
                 this.timer.stop(true)
             }
         }
-        n_votes = Math.floor(n_votes/2)+1
-        //this.rdyUp(username)
     }
 
     _conclude_election()
