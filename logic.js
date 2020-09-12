@@ -161,7 +161,7 @@ class Game
             console.log(Object.keys(this.mother_state.players).length);
             if (Object.keys(this.mother_state.players).length == 0) {
                 player.auth = 'admin';
-            } else {s
+            } else {
                 player.auth = 'user';
             }
             player.shares = {}
@@ -484,6 +484,7 @@ class Game
         if (this.mother_state.stage.phase === 'Taxation') {
             this.mother_state.nations[nat].cash += utils.income_of_nation(
                 this.mother_state, nat)
+            this._prayer('taxes_collected','')
             this._transition()
         }
         else if (this.mother_state.stage.phase === 'Discuss') {
@@ -581,12 +582,6 @@ class Game
 
         if (['Taxation','Auction'].includes(phase)){
             if (is_last(turn, curTURNS)) {
-                if (phase == 'Taxation'){
-                    this._prayer('taxes_collected','')
-                }
-                else{
-                    this._prayer('auctions_complete','')
-                }
                 this.mother_state.stage.phase = next(phase, PHASES)
             }
             this.mother_state.stage.turn = next(turn, curTURNS)
@@ -595,9 +590,7 @@ class Game
             && turn == curTURNS.fromback()) {
                 this.mother_state.stage.round += 1
                 this.mother_state.stage.phase = PHASES[0]
-                console.log('console is')
-                console.log(PHASES[0])
-                this.mother_state.stage.turn = curTURNS[0]
+                this.mother_state.stage.turn = curTURNS.fromback()
                 this.mother_state.stage.subphase = SUBPHASES[0]
             }
 
