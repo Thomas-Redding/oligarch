@@ -1420,7 +1420,8 @@ function updateCurrentActionDivFromState(state) {
         updateDiv("You have voted. Wait for other shareholders to vote for the president of " + state.stage.turn);
       }
     } else if (gUsername != state.nations[state.stage.turn].president) {
-      updateDiv("Lobby the president to do what you want.");
+      let president = state.nations[state.stage.turn].president;
+      updateDiv("Lobby President " + president + " to do what you want.");
     } else {
       updateDiv("You are president. Turn Phase: " + state.stage.subphase);
     }
