@@ -775,7 +775,7 @@ function main(state) {
     let color = nationColor.scale(0.85).plus(randColor);
 
     path.style = '';
-    path.style.fill = color.plus(new Color(255,255,255)).scale(0.5).hex();
+    path.style.fill = color.hex();
     path.style.stroke = 'black';
 
     let onclick = (e) => {
@@ -1266,6 +1266,7 @@ login().then((socket) => {
         currentVotesDiv.innerHTML += "<tr><td>" + key + "</td><td>" + details[key] + "</td></tr>";
       }
       currentVotesDiv.innerHTML += "</table></tbody>";
+      render_map(state);
     }
     else if (action === "begin_presidential_command") {
       clock.set_time_remaining(state.clock);
