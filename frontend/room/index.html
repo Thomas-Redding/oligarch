@@ -1312,7 +1312,9 @@ login().then((socket) => {
     if (action === "get_state") {
       // We assume get_state is only called when the user
       // reloads the page.
-      if (state.stage.phase !== "lobby") {
+      if (state.stage.phase === "lobby") {
+        tab = kTabLobby;
+      } else {
         tab = kTabInfo;
       }
       main(state);
