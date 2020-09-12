@@ -1321,6 +1321,8 @@ function htmlFromLog(action, details, isToast) {
     return "$" + details + "B paid in dividends";
   } else if (action == "end_presidential_command") {
     return "The reign has ended.";
+  } else if (action == "bribe") {
+    return details.player + " bribed " + details.nation + " with $" + details.amount + "B";
   } else {
     if (isToast) {
       return undefined;
