@@ -4,7 +4,7 @@ let utils = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 
-const SPAWN_BUSY_WORLD = true;
+const SPAWN_BUSY_WORLD = false;
 const BALANCED_MODE = true;
 
 log.enabled = true;
@@ -23,8 +23,12 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
- 'election':2*60*1000, 'actions':3*60*1000}
+const TIMING = {
+    'deliberation': 90*1000,
+    'bidding': 1000 * (SPAWN_BUSY_WORLD ? 1 : 12),
+    'election': 2*60*1000,
+    'actions': 3*60*1000
+}
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
     'Artillery':15, 'Cavalry':15 }
@@ -41,7 +45,7 @@ class History {
     this._checkpoint_types = [];
   }
   save(checkpoint_type, args, mother_state) {
-    log(checkpoint_type, args, mother_state)
+    log(checkpoint_type, args)
     this._checkpoint_types.push(checkpoint_type);
     this._args.push(args);
     this._states.push(utils.deep_copy(mother_state));
@@ -168,8 +172,14 @@ class Game
             player.ready = false
             player.vote = null
             player.ready = false
-            for (let key in utils.NATIONS) {
-                player.shares[key] = Math.random() * 2 | 0
+            if (SPAWN_BUSY_WORLD) {
+                for (let key in utils.NATIONS) {
+                    player.shares[key] = Math.random() * 2 | 0
+                }
+            } else {
+                for (let key in utils.NATIONS) {
+                    player.shares[key] = 0
+                }
             }
             this.mother_state.players[username] = player
         }
@@ -224,7 +234,7 @@ class Game
 
     raze(username, unit_id, building, terr)
     {
-        let target_nat = this.terr2nat(terr)
+        let target_nat = this.terr2nat[terr]
         if (this.mother_state.stage.subphase == 'Attack' &&
         this.mother_state.nations[nat].president == username &&
         utils.troop_from_id(this.mother_state, unit_id).can_attack) {
@@ -286,7 +296,8 @@ class Game
         if (n_buildings < 4 && afford &&
              username === this.mother_state.nations[nat].president) {
                 let t_str = type == 'barracks' ? 'n_barracks' : 'n_factories'
-                this.mother_state.nations[nat][terr][t_str] += 1
+                let terrInfo = utils.territory_for_territory_name(terr);
+                terrInfo[t_str] += 1
                 this.mother_state.nations[nat].cash -= COSTS[type]
         }
         this._prayer('built_infrastructure','')
@@ -300,7 +311,8 @@ class Game
         let val_terr = utils.territories_of_nation_that_can_spawn(
             this.mother_state, nat)
         if (val_terr.includes(terr) && afford){
-            this.mother_state.nations[nat][terr].n_barracks_can_spawn -= 1
+            let terrInfo = utils.territory_for_territory_name(terr);
+            terrInfo.n_barracks_can_spawn -= 1
             let unit = {"type": type, "territory":terr,
                 "id":utils.uuid(), 'can_move':false, 'can_move':false}
             this.mother_state.nations[nat].army.push(unit)
@@ -544,8 +556,9 @@ class Game
         else if (this.mother_state.stage.subphase == 'Spawn'){
             this._prayer('begin_spawn','')
             for (let terr of utils.territories_of_nation(this.mother_state, nat)){
-                let nb = this.mother_state.nations[nat][terr].n_barracks
-                this.mother_state.nations[nat][terr].n_barracks_can_spawn = nb
+                let terrInfo = utils.territory_for_territory_name(terr);
+                let nb = terrInfo.n_barracks
+                terrInfo.n_barracks_can_spawn = nb
             }
             let terrs = utils.territories_of_nation_that_can_spawn(
                 this.mother_state, nat)
@@ -765,7 +778,8 @@ class Game
         let candidate_votes = utils.candidate_votes(this.mother_state)
         console.log(utils.candidate_votes(this.mother_state))
         this._prayer('vote_tallied', candidate_votes)
-        let votes_needed = Math.ceil(utils.shares_sold(this.mother_state, nat)/2)
+        let votes_needed = Math.floor(
+            utils.shares_sold(this.mother_state, nat)/2) + 1
         for (let player in candidate_votes) {
             if (candidate_votes[player] >= votes_needed) {
                 this.mother_state.nations[nat].president = player
