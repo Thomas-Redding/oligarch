@@ -1245,6 +1245,9 @@ function htmlFromLog(action, details, isToast) {
     return undefined;
   } else if (action == "is_admin") {
     return undefined;
+  } else if (action == "player_added") {
+    if (isToast) return undefined;
+    else return details + " joined";
   } else if (action == "end_lobby") {
     if (isToast) return undefined;
     else return "Exited Lobby";
@@ -1332,6 +1335,14 @@ function rewriteActivityLogFromScratch() {
   if (rects.length > 0) {
     gameLogContainer.scrollTop = rects[0].height + 400;
   }
+}
+
+function updateLobbyUsernames() {
+  let html = "";
+  for (let username in gLatestState.players) {
+    html += username + "<br/>";
+  }
+  document.getElementById("lobby-usernames").innerHTML = html;
 }
 
 function render_vote_table(state) {
@@ -1449,6 +1460,9 @@ login().then((socket) => {
     else if (action === "undo") {
     }
     else if (action === "user_ready") {
+    }
+    else if (action == "player_added") {
+      updateLobbyUsernames();
     }
     else if (action === "refresh") {
       // Called when an undo is performed.
@@ -2337,13 +2351,14 @@ function send_bribe(nation_name) {
 <div id="lobbyDiv">
   <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); text-align: center;">
     <h1 align="center">The Oligarchs</h1>
-    <br/><br/><br/><br/>
+    <br/><br/>
     <p>
       Do you have what it takes to rule the world?
     </p>
     <div id="start-game-button" class="button invisible-button" onclick="start_game();" style="margin: 2em auto;">
       Start Game
     </div>
+    <div id="lobby-usernames"></div>
   </div>
 </div>
 
