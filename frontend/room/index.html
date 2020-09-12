@@ -1322,13 +1322,21 @@ function htmlFromLog(action, details, isToast) {
     return "The reign has ended.";
   } else if (action == "bribe") {
     return "<b>" + details.player + "</b> bribed " + details.nation + " with $" + details.amount + "B";
+  } else if (action == "player_added") {
+    if (isToast) return undefined;
+    else return "<b>" + details + "</b> joined";
+  } else if (action == "trade_proposed") {
+    if (isToast) return undefined;
+    else return "<b>" + details.from + "</b> proposed a trade to <b>" + details.to + "</b>";
+  } else if (action == "trade_accepted") {
+    if (isToast) return undefined;
+    else return "Trade accepted";
+  } else if (action == "trade_rejected") {
+    if (isToast) return undefined;
+    else return "Trade rejected";
   } else {
-    if (isToast) {
-      return undefined;
-    }
-    else {
-      return action + "@" + details;
-    }
+    if (isToast) return undefined;
+    else return action + "@" + details;
   }
 }
 
