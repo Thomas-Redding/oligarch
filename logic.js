@@ -100,7 +100,7 @@ class Game
         } else {
             throw Exception("Can't undo an action of type '%s'" % action);
         }
-        this._prayer("get_state", '')
+        this._prayer("undo", '')
     }
 
     save(save_name) {
