@@ -425,7 +425,7 @@ function unit_clicked(territory_name, unit_type, nation_name) {
         "Cavalry": 0,
         "Artillery": 0
       });
-    } else if (nation_name !== gLatestState.stage.turn) {
+    } else if (territory_name !== moveState.from) {
       // Pretend we clicked the territory
       document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
         "view": window,
@@ -1278,6 +1278,23 @@ function rewriteActivityLogFromScratch() {
   gameLogDiv.innerHTML = html;
 }
 
+function render_vote_table() {
+  // TODO(mredding): update currentVotesDiv when this exists on the backend.
+  let html = `
+  <table border=1>
+    <tbody>
+      <tr>
+        <td colspan=2>Votes (1 total)</td>
+      </tr>
+  `;
+  let votesFor = utils.candidate_votes(state);
+  for (let player_name in votesFor) {
+    html += "<tr><td>" + player_name + "</td><td>" + votesFor[player_name].vote + " votes</td></tr>";
+  }
+  html += "</table></tbody>";
+  currentVotesDiv.innerHTML = html;
+}
+
 let clock = new Clock();
 
 let gSocket;
@@ -1387,12 +1404,7 @@ login().then((socket) => {
       clock.set_time_remaining(state.clock);
     }
     else if (action === "vote_tallied") {
-      // TODO(mredding): update currentVotesDiv when this exists on the backend.
-      currentVotesDiv.innerHTML = "<table><tbody>";
-      for (let key in details) {
-        currentVotesDiv.innerHTML += "<tr><td>" + key + "</td><td>" + details[key] + "</td></tr>";
-      }
-      currentVotesDiv.innerHTML += "</table></tbody>";
+      render_vote_table();
       render_map(state);
     }
     else if (action === "begin_presidential_command") {
