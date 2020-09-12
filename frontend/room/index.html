@@ -1550,6 +1550,7 @@ login().then((socket) => {
     }
     else if (action === "vote_tallied") {
       render_map(state);
+      render_vote_table(state);
     }
     else if (action === "begin_presidential_command") {
       clock.set_time_remaining(state.clock);
