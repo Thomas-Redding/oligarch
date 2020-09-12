@@ -1412,6 +1412,11 @@ login().then((socket) => {
     else if (action === "moves_made") {
       render_map(state);
     }
+    else if (action === "player_busy") {
+      // TODO: this message should look different depending on
+      // whether the recipient is busy or you are busy.
+      alert("Trade rejected (either your or that player have an ongoing trade)")
+    }
     else if (action === "bid_received") {
       clock.set_time_remaining(state.clock);
 
@@ -1456,11 +1461,11 @@ function count(A) {
 let tradeProposal = null;
 function show_trade_proposal(proposal) {
   tradeProposal = proposal;
-  let shares_to_player = count(proposal.shares_to_player);
-  let shares_from_player = count(proposal.shares_from_player);
+  let shares_to_player = count(proposal.shares_to);
+  let shares_from_player = count(proposal.shares_from);
 
   let foo;
-  if (proposal.shares_to_player.length === 0) {
+  if (proposal.shares_to.length === 0) {
     if (proposal.cash_to === 0) {
       foo = "nothing";
     } else {
@@ -1477,7 +1482,7 @@ function show_trade_proposal(proposal) {
   }
 
   let bar;
-  if (proposal.shares_from_player.length === 0) {
+  if (shares_from_player.length === 0) {
     if (proposal.cash_from === 0) {
       bar = "nothing";
     } else {
@@ -1517,8 +1522,8 @@ function respond_trade(accept) {
     "method": "respondTrade",
     "args": [
       tradingPartner,
-      tradeProposal.shares_to_player,
-      tradeProposal.shares_from_player,
+      tradeProposal.shares_to,
+      tradeProposal.shares_from,
       tradeProposal.cash_to,
       tradeProposal.cash_from,
       accept
