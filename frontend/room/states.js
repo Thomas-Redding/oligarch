@@ -15,7 +15,7 @@ const nations = {
     "territories": ["Venezuela", "Brazil", "Argentina", "Peru"]
   },
   "Europe": {
-    "color": new Color(96, 128, 255),
+    "color": new Color(128, 144, 255),
     "rect": {"x": 530, "y": 135},
     "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"]
   },
