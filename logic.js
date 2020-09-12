@@ -4,7 +4,7 @@ let utils = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 
-const SPAWN_BUSY_WORLD = false;
+const SPAWN_BUSY_WORLD = true;
 const BALANCED_MODE = true;
 
 log.enabled = true;
@@ -296,7 +296,8 @@ class Game
         if (n_buildings < 4 && afford &&
              username === this.mother_state.nations[nat].president) {
                 let t_str = type == 'barracks' ? 'n_barracks' : 'n_factories'
-                let terrInfo = utils.territory_for_territory_name(terr);
+                let terrInfo =
+                    utils.territory_for_territory_name(this.mother_state, terr);
                 terrInfo[t_str] += 1
                 this.mother_state.nations[nat].cash -= COSTS[type]
         }
@@ -311,7 +312,8 @@ class Game
         let val_terr = utils.territories_of_nation_that_can_spawn(
             this.mother_state, nat)
         if (val_terr.includes(terr) && afford){
-            let terrInfo = utils.territory_for_territory_name(terr);
+            let terrInfo =
+                utils.territory_for_territory_name(this.mother_state, terr);
             terrInfo.n_barracks_can_spawn -= 1
             let unit = {"type": type, "territory":terr,
                 "id":utils.uuid(), 'can_move':false, 'can_move':false}
@@ -555,8 +557,9 @@ class Game
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
             this._prayer('begin_spawn','')
-            for (let terr of utils.territories_of_nation(this.mother_state, nat)){
-                let terrInfo = utils.territory_for_territory_name(terr);
+            for (let terr of utils.territories_of_nation(this.mother_state, nat)) {
+                let terrInfo =
+                    utils.territory_for_territory_name(this.mother_state, terr);
                 let nb = terrInfo.n_barracks
                 terrInfo.n_barracks_can_spawn = nb
             }

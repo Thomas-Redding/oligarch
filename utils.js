@@ -284,6 +284,7 @@ let utils = {
       "Ukraine": 1,
       "Scandinavia": 1,
       "Great Britain": 1,
+      "North Africa": 1,
     },
     "Western United States": {
       "Alberta": 1,
@@ -443,7 +444,7 @@ let utils = {
    */
   military_bias: (mother_state, nation, territory) => {
     let rtn = 0;
-    let type_to_action_to_count = utils.army_in_territory(mother_state.nations[nation].army, territory, "move");
+    let type_to_action_to_count = utils.army_in_territory(mother_state, nation, territory, "Move");
     for (let type in type_to_action_to_count) {
       for (let n of type_to_action_to_count[type]) {
         rtn += n;
@@ -451,7 +452,7 @@ let utils = {
     }
     let neighbors = utils.NEIGHBORS[territory];
     for (let neighbor in neighbors) {
-      rtn += utils.sum(utils.army_in_territory(mother_state.nations[nation].army, neighbor, "move")["Artillery"]);
+      rtn += utils.sum(utils.army_in_territory(mother_state, nation, neighbor, "Move")["Artillery"]);
     }
     return rtn;
   },
@@ -631,37 +632,38 @@ let utils = {
    * @return {Object} the dictionary described above.
    */
    army_in_territory: (mother_state, nation_name, territory, action) => {
-     if (action != "Move" && action != "Attack") {
-       throw Error("Unrecognized `stage` parameter.");
-     }
-     let army = mother_state.nations[nation_name].army;
-     let arr = army.filter(x => x.territory == territory);
-     if (action === "join") {
-       return {
-         "Cavalry": arr.filter(x => x.type === "Cavalry").length,
-         "Infantry":  arr.filter(x => x.type === "Infantry").length,
-         "Artillery":  arr.filter(x => x.type === "Artillery").length
-       }
-     }
-     let rtn = {
-       "Cavalry": [0, 0],
-       "Infantry": [0, 0],
-       "Artillery": [0, 0],
-     };
-     for (let troop of arr) {
-       let index;
-       if (action == "Move") {
-         index = troop.can_move ? 1 : 0;
-       } else {
-         if (!utils.has_valid_targets(mother_state, nation_name, territory)) {
-           index = 0;
-         } else {
-           index = troop.can_attack ? 1 : 0;
-         }
-       }
-       rtn[troop.type][index] += 1;
-     }
-     return rtn;
+    console.log("army_in_territory", mother_state, nation_name, territory, action);
+    if (action != "Move" && action != "Attack") {
+      throw Error("Unrecognized `stage` parameter.");
+    }
+    let army = mother_state.nations[nation_name].army;
+    let arr = army.filter(x => x.territory == territory);
+    if (action === "join") {
+      return {
+        "Cavalry": arr.filter(x => x.type === "Cavalry").length,
+        "Infantry":  arr.filter(x => x.type === "Infantry").length,
+        "Artillery":  arr.filter(x => x.type === "Artillery").length
+      }
+    }
+    let rtn = {
+      "Cavalry": [0, 0],
+      "Infantry": [0, 0],
+      "Artillery": [0, 0],
+    };
+    for (let troop of arr) {
+      let index;
+      if (action == "Move") {
+        index = troop.can_move ? 1 : 0;
+      } else {
+        if (!utils.has_valid_targets(mother_state, nation_name, territory)) {
+          index = 0;
+        } else {
+          index = troop.can_attack ? 1 : 0;
+        }
+      }
+      rtn[troop.type][index] += 1;
+    }
+    return rtn;
   },
 
   troop_ids_that_can_act_in_territory: (mother_state, territory_name) => {
