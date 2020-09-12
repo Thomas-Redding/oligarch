@@ -751,15 +751,13 @@ class Game
         let candidate_votes = utils.candidate_votes(this.mother_state)
         console.log(utils.candidate_votes(this.mother_state))
         this._prayer('vote_tallied', candidate_votes)
-        let n_votes = 0
+        let votes_needed = Math.ceil(utils.shares_sold(this.mother_state, nat)/2)
         for (let player in candidate_votes) {
-            if (candidate_votes[player] >= n_votes) {
+            if (candidate_votes[player] >= votes_needed) {
                 this.mother_state.nations[nat].president = player
                 this.timer.stop(true)
             }
         }
-        n_votes = Math.floor(n_votes/2)+1
-        //this.rdyUp(username)
     }
 
     _conclude_election()
