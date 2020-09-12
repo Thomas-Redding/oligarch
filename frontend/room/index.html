@@ -1304,12 +1304,8 @@ function htmlFromLog(action, details, isToast) {
     if (isToast) return undefined;
     else return "Trade rejected";
   } else {
-    if (isToast) {
-      return undefined;
-    }
-    else {
-      return action + "@" + details;
-    }
+    if (isToast) return undefined;
+    else return action + "@" + details;
   }
 }
 
