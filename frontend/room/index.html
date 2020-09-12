@@ -1409,6 +1409,9 @@ login().then((socket) => {
       playIcon.style.display = gLatestState.is_paused ? "block" : "none";
       pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
       clock.set_time_remaining(state.clock);
+      if (gLatestState.is_paused) {
+        clock.pause();
+      }
     }
     else if (action === "undo") {
     }
