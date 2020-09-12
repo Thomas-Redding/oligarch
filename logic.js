@@ -18,8 +18,8 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 10*1000, 'bidding' : 1*1000,
- 'election':10*1000, 'actions':1200*1000}
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000,
+ 'election':2*60*1000, 'actions':3*60*1000}
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
     'Artillery':15, 'Cavalry':15 }
@@ -519,8 +519,8 @@ class Game
             this._prayer('begin_build','')
             let terr_list = utils.territories_of_nation_that_can_build(
                 this.mother_state, nat)
-            if (terr_list.length == 0 || noop)
-                {
+            console.log(terr_list)
+            if (terr_list.length == 0 || noop) {
                     this._transition()
                 }
         }
