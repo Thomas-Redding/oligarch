@@ -358,7 +358,7 @@ function render_table(state) {
       <td class="column-AS">AS</td>
       <td class="column-AU">AU</td>
       <td>Cash</td>
-      <td>Score</td>
+      <td>Worth</td>
     </tr>
   `;
 
@@ -1206,70 +1206,75 @@ function areAdminFetched(areAdmin) {
   }
 }
 
-function htmlFromLog(arr) {
-  if (arr[0] == "get_state") {
+function htmlFromLog(action, details, isToast) {
+  // console.log(action, details);
+  if (action == "get_state") {
     return undefined;
-  } else if (arr[0] == "is_admin") {
+  } else if (action == "is_admin") {
     return undefined;
-  } else if (arr[0] == "end_lobby") {
-    return undefined;
-  } else if (arr[0] == "game_start") {
-    return undefined;
-  } else if (arr[0] == "taxes_collected") {
+  } else if (action == "end_lobby") {
+    if (isToast) return undefined;
+    else return "Exited Lobby";
+  } else if (action == "game_start") {
+    if (isToast) return undefined;
+    else return "Game started";
+  } else if (action == "taxes_collected") {
     return "Taxes collected."
-  } else if (arr[0] == "begin_deliberation") {
+  } else if (action == "begin_deliberation") {
     return "Began deliberation"
-  } else if (arr[0] == "user_ready") {
-    return undefined;
-  } else if (arr[0] == "deliberation_over") {
+  } else if (action == "user_ready") {
+    if (isToast) return undefined;
+    else return "User ready";
+  } else if (action == "deliberation_over") {
     return "Ended deliberation";
-  } else if (arr[0] == "auction_start") {
-    return "Auction began for " + arr[1];
-  } else if (arr[0] == "bid_received") {
-    return undefined;
-    // return arr[1].player + " bid $" + arr[1].amount + "B for " + arr[1].nation;
-  } else if (arr[0] == "conclude_bidding") {
-    return arr[1].winner + " bought a share of " + arr[1].nation + " for $" + arr[1].price + "B";
-  } else if (arr[0] == "auctions_complete") {
+  } else if (action == "auction_start") {
+    return "Auction began for " + details;
+  } else if (action == "bid_received") {
+    if (isToast) return undefined;
+    else return details.player + " bid $" + details.amount + "B for " + details.nation;
+  } else if (action == "conclude_bidding") {
+    return details.winner + " bought a share of " + details.nation + " for $" + details.price + "B";
+  } else if (action == "auctions_complete") {
     return "Auctions concluded.";
-  } else if (arr[0] == "start_election") {
-    return "Election began in " + arr[1];
-  } else if (arr[0] == "vote_tallied") {
-    let candidate = Object.keys(arr[1])[0];
+  } else if (action == "start_election") {
+    return "Election began in " + details;
+  } else if (action == "vote_tallied") {
+    let candidate = Object.keys(details)[0];
     return "Someone voted for " + candidate;
-  } else if (arr[0] == "conclude_election") {
-    if (arr[1].winner) {
-      return arr[1].winner + " won the election";
+  } else if (action == "conclude_election") {
+    if (details.winner) {
+      return details.winner + " won the election";
     } else {
       return "Election concluded with no winner";
     }
-  } else if (arr[0] == "begin_presidential_command") {
-    if (arr[1].president) {
-      return "The reign of " + arr[1].president + " began in " + arr[1].nation + "."
+  } else if (action == "begin_presidential_command") {
+    if (details.president) {
+      return "The reign of " + details.president + " began in " + arr[1].nation + "."
     } else {
       return undefined;
     }
-  } else if (arr[0] == "begin_move") {
+  } else if (action == "begin_move") {
     return "Troop movement began";
-  } else if (arr[0] == "begin_attack") {
+  } else if (action == "begin_attack") {
     return "Troop attacks began";
-  } else if (arr[0] == "begin_spawn") {
+  } else if (action == "begin_spawn") {
     return "Troop recruitment began"
-  } else if (arr[0] == "begin_build") {
+  } else if (action == "begin_build") {
     return "Construction began";
-  } else if (arr[0] == "begin_dividends") {
+  } else if (action == "begin_dividends") {
     return "Dividend deliberations began";
-  } else if (arr[0] == "dividends_paid") {
-    return "$" + arr[1] + "B paid in dividends";
-  } else if (arr[0] == "end_presidential_command") {
+  } else if (action == "dividends_paid") {
+    return "$" + details + "B paid in dividends";
+  } else if (action == "end_presidential_command") {
     return "The reign has ended.";
   } else {
-    return arr.join("@");
+    if (isToast) return undefined;
+    else arr.join("@");
   }
 }
 
 function possiblyToast(actions, details) {
-  let s = htmlFromLog([actions, details]);
+  let s = htmlFromLog(actions, details, true);
   if (s === undefined) return;
   toast(s);
 }
@@ -1279,7 +1284,7 @@ function rewriteActivityLogFromScratch() {
   let logs = gLatestState.logs;
   if (logs === undefined) logs = [];
   for (let log of logs) {
-    let s = htmlFromLog(log);
+    let s = htmlFromLog(log[0], log[1], false);
     if (s === undefined) continue;
     html += "<li>" + s + "</li>";
   }
