@@ -161,7 +161,7 @@ class Game
             console.log(Object.keys(this.mother_state.players).length);
             if (Object.keys(this.mother_state.players).length == 0) {
                 player.auth = 'admin';
-            } else {s
+            } else {
                 player.auth = 'user';
             }
             player.shares = {}
