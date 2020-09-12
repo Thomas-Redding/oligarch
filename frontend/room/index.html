@@ -544,6 +544,9 @@ function render_move_state() {
       let tid = ["stacktext", moveState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
       let circ = document.getElementById(cid);
       let text = document.getElementById(tid);
+      if (!circ) {
+        continue;
+      }
       if (moveState[unit_type] > 0) {
         text.innerHTML = moveState[unit_type];
         circ.style.display = "block";
@@ -634,25 +637,27 @@ function render_map(state) {
                   circ.addEventListener("click", onclick);
                   out.appendChild(circ);
                 }
+              }
 
-                if (can_action) {
-                  const idSuffix = territory_name + "_" + nation_name + "_" + unit_type + "_" + can_action;
-                  let circ = svg.circle(x - 5, y - 6.5, s * 0.23);
-                  circ.style.fill = '#ff0';
-                  circ.style.display = 'none';
-                  circ.addEventListener("click", onclick);
-                  circ.id = "stackcircle_" + idSuffix;
-                  out.appendChild(circ);
+              // This adds the (often invisible) circle indicating how many units from a stack have been
+              // selected.
+              {
+                const idSuffix = territory_name + "_" + nation_name + "_" + unit_type + "_" + can_action;
+                let circ = svg.circle(x - 5, y - 6.5, s * 0.23);
+                circ.style.fill = '#ff0';
+                circ.style.display = 'none';
+                circ.addEventListener("click", onclick);
+                circ.id = "stackcircle_" + idSuffix;
+                out.appendChild(circ);
 
-                  let text = svg.text(n, x - 8, y - 3, {
-                    "style": "font-size: 0.7em; text-align:center;"
-                  });
-                  text.id = "stacktext_" + idSuffix;
-                  text.style.fill = 'black';
-                  text.style.display = 'none';
-                  text.style.textShadow = "6px 6px 20px black";
-                  out.appendChild(text);
-                }
+                let text = svg.text(n, x - 8, y - 3, {
+                  "style": "font-size: 0.7em; text-align:center;"
+                });
+                text.id = "stacktext_" + idSuffix;
+                text.style.fill = 'black';
+                text.style.display = 'none';
+                text.style.textShadow = "6px 6px 20px black";
+                out.appendChild(text);
               }
 
               // We use this grayed-out circle to prevent user clicks when an action is not available.
