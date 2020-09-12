@@ -592,11 +592,14 @@ function render_map(state) {
               }
 
               if (n > 1) {
-                let text = svg.text(n, x - 5, y + 6);
-                text.style.cursor = 'pointer';
-                if (can_action) {
-                  text.addEventListener("click", onclick);
-                }
+                let circ = svg.circle(x + 5, y - 6.5, s * 0.23);
+                circ.style.fill = 'red';
+                out.appendChild(circ);
+
+                // let text = svg.text(n, x - 5, y + 6);
+                let text = svg.text(n, x + 2, y - 3, {
+                  "style": "font-size: 0.7em; text-align:center;"
+                });
                 text.style.fill = 'white';
                 text.style.textShadow = "6px 6px 20px black";
                 out.appendChild(text);
@@ -1204,6 +1207,10 @@ login().then((socket) => {
       }
     }
     else if (action === "trade_accepted") {
+      render_table(state);
+    }
+    else if (action === "battle_outcome") {
+      render_map(state);
       render_table(state);
     }
     else if (action === "is_admin") {
