@@ -1263,7 +1263,7 @@ function htmlFromLog(action, details, isToast) {
     return undefined;
   } else if (action == "player_added") {
     if (isToast) return undefined;
-    else return details + " joined";
+    else return "<b>" + details + "</b> joined";
   } else if (action == "end_lobby") {
     if (isToast) return undefined;
     else return "Exited Lobby";
@@ -1284,25 +1284,25 @@ function htmlFromLog(action, details, isToast) {
     return "Auction began for " + details;
   } else if (action == "bid_received") {
     if (isToast) return undefined;
-    else return details.player + " bid $" + details.amount + "B for " + details.nation;
+    else return "<b>" + details.player + "</b> bid $" + details.amount + "B for " + details.nation;
   } else if (action == "conclude_bidding") {
-    return details.winner + " bought a share of " + details.nation + " for $" + details.price + "B";
+    return "<b>" + details.winner + "</b> bought a share of " + details.nation + " for $" + details.price + "B";
   } else if (action == "auctions_complete") {
     return "Auctions concluded.";
   } else if (action == "start_election") {
     return "Election began in " + details;
   } else if (action == "vote_tallied") {
     let candidate = Object.keys(details)[0];
-    return "Someone voted for " + candidate;
+    return "Someone voted for <b>" + candidate + "</b>";
   } else if (action == "conclude_election") {
     if (details.winner) {
-      return details.winner + " won the election";
+      return "<b>" + details.winner + "</b> won the election";
     } else {
       return "Election concluded with no winner";
     }
   } else if (action == "begin_presidential_command") {
     if (details.president) {
-      return "The reign of " + details.president + " began in " + details.nation + "."
+      return "The reign of <b>" + details.president + "</b> began in " + details.nation + "."
     } else {
       return undefined;
     }
@@ -1321,7 +1321,7 @@ function htmlFromLog(action, details, isToast) {
   } else if (action == "end_presidential_command") {
     return "The reign has ended.";
   } else if (action == "bribe") {
-    return details.player + " bribed " + details.nation + " with $" + details.amount + "B";
+    return "<b>" + details.player + "</b> bribed " + details.nation + " with $" + details.amount + "B";
   } else {
     if (isToast) {
       return undefined;
