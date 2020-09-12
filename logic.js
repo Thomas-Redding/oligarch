@@ -18,8 +18,8 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 10*1000, 'bidding' : 1*1000,
- 'election':10*1000, 'actions':1200*1000}
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000,
+ 'election':2*60*1000, 'actions':3*60*1000}
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
     'Artillery':15, 'Cavalry':15 }
@@ -78,6 +78,9 @@ class Game
         if (this.mother_state.players[username].auth !== 'admin') return;
         let [action, args, state] = this._history.undo();
         if (this.timer) this.timer.stop();
+        // TODO: Allow undoing to the beginning of any subphase. To do this, we
+        // need to add a global variable indicating whether any action has been
+        // taken during this subphase.
         if (action === "lobby") {
             // Go back to the lobby.
             this.mother_state = state
@@ -85,6 +88,9 @@ class Game
         } else if (action === "auction_start") {
             // Go back to the start of an auction (before any bids).
             this.mother_state = state
+        } else if (action === "election_start") {
+            this.mother_state = state
+            this.timer.start(TIMING.election, this._conclude_election.bind(this))
         } else {
             throw Exception("Can't undo an action of type '%s'" % action);
         }
@@ -379,10 +385,10 @@ class Game
                 this.mother_state.players[username].shares[share]++
                 this.mother_state.players[player].shares[share]--
             }
-            this.mother_state.players[username].cash += cash_to
-            this.mother_state.players[player].cash += cash_from
-            this.mother_state.players[username].cash -= cash_from
-            this.mother_state.players[player].cash -= cash_to
+            this.mother_state.players[username].cash += cash_from
+            this.mother_state.players[player].cash += cash_to
+            this.mother_state.players[username].cash -= cash_to
+            this.mother_state.players[player].cash -= cash_from
             this._trade_dequeue(username, player)
             this._prayer('trade_accepted','',this.mother_state)
         }
@@ -513,8 +519,8 @@ class Game
             this._prayer('begin_build','')
             let terr_list = utils.territories_of_nation_that_can_build(
                 this.mother_state, nat)
-            if (terr_list.length == 0 || noop)
-                {
+            console.log(terr_list)
+            if (terr_list.length == 0 || noop) {
                     this._transition()
                 }
         }
@@ -708,6 +714,10 @@ class Game
     _register_vote(username, candidate_username)
     {
         log(username, candidate_username);
+        if (utils.sum(Object.values(utils.candidate_votes(this.mother_state))) == 0) {
+            // This is the first vote.
+            this._history.save("election_start", null, this.mother_state);
+        }
         this.mother_state.players[username].vote = candidate_username
         let nat = this.mother_state.stage.turn
         let candidate_votes = utils.candidate_votes(this.mother_state)
@@ -727,6 +737,10 @@ class Game
     _conclude_election()
     {
         log();
+        if (utils.sum(Object.values(utils.candidate_votes(this.mother_state))) == 0) {
+            // No votes were cast.
+            this._history.save("election_start", null, this.mother_state);
+        }
         for (let player in this.mother_state.players){
             this.mother_state.players[player].vote = null
             this.mother_state.players[player].ready = false
