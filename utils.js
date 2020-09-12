@@ -359,7 +359,7 @@ let utils = {
    */
   score_of_player: (mother_state, username) => {
     let player = mother_state.players[username];
-    let rtn = player.cash;
+    let rtn = parseFloat(player.cash);
     for (let nation in player.shares) {
       let income = utils.income_of_nation(mother_state, nation);
       let shares_sold = utils.shares_sold(mother_state, nation);

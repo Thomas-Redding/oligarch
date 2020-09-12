@@ -368,6 +368,9 @@ function render_table(state) {
     let player = state.players[name];
 
     let tr = document.createElement("TR");
+    if (name === gUsername) {
+      tr.style.backgroundColor = '#444';
+    }
     tr.innerHTML += "<td>" + player.username + "</td>";
     tr.innerHTML += '<td class="column-NA">' + player.shares["North America"] + "</td>";
     tr.innerHTML += '<td class="column-SA">' + player.shares["South America"] + "</td>";
@@ -378,6 +381,31 @@ function render_table(state) {
     tr.innerHTML += "<td>" + player.cash + "</td>";
     tr.innerHTML += "<td>" + utils.score_of_player(state, player.username) + "</td>";
 
+    tbody.appendChild(tr);
+  }
+
+  const players = Object.values(gLatestState.players);
+  function all_shares_out(nation_name) {
+    let r = 0;
+    for (let player of players) {
+      r += player.shares[nation_name];
+    }
+    return r;
+  }
+
+  // sum row
+  {
+    let tr = document.createElement("TR");
+    tr.style.borderTop = 'solid white 1px';
+    tr.innerHTML += "<td>TOTAL</td>";
+    tr.innerHTML += '<td class="column-NA">' + all_shares_out("North America") + "</td>";
+    tr.innerHTML += '<td class="column-SA">' + all_shares_out("South America") + "</td>";
+    tr.innerHTML += '<td class="column-EU">' + all_shares_out("Europe") + "</td>";
+    tr.innerHTML += '<td class="column-AF">' + all_shares_out("Africa") + "</td>";
+    tr.innerHTML += '<td class="column-AS">' + all_shares_out("Asia") + "</td>";
+    tr.innerHTML += '<td class="column-AU">' + all_shares_out("Australia") + "</td>";
+    tr.innerHTML += "<td>" + utils.sum(players.map(x => x.cash)) + "</td>";
+    tr.innerHTML += "<td></td>";
     tbody.appendChild(tr);
   }
 
@@ -2058,20 +2086,7 @@ function send_bribe(nation_name) {
 <div id='contentDiv'>
   <div id="leftPanel">
     <table id='mainTable'>
-      <tbody>
-        <tr>
-          <td></td>
-          <td class="column-NA">NA</td>
-          <td class="column-SA">SA</td>
-          <td class="column-EU">EU</td>
-          <td class="column-AF">AF</td>
-          <td class="column-AS">AS</td>
-          <td class="column-AU">AU</td>
-          <td>Cash</td>
-          <td>Worth</td>
-          <td style="width:100%"></td>
-        </tr>
-      </tbody>
+      <tbody></tbody>
     </table>
     <div id="currentActionDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:3em; display:flex; flex-direction:column;">
       <div style="flex:1"></div>
