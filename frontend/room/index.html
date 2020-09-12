@@ -303,7 +303,7 @@ class Vec2 {
 
 function bid(val) {
   gLatestState
-  if (gLatestState.players[gUsername].cash <= val) return;
+  if (gLatestState.players[gUsername].cash < val) return;
   send({
     "method": "bid",
     "args": [val]
