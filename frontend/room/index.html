@@ -388,19 +388,18 @@ let moveState = null;
 
 function unit_clicked(territory_name, unit_type, nation_name) {
   if (gLatestState.stage.phase !== "Action") {
-    moveState = null;
-    render_move_state();
+    change_move_state(null);
     return;
   }
   const subphase = gLatestState.stage.subphase;
   if (subphase === "Move") {
     if (!moveState) {
-      moveState = {
+      change_move_state({
         "from": territory_name,
         "Infantry": 0,
         "Cavalry": 0,
         "Artillery": 0
-      };
+      });
     } else if (nation_name !== gLatestState.stage.turn) {
       // Pretend we clicked the territory
       document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
@@ -418,9 +417,17 @@ function unit_clicked(territory_name, unit_type, nation_name) {
     let n = utils.sum(army[unit_type]);
 
     if (unit_type in moveState) {
-      moveState[unit_type] = (moveState[unit_type] + 1) % (n + 1);
+      {
+        let c = utils.deep_copy(moveState);
+        c[unit_type] = (moveState[unit_type] + 1) % (n + 1);
+        change_move_state(c);
+      }
     } else {
-      moveState[unit_type] = 1;
+      {
+        let c = utils.deep_copy(moveState);
+        c[unit_type] = 1;
+        change_move_state(c);
+      }
     }
     if (n > 0) {
       // Cause territories you can move to to glow.
@@ -434,19 +441,21 @@ function unit_clicked(territory_name, unit_type, nation_name) {
       let territoryNames = utils.valid_moves_for_troop(gLatestState, nation_name, territory_name, includesNonCavalary ? "Infantry" : "Cavalry");
       highlightTerritories(Object.keys(territoryNames));
     }
-    render_move_state();
   } else if (subphase === "Attack") {
     let army = utils.troop_ids_in_territory(gLatestState, territory_name, nation_name, unit_type);
     if (!moveState) {
-      moveState = {
+      change_move_state({
         "territory": territory_name,
-      }
+      });
     }
-    moveState[nation_name] = army[0];
+    {
+      let c = utils.deep_copy(moveState);
+      c[nation_name] = army[0];
+      change_move_state(c);
+    }
     if (Object.keys(moveState).length === 3) {
       if (!(gLatestState.stage.turn in moveState)) {
-        moveState = null;
-        render_move_state();
+        change_move_state(null);
         return;
       }
       let other_key = Object.keys(moveState);
@@ -459,9 +468,8 @@ function unit_clicked(territory_name, unit_type, nation_name) {
           moveState[other_key].id
         ]
       })
-      moveState = null;
+      change_move_state(null);
     }
-    render_move_state();
   }
 
 }
@@ -527,15 +535,42 @@ function make_horse(x, y, sw, sh) {
   return path;
 }
 
-function render_move_state() {
+function change_move_state(newState) {
+  let oldState = moveState;
+  if (oldState) {
+    if (newState) {
+      console.log('CMS', JSON.stringify(oldState), ' --> ', JSON.stringify(newState));
+    } else {
+      console.log('CMS', JSON.stringify(oldState), ' --> ', '(null)');
+    }
+  } else {
+    if (newState) {
+      console.log('CMS (null)', ' --> ', JSON.stringify(newState));
+    } else {
+      console.log('CMS (null)', ' --> ', ' (null)');
+    }
+  }
+  moveState = newState;
+  render_move_state(oldState, newState);
+}
+
+function render_move_state(oldState, moveState) {
+  // Really terrible code to hide the old state's stacks
+  try {
+    let cid = ["stackcircle", moveState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
+    let tid = ["stacktext", moveState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
+    let circ = document.getElementById(cid);
+    let text = document.getElementById(tid);
+    circ.style.display = "none";
+    text.style.display = "none";
+  } catch (err) {}
+
   if (moveState === null) {
     moveStateDiv.style.display = "none";
     return;
   }
   moveStateDiv.style.display = "block";
   moveStateDiv.innerHTML = JSON.stringify(moveState, null, 2);
-
-  console.log('render_move_state');
 
   // circ.id = territory_name + "_" + nation_name + "_" + unit_type + "_" + can_action
   if (gLatestState.stage.subphase === "Move") {
@@ -562,14 +597,20 @@ function render_move_state() {
         continue;
       }
       let unit = moveState[nation_name];
-      let can_action = (gLatestState.stage.subphase === "Move" ? unit.can_move : unit.can_attack);
+      let can_action = (gLatestState.stage.subphase === "Move" ? unit.can_move : unit.can_attack) * 1;
       let cid = ["stackcircle", unit.territory, nation_name, unit.type, can_action].join("_");
       let tid = ["stacktext", unit.territory, nation_name, unit.type, can_action].join("_");
-      console.log(cid, tid);
+      let circ = document.getElementById(cid);
+      let text = document.getElementById(tid);
+      console.log(cid, circ);
+      if (!circ) {
+        continue;
+      }
+      text.innerHTML = '1';
+      circ.style.display = "block";
+      text.style.display = "block";
     }
   }
-
-  // document.getElementById("")
 }
 
 function render_map(state) {
@@ -900,8 +941,7 @@ function main(state) {
               console.log(type, validIds, moveState);
               if (validIds[type].length < moveState[type]) {
                 alert("Invalid Move (1)");
-                moveState = null;
-                render_move_state();
+                change_move_state(null);
                 return;
               }
               for (let i = 0; i < moveState[type]; ++i) {
@@ -925,8 +965,7 @@ function main(state) {
               alert("Invalid Move (2)");
             }
 
-            moveState = null;
-            render_move_state();
+            change_move_state(null);
           }
         }
       }
@@ -1353,12 +1392,12 @@ login().then((socket) => {
       factoryRadio.checked = true;
     }
     else if (action === "begin_move") {
-      moveState = null;
       render_map(state);
+      change_move_state(null);
     }
     else if (action === "begin_attack") {
-      moveState = null;
       render_map(state);
+      change_move_state(null);
     }
     else if (action === "built_infrastructure") {
       render_table(state);
