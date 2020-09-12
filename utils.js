@@ -66,6 +66,7 @@ let utils = {
       "Venezuela": 1,
       "Peru": 1,
       "Argentina": 1,
+      "North Africa": 1,
     },
     "Central America": {
       "Western United States": 1,
