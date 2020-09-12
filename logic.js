@@ -161,7 +161,7 @@ class Game
             console.log(Object.keys(this.mother_state.players).length);
             if (Object.keys(this.mother_state.players).length == 0) {
                 player.auth = 'admin';
-            } else {
+            } else {s
                 player.auth = 'user';
             }
             player.shares = {}
@@ -173,7 +173,7 @@ class Game
             }
             this.mother_state.players[username] = player
         }
-        setTimeout(() => {this._prayer("player_added", '')}, 0)
+        this._prayer("player_added",username)
         return rtn
     }
 
