@@ -41,7 +41,7 @@ class History {
     this._checkpoint_types = [];
   }
   save(checkpoint_type, args, mother_state) {
-    log(checkpoint_type, args, mother_state)
+    log(checkpoint_type, args)
     this._checkpoint_types.push(checkpoint_type);
     this._args.push(args);
     this._states.push(utils.deep_copy(mother_state));
