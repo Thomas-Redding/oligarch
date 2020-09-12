@@ -473,7 +473,7 @@ function unit_clicked(territory_name, unit_type, nation_name) {
       return;
     }
 
-    let army = utils.army_in_territory(gLatestState.nations[nation_name].army, territory_name, "move");
+    let army = utils.army_in_territory(gLatestState, nation_name, territory_name, "Move");
     let n = utils.sum(army[unit_type]);
 
     if (unit_type in moveState) {
@@ -701,7 +701,7 @@ function render_map(state) {
     let icon_drawers = [];
 
     for (let nation_name in state.nations) {
-      let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, state.stage.subphase === "Attack" ? "attack" : "move", "join");
+      let army = utils.army_in_territory(gLatestState, nation_name, territory_name, (["Move", "Attack"].includes(state.stage.subphase) ? state.stage.subphase : "Move"), "join");
       for (let unit_type in army) {
         for (let can_action = 0; can_action < 2; ++can_action) {
           let n = army[unit_type][can_action];
