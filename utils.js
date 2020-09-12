@@ -444,18 +444,24 @@ let utils = {
     return rtn;
   },
 
-  valid_moves_for_troop: (mother_state, nation, territory, troop_type) => {
+  /*
+   * @param {string} nation_name the name of the nation whose cavalry want to move
+   * @param {string} territory the territory where the cavalry are
+   * @param {string} troop_type the type of troop to move; one of {"Infantry", "Artillery", "Cavalry"}
+   * @returns {Object} a dictionary whose keys are states a cavalry can move to
+   */
+  valid_moves_for_troop: (mother_state, nation_name, territory, troop_type) => {
     if (troop_type == "Cavalry") {
-      return utils.valid_moves_for_cavalry(mother_state, nation, territory);
+      return utils._valid_moves_for_cavalry(mother_state, nation_name, territory);
     }
-    let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation);
+    let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
     let neighbors = utils.NEIGHBORS[territory];
     let rtn = {};
     for (let neighbor in neighbors) {
       if (is_territory_uncontested) {
         rtn[neighbor] = 1;
       } else {
-        let doesOwnNeighbor = (utils.territory_to_owner(mother_state, neighbor) == nation);
+        let doesOwnNeighbor = (utils.territory_to_owner(mother_state, neighbor) == nation_name);
         let doesNeighborHaveTroops = utils.does_territory_have_troops(mother_state, neighbor);
         if (doesOwnNeighbor || !doesNeighborHaveTroops) {
           rtn[neighbor] = 1;
@@ -466,17 +472,17 @@ let utils = {
   },
 
   /*
-   * @param {string} nation the nation whose cavalry want to move
+   * @param {string} nation_name the name of the nation whose cavalry want to move
    * @param {string} territory the territory where the cavalry are
    * @returns {Object} a dictionary whose keys are states a cavalry can move to
    */
-  valid_moves_for_cavalry: (mother_state, nation, territory) => {
-    let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation);
+  _valid_moves_for_cavalry: (mother_state, nation_name, territory) => {
+    let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
     let rtn = {};
     let neighbors = utils.NEIGHBORS[territory];
     let uncontested_neighbors = [];
     for (let neighbor in neighbors) {
-      if (utils.territory_to_owner(mother_state, neighbor) == nation) {
+      if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
         // I own the neighbor.
         uncontested_neighbors.push(neighbor);
         rtn[neighbor] = 1;
