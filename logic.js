@@ -21,7 +21,7 @@ const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
-const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
+const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
 const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000,
  'election':2*60*1000, 'actions':3*60*1000}
 const UNITS = ['Cavalry','Infantry','Artillery']
