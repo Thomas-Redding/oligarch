@@ -257,7 +257,6 @@ function toast(html, duration=2000) {
       if (new Date().getTime() < toast.timeToDismiss) return;
       let toastDivs = document.getElementsByClassName("toast");
       for (let toastDiv of toastDivs) {
-        return;
         toastDiv.parentElement.removeChild(toastDiv);
       }
       if (toast.queue.length == 0) return;
@@ -275,7 +274,7 @@ function toast(html, duration=2000) {
       toast.timeToDismiss = new Date().getTime() + duration;
     }, 100);
   }
-  // toast.queue.push([html, duration]);
+  toast.queue.push([html, duration]);
 }
 
 class Vec2 {
@@ -1207,9 +1206,14 @@ function areAdminFetched(areAdmin) {
 }
 
 function htmlFromLog(arr) {
+  console.log(arr);
   if (arr[0] == "get_state") {
     return undefined;
   } else if (arr[0] == "is_admin") {
+    return undefined;
+  } else if (arr[0] == "end_lobby") {
+    return undefined;
+  } else if (arr[0] == "game_start") {
     return undefined;
   } else if (arr[0] == "taxes_collected") {
     return "Taxes collected."
