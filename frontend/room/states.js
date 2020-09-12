@@ -21,7 +21,7 @@ const nations = {
   },
   "Asia": {
     "color": new Color(96, 255, 96),
-    "rect": {"x": 893, "y": 235},
+    "rect": {"x": 820, "y": 340},
     "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"]
   },
   "Australia": {

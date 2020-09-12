@@ -16,6 +16,8 @@ class Battle {
         this.metadata.max_roll = max_pts
         this.metadata.atk_roll = Math.floor(Math.random()*atk) + 1
         this.metadata.def_roll = Math.floor(Math.random()*def) + 1
+        let n = Math.min(atk, def)
+        this.metadata.win_prob = 0.5*n*(n-1) + Math.min(def*(atk-def), 0)
         this.metadata.outcome = this.metadata.atk_roll > this.metadata.def_roll
     }
 }

@@ -457,14 +457,11 @@ let utils = {
    * @returns {Object} a dictionary whose keys are states a cavalry can move to
    */
   valid_moves_for_troop: (mother_state, nation_name, territory, troop_type) => {
-    console.log("valid_moves_for_troop()", nation_name, territory, troop_type);
     if (troop_type == "Cavalry") {
       return utils._valid_moves_for_cavalry(mother_state, nation_name, territory);
     }
     let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
-    console.log("is_territory_uncontested", is_territory_uncontested);
     let neighbors = utils.NEIGHBORS[territory];
-    console.log("neighbors", neighbors);
     let rtn = {};
     for (let neighbor in neighbors) {
       if (is_territory_uncontested) {
@@ -477,7 +474,6 @@ let utils = {
         }
       }
     }
-    console.log("rtn", rtn);
     return rtn;
   },
 
