@@ -848,7 +848,7 @@ function spawn(state, territory, unit_type) {
 
 function build(state, territory, building_type) {
   let nationName = state.stage.turn;
-  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myUsername = gUsername;
   if (state.nations[nationName].president !== myUsername) {
     return;
   }
@@ -878,7 +878,7 @@ function main(state) {
     // console.log(Math.round(loc.x), Math.round(loc.y));
   });
 
-  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myUsername = gUsername;
   if (state.trading_pairs.map(x => x[1]).includes(myUsername)) {
     // Automatically decline ongoing trades.
     send({
@@ -992,8 +992,6 @@ function main(state) {
     }
   });
 
-  updateCurrentActionDiv(null);
-
   render_presidential_div(gLatestState);
 
   window.onresize();
@@ -1089,6 +1087,7 @@ window.onresize = () => {
   document.body.style.opacity = 1;
 }
 
+let gUsername;
 function login() {
   let username = "";
   let password = "";
@@ -1104,6 +1103,7 @@ function login() {
       password = prompt("password?");
     }
   }
+  gUsername = username;
   // return network.makeWebSocket("chat", username, password);
   return network.makeWebSocket("oligarch", username, password);
 }
@@ -1295,13 +1295,48 @@ function render_vote_table() {
   currentVotesDiv.innerHTML = html;
 }
 
-function updateCurrentActionDiv(message) {
-  if (message) {
-    currentActionDiv.style.opacity = 1;
-    currentActionDiv.children[1].innerHTML = message;
+function updateCurrentActionDivFromState(state) {
+  let updateDiv = (message) => {
+    if (message) {
+      currentActionDiv.style.opacity = 1;
+      currentActionDiv.children[1].innerHTML = message;
+    } else {
+      currentActionDiv.style.opacity = 0;
+      currentActionDiv.children[1].innerHTML = "";
+    }
+  };
+  // updateDiv("Auction for " + details + " has opened");
+  // updateDiv(null);
+  // updateDiv(state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B");
+  if (state.stage.phase == "lobby") {
+    updateDiv(null);
+  } else if (state.stage.phase == "Taxation") {
+    updateDiv("Taxation");
+  } else if (state.stage.phase == "Discuss") {
+    updateDiv("Discuss");
+  } else if (state.stage.phase == "Auction") {
+    if (state.highest_bidder == null) {
+      updateDiv("Bidding is open for " + state.stage.turn);
+    } else {
+      updateDiv(state.highest_bidder + " bid $" + state.current_bid + "B for " + state.stage.turn);
+    }
+  } else if (state.stage.phase == "Action") {
+    if (state.stage.subphase == "Election") {
+      // TODO: Determine whether you've already voted.
+      if (state.players[gUsername].shares[state.stage.turn] == 0) {
+        updateDiv("Wait for shareholders to vote for the president of " + state.stage.turn);
+      } else if (state.players[gUsername].vote === null) {
+        updateDiv("Vote for the president of " + state.stage.turn);
+      } else {
+        updateDiv("You have voted. Wait for other shareholders to vote for the president of " + state.stage.turn);
+      }
+    } else if (gUsername != state.nations[state.stage.turn].president) {
+      updateDiv("Lobby the president to do what you want.");
+    } else {
+      updateDiv("You are president. Turn Phase: " + state.stage.subphase);
+    }
   } else {
-    currentActionDiv.style.opacity = 0;
-    currentActionDiv.children[1].innerHTML = "";
+    throw Error("Unrecognized state.stage.phase: " + state.stage.phase);
   }
 }
 
@@ -1317,7 +1352,7 @@ login().then((socket) => {
   });
   gSocket.addEventListener("message", (event) => {
     let [action, details, state] = JSON.parse(event.data);
-    console.log(action, utils.deep_copy(gLatestState));
+    console.log(action, utils.deep_copy(state));
     gLatestState = state;
     console.log("========================");
     console.log("Received action:", action);
@@ -1325,7 +1360,7 @@ login().then((socket) => {
     console.log("Received state:", state);
     console.log("========================");
 
-    const myUsername = network.fetchExistingUsernamePassword()[0];
+    const myUsername = gUsername;
 
     if (action === "get_state") {
       // We assume get_state is only called when the user
@@ -1407,11 +1442,9 @@ login().then((socket) => {
       clock.set_time_remaining(state.clock);
     }
     else if (action === "auction_start") {
-      updateCurrentActionDiv("Auction for " + details + " has opened");
       clock.set_time_remaining(state.clock);
     }
     else if (action === "start_election") {
-      updateCurrentActionDiv(null);
       clock.set_time_remaining(state.clock);
     }
     else if (action === "vote_tallied") {
@@ -1460,11 +1493,11 @@ login().then((socket) => {
           bidInput.value = state.current_bid + 1;
         }
       }
-      updateCurrentActionDiv(state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B");
     }
     possiblyToast(action, details);
     rewriteActivityLogFromScratch()
     onstagechange(state);
+    updateCurrentActionDivFromState(state);
   });
   gSocket.addEventListener("close", () => {
     console.log("CLOSED");
@@ -1537,7 +1570,7 @@ function show_trade_proposal(proposal) {
 }
 
 function respond_trade(accept) {
-  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myUsername = gUsername;
 
   let i;
   for (i = 0; i < gLatestState.trading_pairs.length; ++i) {
@@ -1571,7 +1604,7 @@ function get_current_modal_type() {
 }
 
 function update_buttons(state) {
-  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myUsername = gUsername;
   const stage = state.stage;
 
   if (stage.phase === "Auction") {
@@ -1615,7 +1648,7 @@ function onstagechange(state) {
   update_buttons(state);
   render_status_bar(state);
 
-  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myUsername = gUsername;
   const myCash = state.players[myUsername].cash;
 
   bidInput.max = myCash;
@@ -1627,7 +1660,7 @@ function onstagechange(state) {
 }
 
 function render_presidential_div(state) {
-  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myUsername = gUsername;
   if (state.stage.phase === "Action") {
     const subphase = state.stage.subphase;
     const nation = state.nations[state.stage.turn];
@@ -1656,7 +1689,7 @@ function render_presidential_div(state) {
 }
 
 function increment_bid_input(delta) {
-  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myUsername = gUsername;
   let newBid = parseInt(bidInput.value) + delta;
   newBid = Math.max(newBid, 0);
   newBid = Math.min(newBid, gLatestState.players[myUsername].cash);
@@ -1664,7 +1697,7 @@ function increment_bid_input(delta) {
 }
 
 function increment_bribe_input(delta) {
-  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myUsername = gUsername;
   let newBribe = parseInt(bribeInput.value) + delta;
   newBribe = Math.max(newBribe, 0);
   newBribe = Math.min(newBribe, gLatestState.players[myUsername].cash);
@@ -1756,7 +1789,7 @@ function trade_with(playername) {
   tradeDivYourOffer.innerHTML = "";
   tradeDivTheirOffer.innerHTML = "";
 
-  gTradeYou = network.fetchExistingUsernamePassword()[0];
+  gTradeYou = gUsername;
   gTradeThem = playername;
 
   let you = gLatestState.players[gTradeYou];
@@ -1825,7 +1858,7 @@ function vote_for(playername) {
 
 function show_modal(type) {
   // Update divs that need a button per player
-  const myUsername = network.fetchExistingUsernamePassword()[0];
+  const myUsername = gUsername;
   tradePlayerButtonsContainer.innerHTML = "";
   votePlayerButtonsContainer.innerHTML = "";
   for (let playername of Object.keys(gLatestState.players)) {
@@ -2010,7 +2043,7 @@ function send_bribe(nation_name) {
         </tr>
       </tbody>
     </table>
-    <div id="currentActionDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:3em; display:flex; flex-direction:column;">
+    <div id="currentActionDiv" style="text-align: center; background-color: hsl(0, 100%, 30%); height: 3em; display: flex; flex-direction: column; margin: 1em;">
       <div style="flex:1"></div>
       <div></div>
       <div style="flex:1"></div>
