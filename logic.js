@@ -406,10 +406,10 @@ class Game
                 this.mother_state.players[username].shares[share]++
                 this.mother_state.players[player].shares[share]--
             }
-            this.mother_state.players[username].cash += cash_to
-            this.mother_state.players[player].cash += cash_from
-            this.mother_state.players[username].cash -= cash_from
-            this.mother_state.players[player].cash -= cash_to
+            this.mother_state.players[username].cash += cash_from
+            this.mother_state.players[player].cash += cash_to
+            this.mother_state.players[username].cash -= cash_to
+            this.mother_state.players[player].cash -= cash_from
             this._trade_dequeue(username, player)
             this._prayer('trade_accepted','',this.mother_state)
         }
