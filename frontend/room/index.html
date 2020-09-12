@@ -550,19 +550,6 @@ function make_horse(x, y, sw, sh) {
 
 function change_move_state(newState) {
   let oldState = moveState;
-  if (oldState) {
-    if (newState) {
-      console.log('CMS', JSON.stringify(oldState), ' --> ', JSON.stringify(newState));
-    } else {
-      console.log('CMS', JSON.stringify(oldState), ' --> ', '(null)');
-    }
-  } else {
-    if (newState) {
-      console.log('CMS (null)', ' --> ', JSON.stringify(newState));
-    } else {
-      console.log('CMS (null)', ' --> ', ' (null)');
-    }
-  }
   moveState = newState;
   render_move_state(oldState, newState);
 }
@@ -615,7 +602,6 @@ function render_move_state(oldState, moveState) {
       let tid = ["stacktext", unit.territory, nation_name, unit.type, can_action].join("_");
       let circ = document.getElementById(cid);
       let text = document.getElementById(tid);
-      console.log(cid, circ);
       if (!circ) {
         continue;
       }
