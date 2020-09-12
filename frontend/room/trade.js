@@ -159,7 +159,7 @@ function show_trade_proposal(proposal) {
   } else {
     foo = '';
     for (let nation in shares_to_player) {
-      foo += nation + 'x' + shares_to_player[nation];
+      foo += ` <span class="abbrSpan">` + utils.NATIONS[nation].abbr + '</span>x' + shares_to_player[nation] + ' ';
     }
     if (proposal.cash_to > 0) {
       foo += " and $" + proposal.cash_to + "B";
@@ -176,7 +176,7 @@ function show_trade_proposal(proposal) {
   } else {
     bar = '';
     for (let nation in shares_from_player) {
-      bar += nation + 'x' + shares_from_player[nation];
+      bar += ` <span class="abbrSpan">` + utils.NATIONS[nation].abbr + '</span>x' + shares_to_player[nation] + ' ';
     }
     if (proposal.cash_from > 0) {
       bar += " and $" + proposal.cash_from + "B";
@@ -187,6 +187,17 @@ function show_trade_proposal(proposal) {
   t += "<br>" + proposal.from + " receives " + bar;
 
   tradeSnackbarMessage.innerHTML = t;
+
+  if (proposal.from === gUsername) {
+    rescindTradeButton.style.display = "inline-block";
+    declineTradeButton.style.display = "none";
+    acceptTradeButton.style.display = "none";
+  } else {
+    rescindTradeButton.style.display = "none";
+    declineTradeButton.style.display = "inline-block";
+    acceptTradeButton.style.display = "inline-block";
+  }
+
   tradeSnackbarContainer.style.display = "block";
 }
 
@@ -215,4 +226,16 @@ function respond_trade(accept) {
     ]
   });
   tradeSnackbarContainer.style.display = "none";
+}
+
+function maybe_show_trade_proposal(state) {
+  let trades = gLatestState.trading_pairs.map(x => x[2]);
+  let tradesFrom = trades.map(x => x.from);
+  let tradesTo = trades.map(x => x.to);
+  if (tradesFrom.concat(tradesTo).includes(gUsername)) {
+    let i = Math.max(tradesFrom.indexOf(gUsername), tradesTo.indexOf(gUsername));
+    show_trade_proposal(trades[i]);
+  } else {
+    tradeSnackbarContainer.style.display = "none";
+  }
 }

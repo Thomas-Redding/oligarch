@@ -403,6 +403,21 @@ class Game
     respondTrade(username, player, 
         shares_to, shares_from, cash_to, cash_from, accept)
     {
+        // Terrible terrible hack that's #tonyendorsed to hotfix respondTrade.
+        // This should be refactored.
+        {
+            let tradesFrom = this.mother_state.trades.map(x => x[2].from);
+            let tradesTo = this.mother_state.trades.map(x => x[2].to);
+            let i = Math.max(tradesFrom.indexOf(username), tradesTo.indexOf());
+            let trade = this.mother_state.trades[i];
+            username = trade.from;
+            player = trade.to;
+            shares_to = trade.share_to;
+            shares_from = trade.shares_from;
+            cash_to = trades.cash_to;
+            cash_from = trades.cash_from;
+        }
+
         // Swap username/player so we can view this from the same perspective as initTrade
         [username, player] = [player, username]
         log(username, player, shares_to, shares_from,
