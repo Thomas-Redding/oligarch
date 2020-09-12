@@ -522,6 +522,39 @@ function render_move_state() {
   }
   moveStateDiv.style.display = "block";
   moveStateDiv.innerHTML = JSON.stringify(moveState, null, 2);
+
+  console.log('render_move_state');
+
+  // circ.id = territory_name + "_" + nation_name + "_" + unit_type + "_" + can_action
+  if (gLatestState.stage.subphase === "Move") {
+    for (let unit_type of ["Infantry", "Cavalry", "Artillery"]) {
+      let cid = ["stackcircle", moveState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
+      let tid = ["stacktext", moveState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
+      let circ = document.getElementById(cid);
+      let text = document.getElementById(tid);
+      if (moveState[unit_type] > 0) {
+        text.innerHTML = moveState[unit_type];
+        circ.style.display = "block";
+        text.style.display = "block";
+      } else {
+        circ.style.display = "none";
+        text.style.display = "none";
+      }
+    }
+  } else {
+    for (let nation_name in moveState) {
+      if (typeof(moveState[nation_name]) === "string") {
+        continue;
+      }
+      let unit = moveState[nation_name];
+      let can_action = (gLatestState.stage.subphase === "Move" ? unit.can_move : unit.can_attack);
+      let cid = ["stackcircle", unit.territory, nation_name, unit.type, can_action].join("_");
+      let tid = ["stacktext", unit.territory, nation_name, unit.type, can_action].join("_");
+      console.log(cid, tid);
+    }
+  }
+
+  // document.getElementById("")
 }
 
 function render_map(state) {
@@ -581,6 +614,35 @@ function render_map(state) {
               img.addEventListener("click", onclick);
               out.appendChild(img);
 
+              if (gLatestState.stage.phase === "Action") {
+                // We use this grayed-out circle to prevent user clicks when an action is not available.
+                if ((!can_action && ["Attack", "Move"].includes(gLatestState.stage.subphase) || (nation_name !== gLatestState.stage.turn))) {
+                  let circ = svg.circle(x, y, s * 0.35);
+                  circ.style.fill = '#0008';
+                  circ.addEventListener("click", onclick);
+                  out.appendChild(circ);
+                }
+
+                if (can_action) {
+                  const idSuffix = territory_name + "_" + nation_name + "_" + unit_type + "_" + can_action;
+                  let circ = svg.circle(x - 5, y - 6.5, s * 0.23);
+                  circ.style.fill = '#ff0';
+                  circ.style.display = 'none';
+                  circ.addEventListener("click", onclick);
+                  circ.id = "stackcircle_" + idSuffix;
+                  out.appendChild(circ);
+
+                  let text = svg.text(n, x - 8, y - 3, {
+                    "style": "font-size: 0.7em; text-align:center;"
+                  });
+                  text.id = "stacktext_" + idSuffix;
+                  text.style.fill = 'black';
+                  text.style.display = 'none';
+                  text.style.textShadow = "6px 6px 20px black";
+                  out.appendChild(text);
+                }
+              }
+
               // We use this grayed-out circle to prevent user clicks when an action is not available.
               if (gLatestState.stage.phase === "Action") {
                 if ((!can_action && ["Attack", "Move"].includes(gLatestState.stage.subphase) || (nation_name !== gLatestState.stage.turn))) {
@@ -596,7 +658,6 @@ function render_map(state) {
                 circ.style.fill = 'red';
                 out.appendChild(circ);
 
-                // let text = svg.text(n, x - 5, y + 6);
                 let text = svg.text(n, x + 2, y - 3, {
                   "style": "font-size: 0.7em; text-align:center;"
                 });
@@ -619,7 +680,7 @@ function render_map(state) {
             "cancelable": false
           }));
         }
-        let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s, height:s});
+        let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s*0.8, height:s*0.8});
         img.addEventListener("click", onclick);
         out.appendChild(img);
 
@@ -634,7 +695,7 @@ function render_map(state) {
     }
     if (territory.n_barracks > 0) {
       icon_drawers.push((x, y) => {
-        let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s, height:s});
+        let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s*0.8, height:s*0.8});
         out.appendChild(img);
 
         if (territory.n_barracks > 1) {
