@@ -4,6 +4,19 @@
 <meta name="viewport" content="width=device-width, user-scalable=no">
 <title>The Oligarchs</title>
 <style>
+
+@font-face {
+  font-family: myfont;
+  font-weight: normal;
+  src: url('/room/assets/fonts/helvetica-neue/helveticaneue.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: myfont;
+  font-weight: bold;
+  src: url('/room/assets/fonts/helvetica-neue/helveticaneue-bold.woff2') format(woff2);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -27,7 +40,7 @@ html, body {
 }
 
 body {
-  font-family: sans-serif;
+  font-family: myfont;
   opacity: 0;
 }
 
@@ -145,7 +158,7 @@ path {
 }
 
 #popupDivForeground {
-  font-family: sans-serif;
+  font-family: myfont;
   position: absolute;
   left: 50vw;
   top: 50vh;

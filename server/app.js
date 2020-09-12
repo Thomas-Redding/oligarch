@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const WebSocket = require('ws')
+let log = require('../log.js');
 
 const OligarchRoom = require("./oligarch.js");
 const ChatRoom = require("./chat.js");
@@ -55,6 +56,7 @@ function sendCode(response, code, specific_message=undefined) {
 
 // Create an instance of the http server to handle HTTP requests
 let app = http.createServer((request, response) => {
+  log("HTTP:", request.url)
   if (request.url.startsWith('/api/')) {
     sendCode(response, 501);
   } else if (request.url.startsWith('/room/')) {
