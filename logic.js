@@ -144,7 +144,7 @@ class Game
 
     rdyUp(username)
     {
-        log("Game.rdyUp()", username);
+        log(username);
         if (this.mother_state.players[username].ready) return;
         this._history.save("rdyUp", [username], this.mother_state,
             "<b>" + username + "</b> readied up");
@@ -162,7 +162,7 @@ class Game
 
     bid(username, amount)
     {
-        //log("Game.bid()", username, amount);
+        //log(username, amount);
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
             this._history.save("bid", [username], this.mother_state,
@@ -173,7 +173,7 @@ class Game
 
     move(username, uid_list, from_terr, target)
     {
-        //log("Game.move()", username, unit_id_list, from_territory, target);
+        //log(username, unit_id_list, from_territory, target);
         let nat = this.mother_state.stage.turn
         if (this.mother_state.stage.subphase == 'Move' &&
             this.mother_state.nations[nat].president === username) {
@@ -207,7 +207,7 @@ class Game
     
     attack(username, unit_id, target_id)
     {
-        //log("Game.attack()", username, unit_id, target_id)
+        //log(username, unit_id, target_id)
 
         let [idx_cur, nat] = this._unit2idx(unit_id)
         let [idx_t, target_nat] = this._unit2idx(target_id)
@@ -237,7 +237,7 @@ class Game
 
     done(username)
     {
-        log("Game.done()", username);
+        log(username);
         let nat = this.mother_state.stage.turn
         if (username === this.mother_state.nations[nat].president) {
             this._transition()
@@ -246,7 +246,7 @@ class Game
 
     build(username, terr, type)
     {
-        log("Game.build()", username, terr, type);
+        log(username, terr, type);
         let nat = this.mother_state.stage.turn
         let terr_info = utils.territory_for_territory_name(
             this.mother_state, terr)
@@ -263,7 +263,7 @@ class Game
 
     spawn(username, terr, type)
     {
-        log("Game.spawn()", username, terr, type);
+        log(username, terr, type);
         let nat = this.mother_state.stage.turn
         let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         let val_terr = utils.territories_of_nation_that_can_spawn(
@@ -280,7 +280,7 @@ class Game
 
     vote(username, candidate_username)
     {
-        log("Game.vote()", username, candidate_username);
+        log(username, candidate_username);
         let cur_nat = this.mother_state.stage.turn
         let cur_r = this.mother_state.stage.round
         if (this.mother_state.stage.subphase == 'Election'){
@@ -298,7 +298,7 @@ class Game
 
     dividends(username, amount)
     {
-        log("Game.dividends()", username, amount);
+        log(username, amount);
         let nat = this.mother_state.stage.turn
         let is_prez = username === this.mother_state.nations[nat].president
         let n_shares = utils.shares_sold(this.mother_state, nat)
@@ -331,7 +331,7 @@ class Game
     //first share and cash args (shares_to & cash_to) go to player (second user)
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
     {
-        log("Game.initTrade()", username, player, shares_to,
+        log(username, player, shares_to,
             shares_from, cash_to, cash_from)
         let t_pairs = this.mother_state.trading_pairs.reduce(
             (a,b) => a.concat(b), []) 
@@ -360,7 +360,7 @@ class Game
     {
         // Swap username/player so we can view this from the same perspective as initTrade
         [username, player] = [player, username]
-        log("Game.respondTrade()", username, player, shares_to, shares_from,
+        log(username, player, shares_to, shares_from,
             cash_to, cash_from)
 
         if (accept && this._trade_verification(
@@ -412,7 +412,7 @@ class Game
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this.mother_state.trading_pairs = []
-        log.enable = false
+        // log.enable = false
         this._nation_init()
     }
 
@@ -420,7 +420,7 @@ class Game
     //prayer wrapper for automatic timing
     _prayer(prayer_id, signal)
     {
-        log("Game._prayer()", prayer_id, signal);
+        log(prayer_id, signal);
         this._log([prayer_id, signal]);
         let tau = 0;
         if (this.timer && this.timer.isRunning()) tau = this.timer.queryTime()
@@ -431,7 +431,7 @@ class Game
     //acts based on current game state
     _parse_stage(stage) 
     {
-        log("Game._parse_stage()", stage);
+        log(stage);
         return [stage.round, stage.phase, stage.turn, stage.subphase]
     }
 
@@ -441,7 +441,7 @@ class Game
     //will eventually call _transition (i.e. timer events)
     _act()
     {
-        log("Game._act()");
+        log();
         let [round, phase, turn, subphase] = this._parse_stage(
             this.mother_state.stage)
         let nat = this.mother_state.stage.turn
@@ -528,7 +528,7 @@ class Game
     //always calls act on end
     _transition()
     {
-        log("Game._transition()")
+        log()
         let cur_ord = (this.mother_state.stage.round % 2 == 1)
         //let curTURNS = TURNS
         console.log(this.mother_state.stage)
@@ -582,7 +582,7 @@ class Game
 
     _nation_init()
     {
-        log("Game._nation_init()");
+        log();
         let terr2nat = {}
         for (let nation in this.mother_state.nations) {
             this.mother_state.nations[nation].cash = 0
@@ -613,7 +613,7 @@ class Game
 
     _player_cash_init()
     {
-        log("Game._player_cash_init()");
+        log();
         let n_players = Object.keys(this.mother_state.players).length
         let inicash = Math.floor(TOTAL_INIT_CASH/n_players)
         for (let player in this.mother_state.players){
@@ -624,7 +624,7 @@ class Game
     //deliberation routines
     _begin_deliberation()
     {
-        log("Game._begin_deliberation()");
+        log();
         this.mother_state.clock = TIMING.deliberation
             if (this.timer.isRunning()) this.timer.stop(false)
             this.timer.start(TIMING.deliberation,
@@ -635,7 +635,7 @@ class Game
     _finish_deliberation()
     {
         console.trace()
-        log("Game._finish_deliberation()");
+        log();
         this.timer.stop(true);
         this.timer.stop(true);
         console.trace()
@@ -646,7 +646,7 @@ class Game
     //auction routines
     _start_auction(nation)
     {
-        log("Game._start_auction()", nation);
+        log(nation);
         this.mother_state.clock = 0
         this.timer.stop(false)
         this.mother_state.current_bid = -1
@@ -656,7 +656,7 @@ class Game
 
     _register_bid(amount, username)
     {
-        log("Game._register_bid()", amount, username);
+        log(amount, username);
         this.mother_state.current_bid = amount
         this.mother_state.highest_bidder = username
         if (this.timer) this.timer.stop(false)
@@ -669,7 +669,7 @@ class Game
 
     _conclude_bidding()
     {
-        log("Game._conclude_bidding()");
+        log();
         let price = this.mother_state.current_bid
         let winner = this.mother_state.highest_bidder
         let curnat = this.mother_state.stage.turn
@@ -685,7 +685,7 @@ class Game
     //election routines
     _start_election(nation)
     {
-        log("Game._start_election()", nation);
+        log(nation);
         this.mother_state.clock = 0
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
@@ -700,7 +700,7 @@ class Game
 
     _register_vote(username, candidate_username)
     {
-        log("Game._register_vote()", username, candidate_username);
+        log(username, candidate_username);
         this.mother_state.players[username].vote = candidate_username
         let nat = this.mother_state.stage.turn
         let candidate_votes = utils.candidate_votes(this.mother_state)
@@ -719,7 +719,7 @@ class Game
 
     _conclude_election()
     {
-        log("Game._conclude_election()");
+        log();
         for (let player in this.mother_state.players){
             this.mother_state.players[player].vote = null
             this.mother_state.players[player].ready = false
@@ -733,7 +733,7 @@ class Game
     //start presidential command & clock
     _start_presidential_command()
     {
-        log("Game._start_presidential_command()");
+        log();
         let nat = this.mother_state.stage.turn
         let prez = this.mother_state.nations[nat].president
         let details = {'president':prez, 'nation':nat}
@@ -746,7 +746,7 @@ class Game
 
     _end_presidential_command()
     {
-        log("Game._end_presidential_command()");
+        log();
         this._prayer('end_presidential_command','')
         let nat = this.mother_state.stage.turn
         this.mother_state.nations[nat].president = null
