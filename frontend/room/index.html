@@ -1064,7 +1064,7 @@ window.onresize = () => {
     statusBarDiv.style.fontSize = '1em';
     contentDiv.style.display = 'block';
 
-    leftPanel.style.display = (tab == kTabMap ? "none" : "block");
+    leftPanel.style.display = (tab == kTabMap ? "none" : "flex");
     mapDiv.style.display = (tab === kTabMap ? "block" : "none");
     mapDiv.style.flex = 0;
     mapDiv.style.maxWidth = "100%";
@@ -1269,8 +1269,12 @@ function htmlFromLog(action, details, isToast) {
   } else if (action == "end_presidential_command") {
     return "The reign has ended.";
   } else {
-    if (isToast) return undefined;
-    else arr.join("@");
+    if (isToast) {
+      return undefined;
+    }
+    else {
+      return action + "@" + details;
+    }
   }
 }
 
@@ -1284,7 +1288,8 @@ function rewriteActivityLogFromScratch() {
   let html = "";
   let logs = gLatestState.logs;
   if (logs === undefined) logs = [];
-  for (let log of logs) {
+  for (let i = logs.length - 1; i >= 0; --i) {
+    let log = logs[i];
     let s = htmlFromLog(log[0], log[1], false);
     if (s === undefined) continue;
     html += "<li>" + s + "</li>";
@@ -1384,7 +1389,7 @@ login().then((socket) => {
 
     const myUsername = gUsername;
 
-    if (action === "get_state") {
+    if (action === "get_state" || action === "undo") {
       // We assume get_state is only called when the user
       // reloads the page.
       if (state.stage.phase === "lobby") {
@@ -1392,17 +1397,23 @@ login().then((socket) => {
       } else {
         tab = kTabInfo;
       }
-      main(state);
+      if (action === "get_state") {
+        main(state);
+      } else {
+        render_presidential_div(gLatestState);
+        window.onresize();
+      }
       render_table(state);
       let playIcon = document.getElementById("play-icon");
       let pauseIcon = document.getElementById("pause-icon");
       playIcon.style.display = gLatestState.is_paused ? "block" : "none";
       pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
       clock.set_time_remaining(state.clock);
+      if (gLatestState.is_paused) {
+        clock.pause();
+      }
     }
     else if (action === "undo") {
-      render_presidential_div(gLatestState);
-      window.onresize();
     }
     else if (action === "user_ready") {
     }
