@@ -169,7 +169,7 @@ class Game
             player.vote = null
             player.ready = false
             for (let key in utils.NATIONS) {
-                player.shares[key] = 0
+                player.shares[key] = Math.random() * 2 | 0
             }
             this.mother_state.players[username] = player
         }
