@@ -193,8 +193,8 @@ path {
 
 .toast {
   position: absolute;
-  bottom: 4em;
-  right: 2em;
+  top: 2em;
+  right: 1em;
   padding: 0.5em;
   border-radius: 0.25em;
 }
@@ -314,6 +314,7 @@ function svg_text(text, x, y, attrs={}) {
   if (!("style" in attrs)) {
     attrs["style"] = "";
     attrs["style"] += "; font-family: myfont";
+    attrs["style"] += "; font-size: 16px";
   }
   return svg.text(text, x, y, attrs);
 }
@@ -489,18 +490,6 @@ function unit_clicked(territory_name, unit_type, nation_name) {
         change_move_state(c);
       }
     }
-    if (n > 0) {
-      // Cause territories you can move to to glow.
-      let includesNonCavalary = false;
-      if ("Infantry" in moveState && moveState["Infantry"] > 0) {
-        includesNonCavalary = true
-      }
-      if ("Artillery" in moveState && moveState["Artillery"] > 0) {
-        includesNonCavalary = true
-      }
-      let territoryNames = utils.valid_moves_for_troop(gLatestState, nation_name, territory_name, includesNonCavalary ? "Infantry" : "Cavalry");
-      highlightTerritories(Object.keys(territoryNames));
-    }
   } else if (subphase === "Attack") {
     let army = utils.troop_ids_in_territory(gLatestState, territory_name, nation_name, unit_type);
     if (!moveState) {
@@ -653,6 +642,22 @@ function render_move_state(oldState, moveState) {
         circ.style.display = "none";
         text.style.display = "none";
       }
+    }
+
+    let nation_name = gLatestState.stage.turn;
+    if (moveState["Infantry"] + moveState["Artillery"] + moveState["Cavalry"] > 0) {
+      // Cause territories you can move to to glow.
+      let includesNonCavalary = false;
+      if ("Infantry" in moveState && moveState["Infantry"] > 0) {
+        includesNonCavalary = true
+      }
+      if ("Artillery" in moveState && moveState["Artillery"] > 0) {
+        includesNonCavalary = true
+      }
+      let territoryNames = utils.valid_moves_for_troop(gLatestState, nation_name, moveState.from, includesNonCavalary ? "Infantry" : "Cavalry");
+      highlightTerritories(Object.keys(territoryNames));
+    } else {
+      highlightTerritories([]);
     }
   } else {
     for (let nation_name in moveState) {
@@ -1263,7 +1268,7 @@ function htmlFromLog(action, details, isToast) {
     return undefined;
   } else if (action == "player_added") {
     if (isToast) return undefined;
-    else return details + " joined";
+    else return "<b>" + details + "</b> joined";
   } else if (action == "end_lobby") {
     if (isToast) return undefined;
     else return "Exited Lobby";
@@ -1284,25 +1289,25 @@ function htmlFromLog(action, details, isToast) {
     return "Auction began for " + details;
   } else if (action == "bid_received") {
     if (isToast) return undefined;
-    else return details.player + " bid $" + details.amount + "B for " + details.nation;
+    else return "<b>" + details.player + "</b> bid $" + details.amount + "B for " + details.nation;
   } else if (action == "conclude_bidding") {
-    return details.winner + " bought a share of " + details.nation + " for $" + details.price + "B";
+    return "<b>" + details.winner + "</b> bought a share of " + details.nation + " for $" + details.price + "B";
   } else if (action == "auctions_complete") {
     return "Auctions concluded.";
   } else if (action == "start_election") {
     return "Election began in " + details;
   } else if (action == "vote_tallied") {
     let candidate = Object.keys(details)[0];
-    return "Someone voted for " + candidate;
+    return "Someone voted for <b>" + candidate + "</b>";
   } else if (action == "conclude_election") {
     if (details.winner) {
-      return details.winner + " won the election";
+      return "<b>" + details.winner + "</b> won the election";
     } else {
       return "Election concluded with no winner";
     }
   } else if (action == "begin_presidential_command") {
     if (details.president) {
-      return "The reign of " + details.president + " began in " + details.nation + "."
+      return "The reign of <b>" + details.president + "</b> began in " + details.nation + "."
     } else {
       return undefined;
     }
@@ -1321,7 +1326,7 @@ function htmlFromLog(action, details, isToast) {
   } else if (action == "end_presidential_command") {
     return "The reign has ended.";
   } else if (action == "bribe") {
-    return details.player + " bribed " + details.nation + " with $" + details.amount + "B";
+    return "<b>" + details.player + "</b> bribed " + details.nation + " with $" + details.amount + "B";
   } else {
     if (isToast) {
       return undefined;
