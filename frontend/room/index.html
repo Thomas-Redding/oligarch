@@ -1317,6 +1317,7 @@ login().then((socket) => {
   });
   gSocket.addEventListener("message", (event) => {
     let [action, details, state] = JSON.parse(event.data);
+    console.log(action, utils.deep_copy(gLatestState));
     gLatestState = state;
     console.log("========================");
     console.log("Received action:", action);
