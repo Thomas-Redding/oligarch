@@ -5,6 +5,7 @@ let Battle = require('./battle.js')
 let log = require('./log.js');
 
 const SPAWN_BUSY_WORLD = false;
+const BALANCED_MODE = true;
 
 log.enabled = true;
 
@@ -15,7 +16,7 @@ Array.prototype.fromback = function(i=1) {
 const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
 
 //global lists and macros defined here
-const TOTAL_INIT_CASH = 600
+const TOTAL_INIT_CASH = 1475
 const ROUNDS = [1,2,3,4,5,6]
 const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America',
@@ -716,7 +717,9 @@ class Game
         let curnat = this.mother_state.stage.turn
         this.mother_state.players[winner].shares[curnat] += 1
         this.mother_state.players[winner].cash -= price
-        this.mother_state.nations[curnat].cash += price
+        if (this.mother_state.stage.round > 1 || !BALANCED_MODE){
+            this.mother_state.nations[curnat].cash += price
+        }
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
         this._prayer('conclude_bidding', details)
