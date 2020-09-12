@@ -1290,7 +1290,10 @@ function rewriteActivityLogFromScratch() {
     html += "<li>" + s + "</li>";
   }
   gameLogDiv.innerHTML = html;
-  gameLogContainer.scrollTop = gameLogDiv.getClientRects()[0].height + 400;
+  let rects = gameLogDiv.getClientRects();
+  if (rects.length > 0) {
+    gameLogContainer.scrollTop = rects[0].height + 400;
+  }
 }
 
 function render_vote_table(state) {
