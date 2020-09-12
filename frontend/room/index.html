@@ -490,18 +490,6 @@ function unit_clicked(territory_name, unit_type, nation_name) {
         change_move_state(c);
       }
     }
-    if (n > 0) {
-      // Cause territories you can move to to glow.
-      let includesNonCavalary = false;
-      if ("Infantry" in moveState && moveState["Infantry"] > 0) {
-        includesNonCavalary = true
-      }
-      if ("Artillery" in moveState && moveState["Artillery"] > 0) {
-        includesNonCavalary = true
-      }
-      let territoryNames = utils.valid_moves_for_troop(gLatestState, nation_name, territory_name, includesNonCavalary ? "Infantry" : "Cavalry");
-      highlightTerritories(Object.keys(territoryNames));
-    }
   } else if (subphase === "Attack") {
     let army = utils.troop_ids_in_territory(gLatestState, territory_name, nation_name, unit_type);
     if (!moveState) {
@@ -654,6 +642,22 @@ function render_move_state(oldState, moveState) {
         circ.style.display = "none";
         text.style.display = "none";
       }
+    }
+
+    let nation_name = gLatestState.stage.turn;
+    if (moveState["Infantry"] + moveState["Artillery"] + moveState["Cavalry"] > 0) {
+      // Cause territories you can move to to glow.
+      let includesNonCavalary = false;
+      if ("Infantry" in moveState && moveState["Infantry"] > 0) {
+        includesNonCavalary = true
+      }
+      if ("Artillery" in moveState && moveState["Artillery"] > 0) {
+        includesNonCavalary = true
+      }
+      let territoryNames = utils.valid_moves_for_troop(gLatestState, nation_name, moveState.from, includesNonCavalary ? "Infantry" : "Cavalry");
+      highlightTerritories(Object.keys(territoryNames));
+    } else {
+      highlightTerritories([]);
     }
   } else {
     for (let nation_name in moveState) {
