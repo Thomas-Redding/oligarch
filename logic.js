@@ -22,7 +22,7 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000,
  'election':2*60*1000, 'actions':3*60*1000}
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
@@ -480,7 +480,7 @@ class Game
         let noop = (prez === null || prez === 'abstain')
 
         if (this.mother_state.stage.phase === 'Taxation') {
-            this.mother_state.nations[nat].cash = utils.income_of_nation(
+            this.mother_state.nations[nat].cash += utils.income_of_nation(
                 this.mother_state, nat)
             this._transition()
         }
