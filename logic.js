@@ -234,7 +234,7 @@ class Game
 
     raze(username, unit_id, building, terr)
     {
-        let target_nat = this.terr2nat(terr)
+        let target_nat = this.terr2nat[terr]
         if (this.mother_state.stage.subphase == 'Attack' &&
         this.mother_state.nations[nat].president == username &&
         utils.troop_from_id(this.mother_state, unit_id).can_attack) {
