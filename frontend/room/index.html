@@ -1354,9 +1354,9 @@ function rewriteActivityLogFromScratch() {
 }
 
 function updateLobbyUsernames() {
-  let html = "";
+  let html = "<b><u>Current Oligarchs</u></b><br/>";
   for (let username in gLatestState.players) {
-    html += username + "<br/>";
+    html += "<br/>" + username;
   }
   document.getElementById("lobby-usernames").innerHTML = html;
 }
