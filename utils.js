@@ -707,6 +707,14 @@ let utils = {
     throw Error("Troop not found with the given ID.");
   },
 
+  can_vote: (mother_state, player_name) => {
+    let stage = mother_state.stage;
+    if (stage.phase !== "Action" || stage.subphase !== "Election") {
+      return false;
+    }
+    return gLatestState.players[player_name].shares[stage.turn] > 0;
+  },
+
   /*
    * Perform a deep copy of a json object. This method does not support
    * functions.
