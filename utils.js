@@ -119,7 +119,6 @@ let utils = {
     },
     "Greenland": {
       "Northwest Territory": 1,
-      "Ontario": 1,
       "Quebec": 1,
       "Iceland": 1,
     },
@@ -203,7 +202,6 @@ let utils = {
       "Northwest Territory": 1,
       "Alberta": 1,
       "Quebec": 1,
-      "Greenland": 1,
       "Western United States": 1,
       "Eastern United States": 1,
     },
