@@ -756,14 +756,32 @@ function render_map(state) {
         }
       });
     }
+
     if (territory.n_barracks > 0) {
       icon_drawers.push((x, y) => {
+        let onclick = (e) => {
+          barracks(territory_name, nation_name);
+        }
+
         let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s*0.8, height:s*0.8});
+        img.style.opacity = 0.5;
         out.appendChild(img);
 
-        if (territory.n_barracks > 1) {
-          let text = svg_text(territory.n_barracks, x - 5, y + 6);
-          text.style.fill = 'white';
+        if (territory.n_barracks) {
+          // const idSuffix = territory_name + "_" + nation_name + "_barracks_" + can_action;
+          let circ = svg.circle(x - 5, y - 6.5, s * 0.23);
+          circ.style.fill = '#ff0';
+          circ.style.display = 'none';
+          circ.addEventListener("click", onclick);
+          // circ.id = "stackcircle_" + idSuffix;
+          out.appendChild(circ);
+
+          let text = svg_text(n, x - 8, y - 3, {
+            "style": "font-size: 0.7em; text-align:center;"
+          });
+          text.id = "stacktext_" + idSuffix;
+          text.style.fill = 'black';
+          text.style.display = 'none';
           text.style.textShadow = "6px 6px 20px black";
           out.appendChild(text);
         }
@@ -1350,6 +1368,11 @@ login().then((socket) => {
       pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
       clock.set_time_remaining(state.clock);
     }
+    else if (action === "undo") {
+      updateCurrentActionDiv(null);
+      render_presidential_div(gLatestState);
+      window.onresize();
+    }
     else if (action === "user_ready") {
     }
     else if (action === "refresh") {
@@ -1876,7 +1899,6 @@ function show_modal(type) {
   bidPopupDiv.style.display = (type === "Bid" ? "block" : "none");
   tradePopupDiv.style.display = (type === "Trade" ? "block" : "none");
   votePopupDiv.style.display = (type === "Vote" ? "block" : "none");
-  bribePopupDiv.style.display = (type === "Bribe" ? "block" : "none");
 
   popupDiv.children[0].onclick = close_modal;
   popupDiv.style.display = 'block';
@@ -2031,8 +2053,8 @@ function send_bribe(nation_name) {
       <div id="tradeButton" class='button' style="display:inline-block;" onclick="show_modal('Trade')">Trade</div>
       <div id="voteButton" class='button' style="display:inline-block;" onclick="show_modal('Vote')">Vote</div>
       <div id="bidButton" class='button' style="display:inline-block;" onclick="show_modal('Bid')">Bid</div>
-      <div id="bribeButton" class='button' style="display:inline-block;" onclick="show_modal('Bribe')">Bribe</div>
       <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1)">Bid +1</div>
+      <div id="bid5Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1)">Bid +5</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
     <div id="presidentDiv" style="position:relative;  border-radius:0.2em; margin:0.5em;">
@@ -2219,35 +2241,6 @@ function send_bribe(nation_name) {
   <div id="votePopupDiv" class="popup">
     <h2 align="center" style="margin-bottom: 1em;">Vote</h2>
     <div id="votePlayerButtonsContainer"></div>
-  </div>
-
-  <div id="bribePopupDiv" class="popup">
-    <h2 align="center">Bribe</h2>
-    <table style='text-align:center; margin: 0 auto;'>
-      <tbody>
-        <tr>
-          <td>
-            <input id="bribeInput" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
-          </td>
-          <td>
-            <div class="button" onClick="increment_bribe_input(5);">+5</div>
-          </td>
-          <td>
-            <div class="button" onClick="increment_bribe_input(20);">+20</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <hr>
-    <div style="text-align:center;">
-      <div onClick="send_bribe('North America')" class='button'>NA</div>
-      <div onClick="send_bribe('South America')" class='button'>EU</div>
-      <div onClick="send_bribe('Asia')" class='button'>AS</div>
-      <br><br>
-      <div onClick="send_bribe('South America')" class='button'>SA</div>
-      <div onClick="send_bribe('Africa')" class='button'>AF</div>
-      <div onClick="send_bribe('Australia')" class='button'>AU</div>
-    </div>
   </div>
 
   <div id="bidPopupDiv" class="popup">
