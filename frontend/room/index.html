@@ -474,7 +474,7 @@ function unit_clicked(territory_name, unit_type, nation_name) {
       return;
     }
 
-    let army = utils.army_in_territory(gLatestState.nations[nation_name].army, territory_name, "move");
+    let army = utils.army_in_territory(gLatestState, nation_name, territory_name, "Move");
     let n = utils.sum(army[unit_type]);
 
     if (unit_type in moveState) {
@@ -489,18 +489,6 @@ function unit_clicked(territory_name, unit_type, nation_name) {
         c[unit_type] = 1;
         change_move_state(c);
       }
-    }
-    if (n > 0) {
-      // Cause territories you can move to to glow.
-      let includesNonCavalary = false;
-      if ("Infantry" in moveState && moveState["Infantry"] > 0) {
-        includesNonCavalary = true
-      }
-      if ("Artillery" in moveState && moveState["Artillery"] > 0) {
-        includesNonCavalary = true
-      }
-      let territoryNames = utils.valid_moves_for_troop(gLatestState, nation_name, territory_name, includesNonCavalary ? "Infantry" : "Cavalry");
-      highlightTerritories(Object.keys(territoryNames));
     }
   } else if (subphase === "Attack") {
     let army = utils.troop_ids_in_territory(gLatestState, territory_name, nation_name, unit_type);
@@ -655,6 +643,22 @@ function render_move_state(oldState, moveState) {
         text.style.display = "none";
       }
     }
+
+    let nation_name = gLatestState.stage.turn;
+    if (moveState["Infantry"] + moveState["Artillery"] + moveState["Cavalry"] > 0) {
+      // Cause territories you can move to to glow.
+      let includesNonCavalary = false;
+      if ("Infantry" in moveState && moveState["Infantry"] > 0) {
+        includesNonCavalary = true
+      }
+      if ("Artillery" in moveState && moveState["Artillery"] > 0) {
+        includesNonCavalary = true
+      }
+      let territoryNames = utils.valid_moves_for_troop(gLatestState, nation_name, moveState.from, includesNonCavalary ? "Infantry" : "Cavalry");
+      highlightTerritories(Object.keys(territoryNames));
+    } else {
+      highlightTerritories([]);
+    }
   } else {
     for (let nation_name in moveState) {
       if (typeof(moveState[nation_name]) === "string") {
@@ -702,7 +706,7 @@ function render_map(state) {
     let icon_drawers = [];
 
     for (let nation_name in state.nations) {
-      let army = utils.army_in_territory(state.nations[nation_name].army, territory_name, state.stage.subphase === "Attack" ? "attack" : "move", "join");
+      let army = utils.army_in_territory(gLatestState, nation_name, territory_name, (["Move", "Attack"].includes(state.stage.subphase) ? state.stage.subphase : "Move"), "join");
       for (let unit_type in army) {
         for (let can_action = 0; can_action < 2; ++can_action) {
           let n = army[unit_type][can_action];

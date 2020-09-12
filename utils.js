@@ -624,10 +624,11 @@ let utils = {
    * @param {string} stage - either "move" or "attack"
    * @return {Object} the dictionary described above.
    */
-   army_in_territory: (army, territory, action) => {
-     if (action != "move" && action != "attack") {
+   army_in_territory: (mother_state, nation_name, territory, action) => {
+     if (action != "Move" && action != "Attack") {
        throw Error("Unrecognized `stage` parameter.");
      }
+     let army = mother_state.nations[nation_name].army;
      let arr = army.filter(x => x.territory == territory);
      if (action === "join") {
        return {
@@ -643,10 +644,14 @@ let utils = {
      };
      for (let troop of arr) {
        let index;
-       if (action == "move") {
+       if (action == "Move") {
          index = troop.can_move ? 1 : 0;
        } else {
-         index = troop.can_attack ? 1 : 0;
+         if (!utils.has_valid_targets(mother_state, nation_name, territory)) {
+           index = 0;
+         } else {
+           index = troop.can_attack ? 1 : 0;
+         }
        }
        rtn[troop.type][index] += 1;
      }
@@ -713,6 +718,19 @@ let utils = {
       return false;
     }
     return gLatestState.players[player_name].shares[stage.turn] > 0;
+  },
+
+  has_valid_targets: (mother_state, nation_name, territory_name) => {
+    for (let name in mother_state.nations) {
+      if (name === nation_name) {
+        continue;
+      }
+      let army = gLatestState.nations[name].army;
+      if (army.filter(x => x.territory === territory_name).length > 0) {
+        return true;
+      }
+    }
+    return false;
   },
 
   /*
