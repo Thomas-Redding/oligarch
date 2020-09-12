@@ -1243,6 +1243,8 @@ login().then((socket) => {
       clock.set_time_remaining(state.clock);
     }
     else if (action === "auction_start") {
+      currentBidDiv.style.opacity = 1;
+      currentBidDiv.children[1].innerHTML = "Auction for " + details + " has opened";
       clock.set_time_remaining(state.clock);
     }
     else if (action === "start_election") {
