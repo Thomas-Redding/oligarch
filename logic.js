@@ -513,8 +513,8 @@ class Game
             this._prayer('begin_build','')
             let terr_list = utils.territories_of_nation_that_can_build(
                 this.mother_state, nat)
-            if (terr_list.length == 0 || noop)
-                {
+            console.log(terr_list)
+            if (terr_list.length == 0 || noop) {
                     this._transition()
                 }
         }
