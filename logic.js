@@ -4,7 +4,7 @@ let utils = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 
-const SPAWN_BUSY_WORLD = false;
+const SPAWN_BUSY_WORLD = true;
 const BALANCED_MODE = true;
 
 log.enabled = true;
@@ -169,7 +169,7 @@ class Game
             player.vote = null
             player.ready = false
             for (let key in utils.NATIONS) {
-                player.shares[key] = 0
+                player.shares[key] = Math.random() * 2 | 0
             }
             this.mother_state.players[username] = player
         }
@@ -622,7 +622,7 @@ class Game
                 nation.owns.push(terr)
                 nation[terr] = {}
                 if (SPAWN_BUSY_WORLD) {
-                    nation[terr].n_factories = 2
+                    nation[terr].n_factories = 1
                     nation[terr].n_barracks = 2
                     nation[terr].n_barracks_can_spawn = 2
                     for (let type of ["Infantry", "Cavalry", "Artillery"]) {

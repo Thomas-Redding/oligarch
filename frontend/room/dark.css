@@ -39,10 +39,12 @@ body {
 .button {
   color: black;
   background-color: hsl(50, 100%, 45%);
+  cursor: pointer;
 }
 
 .button.disabled-button {
   background-color: #aaa;
+  cursor: default;
 }
 
 #popupDivBackground {
