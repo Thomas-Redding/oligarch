@@ -4,7 +4,7 @@ let utils = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 
-SPAWN_BUSY_WORLD = false;
+const SPAWN_BUSY_WORLD = false;
 
 log.enabled = true;
 
