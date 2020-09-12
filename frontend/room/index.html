@@ -199,6 +199,10 @@ path {
   border-radius: 0.25em;
 }
 
+.abbrSpan {
+  color: red;
+}
+
 </style>
 <link rel="stylesheet" class="theme" id="stylesheet-light" href="light.css">
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
@@ -609,17 +613,22 @@ function change_move_state(newState) {
 }
 
 function render_move_state(oldState, moveState) {
-  // Really terrible code to hide the old state's stacks
-  try {
-    let cid = ["stackcircle", moveState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
-    let tid = ["stacktext", moveState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
-    let circ = document.getElementById(cid);
-    let text = document.getElementById(tid);
-    circ.style.display = "none";
-    text.style.display = "none";
-  } catch (err) {}
+  // Hide oldState's stack numbers.
+  if (oldState) {
+    for (let unit_type of ["Infantry", "Artillery", "Cavalry"]) {
+      let cid = ["stackcircle", oldState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
+      let tid = ["stacktext", oldState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
+      let circ = document.getElementById(cid);
+      let text = document.getElementById(tid);
+      if (circ) {
+        circ.style.display = "none";
+        text.style.display = "none";
+      }
+    }
+  }
 
   if (moveState === null) {
+    highlightTerritories([]);
     moveStateDiv.style.display = "none";
     return;
   }
@@ -908,8 +917,7 @@ function spawn(state, territory, unit_type) {
 
 function build(state, territory, building_type) {
   let nationName = state.stage.turn;
-  const myUsername = gUsername;
-  if (state.nations[nationName].president !== myUsername) {
+  if (state.nations[nationName].president !== gUsername) {
     return;
   }
   if (utils.territory_to_owner(gLatestState, territory) !== nationName) {
@@ -938,14 +946,7 @@ function main(state) {
     // console.log(Math.round(loc.x), Math.round(loc.y));
   });
 
-  const myUsername = gUsername;
-  if (state.trading_pairs.map(x => x[1]).includes(myUsername)) {
-    // Automatically decline ongoing trades.
-    send({
-      "method": "respondTrade",
-      "args": [null, null, null, null, null, false]
-    });
-  }
+  maybe_show_trade_proposal(state);
 
   Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
     let territory = path.id;
@@ -1424,7 +1425,6 @@ login().then((socket) => {
     console.log("Received state:", state);
     console.log("========================");
 
-    const myUsername = gUsername;
 
     if (action === "get_state" || action === "undo") {
       // We assume get_state is only called when the user
@@ -1469,11 +1469,10 @@ login().then((socket) => {
       render_table(state);
     }
     else if (action === "trade_proposed") {
-      if (details.to === myUsername) {
-        show_trade_proposal(details);
-      }
+      maybe_show_trade_proposal(state);
     }
     else if (action === "trade_accepted") {
+      tradeSnackbarContainer.style.display = "none";
       render_table(state);
     }
     else if (action === "battle_outcome") {
@@ -1561,6 +1560,9 @@ login().then((socket) => {
       // whether the recipient is busy or you are busy.
       alert("Trade rejected (either your or that player have an ongoing trade)")
     }
+    else if (action === "trade_rejected") {
+      tradeSnackbarContainer.style.display = "none";
+    }
     else if (action === "bid_received") {
       gClock.set_time_remaining(state.clock);
     }
@@ -1605,7 +1607,6 @@ function get_current_modal_type() {
 }
 
 function update_buttons(state) {
-  const myUsername = gUsername;
   const stage = state.stage;
 
   if (stage.phase === "Auction") {
@@ -1645,7 +1646,7 @@ function update_buttons(state) {
     tradeButton.style.display = "none";
   }
 
-  if (state.players[myUsername].ready) {
+  if (state.players[gUsername].ready) {
     endDeliberationButton.style.backgroundColor = '#888';
     endDeliberationButton.style.cursor = 'default';
   } else {
@@ -1660,7 +1661,7 @@ function update_buttons(state) {
   } else {
     voteButton.style.display = "none";
   }
-  if (utils.can_vote(state, myUsername)) {
+  if (utils.can_vote(state, gUsername)) {
     voteButton.classList.remove("disabled-button");
   } else {
     voteButton.classList.add("disabled-button");
@@ -1671,8 +1672,7 @@ function onstagechange(state) {
   update_buttons(state);
   render_status_bar(state);
 
-  const myUsername = gUsername;
-  const myCash = state.players[myUsername].cash;
+  const myCash = state.players[gUsername].cash;
 
   bribeInput.max = myCash;
   bribeInput.value = Math.min(parseInt(bribeInput.value), myCash);
@@ -1681,7 +1681,6 @@ function onstagechange(state) {
 }
 
 function render_presidential_div(state) {
-  const myUsername = gUsername;
   if (state.stage.phase === "Action") {
     const subphase = state.stage.subphase;
     const nation = state.nations[state.stage.turn];
@@ -1699,7 +1698,7 @@ function render_presidential_div(state) {
     dividendSlider.value = (nation.cash / num_shares | 0) * num_shares;
     dividendValueDiv.innerHTML = dividendSlider.value;
 
-    if (state.nations[state.stage.turn].president === myUsername) {
+    if (state.nations[state.stage.turn].president === gUsername) {
       presidentDiv.style.display = "block";
     } else {
       presidentDiv.style.display = "none";
@@ -1710,18 +1709,16 @@ function render_presidential_div(state) {
 }
 
 function increment_bid_input(delta) {
-  const myUsername = gUsername;
   let newBid = parseInt(bidInput.value) + delta;
   newBid = Math.max(newBid, 0);
-  newBid = Math.min(newBid, gLatestState.players[myUsername].cash);
+  newBid = Math.min(newBid, gLatestState.players[gUsername].cash);
   bidInput.value = newBid;
 }
 
 function increment_bribe_input(delta) {
-  const myUsername = gUsername;
   let newBribe = parseInt(bribeInput.value) + delta;
   newBribe = Math.max(newBribe, 0);
-  newBribe = Math.min(newBribe, gLatestState.players[myUsername].cash);
+  newBribe = Math.min(newBribe, gLatestState.players[gUsername].cash);
   bribeInput.value = newBribe;
 }
 
@@ -1741,11 +1738,10 @@ function vote_button_clicked() {
 
 function show_modal(type) {
   // Update divs that need a button per player
-  const myUsername = gUsername;
   tradePlayerButtonsContainer.innerHTML = "";
   votePlayerButtonsContainer.innerHTML = "";
   for (let playername of Object.keys(gLatestState.players)) {
-    if (playername !== myUsername) {
+    if (playername !== gUsername) {
       let button = document.createElement('DIV');
       button.classList.add("button");
       button.innerHTML = playername;
@@ -2161,12 +2157,11 @@ function send_bribe(nation_name) {
 <div id="moveStateDiv" style="position:absolute; top:0; right:0; background-color:#555; border:solid white 1px;">
 </div>
 
-<div id="tradeSnackbarContainer" style="position:absolute; left:0; top:0; width:100%; height:100%; display:none;">
-  <div style="position:absolute; top:1em; right:1em; background-color:white; color:black; border:solid black 1px; padding:0.5em;">
-    <div id="tradeSnackbarMessage"></div>
-    <div style="background-color:red;" class="button" onclick="respond_trade(false)">Decline</div>
-    <div style="background-color:green;" class="button" onclick="respond_trade(true)">Accept</div>
-  </div>
+<div id="tradeSnackbarContainer" style="position:absolute; top:1em; right:1em; background-color:white; color:black; border:solid white 1px; padding:0.5em; background-color:#333; color:white;">
+  <div id="tradeSnackbarMessage"></div>
+  <div id="rescindTradeButton" style="background-color:#a00; color:white;" class="button" onclick="respond_trade(false)">Rescind</div>
+  <div id="declineTradeButton" style="background-color:#a00; color:white;" class="button" onclick="respond_trade(false)">Decline</div>
+  <div id="acceptTradeButton" style="background-color:#0a0; color:white;" class="button" onclick="respond_trade(true)">Accept</div>
 </div>
 
 </body>
