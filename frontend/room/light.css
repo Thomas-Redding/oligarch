@@ -100,3 +100,9 @@ hr {
 #presidentDiv {
   background-color:#ccc;
 }
+
+.toast {
+  background-color: black;
+  color: white;
+  box-shadow: 0 0 0.25em white;
+}
