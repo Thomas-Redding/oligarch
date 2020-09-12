@@ -323,7 +323,9 @@ class Game
         if (this.mother_state.players[username].cash >= amount) {
             this.mother_state.players[username].cash -= amount
             this.mother_state.nations[nation].cash += amount
-            this._prayer('bribe','')
+            let details = { 'amount' : amount,
+                'player':username, 'nation':nation }
+            this._prayer('bribe', details, this.mother_state)
         }
     }
 
