@@ -5,6 +5,7 @@ let Battle = require('./battle.js')
 let log = require('./log.js');
 
 const SPAWN_BUSY_WORLD = true;
+const BALANCED_MODE = true;
 
 log.enabled = true;
 
@@ -15,14 +16,14 @@ Array.prototype.fromback = function(i=1) {
 const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
 
 //global lists and macros defined here
-const TOTAL_INIT_CASH = 600
+const TOTAL_INIT_CASH = 1475
 const ROUNDS = [1,2,3,4,5,6]
 const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
-const TIMING = {'deliberation' : 90*1000, 'bidding' : 10*1000,
+const TIMING = {'deliberation' : 90*1000, 'bidding' : 1*1000,
  'election':2*60*1000, 'actions':3*60*1000}
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
@@ -160,7 +161,7 @@ class Game
             console.log(Object.keys(this.mother_state.players).length);
             if (Object.keys(this.mother_state.players).length == 0) {
                 player.auth = 'admin';
-            } else {
+            } else {s
                 player.auth = 'user';
             }
             player.shares = {}
@@ -172,6 +173,7 @@ class Game
             }
             this.mother_state.players[username] = player
         }
+        this._prayer("player_added",username)
         return rtn
     }
 
@@ -480,7 +482,7 @@ class Game
         let noop = (prez === null || prez === 'abstain')
 
         if (this.mother_state.stage.phase === 'Taxation') {
-            this.mother_state.nations[nat].cash = utils.income_of_nation(
+            this.mother_state.nations[nat].cash += utils.income_of_nation(
                 this.mother_state, nat)
             this._transition()
         }
@@ -593,6 +595,8 @@ class Game
             && turn == curTURNS.fromback()) {
                 this.mother_state.stage.round += 1
                 this.mother_state.stage.phase = PHASES[0]
+                console.log('console is')
+                console.log(PHASES[0])
                 this.mother_state.stage.turn = curTURNS[0]
                 this.mother_state.stage.subphase = SUBPHASES[0]
             }
@@ -716,7 +720,9 @@ class Game
         let curnat = this.mother_state.stage.turn
         this.mother_state.players[winner].shares[curnat] += 1
         this.mother_state.players[winner].cash -= price
-        this.mother_state.nations[curnat].cash += price
+        if (this.mother_state.stage.round > 1 || !BALANCED_MODE){
+            this.mother_state.nations[curnat].cash += price
+        }
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
         this._prayer('conclude_bidding', details)
