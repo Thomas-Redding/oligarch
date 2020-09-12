@@ -996,7 +996,7 @@ function main(state) {
     }
   });
 
-  currentBidDiv.style.opacity = 0;
+  updateCurrentActionDiv(null);
 
   render_presidential_div(gLatestState);
 
@@ -1303,6 +1303,16 @@ function render_vote_table(state) {
   currentVotesDiv.innerHTML = html;
 }
 
+function updateCurrentActionDiv(message) {
+  if (message) {
+    currentActionDiv.style.opacity = 1;
+    currentActionDiv.children[1].innerHTML = message;
+  } else {
+    currentActionDiv.style.opacity = 0;
+    currentActionDiv.children[1].innerHTML = "";
+  }
+}
+
 let clock = new Clock();
 
 let gSocket;
@@ -1327,7 +1337,9 @@ login().then((socket) => {
     if (action === "get_state") {
       // We assume get_state is only called when the user
       // reloads the page.
-      if (state.stage.phase !== "lobby") {
+      if (state.stage.phase === "lobby") {
+        tab = kTabLobby;
+      } else {
         tab = kTabInfo;
       }
       main(state);
@@ -1402,13 +1414,11 @@ login().then((socket) => {
       clock.set_time_remaining(state.clock);
     }
     else if (action === "auction_start") {
-      currentBidDiv.style.opacity = 1;
-      currentBidDiv.children[1].innerHTML = "Auction for " + details + " has opened";
+      updateCurrentActionDiv("Auction for " + details + " has opened");
       clock.set_time_remaining(state.clock);
     }
     else if (action === "start_election") {
-      currentBidDiv.style.opacity = 0;
-      currentVotesDiv.innerHTML = "";
+      updateCurrentActionDiv(null);
       clock.set_time_remaining(state.clock);
     }
     else if (action === "vote_tallied") {
@@ -1456,9 +1466,7 @@ login().then((socket) => {
           bidInput.value = state.current_bid + 1;
         }
       }
-
-      currentBidDiv.style.opacity = 1;
-      currentBidDiv.children[1].innerHTML = state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B";
+      updateCurrentActionDiv(state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B");
     }
 
     if (state.stage.phase === "Action") {
@@ -2013,7 +2021,7 @@ function send_bribe(nation_name) {
         </tr>
       </tbody>
     </table>
-    <div id="currentBidDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:3em; display:flex; flex-direction:column;">
+    <div id="currentActionDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:3em; display:flex; flex-direction:column;">
       <div style="flex:1"></div>
       <div></div>
       <div style="flex:1"></div>

@@ -33,23 +33,26 @@ class History {
     this._prayer = prayer
     this._states = [];
     this._args = [];
-    this._actions = [];
+    this._checkpoint_types = [];
   }
-  save(action, args, mother_state) {
-    log(action, args)
-    this._actions.push(action);
+  save(checkpoint_type, args, mother_state) {
+    log(checkpoint_type, args, mother_state)
+    this._checkpoint_types.push(checkpoint_type);
     this._args.push(args);
     this._states.push(utils.deep_copy(mother_state));
   }
   undo() {
     log()
-    if (this._states.length <= 1) {
+    console.log(this._checkpoint_types);
+    console.log(this._args);
+    console.log(this._states);
+    if (this._states.length == 0) {
         throw Exception("Attempted to undo with a history of length 1.")
     }
-    let action = this._actions.pop();
+    let checkpoint_type = this._checkpoint_types.pop();
     let args = this._args.pop();
-    let state = this._actions.pop();
-    return [action, args, state];
+    let state = this._states.pop();
+    return [checkpoint_type, args, state];
   }
 }
 
@@ -72,28 +75,31 @@ class Game
 
     undo(username) {
         log(username);
-        throw Exception("Game.undo() is not implemented yet.");
         if (this.mother_state.players[username].auth !== 'admin') return;
         let [action, args, state] = this._history.undo();
-        this.mother_state = state;
         if (this.timer) this.timer.stop();
-        if (action === "endLobby") {
-            log("UNDO", action, args);
-        } else if (action === "bid") {
-            log("UNDO", action, args);
+        if (action === "lobby") {
+            // Go back to the lobby.
+            this.mother_state = state
+            this._history.save("lobby", null, this.mother_state);
+        } else if (action === "auction_start") {
+            // Go back to the start of an auction (before any bids).
+            this.mother_state = state
+        } else {
+            throw Exception("Can't undo an action of type '%s'" % action);
         }
+        this._prayer("get_state", '')
     }
 
     endLobby(username)
     {
+        this._history.save("lobby", null, this.mother_state);
         log(username);
         let rtn;
         if (this.mother_state.players[username].auth !== 'admin') {
             rtn = false
         }
         else {
-            this._history.save("endLobby", [username], this.mother_state,
-                "<b>" + username + "</b> closed the lobby.");
             for (let ord of this.mother_state.order) {
                 this.mother_state.stage[ord] = this.mother_state[ord][0]
             }
@@ -146,8 +152,6 @@ class Game
     {
         log(username);
         if (this.mother_state.players[username].ready) return;
-        this._history.save("rdyUp", [username], this.mother_state,
-            "<b>" + username + "</b> readied up");
         this.mother_state.players[username].ready = true
         this._prayer('user_ready', '');
         let all_ready = true
@@ -165,8 +169,6 @@ class Game
         //log(username, amount);
         if (this.mother_state.players[username].cash >= amount &&
             this.mother_state.current_bid < amount) {
-            this._history.save("bid", [username], this.mother_state,
-                "<b>" + username +  "</b> bid $" + amount);
             this._register_bid(amount, username)
         }
     }
@@ -658,11 +660,14 @@ class Game
 
     _register_bid(amount, username)
     {
+        if (this.mother_state.highest_bidder === null) {
+            this._history.save("auction_start", null, this.mother_state);
+        }
         log(amount, username);
         this.mother_state.current_bid = amount
         this.mother_state.highest_bidder = username
         if (this.timer) this.timer.stop(false)
-            this.timer.start(TIMING.bidding, this._conclude_bidding.bind(this))
+        this.timer.start(TIMING.bidding, this._conclude_bidding.bind(this))
         console.log('register bid called')
         this._prayer('bid_received', {'amount' : amount, 'player': username,
             'nation': this.mother_state.stage.turn})
