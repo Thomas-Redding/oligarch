@@ -262,7 +262,8 @@ class Game
                     this.mother_state.nations[unat].army[idx].can_move = false
                 }
             }
-            this._manage_conquest(target_nat)
+           
+            this._manage_conquest(utils.terr2continent[target])
             this._prayer('moves_made','')
         }
     }
@@ -900,13 +901,13 @@ class Game
 
     _manage_conquest(nation)
     {
-       puppeteer = utils.puppeteer(this.mother_state, nation)
+       let puppeteer = utils.puppeteer(this.mother_state, nation)
        if (puppeteer !== nation) {
            this.mother_state.nations[nation].army = []
            let cash = this.mother_state.nations[nation].cash
            this.mother_state.nations[nation].cash = 0
            this.mother_state.nations[puppeteer].cash += cash
-           this._prayer('conquest',nation)
+           this._prayer('conquest', {'nation':nation, 'puppeteer':puppeteer})
        }
     }
     //
