@@ -342,7 +342,7 @@ let utils = {
    */
   income_of_territory: (mother_state, territory) => {
     let natural_income = utils.natural_income_of_territory(territory);
-    let nation = utils.terr2continent[territory];
+    let nation = utils.terr2continentName[territory];
     let factory_income = 5 * mother_state.nations[nation][territory].n_factories;
     return natural_income + factory_income;
   },
@@ -728,7 +728,7 @@ let utils = {
   },
 
   has_valid_targets: (mother_state, nation_name, territory_name) => {
-    const continent = utils.terr2continent[territory_name];
+    const continent = utils.terr2continentName[territory_name];
     const territory = mother_state.nations[continent][territory_name];
     for (let name in mother_state.nations) {
       if (name === nation_name) {
@@ -746,7 +746,7 @@ let utils = {
   },
 
   continent_from_territory: (mother_state, territory_name) => {
-    let nationName = utils.terr2continent[territory_name];
+    let nationName = utils.terr2continentName[territory_name];
     return mother_state.nations[nationName];
   },
 
@@ -768,13 +768,13 @@ let utils = {
 };
 
 {
-  let terr2continent = {};
+  let terr2continentName = {};
   for (let nation in utils.NATIONS) {
     for (let territory of utils.NATIONS[nation].territories) {
-      terr2continent[territory] = nation;
+      terr2continentName[territory] = nation;
     }
   }
-  utils.terr2continent = terr2continent;
+  utils.terr2continentName = terr2continentName;
 }
 
 // Terrible hack so this can be included on frontend.

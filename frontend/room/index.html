@@ -743,7 +743,7 @@ function render_map(state) {
 
   Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
     let territory_name = path.id;
-    let territory = state.nations[utils.terr2continent[territory_name]][territory_name];
+    let territory = state.nations[utils.terr2continentName[territory_name]][territory_name];
 
     {
       let [x, y] = territories[territory_name].center;
@@ -995,7 +995,7 @@ function main(state) {
 
   Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
     let territory = path.id;
-    let nation = utils.terr2continent[territory];
+    let nation = utils.terr2continentName[territory];
     let nationColor = nations[nation].color;
     let randColor = Color.random().scale(0.15);
     let color = nationColor.scale(0.85).plus(randColor);
@@ -1059,7 +1059,7 @@ function main(state) {
 
             let legalMoves = utils.valid_moves_for_troop(
               gLatestState,
-              utils.terr2continent[moveState.from],
+              utils.terr2continentName[moveState.from],
               moveState.from,
               moveState["Cavalry"] === unitIds.length ? "Cavalry" : "Infantry");
 
