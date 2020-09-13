@@ -276,6 +276,7 @@ class Game
         let troop = utils.troop_from_id(this.mother_state, unit_id)
         if (this.mother_state.stage.subphase == 'Attack' &&
         this.mother_state.nations[nat].president == username &&
+        utils.territory_to_owner(this.mother_state, terr) !== null &&
         troop.can_attack) {
             let bldg_type = building == 'barrack' ? 'n_barracks' : 'n_factories'
             if (target_nat[terr][bldg_type] > 0){
