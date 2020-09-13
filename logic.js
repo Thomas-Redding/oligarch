@@ -263,7 +263,7 @@ class Game
                 }
             }
            
-            this._manage_conquest(utils.terr2continent[target])
+            this._manage_conquest(utils.terr2continentName[target])
             this._prayer('moves_made','')
         }
     }
