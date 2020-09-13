@@ -1376,9 +1376,9 @@ function rewriteActivityLogFromScratch() {
 }
 
 function updateLobbyUsernames() {
-  let html = "<b><u>Current Oligarchs</u></b><br/>";
+  let html = "";
   for (let username in gLatestState.players) {
-    html += "<br/>" + username;
+    html += username + "<br>";
   }
   document.getElementById("lobby-usernames").innerHTML = html;
 }
@@ -2186,14 +2186,15 @@ function send_bribe(nation_name) {
 <div id="lobbyDiv">
   <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); text-align: center;">
     <h1 align="center">The Oligarchs</h1>
-    <br/><br/>
+    <br/>
+    <div id="lobby-usernames"></div>
+    <br/>
     <p>
       Do you have what it takes to rule the world?
     </p>
     <div id="start-game-button" class="button invisible-button" onclick="start_game();" style="margin: 2em auto;">
       Start Game
     </div>
-    <div id="lobby-usernames"></div>
   </div>
 </div>
 
