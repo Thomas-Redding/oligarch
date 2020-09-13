@@ -1587,6 +1587,10 @@ login().then((socket) => {
     else if (action === "built_infrastructure") {
       render_table(state);
     }
+    else if (action === "bldg_razed") {
+      render_map(state);
+      render_table(state);
+    }
     else if (action === "dividends_paid") {
       render_table(state);
     }
