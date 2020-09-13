@@ -12,7 +12,7 @@ let utils = {
       "capital": "Ontario",
       "base_income_per_territory" : 4,
       "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"],
-      "total_shares": 7,
+      "total_shares": 6,
       "abbr": "NA"
     },
     "South America": {
@@ -26,14 +26,14 @@ let utils = {
       "capital": "Northern Europe",
       "base_income_per_territory" : 5,
       "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"],
-      "total_shares": 6,
+      "total_shares": 5,
       "abbr": "EU"
     },
     "Asia": {
       "capital": "Japan",
       "base_income_per_territory" : 3,
       "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"],
-      "total_shares": 8,
+      "total_shares": 6,
       "abbr": "AS"
     },
     "Australia": {
