@@ -13,7 +13,8 @@ body {
   background-color: #222;
 }
 
-#leftPanel {
+#endOfGameTable > tbody > tr > td {
+  padding: 0.2em;
 }
 
 #lobbyDiv {
