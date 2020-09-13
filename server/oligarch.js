@@ -29,6 +29,12 @@ class OligarchRoom extends Room {
   fetchGameState() {
     let rtn = this.game.fetchGameState()
     rtn.is_paused = this.timer.isPaused()
+    for (let user of super.connectedUsers()) {
+      rtn.players[user].connected = true;
+    }
+    for (let user of super.disconnectedUsers()) {
+      rtn.players[user].connected = false;
+    }
     return rtn
   }
 
@@ -71,7 +77,7 @@ class OligarchRoom extends Room {
   }
 
   tryToJoin(username, password, ws) {
-    log('tryToJoin("' + username + '", "' + password + '")');
+    log(username, password)
     if (super.users().indexOf(username) > -1) {
       return super.tryToJoin(username, password, ws);
     } else {
@@ -83,6 +89,32 @@ class OligarchRoom extends Room {
         return "The game has already started."
       }
     }
+  }
+
+  userConnected(username) {
+    log(username);
+    super.userConnected(username);
+    this._sendUserConnectionUpdate(username);
+  }
+
+  userDisconnected(username) {
+    log(username);
+    super.userDisconnected(username);
+    this._sendUserConnectionUpdate(username);
+  }
+
+  _sendUserConnectionUpdate(username) {
+    log(username)
+    let users = {}
+    for (let user of super.connectedUsers()) {
+      users[user] = true;
+    }
+    for (let user of super.disconnectedUsers()) {
+      users[user] = false;
+    }
+    let model = this.fetchGameState();
+    console.log('<<<', JSON.stringify(["connection_change", username, "<state clock:" + model.clock + ">"]));
+    this.sendDataToAll(["connection_change", username, model])
   }
 }
 
