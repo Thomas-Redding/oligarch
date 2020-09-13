@@ -677,7 +677,7 @@ class Game
             && turn == curTURNS.fromback()) {
                 this.mother_state.stage.round += 1
                 if (this.mother_state.stage.round > ROUNDS.fromback()){
-                    this._prayer('game_over,'')
+                    this._prayer('game_over')
                     return
                 }
                 this.mother_state.stage.phase = PHASES[0]
