@@ -1303,8 +1303,7 @@ function htmlFromLog(action, details, isToast) {
     if (isToast) return undefined;
     else return "Game started";
   } else if (action == "taxes_collected") {
-    if (isToast) return undefined;
-    else return "Taxes collected";
+    return undefined;
   } else if (action == "begin_deliberation") {
     return "Began deliberation"
   } else if (action == "user_ready") {
@@ -1316,8 +1315,7 @@ function htmlFromLog(action, details, isToast) {
   } else if (action == "auction_start") {
     return "Auction began for " + details;
   } else if (action == "bid_received") {
-    if (isToast) return undefined;
-    else return "<b>" + details.player + "</b> bid $" + details.amount + "B for " + details.nation;
+    return undefined;
   } else if (action == "conclude_bidding") {
     return "<b>" + details.winner + "</b> bought a share of " + details.nation + " for $" + details.price + "B";
   } else if (action == "auctions_complete") {
@@ -1449,10 +1447,10 @@ function updateCurrentActionDivFromState(state) {
     updateDiv("Taxation");
   } else if (state.stage.phase == "Discuss") {
     let num_ready = utils.sum(Object.values(gLatestState.players).map(x => x.ready));
-    updateDiv("Discuss (" + num_ready + "/" + Object.keys(gLatestState.players).length + " ready)");
+    updateDiv("Discuss (" + num_ready + "/" + Object.keys(gLatestState.players).length + " want to skip)");
   } else if (state.stage.phase == "Auction") {
     if (state.highest_bidder == null) {
-      updateDiv("Bidding is open for " + state.stage.turn);
+      updateDiv("Bidding is open for " + state.stage.turn + ". Every bid will extend the countdown.");
     } else {
       updateDiv(state.highest_bidder + " bid $" + state.current_bid + "B for " + state.stage.turn);
     }
@@ -1460,17 +1458,17 @@ function updateCurrentActionDivFromState(state) {
     if (state.stage.subphase == "Election") {
       // TODO: Determine whether you've already voted.
       if (state.players[gUsername].shares[state.stage.turn] == 0) {
-        updateDiv("Wait for shareholders to vote for the president of " + state.stage.turn);
+        updateDiv("Wait for the shareholders of " + state.stage.turn + " to elect a president");
       } else if (state.players[gUsername].vote === null) {
-        updateDiv("Vote for the president of " + state.stage.turn);
+        updateDiv("Cast your vote for the president of " + state.stage.turn);
       } else {
-        updateDiv("You have voted. Wait for other shareholders to vote for the president of " + state.stage.turn);
+        updateDiv("You have voted for the president of " + state.stage.turn + ". Wait for other shareholders to cast their votes.");
       }
     } else if (gUsername != state.nations[state.stage.turn].president) {
       let president = state.nations[state.stage.turn].president;
-      updateDiv("Lobby President " + president + " to do what you want.");
+      updateDiv("<b>" + president + "</b> is the president of " + state.stage.turn + ". Wait for them to finish acting.");
     } else {
-      updateDiv("You are president. Turn Phase: " + state.stage.subphase);
+      updateDiv("You are the president of " + state.stage.turn + ". Bend the nation to your will.");
     }
   } else {
     throw Error("Unrecognized state.stage.phase: " + state.stage.phase);

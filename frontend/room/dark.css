@@ -33,6 +33,10 @@ body {
   background-color: #111;
 }
 
+.tab-off:hover {
+  background-color: #222;
+}
+
 .piece-circle {
   fill: white;
 }
@@ -98,6 +102,10 @@ text {
 .clickable-svg {
   cursor: pointer;
   fill: hsl(50, 100%, 45%);
+}
+
+.clickable-svg:hover {
+  fill: hsl(50, 100%, 60%);
 }
 
 input[type=number] {
