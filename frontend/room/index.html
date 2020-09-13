@@ -142,11 +142,6 @@ path {
   cursor: pointer;
 }
 
-#leftPanel {
-  flex-direction: column;
-  height: 100%;
-}
-
 #popupDivBackground {
   position: absolute;
   left: 0;
@@ -1164,7 +1159,7 @@ window.onresize = () => {
     statusBarDiv.style.fontSize = '1.5em';
     contentDiv.style.display = 'flex';
     contentDiv.style.flexDirection = 'row';
-    leftPanel.style.display = 'flex';
+    leftPanel.style.display = 'block';
     leftPanel.style.width = '30em';
     mainTable.style.display = 'table';
     actionPanel.style.display = 'block';
@@ -1181,7 +1176,7 @@ window.onresize = () => {
     statusBarDiv.style.fontSize = '1em';
     contentDiv.style.display = 'block';
 
-    leftPanel.style.display = (tab == kTabMap ? "none" : "flex");
+    leftPanel.style.display = (tab == kTabMap ? "none" : "block");
     leftPanel.style.width = '100%';
     mapDiv.style.display = (tab === kTabMap ? "block" : "none");
     mapDiv.style.flex = 0;
@@ -2003,15 +1998,15 @@ function send_bribe(nation_name) {
 </div>
 
 <div id='contentDiv'>
-  <div id="leftPanel" style="overflow-y:auto;">
+  <div id="leftPanel" style="overflow-y:auto; height:100%;">
     <table id='mainTable'>
       <tbody></tbody>
     </table>
-      <div id="currentActionDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); display:flex; flex-direction:column;">
+      <div id="currentActionDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); display:flex; flex-direction:column; min-height:3em;">
       <div style="padding:1em;"></div>
     </div>
     <br>
-    <div id="actionPanel">
+    <div id="actionPanel" style="min-height:3em;">
       <div id="tradeButton" class='button' style="display:inline-block;" onclick="show_modal('Trade')">Trade</div>
       <div id="voteButton" class='button' style="display:inline-block;" onclick="vote_button_clicked()">Vote</div>
       <div id="bribeButton" class='button' style="display:inline-block;" onclick="show_modal('Bribe')">Bribe</div>
