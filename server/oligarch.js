@@ -20,15 +20,15 @@ class OligarchRoom extends Room {
     }
   }
 
-  prayer(action, details, newModel) {
-    newModel = utils.deep_copy(newModel)
+  prayer(action, details) {
+    let newModel = this.fetchGameState();
     console.log('<<<', JSON.stringify([action, details, "<state clock:" + newModel.clock + ">"]));
     this.sendDataToAll([ action, details, newModel ]);
   }
 
   fetchGameState() {
-    let rtn = this.game.fetchGameState()
-    rtn.is_paused = this.timer.isPaused()
+    let rtn = this.game.fetchGameState();
+    rtn.is_paused = this.timer.isPaused();
     for (let user of super.connectedUsers()) {
       rtn.players[user].connected = true;
     }
