@@ -375,7 +375,9 @@ function render_table(state) {
     if (name === gUsername) {
       tr.style.backgroundColor = '#444';
     }
-    tr.innerHTML += "<td>" + player.username + "</td>";
+    // We pretend everyone is connected for now.
+    let color = (true ? '#0c0' : '#800');
+    tr.innerHTML += `<td><svg width=16 height=16><circle cx=8 cy=8 r=8 style="fill:` + color + `;"></svg> ` + player.username + "</td>";
     tr.innerHTML += '<td class="column-NA">' + player.shares["North America"] + "</td>";
     tr.innerHTML += '<td class="column-SA">' + player.shares["South America"] + "</td>";
     tr.innerHTML += '<td class="column-EU">' + player.shares["Europe"] + "</td>";
