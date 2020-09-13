@@ -144,7 +144,7 @@ let utils = {
     },
     "Irkutsk": {
       "Siberia": 1,
-      "Yakutsk": 1,
+      "Yakursk": 1,
       "Kamchatka": 1,
       "Mongolia": 1,
     },
@@ -153,7 +153,7 @@ let utils = {
       "Mongolia": 1,
     },
     "Kamchatka": {
-      "Yakutsk": 1,
+      "Yakursk": 1,
       "Irkutsk": 1,
       "Mongolia": 1,
       "Japan": 1,
@@ -186,6 +186,7 @@ let utils = {
     "North Africa": {
       "Brazil": 1,
       "Congo": 1,
+      "East Africa": 1,
       "Egypt": 1,
       "Western Europe": 1,
       "Southern Europe": 1,
@@ -235,7 +236,7 @@ let utils = {
     "Siberia": {
       "Ural": 1,
       "China": 1,
-      "Yakutsk": 1,
+      "Yakursk": 1,
       "Irkutsk": 1,
       "Mongolia": 1,
     },
@@ -289,7 +290,7 @@ let utils = {
       "Eastern United States": 1,
       "Central America": 1,
     },
-    "Yakutsk": {
+    "Yakursk": {
       "Siberia": 1,
       "Irkutsk": 1,
       "Kamchatka": 1,
@@ -630,7 +631,6 @@ let utils = {
    * @return {Object} the dictionary described above.
    */
    army_in_territory: (mother_state, nation_name, territory, action) => {
-    console.log("army_in_territory", mother_state, nation_name, territory, action);
     if (action != "Move" && action != "Attack") {
       throw Error("Unrecognized `stage` parameter.");
     }
