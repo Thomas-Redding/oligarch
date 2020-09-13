@@ -1528,7 +1528,7 @@ let loadPromises = [
           }
           updateLobbyUsernames();
         }
-        else if (action === "end_game") {
+        else if (action === "game_over") {
           render_table(gLatestState, endOfGameTable, true);
           let best = -Infinity;
           let winner = null;
