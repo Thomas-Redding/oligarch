@@ -68,16 +68,16 @@ text {
 }
 
 .column-NA {
-  color: #e08060;
-}
-.column-SA {
   color: #e0e060;
 }
-.column-EU {
+.column-SA {
   color: #60ffff;
 }
-.column-AF {
+.column-EU {
   color: #6080ff;
+}
+.column-AF {
+  color: #e08060;
 }
 .column-AS {
   color: #60ff60;
