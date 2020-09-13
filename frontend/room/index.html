@@ -1211,6 +1211,15 @@ function areAdminFetched(areAdmin) {
     pauseIcon.onclick = () => {
       send({"method": "pause" });
     };
+    document.getElementById("save-icon").classList.add("clickable-svg");
+    document.getElementById("save-icon").addEventListener("click", () => {
+      let save_name = prompt("Enter a save name");
+      if (save_name == null) return;
+      send({
+        "method": "loadFromDisk",
+        "args": [save_name],
+      })
+    });
     document.getElementById("start-game-button").classList.remove("invisible-button")
     document.getElementById("undo-button").classList.remove("invisible-button")
   } else {
@@ -1220,6 +1229,7 @@ function areAdminFetched(areAdmin) {
     pauseIcon.classList.add("unclickable-svg");
     playIcon.onclick = () => {};
     pauseIcon.onclick = () => {};
+    document.getElementById("save-icon").style.display = "none";
     document.getElementById("start-game-button").classList.add("invisible-button")
     document.getElementById("undo-button").classList.add("invisible-button")
   }
@@ -1900,6 +1910,7 @@ function send_bribe(nation_name) {
   <div style='flex:1'></div>
   <div id="statusBarRoundDiv" style="min-width:5em; text-align:center;">Round 3</div>
   <div style='flex:1'></div>
+  <svg id="save-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
   <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>
   <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
 </div>
