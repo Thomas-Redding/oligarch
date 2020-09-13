@@ -200,6 +200,8 @@ path {
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
 <script>
 
+const kDebugMode = false;
+
 let admin = {
   forgetMe: () => {
     setTimeout(() => {
@@ -270,7 +272,7 @@ function toast(html, duration=2000) {
         toast.queue = [];
         rtn.parentElement.removeChild(rtn);
       })
-      document.body.appendChild(rtn);
+      toastContainer.appendChild(rtn);
       toast.timeToDismiss = new Date().getTime() + duration;
     }, 100);
   }
@@ -342,8 +344,11 @@ function argmax(A) {
   return r;
 }
 
-function render_table(state) {
-  let tbody = mainTable.children[0];
+function render_table(state, table, isEndOfGame) {
+  if (!table) {
+    table = mainTable;
+  }
+  let tbody = table.children[0];
   tbody.innerHTML = `
     <tr>
       <td></td>
@@ -369,7 +374,11 @@ function render_table(state) {
     }
     // We pretend everyone is connected for now.
     let color = (state.players[name].connected ? '#0c0' : '#800');
-    tr.innerHTML += `<td><svg width=16 height=16><circle cx=8 cy=8 r=8 style="fill:` + color + `;"></svg> ` + player.username + "</td>";
+    if (isEndOfGame) {
+      tr.innerHTML += `<td>` + player.username + " </td>";
+    } else {
+      tr.innerHTML += `<td><svg width=16 height=16><circle cx=8 cy=8 r=8 style="fill:` + color + `;"></svg> ` + player.username + " </td>";
+    }
     tr.innerHTML += '<td class="column-NA">' + player.shares["North America"] + "</td>";
     tr.innerHTML += '<td class="column-SA">' + player.shares["South America"] + "</td>";
     tr.innerHTML += '<td class="column-EU">' + player.shares["Europe"] + "</td>";
@@ -392,7 +401,7 @@ function render_table(state) {
   }
 
   // sum row
-  {
+  if (!isEndOfGame) {
     let tr = document.createElement("TR");
     tr.style.borderTop = 'solid white 1px';
     tr.innerHTML += "<td>TOTAL</td>";
@@ -632,8 +641,10 @@ function render_move_state(oldState, moveState) {
     moveStateDiv.style.display = "none";
     return;
   }
-  moveStateDiv.style.display = "block";
-  moveStateDiv.innerHTML = JSON.stringify(moveState, null, 2);
+  if (kDebugMode) {
+    moveStateDiv.style.display = "block";
+    moveStateDiv.innerHTML = JSON.stringify(moveState, null, 2);
+  }
 
   // circ.id = territory_name + "_" + nation_name + "_" + unit_type + "_" + can_action
   if (gLatestState.stage.subphase === "Move") {
@@ -1506,6 +1517,20 @@ let loadPromises = [
           }
           updateLobbyUsernames();
         }
+        else if (action === "end_game") {
+          render_table(gLatestState, endOfGameTable, true);
+          let best = -Infinity;
+          let winner = null;
+          for (let player_name in gLatestState.players) {
+            let score = utils.score_of_player(gLatestState, player_name)
+            if (score > best) {
+              best = score;
+              winner = player_name;
+            }
+          }
+          winnerDiv.innerHTML = winner + ' wins!';
+          endOfGameContainer.style.display = 'block';
+        }
         else if (action === "begin_spawn") {
           render_map(state);
         }
@@ -2212,11 +2237,24 @@ function send_bribe(nation_name) {
   <div id="acceptTradeButton" style="background-color:#0a0; color:white;" class="button" onclick="respond_trade(true)">Accept</div>
 </div>
 
+<div id="toastContainer" style="position:absolute; left:0; top:0; width:100%; height:100%;">
+</div>
+
 <div id="pauseDiv" style="position:absolute; left:0; top:0; width:100%; height:100%; background-color:#0008; color:white;">
   <div style="font-size: 3em; position:absolute; left:calc(50% - 3em); top:calc(50% - 1em); text-align:center;">GAME PAUSED</div>
   <div style="position:absolute; left:50%; top:50%; display:flex; flex-direction:row;">
     <div class="button" onclick='send({"method": "resume" });'>Resume</div>
   </div>
+</div>
+
+<div id='endOfGameContainer' style="position:absolute; left:0; top:0; width:100%; height:100%; background-color:#111c; color:white; display:flex; flex-direction:column;">
+  <div style="flex:1"></div>
+  <h1 style="text-align:center;">Game Over</h1>
+  <h1 id="winnerDiv" style="text-align:center;"></h1>
+  <table id="endOfGameTable" style="margin: 0 auto; border-collapse: collapse;">
+    <tbody></tbody>
+  </table>
+  <div style="flex:1"></div>
 </div>
 
 <div id="lobbyDiv">
