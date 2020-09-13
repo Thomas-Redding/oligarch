@@ -88,6 +88,10 @@ class Game
         log(username);
         if (this.mother_state.players[username].auth !== 'admin') return;
         let [action, args, state] = this._history.undo();
+        this._resetServerWithUndoParts(action, args, state)
+    }
+
+    _resetServerWithUndoParts(action, args, state) {
         if (this.timer) this.timer.stop();
         // TODO: Allow undoing to the beginning of any subphase. To do this, we
         // need to add a global variable indicating whether any action has been
@@ -95,7 +99,7 @@ class Game
         if (action === "lobby") {
             // Go back to the lobby.
             this.mother_state = state
-            this._history.save("lobby", null, this.mother_state);
+            this._save("lobby", null);
         } else if (action === "auction_start") {
             // Go back to the start of an auction (before any bids).
             this.mother_state = state
@@ -108,24 +112,52 @@ class Game
         this._prayer("undo", '')
     }
 
-    save(save_name) {
+    saveToDisk(save_name) {
         log(save_name);
-        if (!/^[0-9a-zA-Z]+$/.match(save_name)) {
+        if (!/^[0-9a-zA-Z]+$/.test(save_name)) {
             // TODO: Tell user saving failed.
             return;
         }
         let [action, args, state] = this._history.last_save();
         try {
-            fs.writeFileSync("data/" + save_name + ".json", JSON.stringify(data))
+            fs.writeFileSync("data/" + save_name + ".json", JSON.stringify([action, args, state]))
         } catch (err) {
-            log(err)
+            log("ERROR:", err)
             return;
         }
     }
 
+    loadFromDisk(username, save_name) {
+        // 1599955249143
+        if (this.mother_state.players[username].auth !== 'admin') return
+        let [action, args, state] =
+            JSON.parse(fs.readFileSync("data/" + save_name + ".json"))
+        this._resetServerWithUndoParts(action, args, state)
+    }
+
+    loadMostRecentSaveFromDisk() {
+        let save_names = this.fetchListOfSaves();
+        save_names.sort();
+        let latest_save_name = save_names[save_names.length - 1];
+        this.loadFromDisk(latest_save_name)
+    }
+
+    fetchListOfSaves() {
+        let files = fs.readdirSync("data");
+        return files.map(x => x.substr(0, x.length - 5));
+    }
+
+    _save(checkpoint_type, args) {
+        this._history.save(checkpoint_type, args, this.mother_state)
+        let file_name = new Date().getTime()
+        this.saveToDisk(file_name)
+    }
+
     endLobby(username)
     {
-        this._history.save("lobby", null, this.mother_state);
+        log(username)
+        // TODO: QQQ load from disk
+        this._save("lobby", null);
         log(username);
         let rtn;
         if (this.mother_state.players[username].auth !== 'admin') {
@@ -664,13 +696,15 @@ class Game
                         if (nationName === "Europe") {
                             continue;
                         }
-                        nation.army.push({
-                            "type": type,
-                            "territory": terr,
-                            "id": utils.uuid(),
-                            "can_move": true,
-                            "can_attack": true
-                        });
+                        for (let _ = 0; _ < 2; ++_) {
+                            nation.army.push({
+                                "type": type,
+                                "territory": terr,
+                                "id": utils.uuid(),
+                                "can_move": true,
+                                "can_attack": true
+                            });
+                        }
                     }
                 } else {
                     nation[terr].n_factories = 0
@@ -730,7 +764,7 @@ class Game
     _register_bid(amount, username)
     {
         if (this.mother_state.highest_bidder === null) {
-            this._history.save("auction_start", null, this.mother_state);
+            this._save("auction_start", null);
         }
         log(amount, username);
         this.mother_state.current_bid = amount
@@ -781,7 +815,7 @@ class Game
         log(username, candidate_username);
         if (utils.sum(Object.values(utils.candidate_votes(this.mother_state))) == 0) {
             // This is the first vote.
-            this._history.save("election_start", null, this.mother_state);
+            this._save("election_start", null);
         }
         this.mother_state.players[username].vote = candidate_username
         let nat = this.mother_state.stage.turn
@@ -803,7 +837,7 @@ class Game
         log();
         if (utils.sum(Object.values(utils.candidate_votes(this.mother_state))) == 0) {
             // No votes were cast.
-            this._history.save("election_start", null, this.mother_state);
+            this._save("election_start", null);
         }
         for (let player in this.mother_state.players){
             this.mother_state.players[player].vote = null

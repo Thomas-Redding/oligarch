@@ -375,7 +375,9 @@ function render_table(state) {
     if (name === gUsername) {
       tr.style.backgroundColor = '#444';
     }
-    tr.innerHTML += "<td>" + player.username + "</td>";
+    // We pretend everyone is connected for now.
+    let color = (true ? '#0c0' : '#800');
+    tr.innerHTML += `<td><svg width=16 height=16><circle cx=8 cy=8 r=8 style="fill:` + color + `;"></svg> ` + player.username + "</td>";
     tr.innerHTML += '<td class="column-NA">' + player.shares["North America"] + "</td>";
     tr.innerHTML += '<td class="column-SA">' + player.shares["South America"] + "</td>";
     tr.innerHTML += '<td class="column-EU">' + player.shares["Europe"] + "</td>";
@@ -608,9 +610,10 @@ function change_move_state(newState) {
 function render_move_state(oldState, moveState) {
   // Hide oldState's stack numbers.
   if (oldState) {
+    let territory_name = ('territory' in oldState ? oldState.territory : oldState.from);
     for (let unit_type of ["Infantry", "Artillery", "Cavalry"]) {
-      let cid = ["stackcircle", oldState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
-      let tid = ["stacktext", oldState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
+      let cid = ["stackcircle", territory_name, gLatestState.stage.turn, unit_type, "1"].join("_")
+      let tid = ["stacktext", territory_name, gLatestState.stage.turn, unit_type, "1"].join("_")
       let circ = document.getElementById(cid);
       let text = document.getElementById(tid);
       if (circ) {
@@ -701,7 +704,6 @@ function structure_clicked(territory_name, structure_type) {
   if (gLatestState.stage.subphase !== "Attack") {
     return;
   }
-  alert('raze');
   send({
     "method": "raze",
     "args": [
@@ -1241,6 +1243,15 @@ function areAdminFetched(areAdmin) {
     pauseIcon.onclick = () => {
       send({"method": "pause" });
     };
+    document.getElementById("save-icon").classList.add("clickable-svg");
+    document.getElementById("save-icon").addEventListener("click", () => {
+      let save_name = prompt("Enter a save name");
+      if (save_name == null) return;
+      send({
+        "method": "loadFromDisk",
+        "args": [save_name],
+      })
+    });
     document.getElementById("start-game-button").classList.remove("invisible-button")
     document.getElementById("undo-button").classList.remove("invisible-button")
   } else {
@@ -1250,6 +1261,7 @@ function areAdminFetched(areAdmin) {
     pauseIcon.classList.add("unclickable-svg");
     playIcon.onclick = () => {};
     pauseIcon.onclick = () => {};
+    document.getElementById("save-icon").style.display = "none";
     document.getElementById("start-game-button").classList.add("invisible-button")
     document.getElementById("undo-button").classList.add("invisible-button")
   }
@@ -1364,9 +1376,9 @@ function rewriteActivityLogFromScratch() {
 }
 
 function updateLobbyUsernames() {
-  let html = "<b><u>Current Oligarchs</u></b><br/>";
+  let html = "";
   for (let username in gLatestState.players) {
-    html += "<br/>" + username;
+    html += username + "<br>";
   }
   document.getElementById("lobby-usernames").innerHTML = html;
 }
@@ -1585,7 +1597,7 @@ login().then((socket) => {
     else if (action === "moves_made") {
       render_map(state);
     }
-    else if (action === "player_busy") {
+    else if (action === "players_busy") {
       // TODO: this message should look different depending on
       // whether the recipient is busy or you are busy.
       alert("Trade rejected (either your or that player have an ongoing trade)")
@@ -1930,6 +1942,7 @@ function send_bribe(nation_name) {
   <div style='flex:1'></div>
   <div id="statusBarRoundDiv" style="min-width:5em; text-align:center;">Round 3</div>
   <div style='flex:1'></div>
+  <svg id="save-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
   <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>
   <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
 </div>
@@ -2173,14 +2186,15 @@ function send_bribe(nation_name) {
 <div id="lobbyDiv">
   <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); text-align: center;">
     <h1 align="center">The Oligarchs</h1>
-    <br/><br/>
+    <br/>
+    <div id="lobby-usernames"></div>
+    <br/>
     <p>
       Do you have what it takes to rule the world?
     </p>
     <div id="start-game-button" class="button invisible-button" onclick="start_game();" style="margin: 2em auto;">
       Start Game
     </div>
-    <div id="lobby-usernames"></div>
   </div>
 </div>
 
