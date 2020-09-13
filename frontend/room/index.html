@@ -1702,11 +1702,10 @@ function update_buttons(state) {
   }
 
   update_trade_button(state);
-
   if (state.players[gUsername].ready) {
-    endDeliberationButton.classList.add("disabled");
+    endDeliberationButton.classList.add("disabled-button");
   } else {
-    endDeliberationButton.classList.remove("disabled");
+    endDeliberationButton.classList.remove("disabled-button");
   }
 
   bribeButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
