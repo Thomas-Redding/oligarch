@@ -1059,7 +1059,7 @@ function main(state) {
 
             let legalMoves = utils.valid_moves_for_troop(
               gLatestState,
-              utils.terr2continentName[moveState.from],
+              gLatestState.stage.turn,
               moveState.from,
               moveState["Cavalry"] === unitIds.length ? "Cavalry" : "Infantry");
 
@@ -1629,6 +1629,7 @@ let loadPromises = [
         }
         else if (action === "moves_made") {
           render_map(state);
+          render_table(state);
         }
         else if (action === "players_busy") {
           // TODO: this message should look different depending on

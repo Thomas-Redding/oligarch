@@ -5,7 +5,7 @@ let Battle = require('./battle.js')
 let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
 
-const DEBUG = true;
+const DEBUG = false;
 const BALANCED_MODE = true;
 
 log.enabled = true;
@@ -447,42 +447,46 @@ class Game
     respondTrade(username, player, 
         shares_to, shares_from, cash_to, cash_from, accept)
     {
+        log(username, player, shares_to, shares_from,
+            cash_to, cash_from)
         // Terrible terrible hack that's #tonyendorsed to hotfix respondTrade.
         // This should be refactored.
         {
-            let tradesFrom = this.mother_state.trades.map(x => x[2].from);
-            let tradesTo = this.mother_state.trades.map(x => x[2].to);
-            let i = Math.max(tradesFrom.indexOf(username), tradesTo.indexOf());
-            let trade = this.mother_state.trades[i];
+            log("this.mother_state.trading_pairs", this.mother_state.trading_pairs);
+            let tradesFrom = this.mother_state.trading_pairs.map(x => x[2].from);
+            let tradesTo = this.mother_state.trading_pairs.map(x => x[2].to);
+            let i = Math.max(tradesFrom.indexOf(username),
+                tradesTo.indexOf(username));
+            log("i", i);
+            let trade = this.mother_state.trading_pairs[i][2];
+            log("trade", trade);
             username = trade.from;
             player = trade.to;
-            shares_to = trade.share_to;
+            shares_to = trade.shares_to;
             shares_from = trade.shares_from;
-            cash_to = trades.cash_to;
-            cash_from = trades.cash_from;
+            cash_to = trade.cash_to;
+            cash_from = trade.cash_from;
         }
 
         // Swap username/player so we can view this from the same perspective as initTrade
         [username, player] = [player, username]
-        log(username, player, shares_to, shares_from,
-            cash_to, cash_from)
 
         if (accept && this._trade_verification(
-            username, player, shares_to, shares_from, cash_to, cash_from)) {
+            player, username, shares_to, shares_from, cash_to, cash_from)) {
                 
             for(let share of shares_to) {
-                this.mother_state.players[username].shares[share]--
-                this.mother_state.players[player].shares[share]++
-            }
-            
-            for(let share of shares_from) {
                 this.mother_state.players[username].shares[share]++
                 this.mother_state.players[player].shares[share]--
             }
-            this.mother_state.players[username].cash += cash_from
-            this.mother_state.players[player].cash += cash_to
-            this.mother_state.players[username].cash -= cash_to
-            this.mother_state.players[player].cash -= cash_from
+            
+            for(let share of shares_from) {
+                this.mother_state.players[username].shares[share]--
+                this.mother_state.players[player].shares[share]++
+            }
+            this.mother_state.players[username].cash -= cash_from
+            this.mother_state.players[player].cash -= cash_to
+            this.mother_state.players[username].cash += cash_to
+            this.mother_state.players[player].cash += cash_from
             this._trade_dequeue(username, player)
             this._prayer('trade_accepted','',this.mother_state)
         }
@@ -599,7 +603,7 @@ class Game
         else if (this.mother_state.stage.subphase == 'Attack'){
             this._prayer('begin_attack','')
             if (this.mother_state.nations[nat].army.filter(
-                x => x.can_move).length == 0 || noop) {
+                x => x.can_attack).length == 0 || noop) {
                     this._transition()
                 }
         }
@@ -902,8 +906,9 @@ class Game
 
     _manage_conquest(nation)
     {
+       log(nation)
        let puppeteer = utils.puppeteer(this.mother_state, nation)
-       if (puppeteer !== nation) {
+       if (puppeteer !== null && puppeteer !== nation) {
            this.mother_state.nations[nation].army = []
            let cash = this.mother_state.nations[nation].cash
            this.mother_state.nations[nation].cash = 0
@@ -915,8 +920,9 @@ class Game
 
     _trade_dequeue(username, player)
     {
+        log(username, player)
         for (let pair of this.mother_state.trading_pairs) {
-            if (pair[0] === username && pair[1] === player) {
+            if (pair[1] === username && pair[0] === player) {
                 var idx = this.mother_state.trading_pairs.indexOf(pair)
                 this.mother_state.trading_pairs.splice(idx,1)
                 break
@@ -926,7 +932,9 @@ class Game
 
     _trade_verification(user, player, shares_to, shares_from, cash_to, cash_from)
     {
+        log(user, player, shares_to, shares_from, cash_to, cash_from)
         let shares_valid = (share_list, p) => {
+            log(share_list, p);
             let share_to_counts = {}
             for(let share of share_list) {
                 if (share in share_to_counts) {

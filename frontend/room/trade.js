@@ -176,7 +176,7 @@ function show_trade_proposal(proposal) {
   } else {
     bar = '';
     for (let nation in shares_from_player) {
-      bar += ` <span class="abbrSpan">` + utils.NATIONS[nation].abbr + '</span>x' + shares_to_player[nation] + ' ';
+      bar += ` <span class="abbrSpan">` + utils.NATIONS[nation].abbr + '</span>x' + shares_from_player[nation] + ' ';
     }
     if (proposal.cash_from > 0) {
       bar += " and $" + proposal.cash_from + "B";

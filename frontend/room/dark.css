@@ -42,6 +42,10 @@ body {
   cursor: pointer;
 }
 
+.button:hover {
+  background-color: hsl(50, 100%, 60%);
+}
+
 .button.disabled-button {
   background-color: #aaa;
   cursor: default;
