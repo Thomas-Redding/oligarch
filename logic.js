@@ -268,15 +268,15 @@ class Game
     {
         let target_nat = this.terr2nat[terr]
         let nat = this.mother_state.stage.turn
+        let troop = utils.troop_from_id(this.mother_state, unit_id)
         if (this.mother_state.stage.subphase == 'Attack' &&
         this.mother_state.nations[nat].president == username &&
-        utils.troop_from_id(this.mother_state, unit_id).can_attack) {
-            console.log('raze try')
+        troop.can_attack) {
             let bldg_type = building == 'barrack' ? 'n_barracks' : 'n_factories'
             //console.log(target_nat[terr]['n_barracks'])
             if (target_nat[terr][bldg_type] > 0){
                 target_nat[terr][bldg_type]--
-                console.log('no razing')
+                troop.can_attack = false
                 this._prayer('bldg_razed','')
             }
         }
