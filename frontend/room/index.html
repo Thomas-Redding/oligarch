@@ -448,13 +448,17 @@ function ocean_clicked() {
   change_move_state(null);
 }
 
-function unit_clicked(territory_name, unit_type, nation_name) {
+function unit_clicked(territory_name, unit_type, nation_name, is_grey) {
   if (gLatestState.stage.phase !== "Action") {
     change_move_state(null);
     return;
   }
   const subphase = gLatestState.stage.subphase;
   if (subphase === "Move") {
+    if (is_grey) {
+      change_move_state(null);
+      return;
+    }
     if (!moveState) {
       change_move_state({
         "from": territory_name,
@@ -763,7 +767,7 @@ function render_map(state) {
           if (n > 0) {
             icon_drawers.push((x, y) => {
               let onclick = (e) => {
-                unit_clicked(territory_name, unit_type, nation_name);
+                unit_clicked(territory_name, unit_type, nation_name, !can_action);
               }
 
               let background = svg.circle(x, y, s * 0.35);
