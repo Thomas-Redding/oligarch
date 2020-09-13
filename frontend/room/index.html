@@ -856,7 +856,9 @@ function render_map(state) {
           let text = svg_text(territory.n_factories, x - 5, y + 6);
           text.style.fill = 'white';
           text.style.textShadow = "6px 6px 20px black";
-          text.addEventListener("click", onclick);
+          text.addEventListener("click", () => {
+            factory_clicked(territory_name);
+          });
           out.appendChild(text);
         }
       });
@@ -1153,6 +1155,7 @@ window.onresize = () => {
     contentDiv.style.display = 'flex';
     contentDiv.style.flexDirection = 'row';
     leftPanel.style.display = 'flex';
+    leftPanel.style.width = '30em';
     mainTable.style.display = 'table';
     actionPanel.style.display = 'block';
     mapDiv.style.display = 'block';
@@ -1169,6 +1172,7 @@ window.onresize = () => {
     contentDiv.style.display = 'block';
 
     leftPanel.style.display = (tab == kTabMap ? "none" : "flex");
+    leftPanel.style.maxWidth = '100%';
     mapDiv.style.display = (tab === kTabMap ? "block" : "none");
     mapDiv.style.flex = 0;
     mapDiv.style.maxWidth = "100%";
@@ -1423,10 +1427,10 @@ function updateCurrentActionDivFromState(state) {
   let updateDiv = (message) => {
     if (message) {
       currentActionDiv.style.opacity = 1;
-      currentActionDiv.children[1].innerHTML = message;
+      currentActionDiv.children[0].innerHTML = message;
     } else {
       currentActionDiv.style.opacity = 0;
-      currentActionDiv.children[1].innerHTML = "";
+      currentActionDiv.children[0].innerHTML = "";
     }
   };
   // updateDiv("Auction for " + details + " has opened");
@@ -1466,190 +1470,210 @@ function updateCurrentActionDivFromState(state) {
   }
 }
 
-let gSocket;
+let gSocket
 let gLatestState;
-login().then((socket) => {
-  console.log("CONNECTED");
-  gSocket = socket;
-  gSocket.addEventListener("close", (event) => {
-    window.location.reload();
-  });
-  gSocket.addEventListener("message", (event) => {
-    if (event.data.length == 0) return;
-    let [action, details, state] = JSON.parse(event.data);
-    gLatestState = state;
-    console.log("========================");
-    console.log("Received action:", action);
-    console.log("Received details:", details);
-    console.log("Received state:", state);
-    console.log("========================");
+let loadPromises = [
+  new Promise((resolve, reject) => {
+
+    login().then((socket) => {
+      console.log("CONNECTED");
+      gSocket = socket;
+      gSocket.addEventListener("close", (event) => {
+        window.location.reload();
+      });
+      gSocket.addEventListener("message", (event) => {
+        if (event.data.length == 0) return;
+        let [action, details, state] = JSON.parse(event.data);
+        gLatestState = state;
+        console.log("========================");
+        console.log("Received action:", action);
+        console.log("Received details:", details);
+        console.log("Received state:", state);
+        console.log("========================");
 
 
-    if (action === "get_state" || action === "undo") {
-      // We assume get_state is only called when the user
-      // reloads the page.
-      if (state.stage.phase === "lobby") {
-        tab = kTabLobby;
-      } else {
-        tab = kTabInfo;
-      }
-      if (action === "get_state") {
-        main(state);
-      } else {
-        render_presidential_div(gLatestState);
-        window.onresize();
-      }
-      render_table(state);
-      let playIcon = document.getElementById("play-icon");
-      let pauseIcon = document.getElementById("pause-icon");
-      playIcon.style.display = gLatestState.is_paused ? "block" : "none";
-      pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
-      gClock.set_time_remaining(state.clock);
-      if (gLatestState.is_paused) {
-        gClock.pause();
-      }
-      updateLobbyUsernames();
-    }
-    else if (action === "undo") {
-    }
-    else if (action === "user_ready") {
-    }
-    else if (action == "player_added") {
-      updateLobbyUsernames();
-    }
-    else if (action === "refresh") {
-      // Called when an undo is performed.
-      window.location.reload(true);
-    }
-    else if (action === "built_infrastructure") {
-      render_table(state);
-    }
-    else if (action === "spawned_unit") {
-      render_table(state);
-    }
-    else if (action === "trade_proposed") {
-      maybe_show_trade_proposal(state);
-    }
-    else if (action === "trade_accepted") {
-      tradeSnackbarContainer.style.display = "none";
-      render_table(state);
-    }
-    else if (action === "battle_outcome") {
-      render_map(state);
-      render_table(state);
-    }
-    else if (action === "is_admin") {
-      areAdminFetched(details);
-    }
-    else if (action === "pause") {
-      let playIcon = document.getElementById("play-icon");
-      let pauseIcon = document.getElementById("pause-icon");
-      playIcon.style.display = "block";
-      pauseIcon.style.display = "none";
-      gClock.pause();
-    }
-    else if (action === "resume") {
-      let playIcon = document.getElementById("play-icon");
-      let pauseIcon = document.getElementById("pause-icon");
-      playIcon.style.display = "none";
-      pauseIcon.style.display = "block";
-      gClock.set_time_remaining(state.clock);
-    }
-    else if (action === "end_lobby") {
-      // Equivalent to game_start
-    }
-    else if (action === "game_start") {
-      tab = kTabInfo;
-      window.onresize();
-    }
-    else if (action === "buy_share") {
-      render_table(state);
-    }
-    else if (action === "taxes_collected") {
-      render_table(state);
-    }
-    else if (action === "bribe") {
-      render_table(state);
-    }
-    else if (action === "begin_deliberation") {
-      gClock.set_time_remaining(state.clock);
-    }
-    else if (action === "deliberation_over") {
-      gClock.set_time_remaining(state.clock);
-    }
-    else if (action === "auction_start") {
-      gClock.set_time_remaining(state.clock);
-    }
-    else if (action === "start_election") {
-      gClock.set_time_remaining(state.clock);
-    }
-    else if (action === "vote_tallied") {
-      render_map(state);
-      render_vote_table(state);
-    }
-    else if (action === "begin_presidential_command") {
-      gClock.set_time_remaining(state.clock);
-    }
-    else if (action === "begin_build") {
-      factoryRadio.checked = true;
-    }
-    else if (action === "begin_move") {
-      render_map(state);
-      change_move_state(null);
-    }
-    else if (action === "begin_attack") {
-      render_map(state);
-      change_move_state(null);
-    }
-    else if (action === "built_infrastructure") {
-      render_table(state);
-    }
-    else if (action === "bldg_razed") {
-      render_map(state);
-      render_table(state);
-    }
-    else if (action === "dividends_paid") {
-      render_table(state);
-    }
-    else if (action === "conclude_bidding") {
-      render_table(state);
-      render_nation_rects(state);
-    }
-    else if (action === "moves_made") {
-      render_map(state);
-    }
-    else if (action === "players_busy") {
-      // TODO: this message should look different depending on
-      // whether the recipient is busy or you are busy.
-      alert("Trade rejected (either your or that player have an ongoing trade)")
-    }
-    else if (action === "trade_rejected") {
-      tradeSnackbarContainer.style.display = "none";
-    }
-    else if (action === "bid_received") {
-      gClock.set_time_remaining(state.clock);
-    } else if (action == "connection_change") {
-      render_table(state);
-    }
+        if (action === "get_state" || action === "undo") {
+          // We assume get_state is only called when the user
+          // reloads the page.
+          if (state.stage.phase === "lobby") {
+            tab = kTabLobby;
+          } else {
+            tab = kTabInfo;
+          }
+          if (action === "get_state") {
+            main(state);
+          } else {
+            render_presidential_div(gLatestState);
+            window.onresize();
+          }
+          render_table(state);
+          let playIcon = document.getElementById("play-icon");
+          let pauseIcon = document.getElementById("pause-icon");
+          playIcon.style.display = gLatestState.is_paused ? "block" : "none";
+          pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
+          gClock.set_time_remaining(state.clock);
+          if (gLatestState.is_paused) {
+            gClock.pause();
+          }
+          updateLobbyUsernames();
+        }
+        else if (action === "begin_spawn") {
+          render_map(state);
+        }
+        else if (action === "undo") {
+        }
+        else if (action === "user_ready") {
+        }
+        else if (action == "player_added") {
+          updateLobbyUsernames();
+        }
+        else if (action === "refresh") {
+          // Called when an undo is performed.
+          window.location.reload(true);
+        }
+        else if (action === "built_infrastructure") {
+          render_table(state);
+        }
+        else if (action === "spawned_unit") {
+          render_table(state);
+        }
+        else if (action === "trade_proposed") {
+          maybe_show_trade_proposal(state);
+        }
+        else if (action === "trade_accepted") {
+          tradeSnackbarContainer.style.display = "none";
+          render_table(state);
+        }
+        else if (action === "battle_outcome") {
+          render_map(state);
+          render_table(state);
+        }
+        else if (action === "is_admin") {
+          areAdminFetched(details);
+        }
+        else if (action === "pause") {
+          let playIcon = document.getElementById("play-icon");
+          let pauseIcon = document.getElementById("pause-icon");
+          playIcon.style.display = "block";
+          pauseIcon.style.display = "none";
+          gClock.pause();
+        }
+        else if (action === "resume") {
+          let playIcon = document.getElementById("play-icon");
+          let pauseIcon = document.getElementById("pause-icon");
+          playIcon.style.display = "none";
+          pauseIcon.style.display = "block";
+          gClock.set_time_remaining(state.clock);
+        }
+        else if (action === "end_lobby") {
+          // Equivalent to game_start
+        }
+        else if (action === "game_start") {
+          tab = kTabInfo;
+          window.onresize();
+        }
+        else if (action === "buy_share") {
+          render_table(state);
+        }
+        else if (action === "taxes_collected") {
+          render_table(state);
+        }
+        else if (action === "bribe") {
+          render_table(state);
+        }
+        else if (action === "begin_deliberation") {
+          gClock.set_time_remaining(state.clock);
+        }
+        else if (action === "deliberation_over") {
+          gClock.set_time_remaining(state.clock);
+        }
+        else if (action === "auction_start") {
+          gClock.set_time_remaining(state.clock);
+        }
+        else if (action === "start_election") {
+          gClock.set_time_remaining(state.clock);
+        }
+        else if (action === "vote_tallied") {
+          render_map(state);
+          render_vote_table(state);
+        }
+        else if (action === "begin_presidential_command") {
+          gClock.set_time_remaining(state.clock);
+        }
+        else if (action === "begin_build") {
+          factoryRadio.checked = true;
+        }
+        else if (action === "begin_move") {
+          render_map(state);
+          change_move_state(null);
+        }
+        else if (action === "begin_attack") {
+          render_map(state);
+          change_move_state(null);
+        }
+        else if (action === "built_infrastructure") {
+          render_table(state);
+        }
+        else if (action === "bldg_razed") {
+          render_map(state);
+          render_table(state);
+        }
+        else if (action === "dividends_paid") {
+          render_table(state);
+        }
+        else if (action === "conclude_bidding") {
+          render_table(state);
+          render_nation_rects(state);
+        }
+        else if (action === "moves_made") {
+          render_map(state);
+        }
+        else if (action === "players_busy") {
+          // TODO: this message should look different depending on
+          // whether the recipient is busy or you are busy.
+          alert("Trade rejected (either your or that player have an ongoing trade)")
+        }
+        else if (action === "trade_rejected") {
+          tradeSnackbarContainer.style.display = "none";
+        }
+        else if (action === "bid_received") {
+          gClock.set_time_remaining(state.clock);
+        } else if (action == "connection_change") {
+          render_table(state);
+        }
 
-    if (state.stage.phase === "Action") {
-      render_vote_table(state);
-    }
+        if (state.stage.phase === "Action") {
+          render_vote_table(state);
+        }
 
-    possiblyToast(action, details);
-    rewriteActivityLogFromScratch()
-    onstagechange(state);
-    updateCurrentActionDivFromState(state);
-  });
-  gSocket.addEventListener("close", () => {
-    console.log("CLOSED");
-  });
+        possiblyToast(action, details);
+        rewriteActivityLogFromScratch()
+        onstagechange(state);
+        updateCurrentActionDivFromState(state);
+      });
+      gSocket.addEventListener("close", () => {
+        console.log("CLOSED");
+      });
+      resolve();
+    }, (error) => {
+      console.log("ERROR:", error);
+      reject();
+    });
+  }),
+  new Promise((resolve, reject) => {
+    window.addEventListener('load', () => {
+      resolve();
+    })
+  }),
+];
+
+Promise.all(loadPromises).then(() => {
   send([
     {"method": "get_state"},
     {"method": "is_admin"},
   ]);
 }, (error) => {
-  console.log("ERROR:", error);
+  alert("Error occurred while connecting...");
 });
 
 function count(A) {
@@ -1971,10 +1995,8 @@ function send_bribe(nation_name) {
     <table id='mainTable'>
       <tbody></tbody>
     </table>
-    <div id="currentActionDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); height:3em; display:flex; flex-direction:column;">
-      <div style="flex:1"></div>
-      <div></div>
-      <div style="flex:1"></div>
+      <div id="currentActionDiv" style="text-align:center; background-color:hsl(0, 100%, 30%); display:flex; flex-direction:column;">
+      <div style="padding:1em;"></div>
     </div>
     <br>
     <div id="actionPanel">

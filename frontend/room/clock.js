@@ -20,6 +20,9 @@ class Clock {
     this._paused = true;
   }
   update() {
+    if (!statusBarTimeDiv) {
+      return;
+    }
     let timeElapsed = new Date() - this._startTime;
     if (this._paused) {
       timeElapsed = 0;
