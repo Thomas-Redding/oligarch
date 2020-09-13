@@ -30,12 +30,22 @@ class OligarchRoom extends Room {
     let rtn = this.game.fetchGameState();
     rtn.is_paused = this.timer.isPaused();
     for (let user of super.connectedUsers()) {
-      rtn.players[user].connected = true;
+      if (user in rtn.players) {
+        rtn.players[user].connected = true;
+      }
     }
     for (let user of super.disconnectedUsers()) {
-      rtn.players[user].connected = false;
+      if (user in rtn.players) {
+        rtn.players[user].connected = false;
+      }
     }
     return rtn
+  }
+
+  _isSpectator(username) {
+    let gameState = this.game.fetchGameState();
+    log(username, Object.keys(gameState.players))
+    return !(username in gameState.players);
   }
 
   didReceiveData(username, data) {
@@ -49,7 +59,10 @@ class OligarchRoom extends Room {
         let mother_state = this.fetchGameState()
         console.log('<<<', "<state clock:" + mother_state.clock + ">");
         super.sendData(username, JSON.stringify(["get_state", null, mother_state]));
-      } else if (x.method == "pause") {
+        continue;
+      }
+      if (this._isSpectator(username)) continue;
+      if (x.method == "pause") {
         if (!this.game.is_admin(username)) continue;
         this.timer.pause()
         this.sendDataToAll(["pause", null, this.fetchGameState()])
