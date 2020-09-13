@@ -727,12 +727,17 @@ let utils = {
   },
 
   has_valid_targets: (mother_state, nation_name, territory_name) => {
+    const continent = utils.terr2continent[territory_name];
+    const territory = mother_state.nations[continent][territory_name];
     for (let name in mother_state.nations) {
       if (name === nation_name) {
         continue;
       }
-      let army = gLatestState.nations[name].army;
+      let army = mother_state.nations[name].army;
       if (army.filter(x => x.territory === territory_name).length > 0) {
+        return true;
+      }
+      if (territory.n_barracks + territory.n_factories > 0) {
         return true;
       }
     }
