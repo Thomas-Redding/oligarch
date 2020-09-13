@@ -4,6 +4,7 @@ let utils = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
+const { throws } = require('assert');
 
 const DEBUG = false;
 const BALANCED_MODE = true;
@@ -667,11 +668,18 @@ class Game
             if (is_last(turn, curTURNS)) {
                 this.mother_state.stage.phase = next(phase, PHASES)
             }
+            else if (phase == 'Auction'){
+                this.mother_state.stage.phase = 'Discuss'
+            }
             this.mother_state.stage.turn = next(turn, curTURNS)
         }
         else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback()
             && turn == curTURNS.fromback()) {
                 this.mother_state.stage.round += 1
+                if (this.mother_state.stage.round > ROUNDS.fromback()){
+                    this._prayer('game_over')
+                    return
+                }
                 this.mother_state.stage.phase = PHASES[0]
                 this.mother_state.stage.turn = curTURNS.fromback()
                 this.mother_state.stage.subphase = SUBPHASES[0]
@@ -745,6 +753,9 @@ class Game
     _begin_deliberation()
     {
         log();
+        for (let player in this.mother_state.players) {
+            this.mother_state.players[player].ready = false
+        }
         this.mother_state.clock = TIMING.deliberation
             if (this.timer.isRunning()) this.timer.stop(false)
             this.timer.start(TIMING.deliberation,
