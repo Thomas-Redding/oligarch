@@ -19,7 +19,7 @@ const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1])
 
 //global lists and macros defined here
 const TOTAL_INIT_CASH = 1475
-const ROUNDS = [1,2,3,4,5,6]
+const ROUNDS = [1]
 const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
