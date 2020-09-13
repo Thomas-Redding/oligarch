@@ -1443,7 +1443,7 @@ function updateCurrentActionDivFromState(state) {
     }
   };
   // updateDiv("Auction for " + details + " has opened");
-  // updateDiv(null);
+  // updateDiv(null);j
   // updateDiv(state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B");
   if (state.stage.phase == "lobby") {
     updateDiv(null);
@@ -1456,7 +1456,7 @@ function updateCurrentActionDivFromState(state) {
     if (state.highest_bidder == null) {
       updateDiv("Bidding is open for " + state.stage.turn + ". Every bid will extend the countdown.");
     } else {
-      updateDiv(state.highest_bidder + " bid $" + state.current_bid + "B for " + state.stage.turn);
+      updateDiv("<b>" + state.highest_bidder + "</b> bid $" + state.current_bid + "B for " + state.stage.turn);
     }
   } else if (state.stage.phase == "Action") {
     if (state.stage.subphase == "Election") {
@@ -1531,7 +1531,7 @@ let loadPromises = [
           let best = -Infinity;
           let winner = null;
           for (let player_name in gLatestState.players) {
-            let score = utils.score_of_player(gLatestState, player_name)
+            let score = utils.end_score_of_player(gLatestState, player_name)
             if (score > best) {
               best = score;
               winner = player_name;

@@ -378,6 +378,24 @@ let utils = {
   },
 
   /*
+   * Only call at the end of the game.
+   * @param username - the user whose score we are computing
+   * @returns {int} the score the given user has
+   */
+  end_score_of_player: (mother_state, username) => {
+    let player = mother_state.players[username];
+    let rtn = parseFloat(player.cash);
+    for (let nation in player.shares) {
+      let income = utils.income_of_nation(mother_state, nation);
+      let shares_sold = utils.shares_sold(mother_state, nation);
+      if (shares_sold == 0) continue;
+      let percent_owned = player.shares[nation] / shares_sold;
+      rtn += 2 * percent_owned * income;
+    }
+    return rtn;
+  },
+
+  /*
    * @returns the number of rounds left (excluding the current round).
    */
   rounds_left: (mother_state) => {
