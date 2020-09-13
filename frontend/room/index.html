@@ -495,7 +495,9 @@ function unit_clicked(territory_name, unit_type, nation_name) {
     let army = gLatestState.nations[nation_name].army;
     army = army.filter(x => x.territory === territory_name);
     army = army.filter(x => x.type === unit_type);
-    army = army.filter(x => x.can_attack);
+    if (nation_name === gLatestState.stage.turn) {
+      army = army.filter(x => x.can_attack);
+    }
     if (!moveState) {
       change_move_state({
         "territory": territory_name,
