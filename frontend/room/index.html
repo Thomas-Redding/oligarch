@@ -1783,8 +1783,8 @@ function render_presidential_div(state) {
     const subphase = state.stage.subphase;
     const nation = state.nations[state.stage.turn];
 
-    finishMovingButton.style.display = (subphase === "Move" ? "inline-block" : "none");
-    finishAttackingButton.style.display = (subphase === "Attack" ? "inline-block" : "none");
+    movingDiv.style.display = (subphase === "Move" ? "block" : "none");
+    attackingDiv.style.display = (subphase === "Attack" ? "block" : "none");
     spwaningDiv.style.display = (subphase === "Spawn" ? "block" : "none")
     buildingDiv.style.display = (subphase === "Build" ? "block" : "none");
     dividendsDiv.style.display = (subphase === "Dividends" ? "block" : "none");
@@ -2025,30 +2025,41 @@ function send_bribe(nation_name) {
 
       <h2 id="presidentialHeader"></h2>
 
-      <div id="finishMovingButton" class="button" onclick="end_moving()">End Moving</div><br>
-      <div id="finishAttackingButton" class="button" onclick="end_attacking()">End Attacking</div><br>
+      <div id="movingDiv" style="text-align:right;">
+        <br>
+        <div class="button" onclick="end_moving()">End Moving</div>
+      </div>
+      <div id="attackingDiv" style="text-align:right;">
+        <br>
+        <div class="button" onclick="end_attacking()">End Attacking</div>
+      </div>
       <div id="spwaningDiv">
         <input name="spawnForm" id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($10B)</label>
         <br>
         <input name="spawnForm" id="calvaryRadio" type="radio"><label for="calvaryRadio">Cavalry ($15B)</label>
         <br>
         <input name="spawnForm" id="artilleryRadio" type="radio"><label for="artilleryRadio">Artillery ($15B)</label>
-        <br>
-        <div onclick="end_recruiting()" class="button">End Recruiting</div><br>
+        <div style="text-align:right;">
+          <div onclick="end_recruiting()" class="button">End Recruiting</div>
+        </div>
       </div>
       <div id="buildingDiv">
         <input name="buildForm" id="factoryRadio" type="radio"><label for="factoryRadio">Factory ($10B)</label>
         <br>
         <input name="buildForm" id="barracksRadio" type="radio"><label for="barracksRadio">Barracks ($15B)</label>
-        <br>
-        <div onclick="finish_building()" class="button">End Building</div>
+        <div style="text-align:right;">
+          <div onclick="finish_building()" class="button">End Building</div>
+        </div>
       </div>
       <div id="dividendsDiv">
+        <br>
         <div style="display:flex; flex-direction:row; width:100%; padding:0.5em;">
           <input id="dividendSlider" type="range" min=0 max=100 step=3 style="width:100%" onchange="dividendValueDiv.innerHTML = this.value;" onmousemove="dividendValueDiv.innerHTML = this.value;">
           <div id="dividendValueDiv" style="width:3em;"></div>
         </div>
-        <div onclick="pay_dividends()" class="button">Pay Dividends</div><br>
+        <div style="text-align:right;">
+          <div onclick="pay_dividends()" class="button">Pay Dividends</div><br>
+        </div>
       </div>
     </div>
     <div id="currentVotesDiv"></div>
