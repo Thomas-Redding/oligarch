@@ -1597,7 +1597,7 @@ login().then((socket) => {
     else if (action === "moves_made") {
       render_map(state);
     }
-    else if (action === "player_busy") {
+    else if (action === "players_busy") {
       // TODO: this message should look different depending on
       // whether the recipient is busy or you are busy.
       alert("Trade rejected (either your or that player have an ongoing trade)")
