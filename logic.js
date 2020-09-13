@@ -5,7 +5,7 @@ let Battle = require('./battle.js')
 let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
 
-const DEBUG = false;
+const DEBUG = true;
 const BALANCED_MODE = true;
 
 log.enabled = true;
