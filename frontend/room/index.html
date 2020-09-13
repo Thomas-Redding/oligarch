@@ -1437,7 +1437,8 @@ function updateCurrentActionDivFromState(state) {
   } else if (state.stage.phase == "Taxation") {
     updateDiv("Taxation");
   } else if (state.stage.phase == "Discuss") {
-    updateDiv("Discuss");
+    let num_ready = utils.sum(Object.values(gLatestState.players).map(x => x.ready));
+    updateDiv("Discuss (" + num_ready + "/" + Object.keys(gLatestState.players).length + " ready)");
   } else if (state.stage.phase == "Auction") {
     if (state.highest_bidder == null) {
       updateDiv("Bidding is open for " + state.stage.turn);
