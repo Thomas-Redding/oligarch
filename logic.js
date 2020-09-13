@@ -660,13 +660,15 @@ class Game
                         if (nationName === "Europe") {
                             continue;
                         }
-                        nation.army.push({
-                            "type": type,
-                            "territory": terr,
-                            "id": utils.uuid(),
-                            "can_move": true,
-                            "can_attack": true
-                        });
+                        for (let _ = 0; _ < 2; ++_) {
+                            nation.army.push({
+                                "type": type,
+                                "territory": terr,
+                                "id": utils.uuid(),
+                                "can_move": true,
+                                "can_attack": true
+                            });
+                        }
                     }
                 } else {
                     nation[terr].n_factories = 0

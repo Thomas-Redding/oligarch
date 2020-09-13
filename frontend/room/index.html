@@ -608,9 +608,10 @@ function change_move_state(newState) {
 function render_move_state(oldState, moveState) {
   // Hide oldState's stack numbers.
   if (oldState) {
+    let territory_name = ('territory' in oldState ? oldState.territory : oldState.from);
     for (let unit_type of ["Infantry", "Artillery", "Cavalry"]) {
-      let cid = ["stackcircle", oldState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
-      let tid = ["stacktext", oldState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
+      let cid = ["stackcircle", territory_name, gLatestState.stage.turn, unit_type, "1"].join("_")
+      let tid = ["stacktext", territory_name, gLatestState.stage.turn, unit_type, "1"].join("_")
       let circ = document.getElementById(cid);
       let text = document.getElementById(tid);
       if (circ) {
@@ -701,7 +702,6 @@ function structure_clicked(territory_name, structure_type) {
   if (gLatestState.stage.subphase !== "Attack") {
     return;
   }
-  alert('raze');
   send({
     "method": "raze",
     "args": [
