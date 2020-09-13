@@ -1588,6 +1588,10 @@ login().then((socket) => {
     else if (action === "built_infrastructure") {
       render_table(state);
     }
+    else if (action === "bldg_razed") {
+      render_map(state);
+      render_table(state);
+    }
     else if (action === "dividends_paid") {
       render_table(state);
     }
@@ -1598,7 +1602,7 @@ login().then((socket) => {
     else if (action === "moves_made") {
       render_map(state);
     }
-    else if (action === "player_busy") {
+    else if (action === "players_busy") {
       // TODO: this message should look different depending on
       // whether the recipient is busy or you are busy.
       alert("Trade rejected (either your or that player have an ongoing trade)")
@@ -1685,11 +1689,7 @@ function update_buttons(state) {
     endDeliberationButton.style.display = "none";
   }
 
-  if (!["Election", "Auction"].includes(state.phase)) {
-    tradeButton.style.display = "inline-block";
-  } else {
-    tradeButton.style.display = "none";
-  }
+  update_trade_button(state);
 
   if (state.players[gUsername].ready) {
     endDeliberationButton.style.backgroundColor = '#888';
