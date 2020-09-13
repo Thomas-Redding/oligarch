@@ -129,7 +129,9 @@ let utils = {
       "Iceland": 1,
     },
     "Iceland": {
-      "": 1,
+      "Greenland": 1,
+      "Great Britain": 1,
+      "Scandinavia": 1,
     },
     "India": {
       "Middle East": 1,
@@ -279,8 +281,7 @@ let utils = {
     },
     "Western Europe": {
       "Southern Europe": 1,
-      "Eastern Europe": 1,
-      "Ukraine": 1,
+      "Northern Europe": 1,
       "Scandinavia": 1,
       "Great Britain": 1,
       "North Africa": 1,
@@ -742,6 +743,11 @@ let utils = {
       }
     }
     return false;
+  },
+
+  continent_from_territory: (mother_state, territory_name) => {
+    let nationName = utils.terr2continent[territory_name];
+    return mother_state.nations[nationName];
   },
 
   /*

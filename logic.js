@@ -4,7 +4,7 @@ let utils = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 
-const DEBUG = true;
+const DEBUG = false;
 const BALANCED_MODE = true;
 
 log.enabled = true;
@@ -266,7 +266,8 @@ class Game
 
     raze(username, unit_id, building, terr)
     {
-        let target_nat = this.terr2nat[terr]
+        log(username, unit_id, building, terr)
+        let target_nat = utils.continent_from_territory(this.mother_state, terr)
         let nat = this.mother_state.stage.turn
         let troop = utils.troop_from_id(this.mother_state, unit_id)
         if (this.mother_state.stage.subphase == 'Attack' &&
@@ -677,7 +678,6 @@ class Game
     _nation_init()
     {
         log();
-        let terr2nat = {}
         for (let nationName in this.mother_state.nations) {
             let nation = this.mother_state.nations[nationName];
             nation.cash = 0
@@ -710,10 +710,8 @@ class Game
                     nation[terr].n_barracks = 0
                     nation[terr].n_barracks_can_spawn = 0
                 }
-                terr2nat[terr] = nation
             }
         }
-        this.terr2nat = terr2nat
     }
 
 
