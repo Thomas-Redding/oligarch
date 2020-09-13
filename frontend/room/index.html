@@ -1182,7 +1182,7 @@ window.onresize = () => {
     contentDiv.style.display = 'block';
 
     leftPanel.style.display = (tab == kTabMap ? "none" : "flex");
-    leftPanel.style.maxWidth = '100%';
+    leftPanel.style.width = '100%';
     mapDiv.style.display = (tab === kTabMap ? "block" : "none");
     mapDiv.style.flex = 0;
     mapDiv.style.maxWidth = "100%";
@@ -1263,6 +1263,8 @@ function areAdminFetched(areAdmin) {
   if (gAreAdmin) {
     pauseIcon.classList.add("clickable-svg");
     pauseIcon.classList.remove("unclickable-svg");
+    resumeButton.classList.add("clickable-svg");
+    resumeButton.classList.remove("unclickable-svg");
     pauseIcon.onclick = () => {
       send({"method": "pause" });
     };
@@ -1280,6 +1282,8 @@ function areAdminFetched(areAdmin) {
   } else {
     pauseIcon.classList.remove("clickable-svg");
     pauseIcon.classList.add("unclickable-svg");
+    resumeButton.classList.remove("clickable-svg");
+    resumeButton.classList.add("unclickable-svg");
     pauseIcon.onclick = () => {};
     document.getElementById("save-icon").style.display = "none";
     document.getElementById("start-game-button").classList.add("invisible-button")
@@ -1497,7 +1501,7 @@ let loadPromises = [
         console.log("========================");
 
         if (["get_state", "pause", "resume"].includes(action)) {
-          pauseDiv.style.display = (state.is_paused ? "block" : "none");
+          pauseDiv.style.display = (state.is_paused ? "flex" : "none");
         }
 
 
@@ -1522,7 +1526,7 @@ let loadPromises = [
           }
           updateLobbyUsernames();
         }
-        else if (action === "end_game") {
+        else if (action === "game_over") {
           render_table(gLatestState, endOfGameTable, true);
           let best = -Infinity;
           let winner = null;
@@ -2242,11 +2246,13 @@ function send_bribe(nation_name) {
   <div id="acceptTradeButton" style="background-color:#0a0; color:white;" class="button" onclick="respond_trade(true)">Accept</div>
 </div>
 
-<div id="pauseDiv" style="position:absolute; left:0; top:0; width:100%; height:100%; background-color:#0008; color:white;">
-  <div style="font-size: 3em; position:absolute; left:calc(50% - 3em); top:calc(50% - 1em); text-align:center;">GAME PAUSED</div>
-  <div style="position:absolute; left:50%; top:50%; display:flex; flex-direction:row;">
-    <div class="button" onclick='send({"method": "resume" });'>Resume</div>
+<div id="pauseDiv" style="position:absolute; left:0; top:0; width:100%; height:100%; background-color:#0008; color:white; display:flex; flex-direction:column;">
+  <div style="flex:1"></div>
+  <div style="font-size: 2em; text-align:center;">GAME PAUSED</div>
+  <div style="text-align:center;">
+    <div style="display:inline-block;" id="resumeButton" class="button" onclick='send({"method": "resume" });'>Resume</div>
   </div>
+  <div style="flex:1"></div>
 </div>
 
 <div id='endOfGameContainer' style="position:absolute; left:0; top:0; width:100%; height:100%; background-color:#111c; color:white; display:flex; flex-direction:column; display:none;">
