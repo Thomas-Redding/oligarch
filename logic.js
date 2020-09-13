@@ -4,7 +4,7 @@ let utils = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 
-const SPAWN_BUSY_WORLD = true;
+const DEBUG = true;
 const BALANCED_MODE = true;
 
 log.enabled = true;
@@ -25,9 +25,9 @@ const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
 const TIMING = {
     'deliberation': 90*1000,
-    'bidding': 1000 * (SPAWN_BUSY_WORLD ? 1 : 12),
-    'election': 2*60*1000,
-    'actions': 3*60*1000
+    'bidding': 1000 * (DEBUG ? 1 : 12),
+    'election': (DEBUG ? 20 : 2)*60*1000,
+    'actions': (DEBUG ? 20 : 3)*60*1000
 }
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
@@ -204,7 +204,7 @@ class Game
             player.ready = false
             player.vote = null
             player.ready = false
-            if (SPAWN_BUSY_WORLD) {
+            if (DEBUG) {
                 for (let key in utils.NATIONS) {
                     player.shares[key] = Math.random() * 2 | 0
                 }
@@ -268,9 +268,9 @@ class Game
     {
         let target_nat = this.terr2nat[terr]
         if (this.mother_state.stage.subphase == 'Attack' &&
-        this.mother_state.nations[nat].president == username &&
+        this.mother_state.nations[target_nat].president == username &&
         utils.troop_from_id(this.mother_state, unit_id).can_attack) {
-            bldg_type = building == 'barracks' ? 'n_barracks' : 'n_factories'
+            bldg_type = building == 'barrack' ? 'n_barracks' : 'n_factories'
             if (this.mother_state.nations[target_nat][terr]['bldg_type'] > 0){
                 this.mother_state.nations[target_nat][terr]['bldg_type']--
                 this._prayer('bldg_razed','')
@@ -684,18 +684,23 @@ class Game
             for (let terr of utils.NATIONS[nationName].territories) {
                 nation.owns.push(terr)
                 nation[terr] = {}
-                if (SPAWN_BUSY_WORLD) {
+                if (DEBUG) {
                     nation[terr].n_factories = 1
                     nation[terr].n_barracks = 2
                     nation[terr].n_barracks_can_spawn = 2
                     for (let type of ["Infantry", "Cavalry", "Artillery"]) {
-                        nation.army.push({
-                            "type": type,
-                            "territory": terr,
-                            "id": utils.uuid(),
-                            "can_move": true,
-                            "can_attack": true
-                        });
+                        if (nationName === "Europe") {
+                            continue;
+                        }
+                        for (let _ = 0; _ < 2; ++_) {
+                            nation.army.push({
+                                "type": type,
+                                "territory": terr,
+                                "id": utils.uuid(),
+                                "can_move": true,
+                                "can_attack": true
+                            });
+                        }
                     }
                 } else {
                     nation[terr].n_factories = 0
