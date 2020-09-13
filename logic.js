@@ -676,6 +676,10 @@ class Game
         else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback()
             && turn == curTURNS.fromback()) {
                 this.mother_state.stage.round += 1
+                if (this.mother_state.stage.round > ROUNDS.fromback()){
+                    this._prayer('game_over,'')
+                    return
+                }
                 this.mother_state.stage.phase = PHASES[0]
                 this.mother_state.stage.turn = curTURNS.fromback()
                 this.mother_state.stage.subphase = SUBPHASES[0]
