@@ -5,7 +5,7 @@ let Battle = require('./battle.js')
 let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
 
-const DEBUG = false;
+const DEBUG = true;
 const BALANCED_MODE = true;
 
 log.enabled = true;
@@ -263,7 +263,7 @@ class Game
                 }
             }
            
-            this._manage_conquest(utils.terr2continent[target])
+            this._manage_conquest(utils.terr2continentName[target])
             this._prayer('moves_made','')
         }
     }
@@ -276,6 +276,7 @@ class Game
         let troop = utils.troop_from_id(this.mother_state, unit_id)
         if (this.mother_state.stage.subphase == 'Attack' &&
         this.mother_state.nations[nat].president == username &&
+        utils.territory_to_owner(this.mother_state, terr) !== null &&
         troop.can_attack) {
             let bldg_type = building == 'barrack' ? 'n_barracks' : 'n_factories'
             if (target_nat[terr][bldg_type] > 0){
