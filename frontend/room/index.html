@@ -475,8 +475,11 @@ function unit_clicked(territory_name, unit_type, nation_name) {
       return;
     }
 
-    let army = utils.army_in_territory(gLatestState, nation_name, territory_name, "Move");
-    let n = utils.sum(army[unit_type]);
+    let army = gLatestState.nations[nation_name].army;
+    army = army.filter(x => x.territory === territory_name);
+    army = army.filter(x => x.type === unit_type);
+    army = army.filter(x => x.can_move);
+    let n = army.length;
 
     if (unit_type in moveState) {
       {
@@ -798,6 +801,7 @@ function render_map(state) {
                 let text = svg_text(n, x - 8, y - 3, {
                   "style": "font-size: 0.7em; text-align:center;"
                 });
+                text.addEventListener("click", onclick);
                 text.id = "stacktext_" + idSuffix;
                 text.style.fill = 'black';
                 text.style.display = 'none';
@@ -817,12 +821,14 @@ function render_map(state) {
 
               if (n > 1) {
                 let circ = svg.circle(x + 5, y - 6.5, s * 0.23);
+                circ.addEventListener('click', onclick);
                 circ.style.fill = 'red';
                 out.appendChild(circ);
 
                 let text = svg_text(n, x + 2, y - 3, {
                   "style": "font-size: 0.7em; text-align:center;"
                 });
+                text.addEventListener('click', onclick);
                 text.style.fill = 'white';
                 text.style.textShadow = "6px 6px 20px black";
                 out.appendChild(text);
