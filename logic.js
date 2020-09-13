@@ -5,7 +5,7 @@ let Battle = require('./battle.js')
 let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
 
-const DEBUG = false;
+const DEBUG = true;
 const BALANCED_MODE = true;
 
 log.enabled = true;
@@ -263,7 +263,7 @@ class Game
                 }
             }
            
-            this._manage_conquest(utils.terr2continent[target])
+            this._manage_conquest(utils.terr2continentName[target])
             this._prayer('moves_made','')
         }
     }

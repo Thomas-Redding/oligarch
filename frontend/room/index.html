@@ -1298,7 +1298,8 @@ function htmlFromLog(action, details, isToast) {
     if (isToast) return undefined;
     else return "Game started";
   } else if (action == "taxes_collected") {
-    return "Taxes collected."
+    if (isToast) return undefined;
+    else return "Taxes collected";
   } else if (action == "begin_deliberation") {
     return "Began deliberation"
   } else if (action == "user_ready") {
@@ -1334,15 +1335,20 @@ function htmlFromLog(action, details, isToast) {
       return undefined;
     }
   } else if (action == "begin_move") {
-    return "Troop movement began";
+    if (isToast) return undefined
+    else return "Troop movement began";
   } else if (action == "begin_attack") {
-    return "Troop attacks began";
+    if (isToast) return undefined
+    else return "Troop attacks began";
   } else if (action == "begin_spawn") {
-    return "Troop recruitment began"
+    if (isToast) return undefined
+    else return "Troop recruitment began"
   } else if (action == "begin_build") {
-    return "Construction began";
+    if (isToast) return undefined
+    else return "Construction began";
   } else if (action == "begin_dividends") {
-    return "Dividend deliberations began";
+    if (isToast) return undefined
+    else return "Dividend deliberations began";
   } else if (action == "dividends_paid") {
     return "$" + details + "B paid in dividends";
   } else if (action == "end_presidential_command") {
@@ -1726,11 +1732,10 @@ function update_buttons(state) {
   }
 
   update_trade_button(state);
-
   if (state.players[gUsername].ready) {
-    endDeliberationButton.classList.add("disabled");
+    endDeliberationButton.classList.add("disabled-button");
   } else {
-    endDeliberationButton.classList.remove("disabled");
+    endDeliberationButton.classList.remove("disabled-button");
   }
 
   bribeButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
