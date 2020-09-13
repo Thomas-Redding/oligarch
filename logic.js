@@ -189,7 +189,8 @@ class Game
         let player = {}
         let rtn = true
         if (this.mother_state.stage.phase !== 'lobby') {
-            return !rtn
+            //allow spects
+            return true
         }
         else {
             player.username = username
