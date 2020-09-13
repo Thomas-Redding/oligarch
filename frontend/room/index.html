@@ -492,7 +492,10 @@ function unit_clicked(territory_name, unit_type, nation_name) {
       }
     }
   } else if (subphase === "Attack") {
-    let army = utils.troop_ids_in_territory(gLatestState, territory_name, nation_name, unit_type);
+    let army = gLatestState.nations[nation_name].army;
+    army = army.filter(x => x.territory === territory_name);
+    army = army.filter(x => x.type === unit_type);
+    army = army.filter(x => x.can_attack);
     if (!moveState) {
       change_move_state({
         "territory": territory_name,
@@ -673,8 +676,8 @@ function render_move_state(oldState, moveState) {
       }
       let unit = moveState[nation_name];
       let can_action = (gLatestState.stage.subphase === "Move" ? unit.can_move : unit.can_attack) * 1;
-      let cid = ["stackcircle", unit.territory, nation_name, unit.type, can_action].join("_");
-      let tid = ["stacktext", unit.territory, nation_name, unit.type, can_action].join("_");
+      let cid = ["stackcircle", unit.territory, nation_name, unit.type, 1].join("_");
+      let tid = ["stacktext", unit.territory, nation_name, unit.type, 1].join("_");
       let circ = document.getElementById(cid);
       let text = document.getElementById(tid);
       if (!circ) {

@@ -273,7 +273,6 @@ class Game
         this.mother_state.nations[nat].president == username &&
         troop.can_attack) {
             let bldg_type = building == 'barrack' ? 'n_barracks' : 'n_factories'
-            //console.log(target_nat[terr]['n_barracks'])
             if (target_nat[terr][bldg_type] > 0){
                 target_nat[terr][bldg_type]--
                 troop.can_attack = false
