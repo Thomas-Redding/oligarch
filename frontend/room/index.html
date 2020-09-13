@@ -175,10 +175,6 @@ path {
   padding: 1em;
 }
 
-#play-icon {
-  display: none;
-}
-
 #pause-icon {
   display: block;
 }
@@ -1245,16 +1241,10 @@ function render_status_bar(state) {
 let gAreAdmin = undefined;
 function areAdminFetched(areAdmin) {
   gAreAdmin = areAdmin;
-  let playIcon = document.getElementById("play-icon");
   let pauseIcon = document.getElementById("pause-icon");
   if (gAreAdmin) {
-    playIcon.classList.add("clickable-svg");
     pauseIcon.classList.add("clickable-svg");
-    playIcon.classList.remove("unclickable-svg");
     pauseIcon.classList.remove("unclickable-svg");
-    playIcon.onclick = () => {
-      send({"method": "resume" });
-    };
     pauseIcon.onclick = () => {
       send({"method": "pause" });
     };
@@ -1270,11 +1260,8 @@ function areAdminFetched(areAdmin) {
     document.getElementById("start-game-button").classList.remove("invisible-button")
     document.getElementById("undo-button").classList.remove("invisible-button")
   } else {
-    playIcon.classList.remove("clickable-svg");
     pauseIcon.classList.remove("clickable-svg");
-    playIcon.classList.add("unclickable-svg");
     pauseIcon.classList.add("unclickable-svg");
-    playIcon.onclick = () => {};
     pauseIcon.onclick = () => {};
     document.getElementById("save-icon").style.display = "none";
     document.getElementById("start-game-button").classList.add("invisible-button")
@@ -1487,6 +1474,10 @@ let loadPromises = [
         console.log("Received state:", state);
         console.log("========================");
 
+        if (["get_state", "pause", "resume"].includes(action)) {
+          pauseDiv.style.display = (state.is_paused ? "block" : "none");
+        }
+
 
         if (action === "get_state" || action === "undo") {
           // We assume get_state is only called when the user
@@ -1503,10 +1494,6 @@ let loadPromises = [
             window.onresize();
           }
           render_table(state);
-          let playIcon = document.getElementById("play-icon");
-          let pauseIcon = document.getElementById("pause-icon");
-          playIcon.style.display = gLatestState.is_paused ? "block" : "none";
-          pauseIcon.style.display = gLatestState.is_paused ? "none" : "block";
           gClock.set_time_remaining(state.clock);
           if (gLatestState.is_paused) {
             gClock.pause();
@@ -1548,17 +1535,9 @@ let loadPromises = [
           areAdminFetched(details);
         }
         else if (action === "pause") {
-          let playIcon = document.getElementById("play-icon");
-          let pauseIcon = document.getElementById("pause-icon");
-          playIcon.style.display = "block";
-          pauseIcon.style.display = "none";
           gClock.pause();
         }
         else if (action === "resume") {
-          let playIcon = document.getElementById("play-icon");
-          let pauseIcon = document.getElementById("pause-icon");
-          playIcon.style.display = "none";
-          pauseIcon.style.display = "block";
           gClock.set_time_remaining(state.clock);
         }
         else if (action === "end_lobby") {
@@ -1980,7 +1959,6 @@ function send_bribe(nation_name) {
   <div id="statusBarRoundDiv" style="min-width:5em; text-align:center;">Round 3</div>
   <div style='flex:1'></div>
   <svg id="save-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
-  <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>
   <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
 </div>
 
@@ -2218,6 +2196,23 @@ function send_bribe(nation_name) {
   </div>
 </div>
 
+<div id="moveStateDiv" style="position:absolute; top:0; right:0; background-color:#555; border:solid white 1px;">
+</div>
+
+<div id="tradeSnackbarContainer" style="position:absolute; top:1em; right:1em; background-color:white; color:black; border:solid white 1px; padding:0.5em; background-color:#333; color:white;">
+  <div id="tradeSnackbarMessage"></div>
+  <div id="rescindTradeButton" style="background-color:#a00; color:white;" class="button" onclick="respond_trade(false)">Rescind</div>
+  <div id="declineTradeButton" style="background-color:#a00; color:white;" class="button" onclick="respond_trade(false)">Decline</div>
+  <div id="acceptTradeButton" style="background-color:#0a0; color:white;" class="button" onclick="respond_trade(true)">Accept</div>
+</div>
+
+<div id="pauseDiv" style="position:absolute; left:0; top:0; width:100%; height:100%; background-color:#0008; color:white;">
+  <div style="font-size: 3em; position:absolute; left:calc(50% - 3em); top:calc(50% - 1em); text-align:center;">GAME PAUSED</div>
+  <div style="position:absolute; left:50%; top:50%; display:flex; flex-direction:row;">
+    <div class="button" onclick='send({"method": "resume" });'>Resume</div>
+  </div>
+</div>
+
 <div id="lobbyDiv">
   <div style="position:absolute; left:50vw; top:50vh; transform:translate(-50%, -50%); text-align: center;">
     <h1 align="center">The Oligarchs</h1>
@@ -2231,16 +2226,6 @@ function send_bribe(nation_name) {
       Start Game
     </div>
   </div>
-</div>
-
-<div id="moveStateDiv" style="position:absolute; top:0; right:0; background-color:#555; border:solid white 1px;">
-</div>
-
-<div id="tradeSnackbarContainer" style="position:absolute; top:1em; right:1em; background-color:white; color:black; border:solid white 1px; padding:0.5em; background-color:#333; color:white;">
-  <div id="tradeSnackbarMessage"></div>
-  <div id="rescindTradeButton" style="background-color:#a00; color:white;" class="button" onclick="respond_trade(false)">Rescind</div>
-  <div id="declineTradeButton" style="background-color:#a00; color:white;" class="button" onclick="respond_trade(false)">Decline</div>
-  <div id="acceptTradeButton" style="background-color:#0a0; color:white;" class="button" onclick="respond_trade(true)">Accept</div>
 </div>
 
 </body>
