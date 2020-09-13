@@ -522,7 +522,7 @@ class Game
         let tau = 0;
         if (this.timer && this.timer.isRunning()) tau = this.timer.queryTime()
         this.mother_state.clock = tau
-        this.prayer(prayer_id, signal, this.mother_state)
+        this.prayer(prayer_id, signal)
     }
 
     //acts based on current game state

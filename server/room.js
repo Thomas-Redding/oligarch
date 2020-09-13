@@ -29,6 +29,21 @@ class Room {
   }
 
   /*
+   * This method is called when a user's last websocket disconnects.
+   */
+  userDisconnected(username) {
+    // Do nothing.
+  }
+
+  /*
+   * This method is called after a user joins for the first time or when they
+   * reconnected after their last websocket disconnected.
+   */
+  userConnected(username) {
+    // Do nothing.
+  }
+
+  /*
    * Called by the server when a client attempts a new websocket connection.
    * When subclassing you should write your overridng method like
    *
@@ -72,6 +87,9 @@ class Room {
       for (let i in this.__users[username].sockets) {
         if (this.__users[username].sockets[i] == ws) {
           this.__users[username].sockets.splice(i, 1);
+          if (this.__users[username].sockets.length == 0) {
+            this.userDisconnected(username)
+          }
           break;
         }
       }
@@ -79,6 +97,9 @@ class Room {
     ws.on("message", (data) => {
       this.didReceiveData(username, data);
     })
+    if (this.__users[username].sockets.length == 1) {
+      this.userConnected(username);
+    }
     return null;
   }
 

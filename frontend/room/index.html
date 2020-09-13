@@ -376,7 +376,7 @@ function render_table(state) {
       tr.style.backgroundColor = '#444';
     }
     // We pretend everyone is connected for now.
-    let color = (true ? '#0c0' : '#800');
+    let color = (state.players[name].connected ? '#0c0' : '#800');
     tr.innerHTML += `<td><svg width=16 height=16><circle cx=8 cy=8 r=8 style="fill:` + color + `;"></svg> ` + player.username + "</td>";
     tr.innerHTML += '<td class="column-NA">' + player.shares["North America"] + "</td>";
     tr.innerHTML += '<td class="column-SA">' + player.shares["South America"] + "</td>";
@@ -1462,6 +1462,7 @@ login().then((socket) => {
     window.location.reload();
   });
   gSocket.addEventListener("message", (event) => {
+    if (event.data.length == 0) return;
     let [action, details, state] = JSON.parse(event.data);
     gLatestState = state;
     console.log("========================");
@@ -1614,6 +1615,8 @@ login().then((socket) => {
     }
     else if (action === "bid_received") {
       gClock.set_time_remaining(state.clock);
+    } else if (action == "connection_change") {
+      render_table(state);
     }
 
     if (state.stage.phase === "Action") {
