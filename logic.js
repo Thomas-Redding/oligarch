@@ -3,6 +3,7 @@ const fs = require('fs')
 let utils = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
+const { puppeteer } = require('./utils.js');
 
 const DEBUG = false;
 const BALANCED_MODE = true;
@@ -260,6 +261,7 @@ class Game
                     this.mother_state.nations[unat].army[idx].can_move = false
                 }
             }
+            this._manage_conquest(target_nat)
             this._prayer('moves_made','')
         }
     }
@@ -308,6 +310,7 @@ class Game
                     console.log('defeat')
                     this.mother_state.nations[nat].army.splice(idx_cur,1)
                 }
+                this._manage_conquest(target_nat)
                 this._prayer('battle_outcome',details,this.mother_state)
         }
     }
@@ -544,7 +547,8 @@ class Game
             this.mother_state.stage)
         let nat = this.mother_state.stage.turn
         let prez = this.mother_state.nations[turn].president
-        let noop = (prez === null || prez === 'abstain')
+        let is_puppet = utils.puppeteer(this.mother_state, nat) !== nat
+        let noop = (prez === null || prez === 'abstain' || is_puppet)
 
         if (this.mother_state.stage.phase === 'Taxation') {
             this.mother_state.nations[nat].cash += utils.income_of_nation(
@@ -564,20 +568,25 @@ class Game
             else this._transition()
         }
         else if (this.mother_state.stage.subphase === 'Election') {
-            this._start_election(this.mother_state.stage.turn)
+            if (is_puppet){
+                this._transition()
+            }
+            else{
+                this._start_election(this.mother_state.stage.turn)
+            }
         }
         else if (this.mother_state.stage.subphase == 'Move') {
-            this._start_presidential_command()
-            for (let nation_name in this.mother_state.nations) {
-                let army = this.mother_state.nations[nation_name].army
-                for (let unit of army) {
-                    unit.can_move = (nation_name == nat)
-                    unit.can_attack = (nation_name == nat)
-                    if (unit.type == 'Artillery') {
-                        unit.can_attack = false
+                this._start_presidential_command()
+                for (let nation_name in this.mother_state.nations) {
+                    let army = this.mother_state.nations[nation_name].army
+                    for (let unit of army) {
+                        unit.can_move = (nation_name == nat)
+                        unit.can_attack = (nation_name == nat)
+                        if (unit.type == 'Artillery') {
+                            unit.can_attack = false
+                        }
                     }
                 }
-            }
             this._prayer('begin_move','')
             let no_army = this.mother_state.nations[nat].army.length === 0
             if (noop|| no_army) {
@@ -886,6 +895,18 @@ class Game
         let battle = new Battle(atk_pts, def_pts)
         battle.linear_die_battle()
         return battle.metadata
+    }
+
+    _manage_conquest(nation)
+    {
+       puppeteer = utils.puppeteer(this.mother_state, nation)
+       if (puppeteer !== nation) {
+           this.mother_state.nations[nation].army = []
+           let cash = this.mother_state.nations[nation].cash
+           this.mother_state.nations[nation].cash = 0
+           this.mother_state.nations[puppeteer].cash += cash
+           this._prayer('conquest',nation)
+       }
     }
     //
 
