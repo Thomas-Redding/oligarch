@@ -272,7 +272,7 @@ function toast(html, duration=2000) {
         toast.queue = [];
         rtn.parentElement.removeChild(rtn);
       })
-      toastContainer.appendChild(rtn);
+      document.body.insertBefore(rtn, pauseDiv);
       toast.timeToDismiss = new Date().getTime() + duration;
     }, 100);
   }
@@ -989,7 +989,13 @@ window.addEventListener("DOMContentLoaded", () => {
   lobbyDiv.style.backgroundPosition = "center center";
 })
 
+let mainCounter = 0;
 function main(state) {
+  mainCounter += 1;
+  if (mainCounter > 1) {
+    alert("eeek!!!");
+    throw Error("eeek!!!");
+  }
   riskMap.addEventListener('click', (e) => {
     let pt = riskMap.createSVGPoint();
     pt.x = e.clientX;
@@ -1084,7 +1090,8 @@ function main(state) {
         }
       }
     }
-    path.addEventListener('click', onclick);
+    path.onclick = onclick;
+    // path.addEventListener('click', onclick);
 
     let onmouseover = (e) => {
       path.style.fill = color.plus(new Color(255, 255, 255)).scale(0.5).hex();
@@ -1994,7 +2001,7 @@ function send_bribe(nation_name) {
 </div>
 
 <div id='contentDiv'>
-  <div id="leftPanel">
+  <div id="leftPanel" style="overflow-y:auto;">
     <table id='mainTable'>
       <tbody></tbody>
     </table>
@@ -2235,9 +2242,6 @@ function send_bribe(nation_name) {
   <div id="rescindTradeButton" style="background-color:#a00; color:white;" class="button" onclick="respond_trade(false)">Rescind</div>
   <div id="declineTradeButton" style="background-color:#a00; color:white;" class="button" onclick="respond_trade(false)">Decline</div>
   <div id="acceptTradeButton" style="background-color:#0a0; color:white;" class="button" onclick="respond_trade(true)">Accept</div>
-</div>
-
-<div id="toastContainer" style="position:absolute; left:0; top:0; width:100%; height:100%;">
 </div>
 
 <div id="pauseDiv" style="position:absolute; left:0; top:0; width:100%; height:100%; background-color:#0008; color:white;">
