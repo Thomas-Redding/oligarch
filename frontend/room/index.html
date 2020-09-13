@@ -1587,6 +1587,10 @@ login().then((socket) => {
     else if (action === "built_infrastructure") {
       render_table(state);
     }
+    else if (action === "bldg_razed") {
+      render_map(state);
+      render_table(state);
+    }
     else if (action === "dividends_paid") {
       render_table(state);
     }
@@ -1682,11 +1686,7 @@ function update_buttons(state) {
     endDeliberationButton.style.display = "none";
   }
 
-  if (!["Election", "Auction"].includes(state.phase)) {
-    tradeButton.style.display = "inline-block";
-  } else {
-    tradeButton.style.display = "none";
-  }
+  update_trade_button(state);
 
   if (state.players[gUsername].ready) {
     endDeliberationButton.style.backgroundColor = '#888';

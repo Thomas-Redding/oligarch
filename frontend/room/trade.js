@@ -239,3 +239,16 @@ function maybe_show_trade_proposal(state) {
     tradeSnackbarContainer.style.display = "none";
   }
 }
+
+function update_trade_button(state) {
+  if (!["Election", "Auction"].includes(state.phase)) {
+    tradeButton.style.display = "inline-block";
+  } else {
+    tradeButton.style.display = "none";
+  }
+  if (state.trading_pairs.map(x => x[0]).concat(state.trading_pairs.map(x => x[1])).includes(gUsername)) {
+    tradeButton.classList.add('disabled-button');
+  } else {
+    tradeButton.classList.remove('disabled-button');
+  }
+}
