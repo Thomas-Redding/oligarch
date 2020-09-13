@@ -6,7 +6,7 @@ let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
 const { throws } = require('assert');
 
-const DEBUG = false;
+const DEBUG = true;
 const BALANCED_MODE = true;
 
 log.enabled = true;
@@ -26,7 +26,7 @@ const TURNS = ['North America', 'South America',
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
 const TIMING = {
-    'deliberation': 90*1000,
+    'deliberation': (DEBUG ? 1 : 90)*1000,
     'bidding': 1000 * (DEBUG ? 1 : 12),
     'election': (DEBUG ? 20 : 2)*60*1000,
     'actions': (DEBUG ? 20 : 3)*60*1000
