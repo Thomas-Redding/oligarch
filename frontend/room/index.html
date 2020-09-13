@@ -1682,11 +1682,7 @@ function update_buttons(state) {
     endDeliberationButton.style.display = "none";
   }
 
-  if (!["Election", "Auction"].includes(state.phase)) {
-    tradeButton.style.display = "inline-block";
-  } else {
-    tradeButton.style.display = "none";
-  }
+  update_trade_button(state);
 
   if (state.players[gUsername].ready) {
     endDeliberationButton.style.backgroundColor = '#888';
