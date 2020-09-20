@@ -206,7 +206,7 @@ path {
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
 <script>
 
-const kDebugMode = false;
+const kDebugMode = true;
 
 // How many seconds to disable the bid buttons after receiving a bid.
 const kBidDisableTime = 0.5;
@@ -310,7 +310,10 @@ class Vec2 {
   }
 }
 
-function bid(val) {
+function bid(val, button) {
+  if (button.classList.contains('disabled-button')) {
+    return;
+  }
   gLatestState
   if (gLatestState.players[gUsername].cash < val) return;
   send({
@@ -2071,9 +2074,9 @@ function send_bribe(nation_name) {
       <div id="tradeButton" class='button' style="display:inline-block;" onclick="show_modal('Trade')">Trade</div>
       <div id="voteButton" class='button' style="display:inline-block;" onclick="vote_button_clicked()">Vote</div>
       <div id="bribeButton" class='button' style="display:inline-block;" onclick="show_modal('Bribe')">Bribe</div>
-      <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1)">Bid +1</div>
-      <div id="bid5Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 5)">Bid +5</div>
-      <div id="bid25Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 25)">Bid +25</div>
+      <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1, this)">Bid +1</div>
+      <div id="bid5Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 5, this)">Bid +5</div>
+      <div id="bid25Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 25, this)">Bid +25</div>
       <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Deliberation</div>
     </div>
     <div id="presidentDiv" style="position:relative;  border-radius:0.2em; margin:0.5em;">
