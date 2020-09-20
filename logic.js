@@ -822,7 +822,7 @@ class Game
         this.mother_state.players[winner].cash -= price
         let dem = utils.num_shares_already_auctioned_for_nation(
             this.mother_state, curnat)
-        if (SHOULD_BIDS_GO_TO_OWNERS) {
+        if (SHOULD_BIDS_GO_TO_OWNERS && dem > 0) {
             let owners = utils.owners(this.mother_state, curnat) 
             for (let p in owners) {
                 this.mother_state.players[p].cash += price*owners[p]/dem
