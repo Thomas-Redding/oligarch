@@ -1538,6 +1538,8 @@ let loadPromises = [
           pauseDiv.style.display = (state.is_paused ? "flex" : "none");
         }
 
+        statusBarYourCash.innerHTML = state.players[gUsername].cash;
+
 
         if (action === "get_state" || action === "undo") {
           // We assume get_state is only called when the user

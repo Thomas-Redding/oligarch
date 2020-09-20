@@ -819,7 +819,6 @@ class Game
         let price = this.mother_state.current_bid
         let winner = this.mother_state.highest_bidder
         let curnat = this.mother_state.stage.turn
-        this.mother_state.players[winner].shares[curnat] += SUPERSHARES[i-1]
         this.mother_state.players[winner].cash -= price
         let dem = utils.num_shares_already_auctioned_for_nation(
             this.mother_state, curnat)
@@ -832,6 +831,7 @@ class Game
         else if (this.mother_state.stage.round > 1 || !BALANCED_MODE){
             this.mother_state.nations[curnat].cash += price
         }
+        this.mother_state.players[winner].shares[curnat] += SUPERSHARES[i-1]
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
         this._prayer('conclude_bidding', details)
