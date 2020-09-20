@@ -8,6 +8,8 @@ const { throws } = require('assert');
 
 const DEBUG = true;
 const BALANCED_MODE = true;
+const SUPERSHARES = [1,1,1,2,2,3];
+const SHOULD_BIDS_GO_TO_OWNERS = true;
 
 log.enabled = true;
 
@@ -34,6 +36,8 @@ const TIMING = {
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
     'Artillery':15, 'Cavalry':15 }
+
+
 
 
 //game class defined below
@@ -521,6 +525,7 @@ class Game
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this.mother_state.trading_pairs = []
+        this.mother_state.supershares = SUPERSHARES
         // log.enable = false
         this._nation_init()
     }
@@ -804,10 +809,11 @@ class Game
     _conclude_bidding()
     {
         log();
+        let i = this.mother_state.stage.round
         let price = this.mother_state.current_bid
         let winner = this.mother_state.highest_bidder
         let curnat = this.mother_state.stage.turn
-        this.mother_state.players[winner].shares[curnat] += 1
+        this.mother_state.players[winner].shares[curnat] += SUPERSHARES[i]
         this.mother_state.players[winner].cash -= price
         if (this.mother_state.stage.round > 1 || !BALANCED_MODE){
             this.mother_state.nations[curnat].cash += price

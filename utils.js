@@ -19,14 +19,14 @@ let utils = {
       "capital": "Argentina",
       "base_income_per_territory" : 9,
       "territories": ["Venezuela", "Brazil", "Argentina", "Peru"],
-      "total_shares": 4,
+      "total_shares": 5,
       "abbr": "SA"
     },
     "Europe": {
       "capital": "Northern Europe",
       "base_income_per_territory" : 5,
       "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"],
-      "total_shares": 5,
+      "total_shares": 6,
       "abbr": "EU"
     },
     "Asia": {
@@ -40,7 +40,7 @@ let utils = {
       "capital": "Eastern Australia",
       "base_income_per_territory" : 9,
       "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"],
-      "total_shares": 3,
+      "total_shares": 4,
       "abbr": "AU"
     }
   },
