@@ -198,6 +198,9 @@ path {
 
 const kDebugMode = false;
 
+// How many seconds to disable the bid buttons after receiving a bid.
+const kBidDisableTime = 0.5;
+
 let admin = {
   forgetMe: () => {
     setTimeout(() => {
@@ -731,6 +734,11 @@ function factory_clicked(territory_name) {
 
 function barrack_clicked(territory_name) {
   structure_clicked(territory_name, "barrack");
+}
+
+// TODO(mredding): make this more efficient.
+function refresh_map_highlighting(state) {
+  render_map(state);
 }
 
 function render_map(state) {
@@ -1537,7 +1545,7 @@ let loadPromises = [
           endOfGameContainer.style.display = 'block';
         }
         else if (action === "begin_spawn") {
-          render_map(state);
+          refresh_map_highlighting(state);
         }
         else if (action === "undo") {
         }
@@ -1650,6 +1658,38 @@ let loadPromises = [
         }
         else if (action === "bid_received") {
           gClock.set_time_remaining(state.clock);
+          if (details.player === gUsername) {
+            if (state.players[gUsername].cash > state.current_bid) {
+              bid1Button.classList.remove("disabled-button");
+            } else {
+              bid1Button.classList.add("disabled-button");
+            }
+            if (state.players[gUsername].cash > state.current_bid + 5) {
+              bid5Button.classList.remove("disabled-button");
+            } else {
+              bid5Button.classList.add("disabled-button");
+            }
+            if (state.players[gUsername].cash > state.current_bid + 25) {
+              bid25Button.classList.remove("disabled-button");
+            } else {
+              bid25Button.classList.add("disabled-button");
+            }
+          } else {
+            bid1Button.classList.add("disabled-button");
+            bid5Button.classList.add("disabled-button");
+            bid25Button.classList.add("disabled-button");
+            setTimeout(() => {
+              if (state.players[gUsername].cash > state.current_bid) {
+                bid1Button.classList.remove("disabled-button");
+              }
+              if (state.players[gUsername].cash > state.current_bid + 5) {
+                bid5Button.classList.remove("disabled-button");
+              }
+              if (state.players[gUsername].cash > state.current_bid + 25) {
+                bid25Button.classList.remove("disabled-button");
+              }
+            }, kBidDisableTime * 1000);
+          }
         } else if (action == "connection_change") {
           render_table(state);
         }
@@ -1714,21 +1754,6 @@ function update_buttons(state) {
     bid1Button.style.display = "inline-block";
     bid5Button.style.display = "inline-block";
     bid25Button.style.display = "inline-block";
-    if (state.players[gUsername].cash <= state.current_bid) {
-      bid1Button.classList.add("disabled-button");
-    } else {
-      bid1Button.classList.remove("disabled-button");
-    }
-    if (state.players[gUsername].cash <= state.current_bid + 5) {
-      bid5Button.classList.add("disabled-button");
-    } else {
-      bid5Button.classList.remove("disabled-button");
-    }
-    if (state.players[gUsername].cash <= state.current_bid + 25) {
-      bid25Button.classList.add("disabled-button");
-    } else {
-      bid25Button.classList.remove("disabled-button");
-    }
   } else {
     bid1Button.style.display = "none";
     bid5Button.style.display = "none";
@@ -2030,7 +2055,7 @@ function send_bribe(nation_name) {
         <div class="button" onclick="end_attacking()">End Attacking</div>
       </div>
       <div id="spwaningDiv">
-        <input name="spawnForm" id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($10B)</label>
+        <input name="spawnForm" checked=1 id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($10B)</label>
         <br>
         <input name="spawnForm" id="calvaryRadio" type="radio"><label for="calvaryRadio">Cavalry ($15B)</label>
         <br>
