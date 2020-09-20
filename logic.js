@@ -7,6 +7,8 @@ const { puppeteer } = require('./utils.js');
 const { throws } = require('assert');
 
 const BALANCED_MODE = true;
+const SUPERSHARES = [1,1,1,2,2,3];
+const SHOULD_BIDS_GO_TO_OWNERS = true;
 
 log.enabled = true;
 
@@ -27,6 +29,8 @@ const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
     'Artillery':15, 'Cavalry':15 }
+
+
 
 
 //game class defined below
@@ -301,7 +305,6 @@ class Game
                     this.mother_state, nat, terr)
                 let def_pts = utils.military_bias(
                     this.mother_state, target_nat, terr)
-                //console.log()
                 let details = this._battle(atk_pts,def_pts)
                 console.log(details)
                 this.mother_state.nations[nat].army[idx_cur].can_attack = false
@@ -526,6 +529,7 @@ class Game
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this.mother_state.trading_pairs = []
+        this.mother_state.supershares = SUPERSHARES
         // log.enable = false
         this._nation_init()
     }
@@ -809,12 +813,21 @@ class Game
     _conclude_bidding()
     {
         log();
+        let i = this.mother_state.stage.round
         let price = this.mother_state.current_bid
         let winner = this.mother_state.highest_bidder
         let curnat = this.mother_state.stage.turn
-        this.mother_state.players[winner].shares[curnat] += 1
+        this.mother_state.players[winner].shares[curnat] += SUPERSHARES[i-1]
         this.mother_state.players[winner].cash -= price
-        if (this.mother_state.stage.round > 1 || !BALANCED_MODE){
+        let dem = utils.num_shares_already_auctioned_for_nation(
+            this.mother_state, curnat)
+        if (SHOULD_BIDS_GO_TO_OWNERS) {
+            let owners = utils.owners(this.mother_state, curnat) 
+            for (let p in owners) {
+                this.mother_state.players[p].cash += price*owners[p]/dem
+            }
+        }
+        else if (this.mother_state.stage.round > 1 || !BALANCED_MODE){
             this.mother_state.nations[curnat].cash += price
         }
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}

@@ -23,3 +23,16 @@ class Battle {
 }
 module.exports = Battle
 
+
+let k = 0;
+
+for (let c = 0; c < 100000; c++){
+
+    battle = new Battle(5,3)
+    battle.linear_die_battle()
+    if (battle.metadata.outcome) {
+        k += 1
+    }
+}
+
+console.log(k)
