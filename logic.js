@@ -812,9 +812,17 @@ class Game
         let price = this.mother_state.current_bid
         let winner = this.mother_state.highest_bidder
         let curnat = this.mother_state.stage.turn
-        this.mother_state.players[winner].shares[curnat] += SUPERSHARES[i]
+        this.mother_state.players[winner].shares[curnat] += SUPERSHARES[i-1]
         this.mother_state.players[winner].cash -= price
-        if (this.mother_state.stage.round > 1 || !BALANCED_MODE){
+        let dem = utils.num_shares_already_auctioned_for_nation(
+            this.mother_state, curnat)
+        if (SHOULD_BIDS_GO_TO_OWNERS) {
+            let owners = utils.owners(this.mother_state, curnat) 
+            for (let p in owners) {
+                this.mother_state.players[p].cash += price*owners[p]/dem
+            }
+        }
+        else if (this.mother_state.stage.round > 1 || !BALANCED_MODE){
             this.mother_state.nations[curnat].cash += price
         }
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
