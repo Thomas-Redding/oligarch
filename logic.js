@@ -6,7 +6,6 @@ let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
 const { throws } = require('assert');
 
-const DEBUG = true;
 const BALANCED_MODE = true;
 
 log.enabled = true;
@@ -19,18 +18,12 @@ const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1])
 
 //global lists and macros defined here
 const TOTAL_INIT_CASH = 1475
-const ROUNDS = [1]
+const ROUNDS = [1, 2, 3, 4, 5, 6]
 const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
-const TIMING = {
-    'deliberation': (DEBUG ? 1 : 90)*1000,
-    'bidding': 1000 * (DEBUG ? 1 : 12),
-    'election': (DEBUG ? 20 : 2)*60*1000,
-    'actions': (DEBUG ? 20 : 3)*60*1000
-}
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
     'Artillery':15, 'Cavalry':15 }
@@ -107,11 +100,16 @@ class Game
             this.mother_state = state
         } else if (action === "election_start") {
             this.mother_state = state
-            this.timer.start(TIMING.election, this._conclude_election.bind(this))
+            this.timer.start(this.mother_state.settings.electionTime, this._conclude_election.bind(this))
         } else {
             throw Exception("Can't undo an action of type '%s'" % action);
         }
         this._prayer("undo", '')
+    }
+
+    setSettings(userame, new_settings) {
+        this.mother_state.settings = new_settings
+        this._prayer("update_settings", '')
     }
 
     saveToDisk(save_name) {
@@ -207,7 +205,7 @@ class Game
             player.ready = false
             player.vote = null
             player.ready = false
-            if (DEBUG) {
+            if (this.mother_state.debug) {
                 for (let key in utils.NATIONS) {
                     player.shares[key] = Math.random() * 2 | 0
                 }
@@ -503,6 +501,13 @@ class Game
         this.timer = timer
         this._history = new History(this.prayer);
         this.mother_state = { }
+        this.mother_state.settings = {
+            "debug": false,
+            "deliberationTime": 30*1000,
+            "biddingTime":      12*1000,
+            "electionTime":   2*60*1000,
+            "actionsTime":    3*60*1000,
+        }
         this.mother_state.players = { }
         this.mother_state.nations = utils.NATIONS
         this.mother_state.blacklisted_names = TURNS.concat(BLACKLISTED_NAMES)
@@ -711,7 +716,7 @@ class Game
             for (let terr of utils.NATIONS[nationName].territories) {
                 nation.owns.push(terr)
                 nation[terr] = {}
-                if (DEBUG) {
+                if (this.mother_state.debug) {
                     nation[terr].n_factories = 1
                     nation[terr].n_barracks = 2
                     nation[terr].n_barracks_can_spawn = 2
@@ -756,11 +761,11 @@ class Game
         for (let player in this.mother_state.players) {
             this.mother_state.players[player].ready = false
         }
-        this.mother_state.clock = TIMING.deliberation
+        this.mother_state.clock = this.mother_state.settings.deliberationTime
             if (this.timer.isRunning()) this.timer.stop(false)
-            this.timer.start(TIMING.deliberation,
+            this.timer.start(this.mother_state.settings.deliberationTime,
                 this._finish_deliberation.bind(this))
-            this._prayer('begin_deliberation',TIMING.deliberation)
+            this._prayer('begin_deliberation', this.mother_state.settings.deliberationTime)
     }
 
     _finish_deliberation()
@@ -794,7 +799,7 @@ class Game
         this.mother_state.current_bid = amount
         this.mother_state.highest_bidder = username
         if (this.timer) this.timer.stop(false)
-        this.timer.start(TIMING.bidding, this._conclude_bidding.bind(this))
+        this.timer.start(this.mother_state.settings.biddingTime, this._conclude_bidding.bind(this))
         console.log('register bid called')
         this._prayer('bid_received', {'amount' : amount, 'player': username,
             'nation': this.mother_state.stage.turn})
@@ -830,7 +835,7 @@ class Game
             this.mother_state.players[player].ready = (voters[player] == 0)
         }
         if (this.timer.isRunning()) this.timer.stop(false)
-        this.timer.start(TIMING.election, this._conclude_election.bind(this))
+        this.timer.start(this.mother_state.settings.electionTime, this._conclude_election.bind(this))
         this._prayer('start_election', nation)
     }
 
@@ -880,7 +885,7 @@ class Game
         let nat = this.mother_state.stage.turn
         let prez = this.mother_state.nations[nat].president
         let details = {'president':prez, 'nation':nat}
-        let tau = this.timer.queryTime() + TIMING.actions
+        let tau = this.timer.queryTime() + this.mother_state.settings.actionsTime
         details['time'] = tau
         this.mother_state.clock = tau
         this.timer.start(tau, this._end_presidential_command.bind(this))

@@ -373,6 +373,7 @@ let utils = {
       if (shares_sold == 0) continue;
       let percent_owned = player.shares[nation] / shares_sold;
       rtn += (2 + utils.rounds_left(mother_state)) * percent_owned * income;
+      rtn += percent_owned * mother_state.nations[nation].cash;
     }
     return rtn;
   },
