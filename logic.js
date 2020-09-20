@@ -505,10 +505,11 @@ class Game
         this.timer = timer
         this._history = new History(this.prayer);
         this.mother_state = { }
+        const kDebug = false;
         this.mother_state.settings = {
-            "debug": false,
-            "deliberationTime": 30*1000,
-            "biddingTime":      12*1000,
+            "debug": kDebug,
+            "deliberationTime": (kDebug ? 1 : 30)*1000,
+            "biddingTime":      (kDebug ? 1 : 12)*1000,
             "electionTime":   2*60*1000,
             "actionsTime":    3*60*1000,
         }
