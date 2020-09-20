@@ -198,6 +198,9 @@ path {
 
 const kDebugMode = false;
 
+// How many seconds to disable the bid buttons after receiving a bid.
+const kBidDisableTime = 0.5;
+
 let admin = {
   forgetMe: () => {
     setTimeout(() => {
@@ -1655,6 +1658,38 @@ let loadPromises = [
         }
         else if (action === "bid_received") {
           gClock.set_time_remaining(state.clock);
+          if (details.player === gUsername) {
+            if (state.players[gUsername].cash > state.current_bid) {
+              bid1Button.classList.remove("disabled-button");
+            } else {
+              bid1Button.classList.add("disabled-button");
+            }
+            if (state.players[gUsername].cash > state.current_bid + 5) {
+              bid5Button.classList.remove("disabled-button");
+            } else {
+              bid5Button.classList.add("disabled-button");
+            }
+            if (state.players[gUsername].cash > state.current_bid + 25) {
+              bid25Button.classList.remove("disabled-button");
+            } else {
+              bid25Button.classList.add("disabled-button");
+            }
+          } else {
+            bid1Button.classList.add("disabled-button");
+            bid5Button.classList.add("disabled-button");
+            bid25Button.classList.add("disabled-button");
+            setTimeout(() => {
+              if (state.players[gUsername].cash > state.current_bid) {
+                bid1Button.classList.remove("disabled-button");
+              }
+              if (state.players[gUsername].cash > state.current_bid + 5) {
+                bid5Button.classList.remove("disabled-button");
+              }
+              if (state.players[gUsername].cash > state.current_bid + 25) {
+                bid25Button.classList.remove("disabled-button");
+              }
+            }, kBidDisableTime * 1000);
+          }
         } else if (action == "connection_change") {
           render_table(state);
         }
@@ -1719,21 +1754,6 @@ function update_buttons(state) {
     bid1Button.style.display = "inline-block";
     bid5Button.style.display = "inline-block";
     bid25Button.style.display = "inline-block";
-    if (state.players[gUsername].cash <= state.current_bid) {
-      bid1Button.classList.add("disabled-button");
-    } else {
-      bid1Button.classList.remove("disabled-button");
-    }
-    if (state.players[gUsername].cash <= state.current_bid + 5) {
-      bid5Button.classList.add("disabled-button");
-    } else {
-      bid5Button.classList.remove("disabled-button");
-    }
-    if (state.players[gUsername].cash <= state.current_bid + 25) {
-      bid25Button.classList.add("disabled-button");
-    } else {
-      bid25Button.classList.remove("disabled-button");
-    }
   } else {
     bid1Button.style.display = "none";
     bid5Button.style.display = "none";

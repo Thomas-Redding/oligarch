@@ -303,7 +303,6 @@ class Game
                     this.mother_state, nat, terr)
                 let def_pts = utils.military_bias(
                     this.mother_state, target_nat, terr)
-                //console.log()
                 let details = this._battle(atk_pts,def_pts)
                 console.log(details)
                 this.mother_state.nations[nat].army[idx_cur].can_attack = false
