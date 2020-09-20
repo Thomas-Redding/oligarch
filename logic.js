@@ -573,7 +573,7 @@ class Game
         }
         else if (this.mother_state.stage.phase === 'Auction') {
             if (utils.shares_sold(this.mother_state, turn) <
-                utils.NATIONS[turn].total_shares)
+                utils.total_shares(this.mother_state, nat))
                 {
                     this._start_auction(turn)
                 }

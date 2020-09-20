@@ -65,9 +65,13 @@ li {
 }
 
 #statusBarDiv {
+  width: 100%;
+  border-bottom: solid black 1px;
+}
+
+#statusBarDiv > div {
   display: flex;
   flex-direction: row;
-  border-bottom: solid black 1px;
   padding: 0.4em 1em;
 }
 
@@ -372,11 +376,12 @@ function render_table(state, table, isEndOfGame) {
       tr.style.backgroundColor = '#444';
     }
     // We pretend everyone is connected for now.
-    let color = (state.players[name].connected ? '#0c0' : '#800');
     if (isEndOfGame) {
       tr.innerHTML += `<td>` + player.username + " </td>";
     } else {
-      tr.innerHTML += `<td><svg width=16 height=16><circle cx=8 cy=8 r=8 style="fill:` + color + `;"></svg> ` + player.username + " </td>";
+      // tr.innerHTML += `<td><svg width=16 height=16><circle cx=8 cy=8 r=8 style="fill:` + color + `;"></svg> ` + player.username + " </td>";
+      let opacity = state.players[name].connected * 0.5 + 0.5;
+      tr.innerHTML += `<td style="opacity:` + opacity + `">` + player.username + " </td>";
     }
     tr.innerHTML += '<td class="column-NA">' + player.shares["North America"] + "</td>";
     tr.innerHTML += '<td class="column-SA">' + player.shares["South America"] + "</td>";
@@ -437,7 +442,7 @@ function render_nation_rects(state) {
     let incomeText = svg_text("Income: $" + nation.income + "B", coords.x + 4, coords.y + 28);
     nationRects.appendChild(incomeText);
 
-    let sharesText = svg_text(shares[name] + "/" + utils.NATIONS[name].total_shares + " shares", coords.x + 4, coords.y + 42);
+    let sharesText = svg_text(shares[name] + "/" + utils.total_shares(state, name) + " shares", coords.x + 4, coords.y + 42);
     nationRects.appendChild(sharesText);
   }
 }
@@ -1207,6 +1212,13 @@ window.onresize = () => {
     actionPanel.style.display = "none";
   }
 
+  if (statusBarDiv.getBoundingClientRect().width / parseInt(getComputedStyle(statusBarDiv).fontSize) > 48) {
+    statusBarDiv.style.display = "flex";
+    statusBarDiv.style.flexDirection = "row";
+  } else {
+    statusBarDiv.style.display = "block";
+  }
+
   // When the page first loads we set body opacity to 0 so the user
   // doesn't see a weird UI flash before window.onresize is called.
   // Setting opacity to 1 here makes it visible.
@@ -1258,6 +1270,8 @@ function render_status_bar(state) {
     statusBarSubphaseDiv.previousElementSibling.style.display = "none";
     statusBarSubphaseDiv.innerHTML = "";
   }
+
+  statusBarYourCash
 }
 
 let gAreAdmin = undefined;
@@ -1458,7 +1472,8 @@ function updateCurrentActionDivFromState(state) {
     updateDiv("Discuss (" + num_ready + "/" + Object.keys(gLatestState.players).length + " want to skip)");
   } else if (state.stage.phase == "Auction") {
     if (state.highest_bidder == null) {
-      updateDiv("Bidding is open for " + state.stage.turn + ". Every bid will extend the countdown.");
+      let n = gLatestState.supershares[gLatestState.stage.round - 1];
+      updateDiv("Bidding for <u>" + n + " share" + (n > 1 ? "s" : "") + "</u> is open for " + state.stage.turn + ". Every bid will extend the countdown.");
     } else {
       updateDiv("<b>" + state.highest_bidder + "</b> bid $" + state.current_bid + "B for " + state.stage.turn);
     }
@@ -2009,18 +2024,26 @@ function send_bribe(nation_name) {
 <body>
 
 <div id='statusBarDiv'>
-  <div id="statusBarTimeDiv" style="min-width:3em; text-align:center;">0:00</div>
-  <div style='flex:1'></div>
-  <div id="statusBarPhaseDiv" style="min-width:7em; text-align:center;">Action</div>
-  <div style='flex:1'></div>
-  <div id="statusBarNationDiv" style="min-width:5em; text-align:center;">Europe</div>
-  <div style='flex:1'></div>
-  <div id="statusBarSubphaseDiv">Build</div>
-  <div style='flex:1'></div>
-  <div id="statusBarRoundDiv" style="min-width:5em; text-align:center;">Round 3</div>
-  <div style='flex:1'></div>
-  <svg id="save-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
-  <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+  <div>
+    <div id="statusBarTimeDiv" style="min-width:3em; text-align:center;">0:00</div>
+    <div style='flex:1'></div>
+    <div id="statusBarYourCash" style='color:#0c0;'>$500</div>
+    <div style='flex:1'></div>
+    <div id="statusBarRoundDiv" style="min-width:5em; text-align:center;">Round 3</div>
+    <div style='flex:1'></div>
+    <svg style='width:24px' id="save-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+    <svg style='width:24px' id="pause-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+  </div>
+  <div style="flex:1; padding:0; margin:0;"></div>
+  <div>
+    <div style='flex:1'></div>
+    <div id="statusBarPhaseDiv" style="min-width:7em; text-align:center;">Action</div>
+    <div style='flex:1'></div>
+    <div id="statusBarSubphaseDiv">Build</div>
+    <div style='flex:1'></div>
+    <div id="statusBarNationDiv" style="min-width:5em; text-align:center;">Europe</div>
+    <div style='flex:1'></div>
+  </div>
 </div>
 
 <div id='contentDiv'>

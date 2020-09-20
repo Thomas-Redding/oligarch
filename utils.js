@@ -5,42 +5,42 @@ let utils = {
       "capital": "South Africa",
       "base_income_per_territory" : 6,
       "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"],
-      "total_shares": 5,
+      "num_auction_rounds": 5,
       "abbr": "AF"
     },
     "North America": {
       "capital": "Ontario",
       "base_income_per_territory" : 4,
       "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"],
-      "total_shares": 6,
+      "num_auction_rounds": 6,
       "abbr": "NA"
     },
     "South America": {
       "capital": "Argentina",
       "base_income_per_territory" : 9,
       "territories": ["Venezuela", "Brazil", "Argentina", "Peru"],
-      "total_shares": 5,
+      "num_auction_rounds": 5,
       "abbr": "SA"
     },
     "Europe": {
       "capital": "Northern Europe",
       "base_income_per_territory" : 5,
       "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"],
-      "total_shares": 6,
+      "num_auction_rounds": 6,
       "abbr": "EU"
     },
     "Asia": {
       "capital": "Japan",
       "base_income_per_territory" : 3,
       "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"],
-      "total_shares": 6,
+      "num_auction_rounds": 6,
       "abbr": "AS"
     },
     "Australia": {
       "capital": "Eastern Australia",
       "base_income_per_territory" : 9,
       "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"],
-      "total_shares": 4,
+      "num_auction_rounds": 4,
       "abbr": "AU"
     }
   },
@@ -766,6 +766,14 @@ let utils = {
   continent_from_territory: (mother_state, territory_name) => {
     let nationName = utils.terr2continentName[territory_name];
     return mother_state.nations[nationName];
+  },
+
+  total_shares: (mother_state, nation_name) => {
+    let r = 0;
+    for (let i = 0; i < mother_state.nations[nation_name].num_auction_rounds; ++i) {
+      r += mother_state.supershares[i];
+    }
+    return r;
   },
 
   /*
