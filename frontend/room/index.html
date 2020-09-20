@@ -733,6 +733,11 @@ function barrack_clicked(territory_name) {
   structure_clicked(territory_name, "barrack");
 }
 
+// TODO(mredding): make this more efficient.
+function refresh_map_highlighting(state) {
+  render_map(state);
+}
+
 function render_map(state) {
   render_nation_rects(state);
 
@@ -1537,7 +1542,7 @@ let loadPromises = [
           endOfGameContainer.style.display = 'block';
         }
         else if (action === "begin_spawn") {
-          render_map(state);
+          refresh_map_highlighting(state);
         }
         else if (action === "undo") {
         }
@@ -2030,7 +2035,7 @@ function send_bribe(nation_name) {
         <div class="button" onclick="end_attacking()">End Attacking</div>
       </div>
       <div id="spwaningDiv">
-        <input name="spawnForm" id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($10B)</label>
+        <input name="spawnForm" checked=1 id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($10B)</label>
         <br>
         <input name="spawnForm" id="calvaryRadio" type="radio"><label for="calvaryRadio">Cavalry ($15B)</label>
         <br>
