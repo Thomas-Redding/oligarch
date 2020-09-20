@@ -112,6 +112,7 @@ class Game
     }
 
     setSettings(userame, new_settings) {
+        if (this.mother_state.stage.phase !== 'lobby') return
         this.mother_state.settings = new_settings
         this._prayer("update_settings", '')
     }
