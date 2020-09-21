@@ -17,7 +17,6 @@ Array.prototype.fromback = function(i=1) {
 const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
 
 //global lists and macros defined here
-const TOTAL_INIT_CASH = 1475
 const ROUNDS = [1, 2, 3, 4, 5, 6]
 const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America',
@@ -512,6 +511,7 @@ class Game
             "actionsTime":    3*60*1000,
             "bidsGoToOwners": true,
             "burnCashFirstRound": true,
+            "startingCash": 1475,
         }
         this.mother_state.players = { }
         this.mother_state.nations = utils.NATIONS
@@ -722,6 +722,7 @@ class Game
             for (let terr of utils.NATIONS[nationName].territories) {
                 nation.owns.push(terr)
                 nation[terr] = {}
+                log("RRR", this.mother_state.debug)
                 if (this.mother_state.debug) {
                     nation[terr].n_factories = 1
                     nation[terr].n_barracks = 2
@@ -754,7 +755,7 @@ class Game
     {
         log();
         let n_players = Object.keys(this.mother_state.players).length
-        let inicash = Math.floor(TOTAL_INIT_CASH/n_players)
+        let inicash = Math.floor(this.mother_state.settings.startingCash/n_players)
         for (let player in this.mother_state.players){
             this.mother_state.players[player].cash = inicash
         }
