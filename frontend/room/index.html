@@ -1683,7 +1683,9 @@ let loadPromises = [
         else if (action === "players_busy") {
           // TODO: this message should look different depending on
           // whether the recipient is busy or you are busy.
-          alert("Trade rejected (either your or that player have an ongoing trade)")
+          if (gUsername === action.from) {
+            alert("Trade rejected (either your or that player have an ongoing trade)")
+          }
         }
         else if (action === "trade_rejected") {
           tradeSnackbarContainer.style.display = "none";
