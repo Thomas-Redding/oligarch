@@ -6,9 +6,7 @@ let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
 const { throws } = require('assert');
 
-const BALANCED_MODE = true;
 const SUPERSHARES = [1,1,1,2,2,3];
-const SHOULD_BIDS_GO_TO_OWNERS = true;
 
 log.enabled = true;
 
@@ -512,6 +510,8 @@ class Game
             "biddingTime":      (kDebug ? 1 : 12)*1000,
             "electionTime":   2*60*1000,
             "actionsTime":    3*60*1000,
+            "bidsGoToOwners": true,
+            "burnCashFirstRound": true,
         }
         this.mother_state.players = { }
         this.mother_state.nations = utils.NATIONS
@@ -821,14 +821,14 @@ class Game
         let curnat = this.mother_state.stage.turn
         this.mother_state.players[winner].cash -= price
         let dem = utils.num_shares_already_auctioned_for_nation(
-            this.mother_state, curnat)
-        if (SHOULD_BIDS_GO_TO_OWNERS && dem > 0) {
+            this.mother_state)[curnat]
+        if (this.mother_state.settings.bidsGoToOwners && dem > 0) {
             let owners = utils.owners(this.mother_state, curnat) 
             for (let p in owners) {
                 this.mother_state.players[p].cash += price*owners[p]/dem
             }
         }
-        else if (this.mother_state.stage.round > 1 || !BALANCED_MODE){
+        else if (this.mother_state.stage.round > 1 || !this.mother_state.settings.burnCashFirstRound){
             this.mother_state.nations[curnat].cash += price
         }
         this.mother_state.players[winner].shares[curnat] += SUPERSHARES[i-1]

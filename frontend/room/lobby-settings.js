@@ -35,11 +35,14 @@ var lobbySettings = {
     let table = lobbySettings._make("table");
     let tbody = lobbySettings._make("tbody");
     table.appendChild(tbody);
+    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="number" id="lobby-deliberationTime-number" oninput="lobbySettings.didChange();"></td><td>Deliberation Time (sec)</td>`}));
+    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="number" id="lobby-biddingTime-number" oninput="lobbySettings.didChange();"></td><td>Bidding Time (sec)</td>`}));
+    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="number" id="lobby-electionTime-number" oninput="lobbySettings.didChange();"></td><td>Election Time (sec)</td>`}));
+    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="number" id="lobby-actionsTime-number" oninput="lobbySettings.didChange();"></td><td>Actions Time (sec)</td>`}));
+    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="checkbox" id="lobby-bidsGoToOwners-checkbox" onclick="lobbySettings.didChange();"></td><td>Bid Values Should Go Directly to Shareholders</td>`}));
+    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="checkbox" id="lobby-burnCashFirstRound-checkbox" onclick="lobbySettings.didChange();"></td><td>Bid Values Should Be Burned In Round 1</td>`}));
+    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": ``}));
     tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="checkbox" id="lobby-debug-checkbox" onclick="lobbySettings.didChange();"></td><td>Enable Debug Mode</td>`}));
-    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="number" id="lobby-deliberation-number" oninput="lobbySettings.didChange();"></td><td>Deliberation Time (sec)</td>`}));
-    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="number" id="lobby-bidding-number" oninput="lobbySettings.didChange();"></td><td>Bidding Time (sec)</td>`}));
-    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="number" id="lobby-election-number" oninput="lobbySettings.didChange();"></td><td>Election Time (sec)</td>`}));
-    tbody.appendChild(lobbySettings._make("tr", {"innerHTML": `<td><input style="width:3.5em" type="number" id="lobby-actions-number" oninput="lobbySettings.didChange();"></td><td>Actions Time (sec)</td>`}));
     modalDiv.appendChild(table);
 
     document.body.appendChild(overlayDiv);
@@ -55,11 +58,13 @@ var lobbySettings = {
     console.log("didChange");
     if (document.getElementById("lobby-debug-checkbox") == undefined) return; // The modal isn't up.
     let newSettings = {};
+    newSettings.deliberationTime = 1000 * document.getElementById("lobby-deliberationTime-number").value;
+    newSettings.biddingTime = 1000 * document.getElementById("lobby-biddingTime-number").value;
+    newSettings.electionTime = 1000 * document.getElementById("lobby-electionTime-number").value;
+    newSettings.actionsTime = 1000 * document.getElementById("lobby-actionsTime-number").value;
+    newSettings.bidsGoToOwners = document.getElementById("lobby-bidsGoToOwners-checkbox").checked;
+    newSettings.burnCashFirstRound = document.getElementById("lobby-burnCashFirstRound-checkbox").checked;
     newSettings.debug = document.getElementById("lobby-debug-checkbox").checked;
-    newSettings.deliberationTime = 1000 * document.getElementById("lobby-deliberation-number").value;
-    newSettings.biddingTime = 1000 * document.getElementById("lobby-bidding-number").value;
-    newSettings.electionTime = 1000 * document.getElementById("lobby-election-number").value;
-    newSettings.actionsTime = 1000 * document.getElementById("lobby-actions-number").value;
     gSocket.send(JSON.stringify({
       "method": "setSettings",
       "args": [newSettings]
@@ -67,11 +72,13 @@ var lobbySettings = {
   },
   _update: (newSettings) => {
     console.log("_update", newSettings);
+    document.getElementById("lobby-deliberationTime-number").value = newSettings.deliberationTime / 1000;
+    document.getElementById("lobby-biddingTime-number").value = newSettings.biddingTime / 1000;
+    document.getElementById("lobby-electionTime-number").value = newSettings.electionTime / 1000;
+    document.getElementById("lobby-actionsTime-number").value = newSettings.actionsTime / 1000;
+    document.getElementById("lobby-bidsGoToOwners-checkbox").checked = newSettings.bidsGoToOwners;
+    document.getElementById("lobby-burnCashFirstRound-checkbox").checked = newSettings.burnCashFirstRound;
     document.getElementById("lobby-debug-checkbox").checked = newSettings.debug;
-    document.getElementById("lobby-deliberation-number").value = newSettings.deliberationTime / 1000;
-    document.getElementById("lobby-bidding-number").value = newSettings.biddingTime / 1000;
-    document.getElementById("lobby-election-number").value = newSettings.electionTime / 1000;
-    document.getElementById("lobby-actions-number").value = newSettings.actionsTime / 1000;
   },
   _make: (tagName, attributes, styles) => {
     console.log("_make");

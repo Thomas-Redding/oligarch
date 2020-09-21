@@ -399,7 +399,7 @@ function render_table(state, table, isEndOfGame) {
     tr.innerHTML += '<td class="column-AF">' + player.shares["Africa"] + "</td>";
     tr.innerHTML += '<td class="column-AS">' + player.shares["Asia"] + "</td>";
     tr.innerHTML += '<td class="column-AU">' + player.shares["Australia"] + "</td>";
-    tr.innerHTML += "<td>" + player.cash + "</td>";
+    tr.innerHTML += "<td>" + Math.floor(player.cash) + "</td>";
     tr.innerHTML += "<td>" + Math.round(utils.score_of_player(state, player.username)) + "</td>";
 
     tbody.appendChild(tr);
@@ -425,7 +425,7 @@ function render_table(state, table, isEndOfGame) {
     tr.innerHTML += '<td class="column-AF">' + all_shares_out("Africa") + "</td>";
     tr.innerHTML += '<td class="column-AS">' + all_shares_out("Asia") + "</td>";
     tr.innerHTML += '<td class="column-AU">' + all_shares_out("Australia") + "</td>";
-    tr.innerHTML += "<td>" + utils.sum(players.map(x => x.cash)) + "</td>";
+    tr.innerHTML += "<td>" + Math.round(utils.sum(players.map(x => x.cash))) + "</td>";
     tr.innerHTML += "<td></td>";
     tbody.appendChild(tr);
   }
@@ -1538,7 +1538,7 @@ let loadPromises = [
           pauseDiv.style.display = (state.is_paused ? "flex" : "none");
         }
 
-        statusBarYourCash.innerHTML = state.players[gUsername].cash;
+        statusBarYourCash.innerHTML = "$" + Math.floor(state.players[gUsername].cash) + "B";
 
 
         if (action === "get_state" || action === "undo") {
