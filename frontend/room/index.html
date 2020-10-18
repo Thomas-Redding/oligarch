@@ -399,7 +399,7 @@ function render_table(state, table, isEndOfGame) {
     tr.innerHTML += '<td class="column-AF">' + player.shares["Africa"] + "</td>";
     tr.innerHTML += '<td class="column-AS">' + player.shares["Asia"] + "</td>";
     tr.innerHTML += '<td class="column-AU">' + player.shares["Australia"] + "</td>";
-    tr.innerHTML += "<td>" + player.cash + "</td>";
+    tr.innerHTML += "<td>" + Math.floor(player.cash) + "</td>";
     tr.innerHTML += "<td>" + Math.round(utils.score_of_player(state, player.username)) + "</td>";
 
     tbody.appendChild(tr);
@@ -416,7 +416,9 @@ function render_table(state, table, isEndOfGame) {
 
   // sum row
   if (!isEndOfGame) {
-    let tr = document.createElement("TR");
+    let tr;
+
+    tr = document.createElement("TR");
     tr.style.borderTop = 'solid white 1px';
     tr.innerHTML += "<td>TOTAL</td>";
     tr.innerHTML += '<td class="column-NA">' + all_shares_out("North America") + "</td>";
@@ -425,9 +427,28 @@ function render_table(state, table, isEndOfGame) {
     tr.innerHTML += '<td class="column-AF">' + all_shares_out("Africa") + "</td>";
     tr.innerHTML += '<td class="column-AS">' + all_shares_out("Asia") + "</td>";
     tr.innerHTML += '<td class="column-AU">' + all_shares_out("Australia") + "</td>";
-    tr.innerHTML += "<td>" + utils.sum(players.map(x => x.cash)) + "</td>";
+    tr.innerHTML += "<td>" + Math.round(utils.sum(players.map(x => x.cash))) + "</td>";
     tr.innerHTML += "<td></td>";
     tbody.appendChild(tr);
+
+    if (gLatestState.settings.advice && false) {
+      tr = document.createElement("TR");
+      tr.style.borderTop = 'solid white 1px';
+      tr.innerHTML += "<td colspan='9'>Estimated Value:</td>";
+      tbody.appendChild(tr);
+
+      tr = document.createElement("TR");
+      tr.innerHTML += "<td>TOTAL</td>";
+      tr.innerHTML += '<td class="column-NA">' + utils.score_of_nation(gLatestState, "North America") + "</td>";
+      tr.innerHTML += '<td class="column-SA">' + utils.score_of_nation(gLatestState, "South America") + "</td>";
+      tr.innerHTML += '<td class="column-EU">' + utils.score_of_nation(gLatestState, "Europe") + "</td>";
+      tr.innerHTML += '<td class="column-AF">' + utils.score_of_nation(gLatestState, "Africa") + "</td>";
+      tr.innerHTML += '<td class="column-AS">' + utils.score_of_nation(gLatestState, "Asia") + "</td>";
+      tr.innerHTML += '<td class="column-AU">' + utils.score_of_nation(gLatestState, "Australia") + "</td>";
+      tr.innerHTML += "<td></td>";
+      tr.innerHTML += "<td></td>";
+      tbody.appendChild(tr);
+    }
   }
 
   render_map(state);
@@ -1486,11 +1507,16 @@ function updateCurrentActionDivFromState(state) {
     let num_ready = utils.sum(Object.values(gLatestState.players).map(x => x.ready));
     updateDiv("Discuss (" + num_ready + "/" + Object.keys(gLatestState.players).length + " want to skip)");
   } else if (state.stage.phase == "Auction") {
+    let n = gLatestState.supershares[gLatestState.stage.round - 1];
+    let adviceString = "";
+    if (gLatestState.settings.advice) {
+      let advisedPrice = Math.round(utils.advised_share_price(gLatestState, state.stage.turn, n));
+      adviceString += "<br/><br/> <i>( Assuming no future human actions are taken, the expected future cash flow of this share is $" + advisedPrice + "B )</i>";
+    }
     if (state.highest_bidder == null) {
-      let n = gLatestState.supershares[gLatestState.stage.round - 1];
-      updateDiv("Bidding for <u>" + n + " share" + (n > 1 ? "s" : "") + "</u> is open for " + state.stage.turn + ". Every bid will extend the countdown.");
+      updateDiv("Bidding for <u>" + n + " share" + (n > 1 ? "s" : "") + "</u> is open for " + state.stage.turn + ". Every bid will extend the countdown." + adviceString);
     } else {
-      updateDiv("<b>" + state.highest_bidder + "</b> bid $" + state.current_bid + "B for " + state.stage.turn);
+      updateDiv("<b>" + state.highest_bidder + "</b> bid $" + state.current_bid + "B for " + state.stage.turn + adviceString);
     }
   } else if (state.stage.phase == "Action") {
     if (state.stage.subphase == "Election") {
@@ -1538,7 +1564,7 @@ let loadPromises = [
           pauseDiv.style.display = (state.is_paused ? "flex" : "none");
         }
 
-        statusBarYourCash.innerHTML = state.players[gUsername].cash;
+        statusBarYourCash.innerHTML = "$" + Math.floor(state.players[gUsername].cash) + "B";
 
 
         if (action === "get_state" || action === "undo") {
@@ -2097,11 +2123,11 @@ function send_bribe(nation_name) {
         <div class="button" onclick="end_attacking()">End Attacking</div>
       </div>
       <div id="spwaningDiv">
-        <input name="spawnForm" checked=1 id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($10B)</label>
+        <input name="spawnForm" checked=1 id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($8B)</label>
         <br>
-        <input name="spawnForm" id="calvaryRadio" type="radio"><label for="calvaryRadio">Cavalry ($15B)</label>
+        <input name="spawnForm" id="calvaryRadio" type="radio"><label for="calvaryRadio">Cavalry ($12B)</label>
         <br>
-        <input name="spawnForm" id="artilleryRadio" type="radio"><label for="artilleryRadio">Artillery ($15B)</label>
+        <input name="spawnForm" id="artilleryRadio" type="radio"><label for="artilleryRadio">Artillery ($12B)</label>
         <div style="text-align:right;">
           <div onclick="end_recruiting()" class="button">End Recruiting</div>
         </div>
@@ -2109,7 +2135,7 @@ function send_bribe(nation_name) {
       <div id="buildingDiv">
         <input name="buildForm" id="factoryRadio" type="radio"><label for="factoryRadio">Factory ($10B)</label>
         <br>
-        <input name="buildForm" id="barracksRadio" type="radio"><label for="barracksRadio">Barracks ($15B)</label>
+        <input name="buildForm" id="barracksRadio" type="radio"><label for="barracksRadio">Barracks ($10B)</label>
         <div style="text-align:right;">
           <div onclick="finish_building()" class="button">End Building</div>
         </div>

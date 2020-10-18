@@ -6,9 +6,7 @@ let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
 const { throws } = require('assert');
 
-const BALANCED_MODE = true;
 const SUPERSHARES = [1,1,1,2,2,3];
-const SHOULD_BIDS_GO_TO_OWNERS = true;
 
 log.enabled = true;
 
@@ -19,7 +17,6 @@ Array.prototype.fromback = function(i=1) {
 const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
 
 //global lists and macros defined here
-const TOTAL_INIT_CASH = 1475
 const ROUNDS = [1, 2, 3, 4, 5, 6]
 const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America',
@@ -27,8 +24,8 @@ const TURNS = ['North America', 'South America',
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
 const UNITS = ['Cavalry','Infantry','Artillery']
-const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
-    'Artillery':15, 'Cavalry':15 }
+const COSTS = {'factory' : 10, 'barracks' : 10, 'Infantry': 8, 
+    'Artillery':12, 'Cavalry':12 }
 
 
 
@@ -512,6 +509,10 @@ class Game
             "biddingTime":      (kDebug ? 1 : 12)*1000,
             "electionTime":   2*60*1000,
             "actionsTime":    3*60*1000,
+            "bidsGoToOwners": true,
+            "burnCashFirstRound": true,
+            "startingCash": 1475,
+            "advice": false,
         }
         this.mother_state.players = { }
         this.mother_state.nations = utils.NATIONS
@@ -722,6 +723,7 @@ class Game
             for (let terr of utils.NATIONS[nationName].territories) {
                 nation.owns.push(terr)
                 nation[terr] = {}
+                log("RRR", this.mother_state.debug)
                 if (this.mother_state.debug) {
                     nation[terr].n_factories = 1
                     nation[terr].n_barracks = 2
@@ -754,7 +756,7 @@ class Game
     {
         log();
         let n_players = Object.keys(this.mother_state.players).length
-        let inicash = Math.floor(TOTAL_INIT_CASH/n_players)
+        let inicash = Math.floor(this.mother_state.settings.startingCash/n_players)
         for (let player in this.mother_state.players){
             this.mother_state.players[player].cash = inicash
         }
@@ -821,14 +823,14 @@ class Game
         let curnat = this.mother_state.stage.turn
         this.mother_state.players[winner].cash -= price
         let dem = utils.num_shares_already_auctioned_for_nation(
-            this.mother_state, curnat)
-        if (SHOULD_BIDS_GO_TO_OWNERS && dem > 0) {
+            this.mother_state)[curnat]
+        if (this.mother_state.settings.bidsGoToOwners && dem > 0) {
             let owners = utils.owners(this.mother_state, curnat) 
             for (let p in owners) {
                 this.mother_state.players[p].cash += price*owners[p]/dem
             }
         }
-        else if (this.mother_state.stage.round > 1 || !BALANCED_MODE){
+        else if (this.mother_state.stage.round > 1 || !this.mother_state.settings.burnCashFirstRound){
             this.mother_state.nations[curnat].cash += price
         }
         this.mother_state.players[winner].shares[curnat] += SUPERSHARES[i-1]

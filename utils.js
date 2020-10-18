@@ -364,16 +364,25 @@ let utils = {
    * @param username - the user whose score we are computing
    * @returns {int} the score the given user would have if the game ended now
    */
+  score_of_nation: (mother_state, nation_name) => {
+    let income = utils.income_of_nation(mother_state, nation_name);
+    let cash = mother_state.nations[nation_name].cash;
+    let income_mult = 2 + utils.rounds_left(mother_state);
+    return cash + income_mult * income;
+  },
+
+  /*
+   * @param username - the user whose score we are computing
+   * @returns {int} the score the given user would have if the game ended now
+   */
   score_of_player: (mother_state, username) => {
     let player = mother_state.players[username];
     let rtn = parseFloat(player.cash);
     for (let nation in player.shares) {
-      let income = utils.income_of_nation(mother_state, nation);
       let shares_sold = utils.shares_sold(mother_state, nation);
       if (shares_sold == 0) continue;
       let percent_owned = player.shares[nation] / shares_sold;
-      rtn += (2 + utils.rounds_left(mother_state)) * percent_owned * income;
-      rtn += percent_owned * mother_state.nations[nation].cash;
+      rtn += percent_owned * utils.score_of_nation(mother_state, nation);
     }
     return rtn;
   },
@@ -387,9 +396,9 @@ let utils = {
     let player = mother_state.players[username];
     let rtn = parseFloat(player.cash);
     for (let nation in player.shares) {
-      let income = utils.income_of_nation(mother_state, nation);
       let shares_sold = utils.shares_sold(mother_state, nation);
       if (shares_sold == 0) continue;
+      let income = utils.income_of_nation(mother_state, nation);
       let percent_owned = player.shares[nation] / shares_sold;
       rtn += 2 * percent_owned * income;
     }
@@ -413,6 +422,31 @@ let utils = {
       rtn += mother_state.players[username].shares[nation];
     }
     return rtn;
+  },
+
+  advised_share_price: (mother_state, nation_name, new_shares) => {
+    // TODO: At the moment we assume bids are either burned or go to the existing shareholders.
+    // This is set in `mother_state.settings` but needs to be implemented here.
+    let cash = mother_state.nations[nation_name].cash;
+    let income = utils.income_of_nation(mother_state, nation_name);
+    let existingShares = utils.shares_sold(mother_state, nation_name);
+    let sharesArray = mother_state.supershares.slice(mother_state.stage.round-1);
+    return sharesArray[0] * utils._private_advised_price_for_one_share(cash, income, existingShares, sharesArray);
+  },
+
+  _private_advised_price_for_one_share: (cash, income, existingShares, sharesArray) => {
+    let percent = 1 / (existingShares + sharesArray[0]);
+    let rtn = percent * cash;
+    rtn += percent * income;
+    if (sharesArray.length == 0) {
+      throw Error();
+    } else if (sharesArray.length == 1) {
+      return percent * (cash + income + 2 * income);
+    } else {
+      let immediateValue = percent * (cash + income);
+      let valueNextRound = sharesArray[0] * utils._private_advised_price_for_one_share(0, income, existingShares + sharesArray[0], sharesArray.slice(1));
+      return immediateValue + valueNextRound;
+    }
   },
 
   /*
@@ -490,12 +524,10 @@ let utils = {
     let neighbors = utils.NEIGHBORS[territory];
     let rtn = {};
     for (let neighbor in neighbors) {
-      if (is_territory_uncontested) {
+      if (!is_territory_uncontested) {
         rtn[neighbor] = 1;
       } else {
-        let doesOwnNeighbor = (utils.territory_to_owner(mother_state, neighbor) == nation_name);
-        let doesNeighborHaveTroops = utils.does_territory_have_troops(mother_state, neighbor);
-        if (doesOwnNeighbor || !doesNeighborHaveTroops) {
+        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
           rtn[neighbor] = 1;
         }
       }
@@ -514,17 +546,20 @@ let utils = {
     let neighbors = utils.NEIGHBORS[territory];
     let uncontested_neighbors = [];
     for (let neighbor in neighbors) {
-      if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
-        // I own the neighbor.
-        uncontested_neighbors.push(neighbor);
-        rtn[neighbor] = 1;
-      } else if (!utils.does_territory_have_troops(mother_state, neighbor)) {
-        // I don't own the neighbor, but it is empty.
-        uncontested_neighbors.push(neighbor);
-        rtn[neighbor] = 1;
+      if (is_territory_uncontested) {
+        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
+          // If my tile is contested, I can only move into tiles I own.
+          uncontested_neighbors.push(neighbor);
+          rtn[neighbor] = 1;
+        }
       } else {
-        // The neighbor has enemy troops.
-        if (is_territory_uncontested) rtn[neighbor] = 1;
+        console.log(neighbor, is_territory_uncontested);
+        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
+          // I own the neighbor.
+          console.log("a");
+          uncontested_neighbors.push(neighbor);
+          rtn[neighbor] = 1;
+        }
       }
     }
     for (let neighbor of uncontested_neighbors) {
