@@ -724,7 +724,6 @@ class Game
                 nation.owns.push(terr)
                 nation[terr] = {}
                 if (this.mother_state.settings.debug) {
-                    console.log('x')
                     nation[terr].n_factories = 1
                     nation[terr].n_barracks = 2
                     nation[terr].n_barracks_can_spawn = 2
