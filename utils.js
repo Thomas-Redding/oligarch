@@ -425,6 +425,8 @@ let utils = {
   },
 
   advised_share_price: (mother_state, nation_name, new_shares) => {
+    // TODO: At the moment we assume bids are either burned or go to the existing shareholders.
+    // This is set in `mother_state.settings` but needs to be implemented here.
     let cash = mother_state.nations[nation_name].cash;
     let income = utils.income_of_nation(mother_state, nation_name);
     let existingShares = utils.shares_sold(mother_state, nation_name);
