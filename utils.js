@@ -365,8 +365,6 @@ let utils = {
    * @returns {int} the score the given user would have if the game ended now
    */
   score_of_nation: (mother_state, nation_name) => {
-    let income = utils.income_of_nation(mother_state, nation_name);
-    let cash = mother_state.nations[nation_name].cash;
     let income_mult = 2 + utils.rounds_left(mother_state);
     return cash + income_mult * income;
   },
@@ -375,14 +373,27 @@ let utils = {
    * @param username - the user whose score we are computing
    * @returns {int} the score the given user would have if the game ended now
    */
-  score_of_player: (mother_state, username) => {
+  score_of_player: (mother_state, username, auctionsCompletedSoFar) => {
     let player = mother_state.players[username];
     let rtn = parseFloat(player.cash);
-    for (let nation in player.shares) {
-      let shares_sold = utils.shares_sold(mother_state, nation);
-      if (shares_sold == 0) continue;
-      let percent_owned = player.shares[nation] / shares_sold;
-      rtn += percent_owned * utils.score_of_nation(mother_state, nation);
+    for (let nation_name in player.shares) {
+      if (player.shares[nation_name] == 0) continue;
+      let cash = mother_state.nations[nation_name].cash;
+      let income = utils.income_of_nation(mother_state, nation_name);
+      let existingShares = utils.shares_sold(mother_state, nation_name);
+      let sharesArray = mother_state.supershares;
+      let sum = 0;
+      let i;
+      for (i = 0; i < existingShares; ++i) {
+        if (sum >= existingShares) {
+          sharesArray = sharesArray.slice(i);
+          break;
+        }
+        sum += sharesArray[i];
+      }
+      let valueOfShare = utils._private_advised_price_for_one_share(cash, income, existingShares, sharesArray);
+      let percent_owned = player.shares[nation_name] / existingShares;
+      rtn += percent_owned * valueOfShare;
     }
     return rtn;
   },
