@@ -207,7 +207,7 @@ class Game
             player.ready = false
             player.vote = null
             player.ready = false
-            if (this.mother_state.debug) {
+            if (this.mother_state.settings.debug) {
                 for (let key in utils.NATIONS) {
                     player.shares[key] = Math.random() * 2 | 0
                 }
@@ -502,7 +502,7 @@ class Game
         this.timer = timer
         this._history = new History(this.prayer);
         this.mother_state = { }
-        const kDebug = false;
+        const kDebug = true;
         this.mother_state.settings = {
             "debug": kDebug,
             "deliberationTime": (kDebug ? 1 : 30)*1000,
@@ -723,8 +723,8 @@ class Game
             for (let terr of utils.NATIONS[nationName].territories) {
                 nation.owns.push(terr)
                 nation[terr] = {}
-                log("RRR", this.mother_state.debug)
-                if (this.mother_state.debug) {
+                if (this.mother_state.settings.debug) {
+                    console.log('x')
                     nation[terr].n_factories = 1
                     nation[terr].n_barracks = 2
                     nation[terr].n_barracks_can_spawn = 2
