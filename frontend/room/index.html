@@ -950,7 +950,22 @@ function render_map(state) {
           "bubbles": true,
           "cancelable": false
         }));
-      })
+      });
+      star.addEventListener('mouseover', () => {
+        document.getElementById(territory_name).dispatchEvent(new MouseEvent("mouseover", {
+          "view": window,
+          "bubbles": true,
+          "cancelable": false
+        }));
+      });
+      star.addEventListener('mouseleave', () => {
+        document.getElementById(territory_name).dispatchEvent(new MouseEvent("mouseleave", {
+          "view": window,
+          "bubbles": true,
+          "cancelable": false
+        }));
+      });
+      star.style.cursor = 'pointer';
       star.style.fill = 'white';
       out.appendChild(star);
     }
