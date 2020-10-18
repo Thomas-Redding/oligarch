@@ -425,28 +425,26 @@ let utils = {
   },
 
   advised_share_price: (mother_state, nation_name, new_shares) => {
-    let current_shares = utils.shares_sold(mother_state, nation_name);
-    let percent = (new_shares / (current_shares + new_shares));
-    let rtn = mother_state.nations[nation_name].cash * percent;
-    if (mother_state.stage.round == 6) {
-      rtn += 2 * utils.income_of_nation(mother_state, nation_name) * percent;
-      return rtn;
+    let cash = mother_state.nations[nation_name].cash;
+    let income = utils.income_of_nation(mother_state, nation_name);
+    let existingShares = utils.shares_sold(mother_state, nation_name);
+    let sharesArray = mother_state.supershares.slice(mother_state.stage.round-1);
+    return sharesArray[0] * utils._private_advised_price_for_one_share(cash, income, existingShares, sharesArray);
+  },
+
+  _private_advised_price_for_one_share: (cash, income, existingShares, sharesArray) => {
+    let percent = 1 / (existingShares + sharesArray[0]);
+    let rtn = percent * cash;
+    rtn += percent * income;
+    if (sharesArray.length == 0) {
+      throw Error();
+    } else if (sharesArray.length == 1) {
+      return percent * (cash + income + 2 * income);
+    } else {
+      let immediateValue = percent * (cash + income);
+      let valueNextRound = sharesArray[0] * utils._private_advised_price_for_one_share(0, income, existingShares + sharesArray[0], sharesArray.slice(1));
+      return immediateValue + valueNextRound;
     }
-    rtn += utils.income_of_nation(mother_state, nation_name) * percent;
-    current_shares += new_shares;
-
-    let n = mother_state.supershares[mother_state.stage.round - 1];
-
-    for (let i = mother_state.stage.round + 1; i <= 6; ++i) {
-      
-      let rtn = mother_state.nations[nation_name].income * (new_shares / (current_shares + new_shares));
-
-      utils.income_of_nation(mother_state, nation_name)
-      mother_state.nations[nation_name].cash * (new_shares / (current_shares + new_shares));
-    }
-    let advisedValueOfCountry = utils.score_of_nation(gLatestState, nation_name);
-    let advisedPrice = advisedValueOfCountry * n / (utils.shares_sold(gLatestState, mother_state.stage.turn) + n);
-    return advisedPrice;
   },
 
   /*

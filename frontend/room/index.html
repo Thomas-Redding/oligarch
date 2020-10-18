@@ -1510,7 +1510,7 @@ function updateCurrentActionDivFromState(state) {
     let n = gLatestState.supershares[gLatestState.stage.round - 1];
     let adviceString = "";
     if (gLatestState.settings.advice) {
-      let advisedPrice = utils.advised_share_price(gLatestState, state.stage.turn, n);
+      let advisedPrice = Math.round(utils.advised_share_price(gLatestState, state.stage.turn, n));
       adviceString += "<br/><br/> <i>( Assuming no future human actions are taken, the expected future cash flow of this share is $" + advisedPrice + "B )</i>";
     }
     if (state.highest_bidder == null) {
