@@ -364,16 +364,25 @@ let utils = {
    * @param username - the user whose score we are computing
    * @returns {int} the score the given user would have if the game ended now
    */
+  score_of_nation: (mother_state, nation_name) => {
+    let income = utils.income_of_nation(mother_state, nation_name);
+    let cash = mother_state.nations[nation_name].cash;
+    let income_mult = 2 + utils.rounds_left(mother_state);
+    return cash + income_mult * income;
+  },
+
+  /*
+   * @param username - the user whose score we are computing
+   * @returns {int} the score the given user would have if the game ended now
+   */
   score_of_player: (mother_state, username) => {
     let player = mother_state.players[username];
     let rtn = parseFloat(player.cash);
     for (let nation in player.shares) {
-      let income = utils.income_of_nation(mother_state, nation);
       let shares_sold = utils.shares_sold(mother_state, nation);
       if (shares_sold == 0) continue;
       let percent_owned = player.shares[nation] / shares_sold;
-      rtn += (2 + utils.rounds_left(mother_state)) * percent_owned * income;
-      rtn += percent_owned * mother_state.nations[nation].cash;
+      rtn += percent_owned * utils.score_of_nation(mother_state, nation);
     }
     return rtn;
   },
@@ -387,9 +396,9 @@ let utils = {
     let player = mother_state.players[username];
     let rtn = parseFloat(player.cash);
     for (let nation in player.shares) {
-      let income = utils.income_of_nation(mother_state, nation);
       let shares_sold = utils.shares_sold(mother_state, nation);
       if (shares_sold == 0) continue;
+      let income = utils.income_of_nation(mother_state, nation);
       let percent_owned = player.shares[nation] / shares_sold;
       rtn += 2 * percent_owned * income;
     }
@@ -413,6 +422,31 @@ let utils = {
       rtn += mother_state.players[username].shares[nation];
     }
     return rtn;
+  },
+
+  advised_share_price: (mother_state, nation_name, new_shares) => {
+    let current_shares = utils.shares_sold(mother_state, nation_name);
+    let percent = (new_shares / (current_shares + new_shares));
+    let rtn = mother_state.nations[nation_name].cash * percent;
+    if (mother_state.stage.round == 6) {
+      rtn += 2 * utils.income_of_nation(mother_state, nation_name) * percent;
+      return rtn;
+    }
+    rtn += utils.income_of_nation(mother_state, nation_name) * percent;
+    current_shares += new_shares;
+
+    let n = mother_state.supershares[mother_state.stage.round - 1];
+
+    for (let i = mother_state.stage.round + 1; i <= 6; ++i) {
+      
+      let rtn = mother_state.nations[nation_name].income * (new_shares / (current_shares + new_shares));
+
+      utils.income_of_nation(mother_state, nation_name)
+      mother_state.nations[nation_name].cash * (new_shares / (current_shares + new_shares));
+    }
+    let advisedValueOfCountry = utils.score_of_nation(gLatestState, nation_name);
+    let advisedPrice = advisedValueOfCountry * n / (utils.shares_sold(gLatestState, mother_state.stage.turn) + n);
+    return advisedPrice;
   },
 
   /*

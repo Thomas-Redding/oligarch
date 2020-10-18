@@ -416,7 +416,9 @@ function render_table(state, table, isEndOfGame) {
 
   // sum row
   if (!isEndOfGame) {
-    let tr = document.createElement("TR");
+    let tr;
+
+    tr = document.createElement("TR");
     tr.style.borderTop = 'solid white 1px';
     tr.innerHTML += "<td>TOTAL</td>";
     tr.innerHTML += '<td class="column-NA">' + all_shares_out("North America") + "</td>";
@@ -428,6 +430,25 @@ function render_table(state, table, isEndOfGame) {
     tr.innerHTML += "<td>" + Math.round(utils.sum(players.map(x => x.cash))) + "</td>";
     tr.innerHTML += "<td></td>";
     tbody.appendChild(tr);
+
+    if (gLatestState.settings.advice && false) {
+      tr = document.createElement("TR");
+      tr.style.borderTop = 'solid white 1px';
+      tr.innerHTML += "<td colspan='9'>Estimated Value:</td>";
+      tbody.appendChild(tr);
+
+      tr = document.createElement("TR");
+      tr.innerHTML += "<td>TOTAL</td>";
+      tr.innerHTML += '<td class="column-NA">' + utils.score_of_nation(gLatestState, "North America") + "</td>";
+      tr.innerHTML += '<td class="column-SA">' + utils.score_of_nation(gLatestState, "South America") + "</td>";
+      tr.innerHTML += '<td class="column-EU">' + utils.score_of_nation(gLatestState, "Europe") + "</td>";
+      tr.innerHTML += '<td class="column-AF">' + utils.score_of_nation(gLatestState, "Africa") + "</td>";
+      tr.innerHTML += '<td class="column-AS">' + utils.score_of_nation(gLatestState, "Asia") + "</td>";
+      tr.innerHTML += '<td class="column-AU">' + utils.score_of_nation(gLatestState, "Australia") + "</td>";
+      tr.innerHTML += "<td></td>";
+      tr.innerHTML += "<td></td>";
+      tbody.appendChild(tr);
+    }
   }
 
   render_map(state);
@@ -1486,11 +1507,16 @@ function updateCurrentActionDivFromState(state) {
     let num_ready = utils.sum(Object.values(gLatestState.players).map(x => x.ready));
     updateDiv("Discuss (" + num_ready + "/" + Object.keys(gLatestState.players).length + " want to skip)");
   } else if (state.stage.phase == "Auction") {
+    let n = gLatestState.supershares[gLatestState.stage.round - 1];
+    let adviceString = "";
+    if (gLatestState.settings.advice) {
+      let advisedPrice = utils.advised_share_price(gLatestState, state.stage.turn, n);
+      adviceString += "<br/><br/> <i>( Assuming no future human actions are taken, the expected future cash flow of this share is $" + advisedPrice + "B )</i>";
+    }
     if (state.highest_bidder == null) {
-      let n = gLatestState.supershares[gLatestState.stage.round - 1];
-      updateDiv("Bidding for <u>" + n + " share" + (n > 1 ? "s" : "") + "</u> is open for " + state.stage.turn + ". Every bid will extend the countdown.");
+      updateDiv("Bidding for <u>" + n + " share" + (n > 1 ? "s" : "") + "</u> is open for " + state.stage.turn + ". Every bid will extend the countdown." + adviceString);
     } else {
-      updateDiv("<b>" + state.highest_bidder + "</b> bid $" + state.current_bid + "B for " + state.stage.turn);
+      updateDiv("<b>" + state.highest_bidder + "</b> bid $" + state.current_bid + "B for " + state.stage.turn + adviceString);
     }
   } else if (state.stage.phase == "Action") {
     if (state.stage.subphase == "Election") {
