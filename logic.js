@@ -24,8 +24,8 @@ const TURNS = ['North America', 'South America',
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
 const UNITS = ['Cavalry','Infantry','Artillery']
-const COSTS = {'factory' : 10, 'barracks' : 15, 'Infantry': 10, 
-    'Artillery':15, 'Cavalry':15 }
+const COSTS = {'factory' : 10, 'barracks' : 10, 'Infantry': 8, 
+    'Artillery':12, 'Cavalry':12 }
 
 
 
