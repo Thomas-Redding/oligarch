@@ -524,12 +524,10 @@ let utils = {
     let neighbors = utils.NEIGHBORS[territory];
     let rtn = {};
     for (let neighbor in neighbors) {
-      if (is_territory_uncontested) {
+      if (!is_territory_uncontested) {
         rtn[neighbor] = 1;
       } else {
-        let doesOwnNeighbor = (utils.territory_to_owner(mother_state, neighbor) == nation_name);
-        let doesNeighborHaveTroops = utils.does_territory_have_troops(mother_state, neighbor);
-        if (doesOwnNeighbor || !doesNeighborHaveTroops) {
+        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
           rtn[neighbor] = 1;
         }
       }
@@ -548,17 +546,20 @@ let utils = {
     let neighbors = utils.NEIGHBORS[territory];
     let uncontested_neighbors = [];
     for (let neighbor in neighbors) {
-      if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
-        // I own the neighbor.
-        uncontested_neighbors.push(neighbor);
-        rtn[neighbor] = 1;
-      } else if (!utils.does_territory_have_troops(mother_state, neighbor)) {
-        // I don't own the neighbor, but it is empty.
-        uncontested_neighbors.push(neighbor);
-        rtn[neighbor] = 1;
+      if (is_territory_uncontested) {
+        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
+          // If my tile is contested, I can only move into tiles I own.
+          uncontested_neighbors.push(neighbor);
+          rtn[neighbor] = 1;
+        }
       } else {
-        // The neighbor has enemy troops.
-        if (is_territory_uncontested) rtn[neighbor] = 1;
+        console.log(neighbor, is_territory_uncontested);
+        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
+          // I own the neighbor.
+          console.log("a");
+          uncontested_neighbors.push(neighbor);
+          rtn[neighbor] = 1;
+        }
       }
     }
     for (let neighbor of uncontested_neighbors) {
