@@ -24,12 +24,18 @@ function increment_offer(delta) {
 
   if (gTradeDelta > 0) {
     tradeDivYourOffer.appendChild(gTradeIcon);
+    update_offer_trade_button();
   } else if (gTradeDelta < 0) {
     tradeDivTheirOffer.appendChild(gTradeIcon);
+    update_offer_trade_button();
   }
 }
 
 function offer_trade() {
+  if (offerTradeButton.classList.contains('disabled-button')) {
+    return;
+  }
+
   let player = tradeWithDiv.innerHTML.slice(13);
 
   let yourOffer = [];
@@ -58,7 +64,7 @@ function offer_trade() {
   }
 
   yourOffer = yourOffer.map(arr2val);
-  theirOffer = theirOffer.map(arr2val)
+  theirOffer = theirOffer.map(arr2val);
 
   let yourCashOffer = utils.sum(yourOffer.map(x => typeof(x) === "number" ? x : 0));
   let theirCashOffer = utils.sum(theirOffer.map(x => typeof(x) === "number" ? x : 0));
@@ -71,6 +77,14 @@ function offer_trade() {
     "args": [ player, yourOffer, theirOffer, yourCashOffer, theirCashOffer ]
   });
   close_modal();
+}
+
+function update_offer_trade_button() {
+  if (tradeDivYourOffer.children.length + tradeDivTheirOffer.children.length > 0) {
+    offerTradeButton.classList.remove('disabled-button');
+  } else {
+    offerTradeButton.classList.add('disabled-button');
+  }
 }
 
 function trade_with(playername) {
@@ -126,12 +140,16 @@ function trade_with(playername) {
           button.parentNode.removeChild(button);
           if (parent === tradeDivYourAssets) {
             tradeDivYourOffer.appendChild(button);
+            update_offer_trade_button();
           } else if (parent === tradeDivTheirAssets) {
             tradeDivTheirOffer.appendChild(button);
+            update_offer_trade_button();
           } else if (parent === tradeDivYourOffer) {
             tradeDivYourAssets.appendChild(button);
+            update_offer_trade_button();
           } else if (parent === tradeDivTheirOffer) {
             tradeDivTheirAssets.appendChild(button);
+            update_offer_trade_button();
           }
         }
         td.appendChild(button);
@@ -141,6 +159,7 @@ function trade_with(playername) {
 
   tradePopupDiv.style.display = "none";
   tradePopup2Div.style.display = "flex";
+  offerTradeButton.classList.add('disabled-button');
 }
 
 let tradeProposal = null;
