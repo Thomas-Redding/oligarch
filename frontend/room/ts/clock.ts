@@ -44,4 +44,4 @@ class Clock {
   }
 }
 
-let gClock = new Clock();
+let gClock : Clock = new Clock();
