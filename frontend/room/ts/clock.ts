@@ -36,7 +36,7 @@ class Clock {
     secsRemaining = Math.max(secsRemaining, 0);
     let minsRemaining = secsRemaining / 60 | 0;
     secsRemaining -= minsRemaining * 60;
-    let secsRemainingStr = Math.floor(secsRemaining) + '';
+    let secsRemainingStr : string = Math.floor(secsRemaining) + '';
     if (secsRemainingStr.length === 1) {
       secsRemainingStr = '0' + secsRemainingStr;
     }
