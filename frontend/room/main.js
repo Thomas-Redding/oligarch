@@ -514,6 +514,8 @@ function refresh_map_highlighting(state) {
   render_map(state);
 }
 
+let gHexes = {};
+
 function render_map(state) {
   // render_nation_rects(state);
 
@@ -523,6 +525,94 @@ function render_map(state) {
     "Infantry": "sword.svg",
     "Cavalry": "knight.svg",
     "Artillery": "bow.svg",
+  }
+
+  // This code only runs once!
+  if (Object.keys(gHexes).length === 0) {
+    // Draw water lines
+    let waterLines = [
+      // Madagascar
+      [{x:19, y:20}, {x:21, y:20}],
+      [{x:19, y:19}, {x:21, y:19}],
+      [{x:19, y:19}, {x:21, y:20}],
+
+      // Mediterranean
+      [{x:14, y:10}, {x:15, y:12}],
+      [{x:14, y:12}, {x:14, y:10}],
+      [{x:13, y:10}, {x:14, y:12}],
+      [{x:17, y:10}, {x:17, y:12}],
+      [{x:17, y:10}, {x:16, y:12}],
+
+      // North America and Greenland
+      [{x:8, y:5}, {x:10, y:4}],
+      [{x:8, y:4}, {x:9, y:3}],
+
+      // Greenland to Great Britain
+      [{x:12, y:4}, {x:13, y:3}],
+      [{x:12, y:4}, {x:14, y:4}],
+      [{x:12, y:4}, {x:13, y:5}],
+
+      // Great Britain to Europe
+      [{x:13, y:5}, {x:15, y:6}],
+      [{x:14, y:4}, {x:15, y:5}],
+
+      // North America and South America
+      [{x:4, y:10}, {x:5, y:12}],
+
+      // South America to Africa
+      [{x:9, y:15}, {x:13, y:14}],
+      [{x:9, y:15}, {x:13, y:15}],
+
+      // Asia and Australia
+      [{x:30, y:11}, {x:31, y:15}],
+      [{x:30, y:11}, {x:32, y:15}],
+      [{x:30, y:11}, {x:30, y:16}],
+
+      // Asia and Japan
+      [{x:31, y:8}, {x:33, y:8}],
+      [{x:31, y:7}, {x:33, y:7}],
+
+      // Australia
+      [{x:32, y:15}, {x:34, y:16}],
+      [{x:32, y:16}, {x:34, y:16}],
+      [{x:34, y:17}, {x:34, y:19}],
+      [{x:35, y:17}, {x:34, y:19}],
+      [{x:30, y:17}, {x:31, y:19}],
+      [{x:31, y:15}, {x:30, y:16}],
+      [{x:30, y:17}, {x:32, y:16}],
+
+    ];
+    for (let [a, b] of waterLines) {
+      let line = svg.line(
+        Hex.get_screen_x(a.x, a.y),
+        Hex.get_screen_y(a.x, a.y),
+        Hex.get_screen_x(b.x, b.y),
+        Hex.get_screen_y(b.x, b.y),
+      );
+      line.style.stroke = 'white';
+      line.style.strokeWidth = 2;
+      hexMap.appendChild(line);
+    }
+
+    // Draw hexagons
+    for (let id in kMap) {
+      gHexes[id] = new Hex(id, kMap[id]);
+    }
+
+    hexMap.addEventListener('click', (e) => {
+      if (e.target === hexMap) {
+        if (selectedHex) {
+          selectedHex.on_deselect();
+        }
+      }
+    });
+  }
+
+  for (let hexId in kMap) {
+    if (gHexIdToUnitType[hexId] === undefined) {
+      throw Error(hexId, gHexIdToUnitType[hexId]);
+    }
+    gHexes[hexId].set_type(gHexIdToUnitType[hexId]);
   }
 
   // Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
@@ -1313,6 +1403,8 @@ function updateCurrentActionDivFromState(state) {
   }
 }
 
+let gHexIdToUnitType = {};
+
 let gSocket
 let gLatestState;
 let loadPromises = [
@@ -1328,6 +1420,32 @@ let loadPromises = [
         if (event.data.length == 0) return;
         let [action, details, state] = JSON.parse(event.data);
         gLatestState = state;
+
+        // Populate gHexIdToUnitType for convenience.
+        for (let id in kMap) {
+          gHexIdToUnitType[id] = kTileTypeEmpty;
+        }
+        for (let nationName in gLatestState.nations) {
+          let nation = gLatestState.nations[nationName];
+          for (let unit of nation.army) {
+            gHexIdToUnitType[unit.territory] = {
+              "Infantry": kTileTypeInfantry,
+              "Cavalry": kTileTypeCalvary,
+              "Artillery": kTileTypeCannon,
+            }[unit.type];
+          }
+          for (let key in nation) {
+            if (key in kMap) {
+              let territory = gLatestState.nations[nationName][key];
+              if (territory.n_factories > 0) {
+                gHexIdToUnitType[key] = kTileTypeFactory;
+              } else if (territory.n_barracks > 0) {
+                gHexIdToUnitType[key] = kTileTypeBarracks;
+              }
+            }
+          }
+        }
+
         console.log("========================");
         console.log("Received action:", action);
         console.log("Received details:", details);

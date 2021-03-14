@@ -262,6 +262,7 @@ const kContinent2Color = {
   "AU": new Color(192,   0, 192),
 };
 
+const kTileTypeEmpty = '';
 const kTileTypeCapital = "whitestar.png";
 const kTileTypeCalvary = "horse.png";
 const kTileTypeFactory = "factory.png";
@@ -327,6 +328,10 @@ class Hex {
   set_type(type) {
     if (this.image) {
       hexMap.removeChild(this.image);
+    }
+
+    if (type === kTileTypeEmpty) {
+      return;
     }
 
     let x = this.screenX - kMapScale / 2;
