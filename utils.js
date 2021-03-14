@@ -1,3 +1,9 @@
+try {
+  kMap = require('./map.js');
+} catch {
+  // Frontend just uses <script src="utils.js"></script> :)
+}
+
 let utils = {
   CAPITALS: ["South Africa", "Ontario", "Argentina", "Northern Europe", "Japan", "Eastern Australia"],
   NATIONS: {

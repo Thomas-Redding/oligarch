@@ -4056,3 +4056,5 @@ let kMap = {
   "homeContinent": "au"
  }
 };
+
+try { module.exports = kMap; } catch (err) {}
