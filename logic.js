@@ -720,31 +720,34 @@ class Game
             nation.owns = []
             nation.army = []
             nation.president = null
-            for (let terr of utils.NATIONS[nationName].territories) {
-                nation.owns.push(terr)
-                nation[terr] = {}
+            let hexIds = Object.values(kMap).filter(x => x.homeContinent == utils.NATIONS[nationName].abbr).map(x => x.id);
+            for (let hexId of hexIds) {
+                nation.owns.push(hexId)
+                nation[hexId] = {}
+                nation[hexId].n_factories = 0
+                nation[hexId].n_barracks = 0
+                nation[hexId].n_barracks_can_spawn = 0
                 if (this.mother_state.settings.debug) {
-                    nation[terr].n_factories = 1
-                    nation[terr].n_barracks = 2
-                    nation[terr].n_barracks_can_spawn = 2
-                    for (let type of ["Infantry", "Cavalry", "Artillery"]) {
-                        if (nationName === "Europe") {
-                            continue;
-                        }
-                        for (let _ = 0; _ < 2; ++_) {
-                            nation.army.push({
-                                "type": type,
-                                "territory": terr,
-                                "id": utils.uuid(),
-                                "can_move": true,
-                                "can_attack": true
-                            });
-                        }
+                    if (Math.random() < 0.2) {
+                        nation[hexId].n_factories = 1
+                    } else {
+                        nation[hexId].n_barracks = 1
                     }
-                } else {
-                    nation[terr].n_factories = 0
-                    nation[terr].n_barracks = 0
-                    nation[terr].n_barracks_can_spawn = 0
+                    nation[hexId].n_barracks_can_spawn = nation[hexId].n_barracks;
+                    // for (let type of ["Infantry", "Cavalry", "Artillery"]) {
+                    //     if (nationName === "Europe") {
+                    //         continue;
+                    //     }
+                    //     for (let _ = 0; _ < 2; ++_) {
+                    //         nation.army.push({
+                    //             "type": type,
+                    //             "territory": hexId,
+                    //             "id": utils.uuid(),
+                    //             "can_move": true,
+                    //             "can_attack": true
+                    //         });
+                    //     }
+                    // }
                 }
             }
         }

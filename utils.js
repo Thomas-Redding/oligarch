@@ -4,6 +4,23 @@ try {
   // Frontend just uses <script src="utils.js"></script> :)
 }
 
+const HexType = {
+  none: "none",
+  infantry: "infantry",
+}
+
+const kHexTypeNone = 'none';
+const kHexTypeInfantry = 'infanty';
+
+const kAbbr2Name = {
+  "NA": "North America",
+  "SA": "South America",
+  "EU": "Europe",
+  "AF": "Africa",
+  "AS": "Asia",
+  "AU": "Australia",
+}
+
 let utils = {
   CAPITALS: ["South Africa", "Ontario", "Argentina", "Northern Europe", "Japan", "Eastern Australia"],
   NATIONS: {
@@ -348,8 +365,8 @@ let utils = {
    */
   income_of_territory: (mother_state, territory) => {
     let natural_income = utils.natural_income_of_territory(territory);
-    let nation = utils.terr2continentName[territory];
-    let factory_income = 5 * mother_state.nations[nation][territory].n_factories;
+    let nationName = kAbbr2Name[kMap[territory].homeContinent];
+    let factory_income = 5 * mother_state.nations[nationName][territory].n_factories;
     return natural_income + factory_income;
   },
 
@@ -358,12 +375,7 @@ let utils = {
    * @returns the natural income of the given territory
    */
   natural_income_of_territory: (territory) => {
-    for (let nation in utils.NATIONS) {
-      if (utils.NATIONS[nation].territories.includes(territory)) {
-        return utils.NATIONS[nation].base_income_per_territory;
-      }
-    }
-    throw Error("Unrecognized `territory`.");
+    return 1;
   },
 
   /*
@@ -473,9 +485,10 @@ let utils = {
   territories_of_nation: (mother_state, nation) => {
     let rtn = [];
     for (let nat in utils.NATIONS) {
-      for (let territory of utils.NATIONS[nat].territories) {
-        if (utils.territory_to_owner(mother_state, territory) == nation) {
-          rtn.push(territory);
+      let hexIds = Object.values(kMap).filter(x => x.homeContinent == utils.NATIONS[nat].abbr).map(x => x.id);
+      for (let hexId of hexIds) {
+        if (utils.territory_to_owner(mother_state, hexId) == nation) {
+          rtn.push(hexId);
         }
       }
     }
@@ -617,13 +630,7 @@ let utils = {
     }
     if (owner) return owner;
 
-    // Otherwise, choose the default owner (or their puppeteer).
-    for (let nation in utils.NATIONS) {
-      if (utils.NATIONS[nation].territories.includes(territory)) {
-        return utils.puppeteer(mother_state, nation);
-      }
-    }
-    throw Error("Something went wrong in `utils.territory_to_owner()`.");
+    return utils.puppeteer(mother_state, kMap[territory].homeContinent);
   },
 
   territories_of_nation_that_can_spawn: (mother_state, nation) => {
@@ -656,6 +663,9 @@ let utils = {
    * this method returns null.
    */
   puppeteer: (mother_state, nation) => {
+    if (nation in kAbbr2Name) {
+      nation = kAbbr2Name[nation];
+    }
     if (mother_state.nations[nation].army.filter(x => x.territory == utils.NATIONS[nation].capital).length > 0) {
       return nation;
     }
@@ -795,7 +805,7 @@ let utils = {
     if (stage.phase !== "Action" || stage.subphase !== "Election") {
       return false;
     }
-    return gLatestState.players[player_name].shares[stage.turn] > 0;
+    return mother_state.players[player_name].shares[stage.turn] > 0;
   },
 
   has_valid_targets: (mother_state, nation_name, territory_name) => {

@@ -252,43 +252,15 @@ class Color {
   }
 }
 
-const hexOffsetsY = [
-  Math.cos(0/6 * Math.PI * 2),
-  Math.cos(1/6 * Math.PI * 2),
-  Math.cos(2/6 * Math.PI * 2),
-  Math.cos(3/6 * Math.PI * 2),
-  Math.cos(4/6 * Math.PI * 2),
-  Math.cos(5/6 * Math.PI * 2),
-];
-
-const hexOffsetsX = [
-  Math.sin(0/6 * Math.PI * 2),
-  Math.sin(1/6 * Math.PI * 2),
-  Math.sin(2/6 * Math.PI * 2),
-  Math.sin(3/6 * Math.PI * 2),
-  Math.sin(4/6 * Math.PI * 2),
-  Math.sin(5/6 * Math.PI * 2),
-];
-
 const kContinent2Color = {
     "": new Color(  0,   0,   0),
-  "na": new Color(192, 192,   0),
-  "sa": new Color(  0, 192, 192),
-  "eu": new Color(  0,   0, 192),
-  "af": new Color(  0, 192,   0),
-  "as": new Color(192,   0,   0),
-  "au": new Color(192,   0, 192),
+  "NA": new Color(192, 192,   0),
+  "SA": new Color(  0, 192, 192),
+  "EU": new Color(  0,   0, 192),
+  "AF": new Color(  0, 192,   0),
+  "AS": new Color(192,   0,   0),
+  "AU": new Color(192,   0, 192),
 };
-
-const kIsMapEditable = false;
-
-function coords2id(x, y) {
-  return y * 40 + x;
-}
-
-function id2coords(i) {
-  return [ i % 40, i / 40 | 0 ];
-}
 
 const kTileTypeCapital = "whitestar.png";
 const kTileTypeCalvary = "horse.png";
@@ -392,105 +364,6 @@ class Hex {
   }
 }
 
-let hexes = {};
-window.addEventListener('load', () => {
-  // Draw water lines
-  let waterLines = [
-    // Madagascar
-    [{x:19, y:20}, {x:21, y:20}],
-    [{x:19, y:19}, {x:21, y:19}],
-    [{x:19, y:19}, {x:21, y:20}],
-
-    // Mediterranean
-    [{x:14, y:10}, {x:15, y:12}],
-    [{x:14, y:12}, {x:14, y:10}],
-    [{x:13, y:10}, {x:14, y:12}],
-    [{x:17, y:10}, {x:17, y:12}],
-    [{x:17, y:10}, {x:16, y:12}],
-
-    // North America and Greenland
-    [{x:8, y:5}, {x:10, y:4}],
-    [{x:8, y:4}, {x:9, y:3}],
-
-    // Greenland to Great Britain
-    [{x:12, y:4}, {x:13, y:3}],
-    [{x:12, y:4}, {x:14, y:4}],
-    [{x:12, y:4}, {x:13, y:5}],
-
-    // Great Britain to Europe
-    [{x:13, y:5}, {x:15, y:6}],
-    [{x:14, y:4}, {x:15, y:5}],
-
-    // North America and South America
-    [{x:4, y:10}, {x:5, y:12}],
-
-    // South America to Africa
-    [{x:9, y:15}, {x:13, y:14}],
-    [{x:9, y:15}, {x:13, y:15}],
-
-    // Asia and Australia
-    [{x:30, y:11}, {x:31, y:15}],
-    [{x:30, y:11}, {x:32, y:15}],
-    [{x:30, y:11}, {x:30, y:16}],
-
-    // Asia and Japan
-    [{x:31, y:8}, {x:33, y:8}],
-    [{x:31, y:7}, {x:33, y:7}],
-
-    // Australia
-    [{x:32, y:15}, {x:34, y:16}],
-    [{x:32, y:16}, {x:34, y:16}],
-    [{x:34, y:17}, {x:34, y:19}],
-    [{x:35, y:17}, {x:34, y:19}],
-    [{x:30, y:17}, {x:31, y:19}],
-    [{x:31, y:15}, {x:30, y:16}],
-    [{x:30, y:17}, {x:32, y:16}],
-
-  ];
-  for (let [a, b] of waterLines) {
-    let line = svg.line(
-      Hex.get_screen_x(a.x, a.y),
-      Hex.get_screen_y(a.x, a.y),
-      Hex.get_screen_x(b.x, b.y),
-      Hex.get_screen_y(b.x, b.y),
-    );
-    line.style.stroke = 'white';
-    line.style.strokeWidth = 2;
-    hexMap.appendChild(line);
-  }
-
-  // Draw hexagons
-  for (let id in kMap) {
-    hexes[id] = new Hex(id, kMap[id]);
-  }
-
-  for (let id in kMap) {
-    if (kMap[id].isCapital) {
-      hexes[id].set_type(kTileTypeCapital);
-    } else if (Math.random() < 0.3) {
-      hexes[id].set_type(kTileTypeBarracks);
-      if (Math.random() < 0.2) {
-        hexes[id].set_type(kTileTypeInfantry);
-      } else if (Math.random() < 0.25) {
-        hexes[id].set_type(kTileTypeCalvary);
-      } else if (Math.random() < 0.33) {
-        hexes[id].set_type(kTileTypeCannon);
-      } else if (Math.random() < 0.5) {
-        hexes[id].set_type(kTileTypeFactory);
-      } else if (Math.random() < 1.0) {
-        hexes[id].set_type(kTileTypeBarracks);
-      }
-    }
-  }
-
-  hexMap.addEventListener('click', (e) => {
-    if (e.target === hexMap) {
-      if (selectedHex) {
-        selectedHex.on_deselect();
-      }
-    }
-  });
-});
 </script>
 <script src='utils.js'></script>
 <script src='network.js'></script>
