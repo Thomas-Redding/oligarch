@@ -205,6 +205,7 @@ path {
 <link rel="stylesheet" class="theme" id="stylesheet-light" href="light.css">
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
 <script src="map.js"></script>
+<script src='utils.js'></script>
 <script>
 
 const kDebugMode = true;
@@ -323,9 +324,38 @@ class Hex {
       selectedHex.on_deselect();
     }
     this.on_select();
-    alert(this.x + '  ' + this.y);
+
+    // Debug code.
+
+    // Unhighlight all hexagons
+    for (let id in kMap) {
+      let hex = gHexes[id];
+      hex.path.style.fill = hex.color.hex();
+    }
+
+    // Highlight adjacent hexagons
+    let nationName = kAbbr2Name[kMap[this.id].homeContinent];
+    if (this.troopType) {
+      for (let id in utils.valid_moves_for_troop(gLatestState, nationName, this.id, this.troopType)) {
+        gHexes[id].path.style.fill = 'white';
+      }
+    }
+  }
+  get troopType() {
+    if (this.type === kTileTypeCannon) {
+      return 'Artillery';
+    }
+    if (this.type === kTileTypeCalvary) {
+      return 'Calvary';
+    }
+    if (this.type === kTileTypeInfantry) {
+      return 'Infantry';
+    }
+    return null;
   }
   set_type(type) {
+    this.type = type;
+
     if (this.image) {
       hexMap.removeChild(this.image);
     }
@@ -370,7 +400,6 @@ class Hex {
 }
 
 </script>
-<script src='utils.js'></script>
 <script src='network.js'></script>
 <script src='polygon_data.js'></script>
 <script src='states.js'></script>
