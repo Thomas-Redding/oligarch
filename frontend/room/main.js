@@ -191,29 +191,29 @@ function render_table(state, table, isEndOfGame) {
   render_map(state);
 }
 
-function render_nation_rects(state) {
-  let shares = utils.num_shares_already_auctioned_for_nation(state);
-  nationRects.innerHTML = "";
-  for (let name in nations) {
-    let nation = state.nations[name];
-    let coords = nations[name].rect;
+// function render_nation_rects(state) {
+//   let shares = utils.num_shares_already_auctioned_for_nation(state);
+//   nationRects.innerHTML = "";
+//   for (let name in nations) {
+//     let nation = state.nations[name];
+//     let coords = nations[name].rect;
 
-    nation.income = utils.income_of_nation(state, name);
+//     nation.income = utils.income_of_nation(state, name);
 
-    let rect = svg.rect(coords.x, coords.y, 115, 48);
-    rect.classList.add("nationRect");
-    nationRects.appendChild(rect);
+//     let rect = svg.rect(coords.x, coords.y, 115, 48);
+//     rect.classList.add("nationRect");
+//     nationRects.appendChild(rect);
 
-    let cashText = svg_text("Cash: $" + nation.cash + "B", coords.x + 4, coords.y + 14);
-    nationRects.appendChild(cashText);
+//     let cashText = svg_text("Cash: $" + nation.cash + "B", coords.x + 4, coords.y + 14);
+//     nationRects.appendChild(cashText);
 
-    let incomeText = svg_text("Income: $" + nation.income + "B", coords.x + 4, coords.y + 28);
-    nationRects.appendChild(incomeText);
+//     let incomeText = svg_text("Income: $" + nation.income + "B", coords.x + 4, coords.y + 28);
+//     nationRects.appendChild(incomeText);
 
-    let sharesText = svg_text(shares[name] + "/" + utils.total_shares(state, name) + " shares", coords.x + 4, coords.y + 42);
-    nationRects.appendChild(sharesText);
-  }
-}
+//     let sharesText = svg_text(shares[name] + "/" + utils.total_shares(state, name) + " shares", coords.x + 4, coords.y + 42);
+//     nationRects.appendChild(sharesText);
+//   }
+// }
 
 let moveState = null;
 
@@ -515,7 +515,7 @@ function refresh_map_highlighting(state) {
 }
 
 function render_map(state) {
-  render_nation_rects(state);
+  // render_nation_rects(state);
 
   let out = svg.g();
 
@@ -525,214 +525,214 @@ function render_map(state) {
     "Artillery": "bow.svg",
   }
 
-  Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
-    let territory_name = path.id;
-    let territory = state.nations[utils.terr2continentName[territory_name]][territory_name];
+  // Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
+  //   let territory_name = path.id;
+  //   let territory = state.nations[utils.terr2continentName[territory_name]][territory_name];
 
-    {
-      let [x, y] = territories[territory_name].center;
-      let circle = svg.circle(x, y, 16);
-      circle.style.fill = 'none';
-      circle.style.stroke = '#fff4';
-      circle.style.cursor = 'pointer';
-      circle.addEventListener('click', () => {
-        document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
-          "view": window,
-          "bubbles": true,
-          "cancelable": false
-        }));
-      });
-      circle.addEventListener('mouseover', () => {
-        document.getElementById(territory_name).dispatchEvent(new MouseEvent("mouseover", {
-          "view": window,
-          "bubbles": true,
-          "cancelable": false
-        }));
-      });
-      circle.addEventListener('mouseleave', () => {
-        document.getElementById(territory_name).dispatchEvent(new MouseEvent("mouseleave", {
-          "view": window,
-          "bubbles": true,
-          "cancelable": false
-        }));
-      });
-      out.appendChild(circle);
-    }
+  //   {
+  //     let [x, y] = territories[territory_name].center;
+  //     let circle = svg.circle(x, y, 16);
+  //     circle.style.fill = 'none';
+  //     circle.style.stroke = '#fff4';
+  //     circle.style.cursor = 'pointer';
+  //     circle.addEventListener('click', () => {
+  //       document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
+  //         "view": window,
+  //         "bubbles": true,
+  //         "cancelable": false
+  //       }));
+  //     });
+  //     circle.addEventListener('mouseover', () => {
+  //       document.getElementById(territory_name).dispatchEvent(new MouseEvent("mouseover", {
+  //         "view": window,
+  //         "bubbles": true,
+  //         "cancelable": false
+  //       }));
+  //     });
+  //     circle.addEventListener('mouseleave', () => {
+  //       document.getElementById(territory_name).dispatchEvent(new MouseEvent("mouseleave", {
+  //         "view": window,
+  //         "bubbles": true,
+  //         "cancelable": false
+  //       }));
+  //     });
+  //     out.appendChild(circle);
+  //   }
 
-    let icon_drawers = [];
+  //   let icon_drawers = [];
 
-    for (let nation_name in state.nations) {
-      let army = utils.army_in_territory(gLatestState, nation_name, territory_name, (["Move", "Attack"].includes(state.stage.subphase) ? state.stage.subphase : "Move"), "join");
-      for (let unit_type in army) {
-        for (let can_action = 0; can_action < 2; ++can_action) {
-          let n = army[unit_type][can_action];
-          if (n > 0) {
-            icon_drawers.push((x, y) => {
-              let onclick = (e) => {
-                unit_clicked(territory_name, unit_type, nation_name, !can_action);
-              }
+  //   for (let nation_name in state.nations) {
+  //     let army = utils.army_in_territory(gLatestState, nation_name, territory_name, (["Move", "Attack"].includes(state.stage.subphase) ? state.stage.subphase : "Move"), "join");
+  //     for (let unit_type in army) {
+  //       for (let can_action = 0; can_action < 2; ++can_action) {
+  //         let n = army[unit_type][can_action];
+  //         if (n > 0) {
+  //           icon_drawers.push((x, y) => {
+  //             let onclick = (e) => {
+  //               unit_clicked(territory_name, unit_type, nation_name, !can_action);
+  //             }
 
-              let background = svg.circle(x, y, s * 0.35);
-              background.style.fill = nations[nation_name].color.hex();
-              background.style.stroke = "black";
-              background.style.cursor = "pointer";
-              background.addEventListener("click", onclick);
-              out.appendChild(background);
+  //             let background = svg.circle(x, y, s * 0.35);
+  //             background.style.fill = nations[nation_name].color.hex();
+  //             background.style.stroke = "black";
+  //             background.style.cursor = "pointer";
+  //             background.addEventListener("click", onclick);
+  //             out.appendChild(background);
 
-              // let src = "./assets/" + unittype2icon[unit_type];
-              // let img = svg.image(src, x - s/2, y - s/2, {width:s, height:s, "xlink:href":src});
-              let img;
-              if (unit_type === "Infantry") {
-                img = make_sword(x - s/2, y - s/2, s/2, s/2);
-              } else if (unit_type === "Cavalry") {
-                img = make_horse(x - s/2, y - s/2, s/2, s/2);
-              } else {
-                img = make_bow(x - s/2, y - s/2, s/2, s/2);
-              }
-              img.style.cursor = 'pointer';
-              img.addEventListener("click", onclick);
-              out.appendChild(img);
+  //             // let src = "./assets/" + unittype2icon[unit_type];
+  //             // let img = svg.image(src, x - s/2, y - s/2, {width:s, height:s, "xlink:href":src});
+  //             let img;
+  //             if (unit_type === "Infantry") {
+  //               img = make_sword(x - s/2, y - s/2, s/2, s/2);
+  //             } else if (unit_type === "Cavalry") {
+  //               img = make_horse(x - s/2, y - s/2, s/2, s/2);
+  //             } else {
+  //               img = make_bow(x - s/2, y - s/2, s/2, s/2);
+  //             }
+  //             img.style.cursor = 'pointer';
+  //             img.addEventListener("click", onclick);
+  //             out.appendChild(img);
 
-              // This adds the (often invisible) circle indicating how many units from a stack have been
-              // selected.
-              {
-                const idSuffix = territory_name + "_" + nation_name + "_" + unit_type + "_" + can_action;
-                let circ = svg.circle(x - 5, y - 6.5, s * 0.23);
-                circ.style.fill = '#ff0';
-                circ.style.display = 'none';
-                circ.addEventListener("click", onclick);
-                circ.id = "stackcircle_" + idSuffix;
-                out.appendChild(circ);
+  //             // This adds the (often invisible) circle indicating how many units from a stack have been
+  //             // selected.
+  //             {
+  //               const idSuffix = territory_name + "_" + nation_name + "_" + unit_type + "_" + can_action;
+  //               let circ = svg.circle(x - 5, y - 6.5, s * 0.23);
+  //               circ.style.fill = '#ff0';
+  //               circ.style.display = 'none';
+  //               circ.addEventListener("click", onclick);
+  //               circ.id = "stackcircle_" + idSuffix;
+  //               out.appendChild(circ);
 
-                let text = svg_text(n, x - 8, y - 3, {
-                  "style": "font-size: 0.7em; text-align:center;"
-                });
-                text.addEventListener("click", onclick);
-                text.id = "stacktext_" + idSuffix;
-                text.style.fill = 'black';
-                text.style.display = 'none';
-                text.style.textShadow = "6px 6px 20px black";
-                out.appendChild(text);
-              }
+  //               let text = svg_text(n, x - 8, y - 3, {
+  //                 "style": "font-size: 0.7em; text-align:center;"
+  //               });
+  //               text.addEventListener("click", onclick);
+  //               text.id = "stacktext_" + idSuffix;
+  //               text.style.fill = 'black';
+  //               text.style.display = 'none';
+  //               text.style.textShadow = "6px 6px 20px black";
+  //               out.appendChild(text);
+  //             }
 
-              // We use this grayed-out circle to prevent user clicks when an action is not available.
-              if (gLatestState.stage.phase === "Action") {
-                if ((!can_action && ["Attack", "Move"].includes(gLatestState.stage.subphase) || (nation_name !== gLatestState.stage.turn))) {
-                  let circ = svg.circle(x, y, s * 0.35);
-                  circ.style.fill = '#0008';
-                  circ.addEventListener("click", onclick);
-                  out.appendChild(circ);
-                }
-              }
+  //             // We use this grayed-out circle to prevent user clicks when an action is not available.
+  //             if (gLatestState.stage.phase === "Action") {
+  //               if ((!can_action && ["Attack", "Move"].includes(gLatestState.stage.subphase) || (nation_name !== gLatestState.stage.turn))) {
+  //                 let circ = svg.circle(x, y, s * 0.35);
+  //                 circ.style.fill = '#0008';
+  //                 circ.addEventListener("click", onclick);
+  //                 out.appendChild(circ);
+  //               }
+  //             }
 
-              if (n > 1) {
-                let circ = svg.circle(x + 5, y - 6.5, s * 0.23);
-                circ.addEventListener('click', onclick);
-                circ.style.fill = 'red';
-                out.appendChild(circ);
+  //             if (n > 1) {
+  //               let circ = svg.circle(x + 5, y - 6.5, s * 0.23);
+  //               circ.addEventListener('click', onclick);
+  //               circ.style.fill = 'red';
+  //               out.appendChild(circ);
 
-                let text = svg_text(n, x + 2, y - 3, {
-                  "style": "font-size: 0.7em; text-align:center;"
-                });
-                text.addEventListener('click', onclick);
-                text.style.fill = 'white';
-                text.style.textShadow = "6px 6px 20px black";
-                out.appendChild(text);
-              }
-            });
-          }
-        }
-      }
-    }
+  //               let text = svg_text(n, x + 2, y - 3, {
+  //                 "style": "font-size: 0.7em; text-align:center;"
+  //               });
+  //               text.addEventListener('click', onclick);
+  //               text.style.fill = 'white';
+  //               text.style.textShadow = "6px 6px 20px black";
+  //               out.appendChild(text);
+  //             }
+  //           });
+  //         }
+  //       }
+  //     }
+  //   }
 
-    if (territory.n_factories > 0) {
-      icon_drawers.push((x, y) => {
-        // let img = make_factory(x - s/2, y - s/2, s, s);
-        let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s*0.8, height:s*0.8});
-        img.addEventListener("click", () => {
-          factory_clicked(territory_name);
-        });
-        out.appendChild(img);
+  //   if (territory.n_factories > 0) {
+  //     icon_drawers.push((x, y) => {
+  //       // let img = make_factory(x - s/2, y - s/2, s, s);
+  //       let img = svg.image("./assets/factory.png", x - s/2, y - s/2, {width:s*0.8, height:s*0.8});
+  //       img.addEventListener("click", () => {
+  //         factory_clicked(territory_name);
+  //       });
+  //       out.appendChild(img);
 
-        if (territory.n_factories > 1) {
-          let text = svg_text(territory.n_factories, x - 5, y + 6);
-          text.style.fill = 'white';
-          text.style.textShadow = "6px 6px 20px black";
-          text.addEventListener("click", () => {
-            factory_clicked(territory_name);
-          });
-          out.appendChild(text);
-        }
-      });
-    }
+  //       if (territory.n_factories > 1) {
+  //         let text = svg_text(territory.n_factories, x - 5, y + 6);
+  //         text.style.fill = 'white';
+  //         text.style.textShadow = "6px 6px 20px black";
+  //         text.addEventListener("click", () => {
+  //           factory_clicked(territory_name);
+  //         });
+  //         out.appendChild(text);
+  //       }
+  //     });
+  //   }
 
-    if (territory.n_barracks > 0) {
-      icon_drawers.push((x, y) => {
-        let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s*0.8, height:s*0.8});
-        img.addEventListener("click", () => {
-          barrack_clicked(territory_name);
-        });
-        out.appendChild(img);
+  //   if (territory.n_barracks > 0) {
+  //     icon_drawers.push((x, y) => {
+  //       let img = svg.image("./assets/castle.png", x - s/2, y - s/2, {width:s*0.8, height:s*0.8});
+  //       img.addEventListener("click", () => {
+  //         barrack_clicked(territory_name);
+  //       });
+  //       out.appendChild(img);
 
-        if (territory.n_barracks > 1) {
-          let text = svg_text(territory.n_barracks, x - 5, y + 6);
-          text.addEventListener("click", () => {
-            barrack_clicked(territory_name);
-          })
-          text.style.fill = 'white';
-          text.style.textShadow = "6px 6px 20px black";
-          out.appendChild(text);
-        }
-      });
-    }
+  //       if (territory.n_barracks > 1) {
+  //         let text = svg_text(territory.n_barracks, x - 5, y + 6);
+  //         text.addEventListener("click", () => {
+  //           barrack_clicked(territory_name);
+  //         })
+  //         text.style.fill = 'white';
+  //         text.style.textShadow = "6px 6px 20px black";
+  //         out.appendChild(text);
+  //       }
+  //     });
+  //   }
 
-    const r = 16;
-    const s = 24;
-    const tau = Math.PI * 2;
-    for (let t = 0; t < icon_drawers.length; ++t) {
-      let angle = tau * t / icon_drawers.length - Math.PI / 2;
-      let [x, y] = territories[territory_name].center;
-      x += Math.cos(angle) * r * 1.3;
-      y += Math.sin(angle) * r * 1.3;
-      icon_drawers[t](x, y);
-    }
+  //   const r = 16;
+  //   const s = 24;
+  //   const tau = Math.PI * 2;
+  //   for (let t = 0; t < icon_drawers.length; ++t) {
+  //     let angle = tau * t / icon_drawers.length - Math.PI / 2;
+  //     let [x, y] = territories[territory_name].center;
+  //     x += Math.cos(angle) * r * 1.3;
+  //     y += Math.sin(angle) * r * 1.3;
+  //     icon_drawers[t](x, y);
+  //   }
 
-    if (utils.CAPITALS.includes(territory_name)) {
-      let [x, y] = territories[territory_name].center;
-      let star = svg.image("assets/whitestar.png", x - 10, y - 10, {
-        width: 20,
-        height: 20
-      });
-      star.addEventListener('click', () => {
-        document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
-          "view": window,
-          "bubbles": true,
-          "cancelable": false
-        }));
-      });
-      star.addEventListener('mouseover', () => {
-        document.getElementById(territory_name).dispatchEvent(new MouseEvent("mouseover", {
-          "view": window,
-          "bubbles": true,
-          "cancelable": false
-        }));
-      });
-      star.addEventListener('mouseleave', () => {
-        document.getElementById(territory_name).dispatchEvent(new MouseEvent("mouseleave", {
-          "view": window,
-          "bubbles": true,
-          "cancelable": false
-        }));
-      });
-      star.style.cursor = 'pointer';
-      star.style.fill = 'white';
-      out.appendChild(star);
-    }
-  });
+  //   if (utils.CAPITALS.includes(territory_name)) {
+  //     let [x, y] = territories[territory_name].center;
+  //     let star = svg.image("assets/whitestar.png", x - 10, y - 10, {
+  //       width: 20,
+  //       height: 20
+  //     });
+  //     star.addEventListener('click', () => {
+  //       document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
+  //         "view": window,
+  //         "bubbles": true,
+  //         "cancelable": false
+  //       }));
+  //     });
+  //     star.addEventListener('mouseover', () => {
+  //       document.getElementById(territory_name).dispatchEvent(new MouseEvent("mouseover", {
+  //         "view": window,
+  //         "bubbles": true,
+  //         "cancelable": false
+  //       }));
+  //     });
+  //     star.addEventListener('mouseleave', () => {
+  //       document.getElementById(territory_name).dispatchEvent(new MouseEvent("mouseleave", {
+  //         "view": window,
+  //         "bubbles": true,
+  //         "cancelable": false
+  //       }));
+  //     });
+  //     star.style.cursor = 'pointer';
+  //     star.style.fill = 'white';
+  //     out.appendChild(star);
+  //   }
+  // });
 
-  riskMap.appendChild(out);
-  riskMap.removeChild(document.getElementById("unitIcons"));
-  out.id = "unitIcons";
+  // riskMap.appendChild(out);
+  // riskMap.removeChild(document.getElementById("unitIcons"));
+  // out.id = "unitIcons";
 }
 
 function add_player(details, state) {
@@ -811,121 +811,121 @@ function main(state) {
     // throw Error("eeek!!!");
     return;
   }
-  riskMap.addEventListener('click', (e) => {
-    let pt = riskMap.createSVGPoint();
-    pt.x = e.clientX;
-    pt.y = e.clientY;
-    let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
-    // console.log(Math.round(loc.x), Math.round(loc.y));
-  });
+  // riskMap.addEventListener('click', (e) => {
+  //   let pt = riskMap.createSVGPoint();
+  //   pt.x = e.clientX;
+  //   pt.y = e.clientY;
+  //   let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
+  //   // console.log(Math.round(loc.x), Math.round(loc.y));
+  // });
 
   maybe_show_trade_proposal(state);
 
-  Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
-    let territory = path.id;
-    let nation = utils.terr2continentName[territory];
-    let nationColor = nations[nation].color;
-    let randColor = Color.random().scale(0.15);
-    let color = nationColor.scale(0.85).plus(randColor);
+  // Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
+  //   let territory = path.id;
+  //   let nation = utils.terr2continentName[territory];
+  //   let nationColor = nations[nation].color;
+  //   let randColor = Color.random().scale(0.15);
+  //   let color = nationColor.scale(0.85).plus(randColor);
 
-    path.style = '';
-    path.style.fill = color.hex();
-    path.style.stroke = 'black';
+  //   path.style = '';
+  //   path.style.fill = color.hex();
+  //   path.style.stroke = 'black';
 
-    let onclick = (e) => {
-      if (true) {
-        // Print out coordinates.
-        let pt = riskMap.createSVGPoint();
-        pt.x = e.clientX;
-        pt.y = e.clientY;
-        let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
-        console.log('"' + territory + '": { "center": [' + [Math.round(loc.x), Math.round(loc.y)] + '] },');
-      }
+  //   let onclick = (e) => {
+  //     if (true) {
+  //       // Print out coordinates.
+  //       let pt = riskMap.createSVGPoint();
+  //       pt.x = e.clientX;
+  //       pt.y = e.clientY;
+  //       let loc = pt.matrixTransform(riskMap.getScreenCTM().inverse());
+  //       console.log('"' + territory + '": { "center": [' + [Math.round(loc.x), Math.round(loc.y)] + '] },');
+  //     }
 
-      if (gLatestState.stage.phase === "Action") {
-        if (gLatestState.stage.subphase === "Build") {
-          if (factoryRadio.checked) {
-            build(gLatestState, territory, "factory");
-          } else if (barracksRadio.checked) {
-            build(gLatestState, territory, "barracks");
-          }
-        } else if (gLatestState.stage.subphase === "Spawn") {
-          if (soldierRadio.checked) {
-            spawn(gLatestState, territory, "Infantry");
-          } else if (artilleryRadio.checked) {
-            spawn(gLatestState, territory, "Artillery");
-          } else if (calvaryRadio.checked) {
-            spawn(gLatestState, territory, "Cavalry");
-          }
-        } else if (gLatestState.stage.subphase === "Move") {
-          if (moveState) {
-            let nation_name = gLatestState.stage.turn;
-            let validIds = {
-              "Infantry": [],
-              "Cavalry": [],
-              "Artillery": []
-            };
-            for (let unit of gLatestState.nations[nation_name].army) {
-              if (unit.can_move && unit.territory === moveState.from) {
-                validIds[unit.type].push(unit.id)
-              }
-            }
+  //     if (gLatestState.stage.phase === "Action") {
+  //       if (gLatestState.stage.subphase === "Build") {
+  //         if (factoryRadio.checked) {
+  //           build(gLatestState, territory, "factory");
+  //         } else if (barracksRadio.checked) {
+  //           build(gLatestState, territory, "barracks");
+  //         }
+  //       } else if (gLatestState.stage.subphase === "Spawn") {
+  //         if (soldierRadio.checked) {
+  //           spawn(gLatestState, territory, "Infantry");
+  //         } else if (artilleryRadio.checked) {
+  //           spawn(gLatestState, territory, "Artillery");
+  //         } else if (calvaryRadio.checked) {
+  //           spawn(gLatestState, territory, "Cavalry");
+  //         }
+  //       } else if (gLatestState.stage.subphase === "Move") {
+  //         if (moveState) {
+  //           let nation_name = gLatestState.stage.turn;
+  //           let validIds = {
+  //             "Infantry": [],
+  //             "Cavalry": [],
+  //             "Artillery": []
+  //           };
+  //           for (let unit of gLatestState.nations[nation_name].army) {
+  //             if (unit.can_move && unit.territory === moveState.from) {
+  //               validIds[unit.type].push(unit.id)
+  //             }
+  //           }
 
-            let unitIds = [];
-            for (let type of ["Infantry", "Cavalry", "Artillery"]) {
-              console.log(type, validIds, moveState);
-              if (validIds[type].length < moveState[type]) {
-                alert("Invalid Move (1)");
-                change_move_state(null);
-                return;
-              }
-              for (let i = 0; i < moveState[type]; ++i) {
-                unitIds.push(validIds[type][i]);
-              }
-            }
+  //           let unitIds = [];
+  //           for (let type of ["Infantry", "Cavalry", "Artillery"]) {
+  //             console.log(type, validIds, moveState);
+  //             if (validIds[type].length < moveState[type]) {
+  //               alert("Invalid Move (1)");
+  //               change_move_state(null);
+  //               return;
+  //             }
+  //             for (let i = 0; i < moveState[type]; ++i) {
+  //               unitIds.push(validIds[type][i]);
+  //             }
+  //           }
 
 
-            let legalMoves = utils.valid_moves_for_troop(
-              gLatestState,
-              gLatestState.stage.turn,
-              moveState.from,
-              moveState["Cavalry"] === unitIds.length ? "Cavalry" : "Infantry");
+  //           let legalMoves = utils.valid_moves_for_troop(
+  //             gLatestState,
+  //             gLatestState.stage.turn,
+  //             moveState.from,
+  //             moveState["Cavalry"] === unitIds.length ? "Cavalry" : "Infantry");
 
-            if (territory in legalMoves) {
-              send({
-                "method": "move",
-                "args": [unitIds, moveState.from, territory]
-              })
-            } else {
-              alert("Invalid Move (2)");
-            }
+  //           if (territory in legalMoves) {
+  //             send({
+  //               "method": "move",
+  //               "args": [unitIds, moveState.from, territory]
+  //             })
+  //           } else {
+  //             alert("Invalid Move (2)");
+  //           }
 
-            change_move_state(null);
-          }
-        }
-      }
-    }
-    path.onclick = onclick;
-    // path.addEventListener('click', onclick);
+  //           change_move_state(null);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   path.onclick = onclick;
+  //   // path.addEventListener('click', onclick);
 
-    let onmouseover = (e) => {
-      path.style.fill = color.plus(new Color(255, 255, 255)).scale(0.5).hex();
-    }
-    path.addEventListener("mouseover", onmouseover);
+  //   let onmouseover = (e) => {
+  //     path.style.fill = color.plus(new Color(255, 255, 255)).scale(0.5).hex();
+  //   }
+  //   path.addEventListener("mouseover", onmouseover);
 
-    let onmouseleave = (e) => {
-      path.style.fill = color.hex();
-    };
-    path.addEventListener("mouseleave", onmouseleave);
+  //   let onmouseleave = (e) => {
+  //     path.style.fill = color.hex();
+  //   };
+  //   path.addEventListener("mouseleave", onmouseleave);
 
-    if (false) {
-      let [x, y] = territories[territory].center;
-      circ = create_circle(x, y, 20);
-      circ.style.fill = 'none';
-      circ.style.stroke = 'white';
-      riskMap.appendChild(circ);
-    }
-  });
+  //   if (false) {
+  //     let [x, y] = territories[territory].center;
+  //     circ = create_circle(x, y, 20);
+  //     circ.style.fill = 'none';
+  //     circ.style.stroke = 'white';
+  //     riskMap.appendChild(circ);
+  //   }
+  // });
 
   render_presidential_div(gLatestState);
 
@@ -1474,7 +1474,7 @@ let loadPromises = [
         }
         else if (action === "conclude_bidding") {
           render_table(state);
-          render_nation_rects(state);
+          // render_nation_rects(state);
         }
         else if (action === "moves_made") {
           render_map(state);
