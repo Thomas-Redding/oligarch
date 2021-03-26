@@ -502,7 +502,7 @@ class Game
         this.timer = timer
         this._history = new History(this.prayer);
         this.mother_state = { }
-        const kDebug = true;
+        const kDebug = false;
         this.mother_state.settings = {
             "debug": kDebug,
             "deliberationTime": (kDebug ? 1 : 30)*1000,
@@ -515,9 +515,9 @@ class Game
             "showSharePriceAdvice": true,
             "score_cashWeight": 1,
             "score_incomeWeight": 2,
-            "showYourCashInStatusBar": true,
+            "showYourCashInStatusBar": false,
             "moneyPrefix": "$",
-            "moneyPostfix": "B",
+            "moneyPostfix": "",
         }
         this.mother_state.players = { }
         this.mother_state.nations = utils.NATIONS
