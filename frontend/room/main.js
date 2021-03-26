@@ -141,7 +141,7 @@ function render_table(state, table, isEndOfGame) {
     tr.innerHTML += '<td class="column-AS">' + player.shares["Asia"] + "</td>";
     tr.innerHTML += '<td class="column-AU">' + player.shares["Australia"] + "</td>";
     tr.innerHTML += "<td>" + moneyString(Math.floor(player.cash)) + "</td>";
-    tr.innerHTML += "<td>" + Math.round(utils.score_of_player(state, player.username)) + "</td>";
+    tr.innerHTML += "<td>" + moneyString(Math.round(utils.score_of_player(state, player.username))) + "</td>";
 
     tbody.appendChild(tr);
   }
