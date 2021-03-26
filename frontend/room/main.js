@@ -1057,8 +1057,6 @@ function render_status_bar(state) {
     statusBarSubphaseDiv.previousElementSibling.style.display = "none";
     statusBarSubphaseDiv.innerHTML = "";
   }
-
-  statusBarYourCash
 }
 
 let gAreAdmin = undefined;
@@ -1319,7 +1317,9 @@ let loadPromises = [
           pauseDiv.style.display = (state.is_paused ? "flex" : "none");
         }
 
-        statusBarYourCash.innerHTML = "$" + Math.floor(state.players[gUsername].cash) + "B";
+        if (gLatestState.settings.showYourCashInStatusBar) {
+          statusBarYourCash.innerHTML = "$" + Math.floor(state.players[gUsername].cash) + "B";
+        }
 
 
         if (action === "get_state" || action === "undo") {

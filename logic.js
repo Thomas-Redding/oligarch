@@ -515,6 +515,7 @@ class Game
             "showSharePriceAdvice": true,
             "score_cashWeight": 1,
             "score_incomeWeight": 2,
+            "showYourCashInStatusBar": true,
         }
         this.mother_state.players = { }
         this.mother_state.nations = utils.NATIONS
