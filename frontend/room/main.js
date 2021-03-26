@@ -113,7 +113,7 @@ function render_table(state, table, isEndOfGame) {
       <td class="column-AS">AS</td>
       <td class="column-AU">AU</td>
       <td>Cash</td>
-      <td>Worth</td>
+      ` + (gLatestState.settings.showPlayerWorth ? '<td>Worth</td>' : '') + `
     </tr>
   `;
 
@@ -141,7 +141,9 @@ function render_table(state, table, isEndOfGame) {
     tr.innerHTML += '<td class="column-AS">' + player.shares["Asia"] + "</td>";
     tr.innerHTML += '<td class="column-AU">' + player.shares["Australia"] + "</td>";
     tr.innerHTML += "<td>" + moneyString(Math.floor(player.cash)) + "</td>";
-    tr.innerHTML += "<td>" + moneyString(Math.round(utils.score_of_player(state, player.username))) + "</td>";
+    if (gLatestState.settings.showPlayerWorth) {
+      tr.innerHTML += "<td>" + moneyString(Math.round(utils.score_of_player(state, player.username))) + "</td>";
+    }
 
     tbody.appendChild(tr);
   }
@@ -1274,7 +1276,7 @@ function updateCurrentActionDivFromState(state) {
     let n = gLatestState.supershares[gLatestState.stage.round - 1];
     let adviceString = "";
     if (gLatestState.settings.showSharePriceAdvice) {
-      let advisedPrice = Math.round(utils.advised_share_price(gLatestState, state.stage.turn, n));
+      let advisedPrice = Math.round(utils.advised_share_price(gLatestState, state.stage.turn, n, true));
       adviceString += "<br/><br/> <i>( Assuming no future human actions are taken, the expected future cash flow of this share is " + moneyString(advisedPrice) + " )</i>";
     }
     if (state.highest_bidder == null) {
