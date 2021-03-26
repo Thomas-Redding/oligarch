@@ -26,6 +26,10 @@ function toast(html, duration=2000) {
   toast.queue.push([html, duration]);
 }
 
+function moneyString(num) {
+  return gLatestState.settings.moneyPrefix + num + gLatestState.settings.moneyPostfix;
+}
+
 class Vec2 {
   constructor(x, y) {
     this.x = x;
@@ -136,7 +140,7 @@ function render_table(state, table, isEndOfGame) {
     tr.innerHTML += '<td class="column-AF">' + player.shares["Africa"] + "</td>";
     tr.innerHTML += '<td class="column-AS">' + player.shares["Asia"] + "</td>";
     tr.innerHTML += '<td class="column-AU">' + player.shares["Australia"] + "</td>";
-    tr.innerHTML += "<td>" + Math.floor(player.cash) + "</td>";
+    tr.innerHTML += "<td>" + moneyString(Math.floor(player.cash)) + "</td>";
     tr.innerHTML += "<td>" + Math.round(utils.score_of_player(state, player.username)) + "</td>";
 
     tbody.appendChild(tr);
@@ -185,10 +189,10 @@ function render_nation_rects(state) {
     rect.classList.add("nationRect");
     nationRects.appendChild(rect);
 
-    let cashText = svg_text("Cash: $" + nation.cash + "B", coords.x + 4, coords.y + 14);
+    let cashText = svg_text("Cash: " + moneyString(nation.cash), coords.x + 4, coords.y + 14);
     nationRects.appendChild(cashText);
 
-    let incomeText = svg_text("Income: $" + nation.income + "B", coords.x + 4, coords.y + 28);
+    let incomeText = svg_text("Income: " + moneyString(nation.income), coords.x + 4, coords.y + 28);
     nationRects.appendChild(incomeText);
 
     let sharesText = svg_text(shares[name] + "/" + utils.total_shares(state, name) + " shares", coords.x + 4, coords.y + 42);
@@ -1128,7 +1132,7 @@ function htmlFromLog(action, details, isToast) {
   } else if (action == "bid_received") {
     return undefined;
   } else if (action == "conclude_bidding") {
-    return "<b>" + details.winner + "</b> bought a share of " + details.nation + " for $" + details.price + "B";
+    return "<b>" + details.winner + "</b> bought a share of " + details.nation + " for " + moneyString(details.price);
   } else if (action == "auctions_complete") {
     return "Auctions concluded.";
   } else if (action == "start_election") {
@@ -1164,11 +1168,11 @@ function htmlFromLog(action, details, isToast) {
     if (isToast) return undefined
     else return "Dividend deliberations began";
   } else if (action == "dividends_paid") {
-    return "$" + details + "B paid in dividends";
+    return moneyString(details) + " paid in dividends";
   } else if (action == "end_presidential_command") {
     return "The reign has ended.";
   } else if (action == "bribe") {
-    return "<b>" + details.player + "</b> bribed " + details.nation + " with $" + details.amount + "B";
+    return "<b>" + details.player + "</b> bribed " + details.nation + " with " + moneyString(details.amount);
   } else if (action == "player_added") {
     if (isToast) return undefined;
     else return "<b>" + details + "</b> joined";
@@ -1251,7 +1255,7 @@ function updateCurrentActionDivFromState(state) {
   };
   // updateDiv("Auction for " + details + " has opened");
   // updateDiv(null);j
-  // updateDiv(state.stage.turn + " to <b>" + state.highest_bidder + '</b> for $' + state.current_bid + " B");
+  // updateDiv(state.stage.turn + " to <b>" + state.highest_bidder + '</b> for ' + moneyString(state.current_bid));
   if (state.stage.phase == "lobby") {
     updateDiv(null);
   } else if (state.stage.phase == "Taxation") {
@@ -1264,7 +1268,7 @@ function updateCurrentActionDivFromState(state) {
     let adviceString = "";
     if (gLatestState.settings.showSharePriceAdvice) {
       let advisedPrice = Math.round(utils.advised_share_price(gLatestState, state.stage.turn, n));
-      adviceString += "<br/><br/> <i>( Assuming no future human actions are taken, the expected future cash flow of this share is $" + advisedPrice + "B )</i>";
+      adviceString += "<br/><br/> <i>( Assuming no future human actions are taken, the expected future cash flow of this share is " + moneyString(advisedPrice) + " )</i>";
     }
     if (state.highest_bidder == null) {
       updateDiv("Bidding for <u>" + n + " share" + (n > 1 ? "s" : "") + "</u> is open for " + state.stage.turn + ". Every bid will extend the countdown." + adviceString);
@@ -1318,7 +1322,7 @@ let loadPromises = [
         }
 
         if (gLatestState.settings.showYourCashInStatusBar) {
-          statusBarYourCash.innerHTML = "$" + Math.floor(state.players[gUsername].cash) + "B";
+          statusBarYourCash.innerHTML = moneyString(Math.floor(state.players[gUsername].cash));
         }
 
 
@@ -1624,7 +1628,7 @@ function render_presidential_div(state) {
     spwaningDiv.style.display = (subphase === "Spawn" ? "block" : "none")
     buildingDiv.style.display = (subphase === "Build" ? "block" : "none");
     dividendsDiv.style.display = (subphase === "Dividends" ? "block" : "none");
-    presidentialHeader.innerHTML = state.stage.turn + " ($" + nation.cash + " B)";
+    presidentialHeader.innerHTML = state.stage.turn + " (" + moneyString(nation.cash) + ")";
 
     const num_shares = utils.num_shares_already_auctioned_for_nation(state)[state.stage.turn];
     dividendSlider.step = num_shares;
