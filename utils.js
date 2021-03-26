@@ -4,6 +4,64 @@ try {
   // Frontend just uses <script src="utils.js"></script> :)
 }
 
+let waterPaths = [
+  // // Madagascar
+  [19+40*20 ,21+40*20],
+  [19+40*19 ,21+40*19],
+  [19+40*19 ,21+40*20],
+
+  // Mediterranean
+  [14+40*10 ,15+40*12],
+  [14+40*12 ,14+40*10],
+  [13+40*10 ,14+40*12],
+  [17+40*10 ,17+40*12],
+  [17+40*10 ,16+40*12],
+
+  // North America and Greenland
+  [8+40*5 ,10+40*4],
+  [8+40*4 ,9+40*3],
+
+  // Greenland to Great Britain
+  [12+40*4 ,13+40*3],
+  [12+40*4 ,14+40*4],
+  [12+40*4 ,13+40*5],
+
+  // Great Britain to Europe
+  [13+40*5 ,15+40*6],
+  [14+40*4 ,15+40*5],
+
+  // North America and South America
+  [4+40*10 ,5+40*12],
+
+  // South America to Africa
+  [9+40*15 ,13+40*14],
+  [9+40*15 ,13+40*15],
+
+  // Asia and Australia
+  [30+40*11 ,31+40*15],
+  [30+40*11 ,32+40*15],
+  [30+40*11 ,30+40*16],
+
+  // Asia and Japan
+  [31+40*8 ,33+40*8],
+  [31+40*7 ,33+40*7],
+
+  // Australia
+  [32+40*15 ,34+40*16],
+  [32+40*16 ,34+40*16],
+  [34+40*17 ,34+40*19],
+  [35+40*17 ,34+40*19],
+  [30+40*17 ,31+40*19],
+  [31+40*15 ,30+40*16],
+  [30+40*17 ,32+40*16],
+];
+
+for (let path of waterPaths) {
+  path = path.map(x => x + 1);
+  kMap[path[0]]["adjacencies"].push(path[1]);
+  kMap[path[1]]["adjacencies"].push(path[0]);
+}
+
 const HexType = {
   none: "none",
   infantry: "infantry",
@@ -67,260 +125,6 @@ let utils = {
       "abbr": "AU"
     }
   },
-  NEIGHBORS: {
-    "Afghanistan": {
-      "Ural": 1,
-      "Siberia": 1,
-      "China": 1,
-      "India": 1,
-      "Middle East": 1,
-      "Ukraine": 1,
-    },
-    "Alaska": {
-      "Northwest Territory": 1,
-      "Alberta": 1,
-      "Kamchatka": 1,
-    },
-    "Alberta": {
-      "Alaska": 1,
-      "Northwest Territory": 1,
-      "Ontario": 1,
-      "Western United States": 1,
-    },
-    "Argentina": {
-      "Peru": 1,
-      "Brazil": 1,
-    },
-    "Brazil": {
-      "Venezuela": 1,
-      "Peru": 1,
-      "Argentina": 1,
-      "North Africa": 1,
-    },
-    "Central America": {
-      "Western United States": 1,
-      "Eastern United States": 1,
-      "Venezuela": 1,
-    },
-    "China": {
-      "Siam": 1,
-      "India": 1,
-      "Afghanistan": 1,
-      "Ural": 1,
-      "Siberia": 1,
-      "Mongolia": 1,
-    },
-    "Congo": {
-      "North Africa": 1,
-      "East Africa": 1,
-      "South Africa": 1,
-    },
-    "East Africa": {
-      "South Africa": 1,
-      "Congo": 1,
-      "Madagascar": 1,
-      "North Africa": 1,
-      "Egypt": 1,
-      "Middle East": 1,
-    },
-    "Eastern Australia": {
-      "Western Australia": 1,
-      "New Guinea": 1,
-    },
-    "Eastern United States": {
-      "Central America": 1,
-      "Western United States": 1,
-      "Ontario": 1,
-      "Quebec": 1,
-    },
-    "Egypt": {
-      "North Africa": 1,
-      "East Africa": 1,
-      "Western Europe": 1,
-      "Southern Europe": 1,
-      "Middle East": 1,
-    },
-    "Great Britain": {
-      "Iceland": 1,
-      "Scandinavia": 1,
-      "Northern Europe": 1,
-      "Western Europe": 1,
-    },
-    "Greenland": {
-      "Northwest Territory": 1,
-      "Quebec": 1,
-      "Iceland": 1,
-    },
-    "Iceland": {
-      "Greenland": 1,
-      "Great Britain": 1,
-      "Scandinavia": 1,
-    },
-    "India": {
-      "Middle East": 1,
-      "Afghanistan": 1,
-      "China": 1,
-      "Siam": 1,
-    },
-    "Indonesia": {
-      "Siam": 1,
-      "New Guinea": 1,
-      "Western Australia": 1,
-    },
-    "Irkutsk": {
-      "Siberia": 1,
-      "Yakursk": 1,
-      "Kamchatka": 1,
-      "Mongolia": 1,
-    },
-    "Japan": {
-      "Kamchatka": 1,
-      "Mongolia": 1,
-    },
-    "Kamchatka": {
-      "Yakursk": 1,
-      "Irkutsk": 1,
-      "Mongolia": 1,
-      "Japan": 1,
-      "Alaska": 1,
-    },
-    "Madagascar": {
-      "South Africa": 1,
-      "East Africa": 1,
-    },
-    "Middle East": {
-      "Afghanistan": 1,
-      "East Africa": 1,
-      "Egypt": 1,
-      "India": 1,
-      "Southern Europe": 1,
-      "Ukraine": 1,
-    },
-    "Mongolia": {
-      "China": 1,
-      "Siberia": 1,
-      "Irkutsk": 1,
-      "Japan": 1,
-      "Kamchatka": 1,
-    },
-    "New Guinea": {
-      "Indonesia": 1,
-      "Eastern Australia": 1,
-      "Western Australia": 1,
-    },
-    "North Africa": {
-      "Brazil": 1,
-      "Congo": 1,
-      "East Africa": 1,
-      "Egypt": 1,
-      "Western Europe": 1,
-      "Southern Europe": 1,
-    },
-    "Northern Europe": {
-      "Great Britain": 1,
-      "Scandinavia": 1,
-      "Ukraine": 1,
-      "Southern Europe": 1,
-      "Western Europe": 1,
-    },
-    "Northwest Territory": {
-      "Alaska": 1,
-      "Alberta": 1,
-      "Ontario": 1,
-      "Quebec": 1,
-      "Greenland": 1,
-    },
-    "Ontario": {
-      "Northwest Territory": 1,
-      "Alberta": 1,
-      "Quebec": 1,
-      "Western United States": 1,
-      "Eastern United States": 1,
-    },
-    "Peru": {
-      "Venezuela": 1,
-      "Brazil": 1,
-      "Argentina": 1,
-    },
-    "Quebec": {
-      "Greenland": 1,
-      "Ontario": 1,
-      "Eastern United States": 1,
-    },
-    "Scandinavia": {
-      "Iceland": 1,
-      "Great Britain": 1,
-      "Northern Europe": 1,
-      "Ukraine": 1,
-    },
-    "Siam": {
-      "China": 1,
-      "India": 1,
-      "Indonesia": 1,
-    },
-    "Siberia": {
-      "Ural": 1,
-      "China": 1,
-      "Yakursk": 1,
-      "Irkutsk": 1,
-      "Mongolia": 1,
-    },
-    "South Africa": {
-      "Congo": 1,
-      "East Africa": 1,
-      "Madagascar": 1,
-    },
-    "Southern Europe": {
-      "Western Europe": 1,
-      "Northern Europe": 1,
-      "Ukraine": 1,
-      "Middle East": 1,
-      "Egypt": 1,
-      "North Africa": 1,
-    },
-    "Ukraine": {
-      "Scandinavia": 1,
-      "Northern Europe": 1,
-      "Southern Europe": 1,
-      "Middle East": 1,
-      "Afghanistan": 1,
-      "Ural": 1,
-    },
-    "Ural": {
-      "Ukraine": 1,
-      "Afghanistan": 1,
-      "Siberia": 1,
-      "China": 1,
-    },
-    "Venezuela": {
-      "Central America": 1,
-      "Peru": 1,
-      "Brazil": 1,
-    },
-    "Western Australia": {
-      "Eastern Australia": 1,
-      "Indonesia": 1,
-      "New Guinea": 1,
-    },
-    "Western Europe": {
-      "Southern Europe": 1,
-      "Northern Europe": 1,
-      "Scandinavia": 1,
-      "Great Britain": 1,
-      "North Africa": 1,
-    },
-    "Western United States": {
-      "Alberta": 1,
-      "Eastern United States": 1,
-      "Central America": 1,
-    },
-    "Yakursk": {
-      "Siberia": 1,
-      "Irkutsk": 1,
-      "Kamchatka": 1,
-    }
-  },
-
   /*
    * Find how many shares have already been auctioned off for each nation.
    * @returns {Object} a dictionary with nation names as keys and number of
@@ -533,11 +337,32 @@ let utils = {
         rtn += n;
       }
     }
-    let neighbors = utils.NEIGHBORS[territory];
-    for (let neighbor in neighbors) {
+    let neighbors = kMap[territory]["adjacencies"];
+    for (let neighbor of neighbors) {
       rtn += utils.sum(utils.army_in_territory(mother_state, nation, neighbor, "Move")["Artillery"]);
     }
     return rtn;
+  },
+
+  valid_attacks_for_troop: (mother_state, territoryId) => {
+    let turn = mother_state.stage.turn;
+    let army = mother_state.nations[turn].army;
+    army = army.filter(x => x.territory == territoryId);
+    if (army.length === 0) {
+      return [];
+    }
+    if (army.length > 1) {
+      throw Error('');
+    }
+    let unit = army[0];
+
+    if (!unit.can_attack) {
+      return [];
+    }
+
+    let adjacencies = kMap[territoryId]["adjacencies"];
+    adjacencies = adjacencies.filter(x => utils.is_hex_occupied(mother_state, x));
+    return adjacencies;
   },
 
   /*
@@ -547,24 +372,15 @@ let utils = {
    * @returns {Object} a dictionary whose keys are states a cavalry can move to
    */
   valid_moves_for_troop: (mother_state, nation_name, territory, troop_type) => {
-    return {
-      90: 1,
-      91: 1,
-      92: 1,
-    }
     if (troop_type == "Cavalry") {
       return utils._valid_moves_for_cavalry(mother_state, nation_name, territory);
     }
     let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
-    let neighbors = utils.NEIGHBORS[territory];
+    let neighbors = kMap[territory]["adjacencies"];
     let rtn = {};
-    for (let neighbor in neighbors) {
-      if (!is_territory_uncontested) {
+    for (let neighbor of neighbors) {
+      if (!utils.is_hex_occupied(mother_state, neighbor)) {
         rtn[neighbor] = 1;
-      } else {
-        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
-          rtn[neighbor] = 1;
-        }
       }
     }
     return rtn;
@@ -577,15 +393,15 @@ let utils = {
    */
   _valid_moves_for_cavalry: (mother_state, nation_name, territory) => {
     let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
-    let rtn = {};
-    let neighbors = utils.NEIGHBORS[territory];
+    let rtn = new Set();
+    let neighbors = kMap[territory]["adjacencies"];
     let uncontested_neighbors = [];
-    for (let neighbor in neighbors) {
+    for (let neighbor of neighbors) {
       if (is_territory_uncontested) {
         if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
           // If my tile is contested, I can only move into tiles I own.
           uncontested_neighbors.push(neighbor);
-          rtn[neighbor] = 1;
+          rtn.add(neighbor);
         }
       } else {
         console.log(neighbor, is_territory_uncontested);
@@ -593,14 +409,18 @@ let utils = {
           // I own the neighbor.
           console.log("a");
           uncontested_neighbors.push(neighbor);
-          rtn[neighbor] = 1;
+          rtn.add(neighbor);
         }
       }
     }
     for (let neighbor of uncontested_neighbors) {
-      rtn = utils.union_dict(rtn, utils.NEIGHBORS[neighbor]);
+      for (territoryId of kMap[neighbor]["adjacencies"]) {
+        rtn.add(territoryId);
+      }
     }
-    if (territory in rtn) delete rtn[territory];
+    if (territory in rtn) {
+      rtn.delete(territory);
+    }
     return rtn;
   },
 
@@ -624,40 +444,139 @@ let utils = {
    * `null`` if the territory is contested.
    */
   territory_to_owner: (mother_state, territory) => {
-    // If a territory is contested, return `null`; if a territory has one
-    // nation's troops, it is owned by that nation.
-    let owner = null;
-    for (let nation in mother_state.nations) {
-      if (mother_state.nations[nation].army.filter(x => x.territory == territory).length > 0) {
-        if (owner !== null) return null;
-        owner = nation;
+    territory = territory + '';
+    let neighbors = kMap[territory]["adjacencies"].map(x => x + '');
+
+    let claimants = [];
+    for (let nationName in mother_state.nations) {
+      let nation = mother_state.nations[nationName];
+      for (let unit of nation.army) {
+        if (unit.territory + '' === territory) {
+          return nationName;
+        }
+        if (neighbors.includes(unit.territory + '')) {
+          claimants.push(nationName);
+          break;
+        }
       }
     }
-    if (owner) return owner;
+    if (claimants.length === 1) {
+      return claimants[0];
+    }
 
     return utils.puppeteer(mother_state, kMap[territory].homeContinent);
   },
 
+  /*
+   * @param {Object} mother_state - the mother state
+   * @param {string} territoryId
+   * @returns {string[]} array of territoryIds a barrack in territoryId can spawn in
+   */
+  territories_barracks_can_spawn_to: (mother_state, territoryId) => {
+    territoryId = territoryId + '';
+    let continent = utils.terr2continentName[territoryId];
+    let territory = mother_state.nations[continent][territoryId];
+    if (territory.n_barracks_can_spawn === 0) {
+      return [];
+    }
+    let owner = utils.territory_to_owner(mother_state, territoryId);
+    if (owner !== mother_state.stage.turn) {
+      return [];
+    }
+    adjacencies = kMap[territoryId]["adjacencies"].filter(x => !utils.is_hex_occupied(mother_state, x));
+    return adjacencies;
+  },
+
+  /*
+   * @param {Object} mother_state - the mother state
+   * @param {string} territoryId
+   * @returns {boolean} whether the hex has a unit or building on it.
+   */
+  is_hex_occupied(mother_state, territoryId) {
+    let continent = utils.terr2continentName[territoryId];
+    if (mother_state.nations[continent][territoryId].n_barracks > 0) {
+      return true;
+    }
+    if (mother_state.nations[continent][territoryId].n_factories > 0) {
+      return true;
+    }
+    territoryId = territoryId + '';
+    let armies = utils.armies(mother_state).map(x => x.territory + '');
+    return armies.includes(territoryId);
+  },
+
+  armies(mother_state) {
+    let armies = [];
+    for (let k in mother_state.nations) {
+      armies = armies.concat(mother_state.nations[k].army);
+    }
+    return armies;
+  },
+
   territories_of_nation_that_can_spawn: (mother_state, nation) => {
+    let territoriesWithArmy = {};
+    for (let nationName in mother_state.nations) {
+      let nation = mother_state.nations[nationName];
+      for (let unit of nation.army) {
+        territoriesWithArmy[unit.territory] = 1;
+      }
+    }
+
     let territory_names = utils.territories_of_nation(mother_state, nation);
     let rtn = [];
     for (let territory_name of territory_names) {
       let territory = utils.territory_for_territory_name(mother_state, territory_name);
-      if (territory.n_barracks_can_spawn) {
-        rtn.push(territory_name);
+      if (territory.n_factories) {
+        continue;
       }
+      if (territory.n_barracks) {
+        continue;
+      }
+      if (territory_name in territoriesWithArmy) {
+        continue;
+      }
+      // Must be adjacent to barrack that you own.
+      let adjacencies = kMap[territory_name].adjacencies;
+      for (let hexId of adjacencies)
+      rtn.push(territory_name);
     }
     return rtn;
   },
 
+  unit_for_territory(mother_state, territory_name) {
+    let nationName = kAbbr2Name[kMap[territory_name].homeContinent];
+    let territory = mother_state.nations[nationName][territory_name];
+    if (territory.n_barracks) {
+      return 'barrack';
+    }
+    if (territory.n_factories) {
+      return 'factory';
+    }
+  },
+
   territories_of_nation_that_can_build: (mother_state, nation) => {
+    let territoriesWithArmy = {};
+    for (let nationName in mother_state.nations) {
+      let nation = mother_state.nations[nationName];
+      for (let unit of nation.army) {
+        territoriesWithArmy[unit.territory] = 1;
+      }
+    }
+
     let territory_names = utils.territories_of_nation(mother_state, nation);
     let rtn = [];
     for (let territory_name of territory_names) {
       let territory = utils.territory_for_territory_name(mother_state, territory_name);
-      if (territory.n_factories + territory.n_barracks < 4) {
-        rtn.push(territory_name);
+      if (territory.n_factories) {
+        continue;
       }
+      if (territory.n_barracks) {
+        continue;
+      }
+      if (territory_name in territoriesWithArmy) {
+        continue;
+      }
+      rtn.push(territory_name);
     }
     return rtn;
   },
@@ -671,6 +590,7 @@ let utils = {
     if (nation in kAbbr2Name) {
       nation = kAbbr2Name[nation];
     }
+
     if (mother_state.nations[nation].army.filter(x => x.territory == utils.NATIONS[nation].capital).length > 0) {
       return nation;
     }
@@ -863,10 +783,8 @@ let utils = {
 
 {
   let terr2continentName = {};
-  for (let nation in utils.NATIONS) {
-    for (let territory of utils.NATIONS[nation].territories) {
-      terr2continentName[territory] = nation;
-    }
+  for (let territoryId in kMap) {
+    terr2continentName[territoryId] = kAbbr2Name[kMap[territoryId].homeContinent];
   }
   utils.terr2continentName = terr2continentName;
 }

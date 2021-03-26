@@ -215,303 +215,12 @@ function render_table(state, table, isEndOfGame) {
 //   }
 // }
 
-let moveState = null;
 
 function ocean_clicked() {
-  change_move_state(null);
-}
-
-function unit_clicked(territory_name, unit_type, nation_name, is_grey) {
-  if (gLatestState.stage.phase !== "Action") {
-    change_move_state(null);
-    return;
+  Hex.unhighlight_all_hexes();
+  if (gSelectedHex) {
+    gSelectedHex.on_deselect();
   }
-  const subphase = gLatestState.stage.subphase;
-  if (subphase === "Move") {
-    if (is_grey) {
-      change_move_state(null);
-      return;
-    }
-    if (!moveState) {
-      change_move_state({
-        "from": territory_name,
-        "Infantry": 0,
-        "Cavalry": 0,
-        "Artillery": 0
-      });
-    } else if (territory_name !== moveState.from) {
-      // Pretend we clicked the territory
-      document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
-        "view": window,
-        "bubbles": true,
-        "cancelable": false
-      }));
-      return;
-    }
-    if (territory_name !== moveState.from) {
-      return;
-    }
-
-    let army = gLatestState.nations[nation_name].army;
-    army = army.filter(x => x.territory === territory_name);
-    army = army.filter(x => x.type === unit_type);
-    army = army.filter(x => x.can_move);
-    let n = army.length;
-
-    if (unit_type in moveState) {
-      {
-        let c = utils.deep_copy(moveState);
-        c[unit_type] = (moveState[unit_type] + 1) % (n + 1);
-        change_move_state(c);
-      }
-    } else {
-      {
-        let c = utils.deep_copy(moveState);
-        c[unit_type] = 1;
-        change_move_state(c);
-      }
-    }
-  } else if (subphase === "Attack") {
-    let army = gLatestState.nations[nation_name].army;
-    army = army.filter(x => x.territory === territory_name);
-    army = army.filter(x => x.type === unit_type);
-    if (nation_name === gLatestState.stage.turn) {
-      army = army.filter(x => x.can_attack);
-    }
-    if (!moveState) {
-      change_move_state({
-        "territory": territory_name,
-      });
-    }
-    {
-      let c = utils.deep_copy(moveState);
-      c[nation_name] = army[0];
-      change_move_state(c);
-    }
-    if (Object.keys(moveState).length === 3) {
-      if (!(gLatestState.stage.turn in moveState)) {
-        change_move_state(null);
-        return;
-      }
-      let other_key = Object.keys(moveState);
-      other_key.splice(other_key.indexOf(gLatestState.stage.turn), 1);
-      other_key.splice(other_key.indexOf("territory"), 1);
-      send({
-        "method": "attack",
-        "args": [
-          moveState[gLatestState.stage.turn].id,
-          moveState[other_key].id
-        ]
-      })
-      change_move_state(null);
-    }
-  }
-
-}
-
-function make_sword(x, y, sw, sh) {
-  x += 6.5;
-  y += 6.5;
-  let path = svg.path({
-    "d": "M 26 0 L 20 2 L 7.59375 15.59375 L 9.3125 16.6875 L 10.40625 18.40625 L 24 6 L 26 0 z M 3.90625 14.09375 L 2.59375 15.40625 L 5.3125 18.125 L 2.09375 22.21875 C 2.0298776 22.212263 1.9718338 22.1875 1.90625 22.1875 C 0.85690896 22.1875 0 23.044409 0 24.09375 C -2.9605947e-16 25.143091 0.85690896 26 1.90625 26 C 2.955591 26 3.8125 25.143091 3.8125 24.09375 C 3.8125 24.028166 3.7877366 23.970122 3.78125 23.90625 L 7.875 20.6875 L 10.59375 23.40625 L 11.90625 22.09375 L 8.59375 17.40625 L 3.90625 14.09375 z",
-    "transform": "translate(" + x + " " +  y + ") scale(" + sw / 28 + " " + sh / 28 + ")"
-  });
-  path.style.fill = 'black';
-  return path;
-}
-
-function make_bow(x, y, sw, sh) {
-  x += 4.5;
-  y += 4.5;
-  let transform = "translate(" + x + " " +  y + ") scale(" + sw / 800 + " " + sh / 800 + ")";
-  let fill = "black";
-  let path1 = svg.path({
-    "d": "M235.8,425.1L458,123.2c0.5,0.1,1.1,0.3,1.6,0.4c9.7,2.4,20.1,5.5,30.8,9.1c21.6,7.3,44.9,17.2,68.4,30.7c23.5,13.5,47.1,30.4,69.2,51c22.1,20.5,42.7,44.6,60.3,71.8c17.6,27.1,32.3,57.1,42.9,88.9c7.7,22.9,13.2,46.8,16.5,71h102c-4.3-36.1-13.2-71.6-26.4-104.9c-15.8-40-37.6-76.7-63.4-108.1c-25.8-31.4-55.5-57.6-86.3-77.8c-30.8-20.3-62.7-34.5-93-43.6c-30.3-9.1-58.9-13.1-84-13.9c-12.5-0.4-24.2,0-34.9,0.8c-2.7,0.2-5.3,0.4-7.8,0.7c-2.6,0.3-5,0.6-7.5,0.9c-2.4,0.3-4.8,0.6-7.1,1l-47.3-28.4l12.1,26L163.8,425.1H235.8z",
-    "transform": transform
-  });
-  path1.style.fill = fill;
-
-  let poly1 = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-  poly1.setAttribute("points", "888.7,422.9 888.7,479.8 182.3,479.8 163.2,453.9 10,454 62.4,500.8 990,500.1");
-  poly1.setAttribute("transform", transform);
-  poly1.style.fill = fill;
-
-  let path2 = svg.path({
-    "d": "M235.8,574.9L458,876.8c0.5-0.1,1.1-0.3,1.6-0.4c9.7-2.4,20.1-5.5,30.8-9.1c21.6-7.3,44.9-17.2,68.4-30.7c23.5-13.5,47.1-30.4,69.2-51c22.1-20.5,42.7-44.6,60.3-71.8c17.6-27.1,32.3-57.1,42.9-88.9c7.7-22.9,13.2-46.8,16.5-71h102c-4.3,36.1-13.2,71.6-26.4,104.9c-15.8,40-37.6,76.7-63.4,108.1c-25.8,31.4-55.5,57.6-86.3,77.8c-30.8,20.3-62.7,34.5-93,43.6c-30.3,9.1-58.9,13.1-84,13.9c-12.5,0.4-24.2,0-34.9-0.8c-2.7-0.2-5.3-0.4-7.8-0.7c-2.6-0.3-5-0.6-7.5-0.9c-2.4-0.3-4.8-0.6-7.1-1l-47.3,28.4l12.1-26L163.8,574.9H235.8z",
-    "transform": transform
-  });
-  path2.style.fill = fill;
-
-
-
-  let poly2 = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-  poly2.setAttribute("points", "888.7,577.1 888.7,520.2 182.3,520.2 163.2,546.1 10,546 62.4,499.2 990,499.9 ");
-  poly2.setAttribute("transform", transform);
-  poly2.style.fill = fill;
-
-  let g = svg.g();
-  g.appendChild(path1);
-  g.appendChild(poly1);
-  g.appendChild(path2);
-  g.appendChild(poly2);
-
-  return g;
-}
-
-function make_horse(x, y, sw, sh) {
-  x += 3;
-  y += 2.5;
-
-  let path = svg.path({
-    "d": "M36,18l2.4,6.1c-5.1,6.1-9.7,11.3-14.8,17.5c-2.1,2.5,3.1,9,6.3,8.7c5-2.1,10.9-4.5,16.2-7.3c2.4,9.5-17,11.6-19.5,22.6h37.9c-1.6-9.2,11.8-13.9,7.3-28.3C66.9,21.3,50.8,19.5,36,18z M23.7,68.8V78h44.1v-9.2H23.7z",
-    "transform": "translate(" + x + " " +  y + ") scale(" + sw / 64 + " " + sh / 64 + ")"
-  });
-  path.style.fill = 'black';
-  return path;
-}
-
-function make_factory(x, y, sw, sh) {
-  let paths = [
-    svg.path({"d": "m25.178 195.613-25.178 314.72h147.796l-33.57-314.72z"}),
-    svg.path({"d": "m31.178 120.613-3.6 45h83.448l-4.8-45z"}),
-    svg.path({"d": "m470.156 210.613-80.337 97.121v-97.121h-41.044l-84.685 101.797v-101.797h-41.087l-68.178 82.762 10.372 97.238h46.029v30h-42.829l9.6 90h333.229v-300zm-168.93 210h-60v-30h60zm90 0h-60v-30h60zm90 0h-60v-30h60z"}),
-    svg.path({"d": "m133.196 90.613 10.099 94.679c15.558-1.388 30.38-7.317 42.579-16.962 13.696 7.981 29.403 12.283 45.351 12.283 24.818 0 48.319-10.251 65.181-27.959 10.783 5.236 22.605 7.959 34.819 7.959 17.581 0 34.645-5.858 48.486-16.39 11.564 7.41 25.024 11.39 39.014 11.39 39.977 0 72.5-32.523 72.5-72.5s-32.523-72.5-72.5-72.5c-12.471 0-24.67 3.229-35.428 9.258-14.39-12.363-32.752-19.258-52.072-19.258-17.536 0-34.544 5.82-48.36 16.291-15.044-10.581-32.949-16.291-51.64-16.291-25.879 0-50.145 11.03-67.101 ;30.027-8.891-3.31-18.349-5.027-27.899-5.027-38.984 0-71.526 28.036-78.569 65z"})
-  ];
-  let g = svg.g();
-  for (let path of paths) {
-    path.style.fill = 'black';
-    g.appendChild(path);
-  }
-  g.setAttribute("transform", "translate(" + x + " " +  y + ") scale(" + sw / 900 + " " + sh / 900 + ")");
-  return g;
-}
-
-function change_move_state(newState) {
-  let oldState = moveState;
-  moveState = newState;
-  render_move_state(oldState, newState);
-}
-
-function render_move_state(oldState, moveState) {
-  // Hide oldState's stack numbers.
-  if (oldState) {
-    let territory_name = ('territory' in oldState ? oldState.territory : oldState.from);
-    for (let unit_type of ["Infantry", "Artillery", "Cavalry"]) {
-      let cid = ["stackcircle", territory_name, gLatestState.stage.turn, unit_type, "1"].join("_")
-      let tid = ["stacktext", territory_name, gLatestState.stage.turn, unit_type, "1"].join("_")
-      let circ = document.getElementById(cid);
-      let text = document.getElementById(tid);
-      if (circ) {
-        circ.style.display = "none";
-        text.style.display = "none";
-      }
-    }
-  }
-
-  if (moveState === null) {
-    highlightTerritories([]);
-    moveStateDiv.style.display = "none";
-    return;
-  }
-  if (kDebugMode) {
-    moveStateDiv.style.display = "block";
-    moveStateDiv.innerHTML = JSON.stringify(moveState, null, 2);
-  }
-
-  // circ.id = territory_name + "_" + nation_name + "_" + unit_type + "_" + can_action
-  if (gLatestState.stage.subphase === "Move") {
-    for (let unit_type of ["Infantry", "Cavalry", "Artillery"]) {
-      let cid = ["stackcircle", moveState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
-      let tid = ["stacktext", moveState.from, gLatestState.stage.turn, unit_type, "1"].join("_")
-      let circ = document.getElementById(cid);
-      let text = document.getElementById(tid);
-      if (!circ) {
-        continue;
-      }
-      if (moveState[unit_type] > 0) {
-        text.innerHTML = moveState[unit_type];
-        circ.style.display = "block";
-        text.style.display = "block";
-      } else {
-        circ.style.display = "none";
-        text.style.display = "none";
-      }
-    }
-
-    let nation_name = gLatestState.stage.turn;
-    if (moveState["Infantry"] + moveState["Artillery"] + moveState["Cavalry"] > 0) {
-      // Cause territories you can move to to glow.
-      let includesNonCavalary = false;
-      if ("Infantry" in moveState && moveState["Infantry"] > 0) {
-        includesNonCavalary = true
-      }
-      if ("Artillery" in moveState && moveState["Artillery"] > 0) {
-        includesNonCavalary = true
-      }
-      let territoryNames = utils.valid_moves_for_troop(gLatestState, nation_name, moveState.from, includesNonCavalary ? "Infantry" : "Cavalry");
-      highlightTerritories(Object.keys(territoryNames));
-    } else {
-      highlightTerritories([]);
-    }
-  } else {
-    for (let nation_name in moveState) {
-      if (typeof(moveState[nation_name]) === "string") {
-        continue;
-      }
-      let unit = moveState[nation_name];
-      let can_action = (gLatestState.stage.subphase === "Move" ? unit.can_move : unit.can_attack) * 1;
-      let cid = ["stackcircle", unit.territory, nation_name, unit.type, 1].join("_");
-      let tid = ["stacktext", unit.territory, nation_name, unit.type, 1].join("_");
-      let circ = document.getElementById(cid);
-      let text = document.getElementById(tid);
-      if (!circ) {
-        continue;
-      }
-      text.innerHTML = '1';
-      circ.style.display = "block";
-      text.style.display = "block";
-    }
-  }
-}
-
-function structure_clicked(territory_name, structure_type) {
-  console.log('structure_clicked', moveState);
-  if (!moveState) {
-    document.getElementById(territory_name).dispatchEvent(new MouseEvent("click", {
-      "view": window,
-      "bubbles": true,
-      "cancelable": false
-    }));
-    return;
-  }
-  console.log(gLatestState.stage);
-  if (gLatestState.stage.phase !== "Action") {
-    return;
-  }
-  if (gLatestState.stage.subphase !== "Attack") {
-    return;
-  }
-  send({
-    "method": "raze",
-    "args": [
-      moveState[gLatestState.stage.turn].id,
-      structure_type,
-      territory_name
-    ]
-  })
-}
-
-function factory_clicked(territory_name) {
-  structure_clicked(territory_name, "factory");
-}
-
-function barrack_clicked(territory_name) {
-  structure_clicked(territory_name, "barrack");
-}
-
-// TODO(mredding): make this more efficient.
-function refresh_map_highlighting(state) {
-  render_map(state);
 }
 
 let gHexes = {};
@@ -519,7 +228,7 @@ let gHexes = {};
 function render_map(state) {
   // render_nation_rects(state);
 
-  let out = svg.g();
+  // let out = svg.g();
 
   const unittype2icon = {
     "Infantry": "sword.svg",
@@ -601,9 +310,7 @@ function render_map(state) {
 
     hexMap.addEventListener('click', (e) => {
       if (e.target === hexMap) {
-        if (selectedHex) {
-          selectedHex.on_deselect();
-        }
+        ocean_clicked();
       }
     });
   }
@@ -612,7 +319,7 @@ function render_map(state) {
     if (gHexIdToUnitType[hexId] === undefined) {
       throw Error(hexId, gHexIdToUnitType[hexId]);
     }
-    gHexes[hexId].set_type(gHexIdToUnitType[hexId]);
+    gHexes[hexId].update();
   }
 
   // Array.from(territoryLayer.getElementsByTagName('path')).forEach(path => {
@@ -1424,6 +1131,9 @@ let loadPromises = [
         // Populate gHexIdToUnitType for convenience.
         for (let id in kMap) {
           gHexIdToUnitType[id] = kTileTypeEmpty;
+          if (kMap[id].isCapital) {
+            gHexIdToUnitType[id] = kTileTypeCapital;
+          }
         }
         for (let nationName in gLatestState.nations) {
           let nation = gLatestState.nations[nationName];
@@ -1495,7 +1205,7 @@ let loadPromises = [
           endOfGameContainer.style.display = 'block';
         }
         else if (action === "begin_spawn") {
-          refresh_map_highlighting(state);
+          render_map(state);
         }
         else if (action === "undo") {
         }
@@ -1574,11 +1284,9 @@ let loadPromises = [
         }
         else if (action === "begin_move") {
           render_map(state);
-          change_move_state(null);
         }
         else if (action === "begin_attack") {
           render_map(state);
-          change_move_state(null);
         }
         else if (action === "built_infrastructure") {
           render_table(state);
@@ -1925,20 +1633,22 @@ function undo() {
 
 function highlightTerritories(territoryNames) {
   let territoryLayer = document.getElementById("territoryLayer");
-  for (let nation in utils.NATIONS) {
-    for (let territoryName of utils.NATIONS[nation].territories) {
-      let path = document.getElementById(territoryName);
-      if (territoryNames.indexOf(territoryName) > -1) {
-        // Highlight
-        path.style.stroke = "white";
-        path.style.strokeWidth = "2px";
-        let firstChild = territoryLayer.children[0];
-        territoryLayer.insertBefore(path, null);
-      } else {
-        // Unhighlight
-        path.style.stroke = "black";
-        path.style.strokeWidth = "1px";
-      }
+  for (let territoryName in utils.terr2continentName) {
+    let nation = utils.terr2continentName[territoryName];
+    let path = document.getElementById(territoryName);
+    if (!path) {
+      console.log('missing node with id "' + territoryName + '"');
+    }
+    if (territoryNames.indexOf(territoryName) > -1) {
+      // Highlight
+      path.style.stroke = "white";
+      path.style.strokeWidth = "2px";
+      let firstChild = territoryLayer.children[0];
+      territoryLayer.insertBefore(path, null);
+    } else {
+      // Unhighlight
+      path.style.stroke = "black";
+      path.style.strokeWidth = "1px";
     }
   }
 }

@@ -505,10 +505,10 @@ class Game
         const kDebug = true;
         this.mother_state.settings = {
             "debug": kDebug,
-            "deliberationTime": (kDebug ? 1 : 30)*1000,
-            "biddingTime":      (kDebug ? 1 : 12)*1000,
-            "electionTime":   2*60*1000,
-            "actionsTime":    3*60*1000,
+            "deliberationTime": (kDebug ?   1 : 30)* 1*1000,
+            "biddingTime":      (kDebug ?   1 : 12)* 1*1000,
+            "electionTime":     (kDebug ? 999 :  2)*60*1000,
+            "actionsTime":      (kDebug ? 999 :  3)*60*1000,
             "bidsGoToOwners": true,
             "burnCashFirstRound": true,
             "startingCash": 1475,
@@ -728,11 +728,14 @@ class Game
                 nation[hexId].n_barracks = 0
                 nation[hexId].n_barracks_can_spawn = 0
                 if (this.mother_state.settings.debug) {
-                    if (Math.random() < 0.2) {
+                    if (kMap[hexId].isCapital) {
+                        continue;
+                    }
+                    if (Math.random() < 0.125) {
                         nation[hexId].n_factories = 1
-                    } else if (Math.random() < 0.25) {
+                    } else if (Math.random() < 0.14) {
                         nation[hexId].n_barracks = 1
-                    } else if (Math.random() < 0.33) {
+                    } else if (Math.random() < 0.17) {
                         let T = ["Infantry", "Cavalry", "Artillery"];
                         let type = T[Math.random() * T.length | 0];
                         nation.army.push({
