@@ -518,6 +518,7 @@ class Game
             "showYourCashInStatusBar": false,
             "moneyPrefix": "$",
             "moneyPostfix": "",
+            "meme": false,
         }
         this.mother_state.players = { }
         this.mother_state.nations = utils.NATIONS

@@ -1038,13 +1038,20 @@ function login() {
 }
 
 function render_status_bar(state) {
-  const turn2label = {
+  const turn2label = gLatestState.settings.meme ? {
     "North America": "America",
     "South America": "Banana Republic",
     "Europe":        "Reichland",
     "Africa":        "Afrika",
     "Asia":          "The Orient",
     "Australia":     "The Downunder",
+  } : {
+    "North America": "North America",
+    "South America": "South America",
+    "Europe":        "Europe",
+    "Africa":        "Africa",
+    "Asia":          "Asia",
+    "Australia":     "Australia",
   };
 
   statusBarRoundDiv.innerHTML = "Round " + state.stage.round;
