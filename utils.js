@@ -361,39 +361,55 @@ let utils = {
   },
 
   /*
-   * @param username - the user whose score we are computing
+   * @param nation_name - the nations whose score we are computing
    * @returns {int} the score the given user would have if the game ended now
    */
   score_of_nation: (mother_state, nation_name) => {
-    let income_mult = 2 + utils.rounds_left(mother_state);
-    return cash + income_mult * income;
+    let cashW = mother_state.settings.score_cashWeight
+    let incomeW = mother_state.settings.score_incomeWeight;
+    let income = utils.income_of_nation(mother_state, nation_name);
+    return cashW * cash + incomeW * income;
+  },
+
+  /*
+   * Expected future cash flow
+   */
+  _expected_value_of_nation: (mother_state, nation_name) => {
+    // Taxation happens instantly at the beginning of each round.
+    if (mother_state.phase[0] != "Taxation") {
+      throw Exception();
+    }
+    let cashW = mother_state.settings.score_cashWeight
+    let cash = mother_state.nations[nation_name].cash;
+    let incomeW = mother_state.settings.score_incomeWeight;
+    let income = utils.income_of_nation(mother_state, nation_name);
+    let income_mult = incomeW + utils._rounds_left(mother_state);
+    return cashW * cash + income_mult * income;
+  },
+
+  advised_share_price: (mother_state, nation_name, num_shares, is_new) => {
+    if (mother_state.stage.phase == "Taxation") {
+      throw Exception();
+    }
+    let sharesSold = utils.shares_sold(mother_state, nation_name);
+    let expVal = utils._expected_value_of_nation(mother_state, nation_name);
+    if (is_new) {
+      return num_shares / (sharesSold + num_shares) * expVal;
+    } else {
+      return num_shares / sharesSold * expVal;
+    }
   },
 
   /*
    * @param username - the user whose score we are computing
    * @returns {int} the score the given user would have if the game ended now
    */
-  score_of_player: (mother_state, username, auctionsCompletedSoFar) => {
+  score_of_player: (mother_state, username) => {
     let player = mother_state.players[username];
     let rtn = parseFloat(player.cash);
     for (let nation_name in player.shares) {
       if (player.shares[nation_name] == 0) continue;
-      let cash = mother_state.nations[nation_name].cash;
-      let income = utils.income_of_nation(mother_state, nation_name);
-      let existingShares = utils.shares_sold(mother_state, nation_name);
-      let sharesArray = mother_state.supershares;
-      let sum = 0;
-      let i;
-      for (i = 0; i < existingShares; ++i) {
-        if (sum >= existingShares) {
-          sharesArray = sharesArray.slice(i);
-          break;
-        }
-        sum += sharesArray[i];
-      }
-      let valueOfShare = utils._private_advised_price_for_one_share(cash, income, existingShares, sharesArray);
-      let percent_owned = player.shares[nation_name] / existingShares;
-      rtn += percent_owned * valueOfShare;
+      rtn += advised_share_price(mother_state, nation_name, player.shares[nation_name], false);
     }
     return rtn;
   },
@@ -419,8 +435,9 @@ let utils = {
   /*
    * @returns the number of rounds left (excluding the current round).
    */
-  rounds_left: (mother_state) => {
-    return 6 - mother_state.stage.round;
+  _rounds_left: (mother_state) => {
+    let rtn = gLatestState.round.length - mother_state.stage.round;
+    return Math.max(rtn, 0);
   },
 
   /*
@@ -435,29 +452,12 @@ let utils = {
     return rtn;
   },
 
-  advised_share_price: (mother_state, nation_name, new_shares) => {
-    // TODO: At the moment we assume bids are either burned or go to the existing shareholders.
-    // This is set in `mother_state.settings` but needs to be implemented here.
-    let cash = mother_state.nations[nation_name].cash;
-    let income = utils.income_of_nation(mother_state, nation_name);
-    let existingShares = utils.shares_sold(mother_state, nation_name);
-    let sharesArray = mother_state.supershares.slice(mother_state.stage.round-1);
-    return sharesArray[0] * utils._private_advised_price_for_one_share(cash, income, existingShares, sharesArray);
-  },
-
-  _private_advised_price_for_one_share: (cash, income, existingShares, sharesArray) => {
-    let percent = 1 / (existingShares + sharesArray[0]);
-    let rtn = percent * cash;
-    rtn += percent * income;
-    if (sharesArray.length == 0) {
-      throw Error();
-    } else if (sharesArray.length == 1) {
-      return percent * (cash + income + 2 * income);
-    } else {
-      let immediateValue = percent * (cash + income);
-      let valueNextRound = sharesArray[0] * utils._private_advised_price_for_one_share(0, income, existingShares + sharesArray[0], sharesArray.slice(1));
-      return immediateValue + valueNextRound;
+  _share_array_for_nation: (mother_state, nation_name) => {
+    let rtn = mother_state.supershares.slice(0, utils.NATIONS[nation_name].num_auction_rounds);
+    for (let i = rtn.length; i < 6; ++i) {
+      rtn.push(0);
     }
+    return rtn;
   },
 
   /*

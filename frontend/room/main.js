@@ -167,25 +167,6 @@ function render_table(state, table, isEndOfGame) {
     tr.innerHTML += "<td>" + Math.round(utils.sum(players.map(x => x.cash))) + "</td>";
     tr.innerHTML += "<td></td>";
     tbody.appendChild(tr);
-
-    if (gLatestState.settings.advice && false) {
-      tr = document.createElement("TR");
-      tr.style.borderTop = 'solid white 1px';
-      tr.innerHTML += "<td colspan='9'>Estimated Value:</td>";
-      tbody.appendChild(tr);
-
-      tr = document.createElement("TR");
-      tr.innerHTML += "<td>TOTAL</td>";
-      tr.innerHTML += '<td class="column-NA">' + utils.score_of_nation(gLatestState, "North America") + "</td>";
-      tr.innerHTML += '<td class="column-SA">' + utils.score_of_nation(gLatestState, "South America") + "</td>";
-      tr.innerHTML += '<td class="column-EU">' + utils.score_of_nation(gLatestState, "Europe") + "</td>";
-      tr.innerHTML += '<td class="column-AF">' + utils.score_of_nation(gLatestState, "Africa") + "</td>";
-      tr.innerHTML += '<td class="column-AS">' + utils.score_of_nation(gLatestState, "Asia") + "</td>";
-      tr.innerHTML += '<td class="column-AU">' + utils.score_of_nation(gLatestState, "Australia") + "</td>";
-      tr.innerHTML += "<td></td>";
-      tr.innerHTML += "<td></td>";
-      tbody.appendChild(tr);
-    }
   }
 
   render_map(state);
@@ -1283,7 +1264,7 @@ function updateCurrentActionDivFromState(state) {
   } else if (state.stage.phase == "Auction") {
     let n = gLatestState.supershares[gLatestState.stage.round - 1];
     let adviceString = "";
-    if (gLatestState.settings.advice) {
+    if (gLatestState.settings.showSharePriceAdvice) {
       let advisedPrice = Math.round(utils.advised_share_price(gLatestState, state.stage.turn, n));
       adviceString += "<br/><br/> <i>( Assuming no future human actions are taken, the expected future cash flow of this share is $" + advisedPrice + "B )</i>";
     }

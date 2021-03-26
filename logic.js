@@ -512,7 +512,9 @@ class Game
             "bidsGoToOwners": true,
             "burnCashFirstRound": true,
             "startingCash": 1475,
-            "advice": false,
+            "showSharePriceAdvice": true,
+            "score_cashWeight": 1,
+            "score_incomeWeight": 2,
         }
         this.mother_state.players = { }
         this.mother_state.nations = utils.NATIONS
