@@ -365,7 +365,8 @@ let utils = {
    * @returns {int} the score the given user would have if the game ended now
    */
   score_of_nation: (mother_state, nation_name) => {
-    let cashW = mother_state.settings.score_cashWeight
+    let cash = mother_state.nations[nation_name].cash;
+    let cashW = mother_state.settings.score_cashWeight;
     let incomeW = mother_state.settings.score_incomeWeight;
     let income = utils.income_of_nation(mother_state, nation_name);
     return cashW * cash + incomeW * income;
@@ -409,7 +410,8 @@ let utils = {
     let rtn = parseFloat(player.cash);
     for (let nation_name in player.shares) {
       if (player.shares[nation_name] == 0) continue;
-      rtn += advised_share_price(mother_state, nation_name, player.shares[nation_name], false);
+      let percentOwend = player.shares[nation_name] / utils.shares_sold(mother_state, nation_name);
+      rtn += percentOwend * utils.score_of_nation(mother_state, nation_name);
     }
     return rtn;
   },
