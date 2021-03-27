@@ -60,6 +60,12 @@ class OligarchRoom extends Room {
         console.log('<<<', "<state clock:" + mother_state.clock + ">");
         super.sendData(username, JSON.stringify(["get_state", null, mother_state]));
         continue;
+      } else if (x.method == "is_admin") {
+        let mother_state = this.fetchGameState()
+        console.log('<<<', this.game.is_admin(username), "<state clock:" + mother_state.clock + ">");
+        this.sendData(username, JSON.stringify(["is_admin", this.game.is_admin(username), mother_state]))
+      } else if (x.method == "is_spectator") {
+        this.sendData(username, JSON.stringify(["is_spectator", this._isSpectator(username), mother_state]))
       }
       if (this._isSpectator(username)) continue;
       if (x.method == "pause") {
@@ -70,10 +76,6 @@ class OligarchRoom extends Room {
         if (!this.game.is_admin(username)) continue;
         this.timer.resume()
         this.sendDataToAll(["resume", null, this.fetchGameState()])
-      } else if (x.method == "is_admin") {
-        let mother_state = this.fetchGameState()
-        console.log('<<<', this.game.is_admin(username), "<state clock:" + mother_state.clock + ">");
-        this.sendData(username, JSON.stringify(["is_admin", this.game.is_admin(username), mother_state]))
       } else  {
         if (this.timer.isPaused()) continue;
         if (x.method.startsWith("_")) {

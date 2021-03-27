@@ -1,3 +1,17 @@
+
+function _trade_moneyString(num) {
+  return gLatestState.settings.moneyPrefix + num + gLatestState.settings.moneyPostfix;
+}
+
+let _trade_nationColors = {
+  'North America': '#e0e060',
+  'South America': '#60ffff',
+  'Europe': '#6080ff',
+  'Africa': '#e08060',
+  'Asia': '#60ff60',
+  'Australia': '#ff60ff',
+}
+
 let gTradeYou = null;
 let gTradeThem = null;
 let gTradeDelta = null;
@@ -20,7 +34,7 @@ function increment_offer(delta) {
   } else if (-gTradeDelta > gLatestState.players[gTradeThem].cash) {
     gTradeDelta = -gLatestState.players[gTradeThem].cash;
   }
-  gTradeIcon.innerHTML = "$" + Math.abs(gTradeDelta) + " B";
+  gTradeIcon.innerHTML = _trade_moneyString(Math.abs(gTradeDelta));
 
   if (gTradeDelta > 0) {
     tradeDivYourOffer.appendChild(gTradeIcon);
@@ -50,7 +64,7 @@ function offer_trade() {
 
   let arr2val = (val) => {
     if (val.startsWith("$")) {
-      val = val.slice(1, val.length - 1);
+      val = val.slice(gLatestState.settings.moneyPrefix.length, val.length - gLatestState.settings.moneyPostfix.length);
       return parseInt(val);
     }
     return {
@@ -121,7 +135,7 @@ function trade_with(playername) {
     {
       let button = document.createElement("DIV");
       button.classList.add("button");
-      button.innerHTML = "$" + player.cash + "B";
+      button.innerHTML = _trade_moneyString(player.cash);
       button.style.margin = '0.5em';
       button.style.backgroundColor = '#777';
       button.style.cursor = 'default';
@@ -173,32 +187,32 @@ function show_trade_proposal(proposal) {
     if (proposal.cash_to === 0) {
       foo = "nothing";
     } else {
-      foo = "$" + proposal.cash_to + "B";
+      foo = _trade_moneyString(proposal.cash_to);
     }
   } else {
     foo = '';
     for (let nation in shares_to_player) {
-      foo += ` <span class="abbrSpan">` + utils.NATIONS[nation].abbr + '</span>x' + shares_to_player[nation] + ' ';
+      foo += ` <span style="color:` + _trade_nationColors[nation] + ` ">` + utils.NATIONS[nation].abbr + '</span>x' + shares_to_player[nation] + ' ';
     }
     if (proposal.cash_to > 0) {
-      foo += " and $" + proposal.cash_to + "B";
+      foo += " and " + _trade_moneyString(proposal.cash_to);
     }
   }
 
   let bar;
-  if (shares_from_player.length === 0) {
+  if (proposal.shares_from.length === 0) {
     if (proposal.cash_from === 0) {
       bar = "nothing";
     } else {
-      bar = "$" + proposal.cash_from + "B";
+      bar = _trade_moneyString(proposal.cash_from);
     }
   } else {
     bar = '';
     for (let nation in shares_from_player) {
-      bar += ` <span class="abbrSpan">` + utils.NATIONS[nation].abbr + '</span>x' + shares_from_player[nation] + ' ';
+      bar += ` <span style="color:` + _trade_nationColors[nation] + ` ">` + utils.NATIONS[nation].abbr + '</span>x' + shares_from_player[nation] + ' ';
     }
     if (proposal.cash_from > 0) {
-      bar += " and $" + proposal.cash_from + "B";
+      bar += " and " + _trade_moneyString(proposal.cash_from);
     }
   }
 

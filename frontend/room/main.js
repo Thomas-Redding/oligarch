@@ -1236,7 +1236,7 @@ function render_vote_table(state) {
   <table>
     <tbody>
       <tr>
-        <td colspan=3>Votes (` + utils.NATIONS[gLatestState.stage.turn].total_shares + ` total)</td>
+        <td colspan=3>Votes (` + utils.shares_sold(gLatestState, gLatestState.stage.turn) + ` total)</td>
       </tr>
   `;
   let votesFor = utils.candidate_votes(state);
@@ -1253,13 +1253,20 @@ function render_vote_table(state) {
 }
 
 function updateCurrentActionDivFromState(state) {
-  let updateDiv = (message) => {
+  let updateDiv = (message, advice) => {
     if (message) {
       currentActionDiv.style.opacity = 1;
       currentActionDiv.children[0].innerHTML = message;
     } else {
       currentActionDiv.style.opacity = 0;
       currentActionDiv.children[0].innerHTML = "";
+    }
+    if (advice) {
+      adviceDiv.style.display = "block";
+      adviceDiv.innerHTML = advice;
+    } else {
+      adviceDiv.style.display = "none";
+      adviceDiv.innerHTML = "";
     }
   };
   // updateDiv("Auction for " + details + " has opened");
@@ -1277,12 +1284,12 @@ function updateCurrentActionDivFromState(state) {
     let adviceString = "";
     if (gLatestState.settings.showSharePriceAdvice) {
       let advisedPrice = Math.round(utils.advised_share_price(gLatestState, state.stage.turn, n, true));
-      adviceString += "<br/><br/> <i>( Assuming no future human actions are taken, the expected future cash flow of this share is " + moneyString(advisedPrice) + " )</i>";
+      adviceString += "<i>( Assuming no future human actions are taken, the expected future cash flow of this share is " + moneyString(advisedPrice) + " )</i>";
     }
     if (state.highest_bidder == null) {
-      updateDiv("Bidding for <u>" + n + " share" + (n > 1 ? "s" : "") + "</u> is open for " + state.stage.turn + ". Every bid will extend the countdown." + adviceString);
+      updateDiv("Bidding for <b><u>" + n + " share" + (n > 1 ? "s" : "") + "</u></b> is open for <b><u>" + state.stage.turn + "</u></b>. Every bid will extend the countdown.", adviceString);
     } else {
-      updateDiv("<b>" + state.highest_bidder + "</b> bid $" + state.current_bid + "B for " + state.stage.turn + adviceString);
+      updateDiv("<b><u>" + state.highest_bidder + "</u></b> bid <b><u>" + moneyString(state.current_bid) + "</b></u> for " + state.stage.turn, adviceString);
     }
   } else if (state.stage.phase == "Action") {
     if (state.stage.subphase == "Election") {

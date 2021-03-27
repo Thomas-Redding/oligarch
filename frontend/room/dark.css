@@ -125,7 +125,7 @@ hr {
 }
 
 .toast {
-  background-color: black;
+  background-color: #333;
   color: white;
-  box-shadow: 0 0 0.25em white;
+  box-shadow: 0 0 0.25em black;
 }

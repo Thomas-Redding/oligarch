@@ -394,10 +394,11 @@ let utils = {
     }
     let sharesSold = utils.shares_sold(mother_state, nation_name);
     let expVal = utils._expected_value_of_nation(mother_state, nation_name);
+    let cashW = mother_state.settings.score_cashWeight
     if (is_new) {
-      return num_shares / (sharesSold + num_shares) * expVal;
+      return num_shares / (sharesSold + num_shares) * expVal / cashW;
     } else {
-      return num_shares / sharesSold * expVal;
+      return num_shares / sharesSold * expVal / cashW;
     }
   },
 
@@ -533,16 +534,16 @@ let utils = {
     if (troop_type == "Cavalry") {
       return utils._valid_moves_for_cavalry(mother_state, nation_name, territory);
     }
-    let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
+    let is_territory_contested = (utils.territory_to_owner(mother_state, territory) != nation_name);
     let neighbors = utils.NEIGHBORS[territory];
     let rtn = {};
     for (let neighbor in neighbors) {
-      if (!is_territory_uncontested) {
-        rtn[neighbor] = 1;
-      } else {
+      if (is_territory_contested) {
         if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
           rtn[neighbor] = 1;
         }
+      } else {
+        rtn[neighbor] = 1;
       }
     }
     return rtn;
@@ -554,24 +555,29 @@ let utils = {
    * @returns {Object} a dictionary whose keys are states a cavalry can move to
    */
   _valid_moves_for_cavalry: (mother_state, nation_name, territory) => {
-    let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
+    let is_territory_contested = (utils.territory_to_owner(mother_state, territory) != nation_name);
     let rtn = {};
     let neighbors = utils.NEIGHBORS[territory];
     let uncontested_neighbors = [];
+    console.log(is_territory_contested, neighbors)
     for (let neighbor in neighbors) {
-      if (is_territory_uncontested) {
-        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
+      let isContested = false;
+      if (utils.does_territory_have_troops(mother_state, neighbor)) {
+        if (utils.territory_to_owner(mother_state, neighbor) != nation_name) {
+          isContested = true;
+        }
+      }
+      if (is_territory_contested) {
+        if (!isContested) {
           // If my tile is contested, I can only move into tiles I own.
           uncontested_neighbors.push(neighbor);
           rtn[neighbor] = 1;
         }
       } else {
-        console.log(neighbor, is_territory_uncontested);
-        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
-          // I own the neighbor.
-          console.log("a");
+        rtn[neighbor] = 1;
+        if (!isContested) {
+          // If my tile is contested, I can only move into tiles I own.
           uncontested_neighbors.push(neighbor);
-          rtn[neighbor] = 1;
         }
       }
     }

@@ -197,10 +197,6 @@ path {
   border-radius: 0.25em;
 }
 
-.abbrSpan {
-  color: red;
-}
-
 </style>
 <link rel="stylesheet" class="theme" id="stylesheet-light" href="light.css">
 <link rel="stylesheet" class="theme" id="stylesheet-dark" href="dark.css">
@@ -347,6 +343,7 @@ class Color {
       </div>
     </div>
     <div id="currentVotesDiv"></div>
+    <div id="adviceDiv" style="padding: 1em; text-align: center;"></div>
     <div id="gameLogContainer">
       <div style="padding:0.5em; display:flex; flex-direction:row;">
         <div style="text-align:center; font-weight:900; font-size: 1.3em;">Game Log</div>
@@ -424,6 +421,9 @@ class Color {
         <line x1="880" y1="192" x2="9999" y2="192" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
         <line x1="816" y1="475" x2="835" y2="476" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
         <line x1="852" y1="483" x2="853" y2="500" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
+
+        <line x1="842" y1="483" x2="825" y2="510" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
+
         <line x1="802" y1="513" x2="813" y2="523" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
         <line x1="634" y1="443" x2="625" y2="454" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
         <line x1="564" y1="371" x2="568" y2="390" stroke-dasharray="5" style="stroke:white;stroke-width:1" />
@@ -453,7 +453,7 @@ class Color {
     <div id="tradePlayerButtonsContainer"></div>
   </div>
 
-  <div id="tradePopup2Div" class="popup" style="flex-direction:column; left:2em; top:2em; right:2em; bottom:2em; transform:none; padding:0;">
+  <div id="tradePopup2Div" class="popup" style="flex-direction:column; left:2em; top:2em; right:2em; bottom:2em; transform:none; padding:1em;">
     <h2 id="tradeWithDiv" align="center"></h2>
     <div style="width:100%; flex:1;">
       <table style="width:100%; font-size:0.5em;">
@@ -534,7 +534,7 @@ class Color {
 <div id="moveStateDiv" style="position:absolute; top:0; right:0; background-color:#555; border:solid white 1px;">
 </div>
 
-<div id="tradeSnackbarContainer" style="position:absolute; top:1em; right:1em; background-color:white; color:black; border:solid white 1px; padding:0.5em; background-color:#333; color:white;">
+<div id="tradeSnackbarContainer" style="position:absolute; top:1em; right:1em; background-color:white; color:black; background-color:#333; color:white; padding:1em; box-shadow:0 0 0.5em black; border-radius:0.25em;">
   <div id="tradeSnackbarMessage"></div>
   <div id="rescindTradeButton" style="background-color:#a00; color:white;" class="button" onclick="respond_trade(false)">Rescind</div>
   <div id="declineTradeButton" style="background-color:#a00; color:white;" class="button" onclick="respond_trade(false)">Decline</div>
