@@ -502,7 +502,7 @@ class Game
         this.timer = timer
         this._history = new History(this.prayer);
         this.mother_state = { }
-        const kDebug = true;
+        const kDebug = false;
         this.mother_state.settings = {
             "debug": kDebug,
             "deliberationTime": (kDebug ?   1 : 30)* 1*1000,
