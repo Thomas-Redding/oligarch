@@ -522,7 +522,7 @@ class Hex {
         type = "Cavalry";
       }
 
-      if (type && valid.includes(this.id)) {
+      if (type && valid.includes(gSelectedHex.id)) {
         send({
           "method": "spawn",
           "args": [this.id, type]
