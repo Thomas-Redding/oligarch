@@ -80,7 +80,7 @@ const kAbbr2Name = {
 }
 
 let utils = {
-  CAPITALS: ["South Africa", "Ontario", "Argentina", "Northern Europe", "Japan", "Eastern Australia"],
+  CAPITALS: ["819", "246", "767", "258", "310", "874"],
   NATIONS: {
     "Africa": {
       "capital": "819",
