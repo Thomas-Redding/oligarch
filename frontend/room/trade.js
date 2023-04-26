@@ -24,10 +24,10 @@ function increment_offer(delta) {
 
   if (gTradeDelta > 0) {
     tradeDivYourOffer.appendChild(gTradeIcon);
-    update_offer_trade_button();
+    update_trade_buttons(gLatestState.players[gTradeYou], gLatestState.players[gTradeThem], gTradeDelta);
   } else if (gTradeDelta < 0) {
     tradeDivTheirOffer.appendChild(gTradeIcon);
-    update_offer_trade_button();
+    update_trade_buttons(gLatestState.players[gTradeYou], gLatestState.players[gTradeThem], gTradeDelta);
   }
 }
 
@@ -79,11 +79,38 @@ function offer_trade() {
   close_modal();
 }
 
-function update_offer_trade_button() {
+function update_trade_buttons(you, them, tradeDelta) {
   if (tradeDivYourOffer.children.length + tradeDivTheirOffer.children.length > 0) {
     offerTradeButton.classList.remove('disabled-button');
   } else {
     offerTradeButton.classList.add('disabled-button');
+  }
+  let cashButtonValues = [1, 5, 20];
+  {
+    let myTradeCashButtons = document.getElementsByClassName('my-trade-cash-button');
+    if (myTradeCashButtons.length != cashButtonValues.length) {
+      throw Error();
+    }
+    for (let i = 0; i < cashButtonValues.length; ++i) {
+      if (gTradeDelta + cashButtonValues[i] > you.cash) {
+        myTradeCashButtons[i].classList.add('disabled-button');
+      } else {
+        myTradeCashButtons[i].classList.remove('disabled-button');
+      }
+    }
+  }
+  {
+    let theirTradeCashButtons = document.getElementsByClassName('their-trade-cash-button');
+    if (theirTradeCashButtons.length != cashButtonValues.length) {
+      throw Error();
+    }
+    for (let i = 0; i < cashButtonValues.length; ++i) {
+      if (cashButtonValues[i] - gTradeDelta > them.cash) {
+        theirTradeCashButtons[i].classList.add('disabled-button');
+      } else {
+        theirTradeCashButtons[i].classList.remove('disabled-button');
+      }
+    }
   }
 }
 
@@ -140,16 +167,16 @@ function trade_with(playername) {
           button.parentNode.removeChild(button);
           if (parent === tradeDivYourAssets) {
             tradeDivYourOffer.appendChild(button);
-            update_offer_trade_button();
+            update_trade_buttons(you, them, gTradeDelta);
           } else if (parent === tradeDivTheirAssets) {
             tradeDivTheirOffer.appendChild(button);
-            update_offer_trade_button();
+            update_trade_buttons(you, them, gTradeDelta);
           } else if (parent === tradeDivYourOffer) {
             tradeDivYourAssets.appendChild(button);
-            update_offer_trade_button();
+            update_trade_buttons(you, them, gTradeDelta);
           } else if (parent === tradeDivTheirOffer) {
             tradeDivTheirAssets.appendChild(button);
-            update_offer_trade_button();
+            update_trade_buttons(you, them, gTradeDelta);
           }
         }
         td.appendChild(button);
