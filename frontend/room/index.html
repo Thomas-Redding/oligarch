@@ -302,6 +302,7 @@ class Hex {
       y => Math.cos(y) * a * kMapScale + this.screenY);
 
     this.path = svg.polygon(xs, ys, {});
+    this.path.setAttribute('hexid', id);
     this.color = kContinent2Color[this.homeContinent];
     this.path.style.fill = this.color.hex();
     hexMap.appendChild(this.path);
