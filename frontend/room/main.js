@@ -1041,7 +1041,7 @@ function render_vote_table(state) {
   <table>
     <tbody>
       <tr>
-        <td colspan=3>Votes (` + utils.NATIONS[gLatestState.stage.turn].total_shares + ` total)</td>
+        <td colspan=3>Votes (` + utils.total_shares(gLatestState, gLatestState.stage.turn) + ` total)</td>
       </tr>
   `;
   let votesFor = utils.candidate_votes(state);
