@@ -1,6 +1,6 @@
 let kMap = {
  "90": {
-  "id": 90,
+  "id": "90",
   "adjacencies": [
    91,
    130
@@ -10,7 +10,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "91": {
-  "id": 91,
+  "id": "91",
   "adjacencies": [
    92,
    90,
@@ -22,7 +22,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "92": {
-  "id": 92,
+  "id": "92",
   "adjacencies": [
    91,
    132,
@@ -33,7 +33,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "98": {
-  "id": 98,
+  "id": "98",
   "adjacencies": [
    99,
    138,
@@ -44,7 +44,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "99": {
-  "id": 99,
+  "id": "99",
   "adjacencies": [
    100,
    98,
@@ -56,7 +56,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "100": {
-  "id": 100,
+  "id": "100",
   "adjacencies": [
    99,
    140,
@@ -67,7 +67,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "122": {
-  "id": 122,
+  "id": "122",
   "adjacencies": [
    123,
    162,
@@ -78,7 +78,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "123": {
-  "id": 123,
+  "id": "123",
   "adjacencies": [
    124,
    122,
@@ -90,7 +90,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "124": {
-  "id": 124,
+  "id": "124",
   "adjacencies": [
    125,
    123,
@@ -102,7 +102,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "125": {
-  "id": 125,
+  "id": "125",
   "adjacencies": [
    126,
    124,
@@ -114,7 +114,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "126": {
-  "id": 126,
+  "id": "126",
   "adjacencies": [
    125,
    166
@@ -124,7 +124,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "130": {
-  "id": 130,
+  "id": "130",
   "adjacencies": [
    131,
    90,
@@ -136,7 +136,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "131": {
-  "id": 131,
+  "id": "131",
   "adjacencies": [
    132,
    130,
@@ -150,7 +150,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "132": {
-  "id": 132,
+  "id": "132",
   "adjacencies": [
    131,
    172,
@@ -162,7 +162,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "134": {
-  "id": 134,
+  "id": "134",
   "adjacencies": [
    175
   ],
@@ -171,7 +171,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "137": {
-  "id": 137,
+  "id": "137",
   "adjacencies": [
    138,
    98
@@ -181,7 +181,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "138": {
-  "id": 138,
+  "id": "138",
   "adjacencies": [
    139,
    137,
@@ -193,7 +193,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "139": {
-  "id": 139,
+  "id": "139",
   "adjacencies": [
    140,
    138,
@@ -206,7 +206,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "140": {
-  "id": 140,
+  "id": "140",
   "adjacencies": [
    141,
    139,
@@ -219,7 +219,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "141": {
-  "id": 141,
+  "id": "141",
   "adjacencies": [
    142,
    140,
@@ -231,7 +231,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "142": {
-  "id": 142,
+  "id": "142",
   "adjacencies": [
    143,
    141,
@@ -243,7 +243,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "143": {
-  "id": 143,
+  "id": "143",
   "adjacencies": [
    144,
    142,
@@ -255,7 +255,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "144": {
-  "id": 144,
+  "id": "144",
   "adjacencies": [
    143,
    184,
@@ -266,7 +266,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "147": {
-  "id": 147,
+  "id": "147",
   "adjacencies": [
    148,
    187,
@@ -277,7 +277,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "148": {
-  "id": 148,
+  "id": "148",
   "adjacencies": [
    149,
    147,
@@ -289,7 +289,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "149": {
-  "id": 149,
+  "id": "149",
   "adjacencies": [
    150,
    148,
@@ -301,7 +301,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "150": {
-  "id": 150,
+  "id": "150",
   "adjacencies": [
    151,
    149,
@@ -313,7 +313,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "151": {
-  "id": 151,
+  "id": "151",
   "adjacencies": [
    152,
    150,
@@ -325,7 +325,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "152": {
-  "id": 152,
+  "id": "152",
   "adjacencies": [
    153,
    151,
@@ -337,7 +337,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "153": {
-  "id": 153,
+  "id": "153",
   "adjacencies": [
    152,
    193
@@ -347,7 +347,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "162": {
-  "id": 162,
+  "id": "162",
   "adjacencies": [
    163,
    122
@@ -357,7 +357,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "163": {
-  "id": 163,
+  "id": "163",
   "adjacencies": [
    164,
    162,
@@ -370,7 +370,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "164": {
-  "id": 164,
+  "id": "164",
   "adjacencies": [
    165,
    163,
@@ -384,7 +384,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "165": {
-  "id": 165,
+  "id": "165",
   "adjacencies": [
    166,
    164,
@@ -398,7 +398,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "166": {
-  "id": 166,
+  "id": "166",
   "adjacencies": [
    165,
    206,
@@ -411,7 +411,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "169": {
-  "id": 169,
+  "id": "169",
   "adjacencies": [
    209,
    208
@@ -421,7 +421,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "171": {
-  "id": 171,
+  "id": "171",
   "adjacencies": [
    172,
    211,
@@ -433,7 +433,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "172": {
-  "id": 172,
+  "id": "172",
   "adjacencies": [
    173,
    171,
@@ -447,7 +447,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "173": {
-  "id": 173,
+  "id": "173",
   "adjacencies": [
    172,
    212,
@@ -458,7 +458,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "175": {
-  "id": 175,
+  "id": "175",
   "adjacencies": [
    214,
    134
@@ -468,7 +468,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "180": {
-  "id": 180,
+  "id": "180",
   "adjacencies": [
    181,
    220,
@@ -481,7 +481,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "181": {
-  "id": 181,
+  "id": "181",
   "adjacencies": [
    182,
    180,
@@ -495,7 +495,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "182": {
-  "id": 182,
+  "id": "182",
   "adjacencies": [
    183,
    181,
@@ -509,7 +509,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "183": {
-  "id": 183,
+  "id": "183",
   "adjacencies": [
    184,
    182,
@@ -523,7 +523,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "184": {
-  "id": 184,
+  "id": "184",
   "adjacencies": [
    185,
    183,
@@ -537,7 +537,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "185": {
-  "id": 185,
+  "id": "185",
   "adjacencies": [
    186,
    184,
@@ -550,7 +550,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "186": {
-  "id": 186,
+  "id": "186",
   "adjacencies": [
    187,
    185,
@@ -562,7 +562,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "187": {
-  "id": 187,
+  "id": "187",
   "adjacencies": [
    188,
    186,
@@ -575,7 +575,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "188": {
-  "id": 188,
+  "id": "188",
   "adjacencies": [
    189,
    187,
@@ -589,7 +589,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "189": {
-  "id": 189,
+  "id": "189",
   "adjacencies": [
    190,
    188,
@@ -603,7 +603,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "190": {
-  "id": 190,
+  "id": "190",
   "adjacencies": [
    191,
    189,
@@ -617,7 +617,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "191": {
-  "id": 191,
+  "id": "191",
   "adjacencies": [
    192,
    190,
@@ -631,7 +631,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "192": {
-  "id": 192,
+  "id": "192",
   "adjacencies": [
    193,
    191,
@@ -645,7 +645,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "193": {
-  "id": 193,
+  "id": "193",
   "adjacencies": [
    192,
    233,
@@ -658,7 +658,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "203": {
-  "id": 203,
+  "id": "203",
   "adjacencies": [
    204,
    163,
@@ -670,7 +670,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "204": {
-  "id": 204,
+  "id": "204",
   "adjacencies": [
    205,
    203,
@@ -684,7 +684,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "205": {
-  "id": 205,
+  "id": "205",
   "adjacencies": [
    206,
    204,
@@ -698,7 +698,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "206": {
-  "id": 206,
+  "id": "206",
   "adjacencies": [
    207,
    205,
@@ -710,7 +710,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "207": {
-  "id": 207,
+  "id": "207",
   "adjacencies": [
    208,
    206,
@@ -721,7 +721,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "208": {
-  "id": 208,
+  "id": "208",
   "adjacencies": [
    209,
    207,
@@ -734,7 +734,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "209": {
-  "id": 209,
+  "id": "209",
   "adjacencies": [
    208,
    249,
@@ -745,7 +745,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "211": {
-  "id": 211,
+  "id": "211",
   "adjacencies": [
    212,
    171,
@@ -757,7 +757,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "212": {
-  "id": 212,
+  "id": "212",
   "adjacencies": [
    211,
    252,
@@ -769,7 +769,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "214": {
-  "id": 214,
+  "id": "214",
   "adjacencies": [
    175
   ],
@@ -778,7 +778,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "216": {
-  "id": 216,
+  "id": "216",
   "adjacencies": [
    217,
    256,
@@ -789,7 +789,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "217": {
-  "id": 217,
+  "id": "217",
   "adjacencies": [
    218,
    216,
@@ -801,7 +801,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "218": {
-  "id": 218,
+  "id": "218",
   "adjacencies": [
    219,
    217,
@@ -813,7 +813,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "219": {
-  "id": 219,
+  "id": "219",
   "adjacencies": [
    220,
    218,
@@ -826,7 +826,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "220": {
-  "id": 220,
+  "id": "220",
   "adjacencies": [
    221,
    219,
@@ -840,7 +840,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "221": {
-  "id": 221,
+  "id": "221",
   "adjacencies": [
    222,
    220,
@@ -854,7 +854,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "222": {
-  "id": 222,
+  "id": "222",
   "adjacencies": [
    223,
    221,
@@ -868,7 +868,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "223": {
-  "id": 223,
+  "id": "223",
   "adjacencies": [
    224,
    222,
@@ -882,7 +882,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "224": {
-  "id": 224,
+  "id": "224",
   "adjacencies": [
    225,
    223,
@@ -896,7 +896,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "225": {
-  "id": 225,
+  "id": "225",
   "adjacencies": [
    226,
    224,
@@ -910,7 +910,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "226": {
-  "id": 226,
+  "id": "226",
   "adjacencies": [
    227,
    225,
@@ -924,7 +924,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "227": {
-  "id": 227,
+  "id": "227",
   "adjacencies": [
    228,
    226,
@@ -938,7 +938,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "228": {
-  "id": 228,
+  "id": "228",
   "adjacencies": [
    229,
    227,
@@ -952,7 +952,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "229": {
-  "id": 229,
+  "id": "229",
   "adjacencies": [
    230,
    228,
@@ -966,7 +966,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "230": {
-  "id": 230,
+  "id": "230",
   "adjacencies": [
    231,
    229,
@@ -980,7 +980,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "231": {
-  "id": 231,
+  "id": "231",
   "adjacencies": [
    232,
    230,
@@ -994,7 +994,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "232": {
-  "id": 232,
+  "id": "232",
   "adjacencies": [
    233,
    231,
@@ -1007,7 +1007,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "233": {
-  "id": 233,
+  "id": "233",
   "adjacencies": [
    232,
    193
@@ -1017,7 +1017,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "244": {
-  "id": 244,
+  "id": "244",
   "adjacencies": [
    245,
    284,
@@ -1030,7 +1030,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "245": {
-  "id": 245,
+  "id": "245",
   "adjacencies": [
    246,
    244,
@@ -1044,7 +1044,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "246": {
-  "id": 246,
+  "id": "246",
   "adjacencies": [
    245,
    286,
@@ -1058,7 +1058,7 @@ let kMap = {
   "isCapital": true,
  },
  "248": {
-  "id": 248,
+  "id": "248",
   "adjacencies": [
    249,
    288,
@@ -1071,7 +1071,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "249": {
-  "id": 249,
+  "id": "249",
   "adjacencies": [
    248,
    209,
@@ -1083,7 +1083,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "252": {
-  "id": 252,
+  "id": "252",
   "adjacencies": [
    212,
    211
@@ -1093,7 +1093,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "256": {
-  "id": 256,
+  "id": "256",
   "adjacencies": [
    257,
    296,
@@ -1105,7 +1105,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "257": {
-  "id": 257,
+  "id": "257",
   "adjacencies": [
    258,
    256,
@@ -1119,7 +1119,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "258": {
-  "id": 258,
+  "id": "258",
   "adjacencies": [
    259,
    257,
@@ -1134,7 +1134,7 @@ let kMap = {
   "isCapital": true,
  },
  "259": {
-  "id": 259,
+  "id": "259",
   "adjacencies": [
    260,
    258,
@@ -1148,7 +1148,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "260": {
-  "id": 260,
+  "id": "260",
   "adjacencies": [
    261,
    259,
@@ -1162,7 +1162,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "261": {
-  "id": 261,
+  "id": "261",
   "adjacencies": [
    262,
    260,
@@ -1176,7 +1176,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "262": {
-  "id": 262,
+  "id": "262",
   "adjacencies": [
    263,
    261,
@@ -1190,7 +1190,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "263": {
-  "id": 263,
+  "id": "263",
   "adjacencies": [
    264,
    262,
@@ -1204,7 +1204,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "264": {
-  "id": 264,
+  "id": "264",
   "adjacencies": [
    265,
    263,
@@ -1218,7 +1218,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "265": {
-  "id": 265,
+  "id": "265",
   "adjacencies": [
    266,
    264,
@@ -1232,7 +1232,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "266": {
-  "id": 266,
+  "id": "266",
   "adjacencies": [
    267,
    265,
@@ -1246,7 +1246,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "267": {
-  "id": 267,
+  "id": "267",
   "adjacencies": [
    268,
    266,
@@ -1260,7 +1260,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "268": {
-  "id": 268,
+  "id": "268",
   "adjacencies": [
    269,
    267,
@@ -1274,7 +1274,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "269": {
-  "id": 269,
+  "id": "269",
   "adjacencies": [
    270,
    268,
@@ -1288,7 +1288,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "270": {
-  "id": 270,
+  "id": "270",
   "adjacencies": [
    271,
    269,
@@ -1302,7 +1302,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "271": {
-  "id": 271,
+  "id": "271",
   "adjacencies": [
    272,
    270,
@@ -1316,7 +1316,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "272": {
-  "id": 272,
+  "id": "272",
   "adjacencies": [
    271,
    312,
@@ -1329,7 +1329,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "283": {
-  "id": 283,
+  "id": "283",
   "adjacencies": [
    284,
    324,
@@ -1340,7 +1340,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "284": {
-  "id": 284,
+  "id": "284",
   "adjacencies": [
    285,
    283,
@@ -1354,7 +1354,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "285": {
-  "id": 285,
+  "id": "285",
   "adjacencies": [
    286,
    284,
@@ -1368,7 +1368,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "286": {
-  "id": 286,
+  "id": "286",
   "adjacencies": [
    287,
    285,
@@ -1381,7 +1381,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "287": {
-  "id": 287,
+  "id": "287",
   "adjacencies": [
    288,
    286,
@@ -1394,7 +1394,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "288": {
-  "id": 288,
+  "id": "288",
   "adjacencies": [
    287,
    328,
@@ -1406,7 +1406,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "295": {
-  "id": 295,
+  "id": "295",
   "adjacencies": [
    296,
    335,
@@ -1418,7 +1418,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "296": {
-  "id": 296,
+  "id": "296",
   "adjacencies": [
    297,
    295,
@@ -1432,7 +1432,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "297": {
-  "id": 297,
+  "id": "297",
   "adjacencies": [
    298,
    296,
@@ -1446,7 +1446,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "298": {
-  "id": 298,
+  "id": "298",
   "adjacencies": [
    299,
    297,
@@ -1460,7 +1460,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "299": {
-  "id": 299,
+  "id": "299",
   "adjacencies": [
    300,
    298,
@@ -1474,7 +1474,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "300": {
-  "id": 300,
+  "id": "300",
   "adjacencies": [
    301,
    299,
@@ -1488,7 +1488,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "301": {
-  "id": 301,
+  "id": "301",
   "adjacencies": [
    302,
    300,
@@ -1502,7 +1502,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "302": {
-  "id": 302,
+  "id": "302",
   "adjacencies": [
    303,
    301,
@@ -1516,7 +1516,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "303": {
-  "id": 303,
+  "id": "303",
   "adjacencies": [
    304,
    302,
@@ -1530,7 +1530,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "304": {
-  "id": 304,
+  "id": "304",
   "adjacencies": [
    305,
    303,
@@ -1544,7 +1544,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "305": {
-  "id": 305,
+  "id": "305",
   "adjacencies": [
    306,
    304,
@@ -1558,7 +1558,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "306": {
-  "id": 306,
+  "id": "306",
   "adjacencies": [
    307,
    305,
@@ -1572,7 +1572,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "307": {
-  "id": 307,
+  "id": "307",
   "adjacencies": [
    308,
    306,
@@ -1586,7 +1586,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "308": {
-  "id": 308,
+  "id": "308",
   "adjacencies": [
    309,
    307,
@@ -1600,7 +1600,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "309": {
-  "id": 309,
+  "id": "309",
   "adjacencies": [
    310,
    308,
@@ -1614,7 +1614,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "310": {
-  "id": 310,
+  "id": "310",
   "adjacencies": [
    311,
    309,
@@ -1629,7 +1629,7 @@ let kMap = {
   "isCapital": true,
  },
  "311": {
-  "id": 311,
+  "id": "311",
   "adjacencies": [
    312,
    310,
@@ -1643,7 +1643,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "312": {
-  "id": 312,
+  "id": "312",
   "adjacencies": [
    311,
    352,
@@ -1654,7 +1654,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "314": {
-  "id": 314,
+  "id": "314",
   "adjacencies": [
    354
   ],
@@ -1663,7 +1663,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "324": {
-  "id": 324,
+  "id": "324",
   "adjacencies": [
    325,
    364,
@@ -1675,7 +1675,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "325": {
-  "id": 325,
+  "id": "325",
   "adjacencies": [
    326,
    324,
@@ -1689,7 +1689,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "326": {
-  "id": 326,
+  "id": "326",
   "adjacencies": [
    327,
    325,
@@ -1702,7 +1702,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "327": {
-  "id": 327,
+  "id": "327",
   "adjacencies": [
    328,
    326,
@@ -1714,7 +1714,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "328": {
-  "id": 328,
+  "id": "328",
   "adjacencies": [
    327,
    368,
@@ -1726,7 +1726,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "334": {
-  "id": 334,
+  "id": "334",
   "adjacencies": [
    335,
    374,
@@ -1737,7 +1737,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "335": {
-  "id": 335,
+  "id": "335",
   "adjacencies": [
    336,
    334,
@@ -1750,7 +1750,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "336": {
-  "id": 336,
+  "id": "336",
   "adjacencies": [
    337,
    335,
@@ -1763,7 +1763,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "337": {
-  "id": 337,
+  "id": "337",
   "adjacencies": [
    338,
    336,
@@ -1776,7 +1776,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "338": {
-  "id": 338,
+  "id": "338",
   "adjacencies": [
    339,
    337,
@@ -1789,7 +1789,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "339": {
-  "id": 339,
+  "id": "339",
   "adjacencies": [
    340,
    338,
@@ -1802,7 +1802,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "340": {
-  "id": 340,
+  "id": "340",
   "adjacencies": [
    341,
    339,
@@ -1815,7 +1815,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "341": {
-  "id": 341,
+  "id": "341",
   "adjacencies": [
    342,
    340,
@@ -1828,7 +1828,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "342": {
-  "id": 342,
+  "id": "342",
   "adjacencies": [
    343,
    341,
@@ -1842,7 +1842,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "343": {
-  "id": 343,
+  "id": "343",
   "adjacencies": [
    344,
    342,
@@ -1856,7 +1856,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "344": {
-  "id": 344,
+  "id": "344",
   "adjacencies": [
    345,
    343,
@@ -1869,7 +1869,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "345": {
-  "id": 345,
+  "id": "345",
   "adjacencies": [
    346,
    344,
@@ -1881,7 +1881,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "346": {
-  "id": 346,
+  "id": "346",
   "adjacencies": [
    347,
    345,
@@ -1894,7 +1894,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "347": {
-  "id": 347,
+  "id": "347",
   "adjacencies": [
    348,
    346,
@@ -1908,7 +1908,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "348": {
-  "id": 348,
+  "id": "348",
   "adjacencies": [
    349,
    347,
@@ -1922,7 +1922,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "349": {
-  "id": 349,
+  "id": "349",
   "adjacencies": [
    350,
    348,
@@ -1935,7 +1935,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "350": {
-  "id": 350,
+  "id": "350",
   "adjacencies": [
    351,
    349,
@@ -1948,7 +1948,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "351": {
-  "id": 351,
+  "id": "351",
   "adjacencies": [
    352,
    350,
@@ -1962,7 +1962,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "352": {
-  "id": 352,
+  "id": "352",
   "adjacencies": [
    351,
    312,
@@ -1974,7 +1974,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "354": {
-  "id": 354,
+  "id": "354",
   "adjacencies": [
    314
   ],
@@ -1983,7 +1983,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "364": {
-  "id": 364,
+  "id": "364",
   "adjacencies": [
    365,
    324,
@@ -1995,7 +1995,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "365": {
-  "id": 365,
+  "id": "365",
   "adjacencies": [
    364,
    405,
@@ -2008,7 +2008,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "368": {
-  "id": 368,
+  "id": "368",
   "adjacencies": [
    328
   ],
@@ -2017,7 +2017,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "373": {
-  "id": 373,
+  "id": "373",
   "adjacencies": [
    374,
    414,
@@ -2028,7 +2028,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "374": {
-  "id": 374,
+  "id": "374",
   "adjacencies": [
    375,
    373,
@@ -2042,7 +2042,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "375": {
-  "id": 375,
+  "id": "375",
   "adjacencies": [
    374,
    415,
@@ -2054,7 +2054,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "377": {
-  "id": 377,
+  "id": "377",
   "adjacencies": [
    337,
    418,
@@ -2065,7 +2065,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "379": {
-  "id": 379,
+  "id": "379",
   "adjacencies": [
    339,
    340
@@ -2075,7 +2075,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "381": {
-  "id": 381,
+  "id": "381",
   "adjacencies": [
    382,
    341,
@@ -2087,7 +2087,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "382": {
-  "id": 382,
+  "id": "382",
   "adjacencies": [
    383,
    381,
@@ -2101,7 +2101,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "383": {
-  "id": 383,
+  "id": "383",
   "adjacencies": [
    382,
    423,
@@ -2114,7 +2114,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "386": {
-  "id": 386,
+  "id": "386",
   "adjacencies": [
    387,
    346,
@@ -2126,7 +2126,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "387": {
-  "id": 387,
+  "id": "387",
   "adjacencies": [
    388,
    386,
@@ -2140,7 +2140,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "388": {
-  "id": 388,
+  "id": "388",
   "adjacencies": [
    387,
    428,
@@ -2152,7 +2152,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "390": {
-  "id": 390,
+  "id": "390",
   "adjacencies": [
    391,
    350,
@@ -2164,7 +2164,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "391": {
-  "id": 391,
+  "id": "391",
   "adjacencies": [
    390,
    431,
@@ -2177,7 +2177,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "405": {
-  "id": 405,
+  "id": "405",
   "adjacencies": [
    406,
    365,
@@ -2188,7 +2188,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "406": {
-  "id": 406,
+  "id": "406",
   "adjacencies": [
    405,
    446,
@@ -2199,7 +2199,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "414": {
-  "id": 414,
+  "id": "414",
   "adjacencies": [
    415,
    374,
@@ -2210,7 +2210,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "415": {
-  "id": 415,
+  "id": "415",
   "adjacencies": [
    414,
    375,
@@ -2221,7 +2221,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "418": {
-  "id": 418,
+  "id": "418",
   "adjacencies": [
    377
   ],
@@ -2230,7 +2230,7 @@ let kMap = {
   "homeContinent": "EU"
  },
  "422": {
-  "id": 422,
+  "id": "422",
   "adjacencies": [
    423,
    462,
@@ -2243,7 +2243,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "423": {
-  "id": 423,
+  "id": "423",
   "adjacencies": [
    424,
    422,
@@ -2257,7 +2257,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "424": {
-  "id": 424,
+  "id": "424",
   "adjacencies": [
    423,
    464,
@@ -2269,7 +2269,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "427": {
-  "id": 427,
+  "id": "427",
   "adjacencies": [
    428,
    467,
@@ -2281,7 +2281,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "428": {
-  "id": 428,
+  "id": "428",
   "adjacencies": [
    427,
    388,
@@ -2293,7 +2293,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "431": {
-  "id": 431,
+  "id": "431",
   "adjacencies": [
    432,
    471,
@@ -2305,7 +2305,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "432": {
-  "id": 432,
+  "id": "432",
   "adjacencies": [
    431,
    471,
@@ -2316,7 +2316,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "446": {
-  "id": 446,
+  "id": "446",
   "adjacencies": [
    486,
    406,
@@ -2327,7 +2327,7 @@ let kMap = {
   "homeContinent": "NA"
  },
  "461": {
-  "id": 461,
+  "id": "461",
   "adjacencies": [
    462,
    501,
@@ -2338,7 +2338,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "462": {
-  "id": 462,
+  "id": "462",
   "adjacencies": [
    463,
    461,
@@ -2351,7 +2351,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "463": {
-  "id": 463,
+  "id": "463",
   "adjacencies": [
    464,
    462,
@@ -2365,7 +2365,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "464": {
-  "id": 464,
+  "id": "464",
   "adjacencies": [
    463,
    504,
@@ -2376,7 +2376,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "467": {
-  "id": 467,
+  "id": "467",
   "adjacencies": [
    427,
    428
@@ -2386,7 +2386,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "471": {
-  "id": 471,
+  "id": "471",
   "adjacencies": [
    431,
    432
@@ -2396,7 +2396,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "486": {
-  "id": 486,
+  "id": "486",
   "adjacencies": [
    487,
    526,
@@ -2408,7 +2408,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "487": {
-  "id": 487,
+  "id": "487",
   "adjacencies": [
    488,
    486,
@@ -2421,7 +2421,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "488": {
-  "id": 488,
+  "id": "488",
   "adjacencies": [
    489,
    487,
@@ -2433,7 +2433,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "489": {
-  "id": 489,
+  "id": "489",
   "adjacencies": [
    488,
    529,
@@ -2444,7 +2444,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "495": {
-  "id": 495,
+  "id": "495",
   "adjacencies": [
    496,
    535,
@@ -2455,7 +2455,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "496": {
-  "id": 496,
+  "id": "496",
   "adjacencies": [
    497,
    495,
@@ -2467,7 +2467,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "497": {
-  "id": 497,
+  "id": "497",
   "adjacencies": [
    498,
    496,
@@ -2479,7 +2479,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "498": {
-  "id": 498,
+  "id": "498",
   "adjacencies": [
    497,
    538,
@@ -2490,7 +2490,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "501": {
-  "id": 501,
+  "id": "501",
   "adjacencies": [
    541,
    461,
@@ -2501,7 +2501,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "503": {
-  "id": 503,
+  "id": "503",
   "adjacencies": [
    504,
    543,
@@ -2513,7 +2513,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "504": {
-  "id": 504,
+  "id": "504",
   "adjacencies": [
    503,
    464,
@@ -2525,7 +2525,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "525": {
-  "id": 525,
+  "id": "525",
   "adjacencies": [
    526,
    565,
@@ -2537,7 +2537,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "526": {
-  "id": 526,
+  "id": "526",
   "adjacencies": [
    527,
    525,
@@ -2551,7 +2551,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "527": {
-  "id": 527,
+  "id": "527",
   "adjacencies": [
    528,
    526,
@@ -2565,7 +2565,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "528": {
-  "id": 528,
+  "id": "528",
   "adjacencies": [
    529,
    527,
@@ -2579,7 +2579,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "529": {
-  "id": 529,
+  "id": "529",
   "adjacencies": [
    528,
    569,
@@ -2591,7 +2591,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "534": {
-  "id": 534,
+  "id": "534",
   "adjacencies": [
    535,
    574,
@@ -2603,7 +2603,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "535": {
-  "id": 535,
+  "id": "535",
   "adjacencies": [
    536,
    534,
@@ -2617,7 +2617,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "536": {
-  "id": 536,
+  "id": "536",
   "adjacencies": [
    537,
    535,
@@ -2631,7 +2631,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "537": {
-  "id": 537,
+  "id": "537",
   "adjacencies": [
    538,
    536,
@@ -2645,7 +2645,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "538": {
-  "id": 538,
+  "id": "538",
   "adjacencies": [
    539,
    537,
@@ -2658,7 +2658,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "539": {
-  "id": 539,
+  "id": "539",
   "adjacencies": [
    540,
    538,
@@ -2670,7 +2670,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "540": {
-  "id": 540,
+  "id": "540",
   "adjacencies": [
    541,
    539,
@@ -2683,7 +2683,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "541": {
-  "id": 541,
+  "id": "541",
   "adjacencies": [
    540,
    581,
@@ -2695,7 +2695,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "543": {
-  "id": 543,
+  "id": "543",
   "adjacencies": [
    583,
    503,
@@ -2706,7 +2706,7 @@ let kMap = {
   "homeContinent": "AS"
  },
  "565": {
-  "id": 565,
+  "id": "565",
   "adjacencies": [
    566,
    605,
@@ -2717,7 +2717,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "566": {
-  "id": 566,
+  "id": "566",
   "adjacencies": [
    567,
    565,
@@ -2731,7 +2731,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "567": {
-  "id": 567,
+  "id": "567",
   "adjacencies": [
    568,
    566,
@@ -2745,7 +2745,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "568": {
-  "id": 568,
+  "id": "568",
   "adjacencies": [
    569,
    567,
@@ -2759,7 +2759,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "569": {
-  "id": 569,
+  "id": "569",
   "adjacencies": [
    570,
    568,
@@ -2773,7 +2773,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "570": {
-  "id": 570,
+  "id": "570",
   "adjacencies": [
    569,
    610,
@@ -2785,7 +2785,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "574": {
-  "id": 574,
+  "id": "574",
   "adjacencies": [
    575,
    614,
@@ -2796,7 +2796,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "575": {
-  "id": 575,
+  "id": "575",
   "adjacencies": [
    576,
    574,
@@ -2810,7 +2810,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "576": {
-  "id": 576,
+  "id": "576",
   "adjacencies": [
    577,
    575,
@@ -2824,7 +2824,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "577": {
-  "id": 577,
+  "id": "577",
   "adjacencies": [
    578,
    576,
@@ -2838,7 +2838,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "578": {
-  "id": 578,
+  "id": "578",
   "adjacencies": [
    579,
    577,
@@ -2852,7 +2852,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "579": {
-  "id": 579,
+  "id": "579",
   "adjacencies": [
    580,
    578,
@@ -2866,7 +2866,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "580": {
-  "id": 580,
+  "id": "580",
   "adjacencies": [
    581,
    579,
@@ -2880,7 +2880,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "581": {
-  "id": 581,
+  "id": "581",
   "adjacencies": [
    582,
    580,
@@ -2894,7 +2894,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "582": {
-  "id": 582,
+  "id": "582",
   "adjacencies": [
    583,
    581,
@@ -2906,7 +2906,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "583": {
-  "id": 583,
+  "id": "583",
   "adjacencies": [
    582,
    543
@@ -2916,7 +2916,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "605": {
-  "id": 605,
+  "id": "605",
   "adjacencies": [
    606,
    565,
@@ -2928,7 +2928,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "606": {
-  "id": 606,
+  "id": "606",
   "adjacencies": [
    607,
    605,
@@ -2942,7 +2942,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "607": {
-  "id": 607,
+  "id": "607",
   "adjacencies": [
    608,
    606,
@@ -2956,7 +2956,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "608": {
-  "id": 608,
+  "id": "608",
   "adjacencies": [
    609,
    607,
@@ -2970,7 +2970,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "609": {
-  "id": 609,
+  "id": "609",
   "adjacencies": [
    610,
    608,
@@ -2984,7 +2984,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "610": {
-  "id": 610,
+  "id": "610",
   "adjacencies": [
    609,
    650,
@@ -2995,7 +2995,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "614": {
-  "id": 614,
+  "id": "614",
   "adjacencies": [
    615,
    574,
@@ -3007,7 +3007,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "615": {
-  "id": 615,
+  "id": "615",
   "adjacencies": [
    616,
    614,
@@ -3021,7 +3021,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "616": {
-  "id": 616,
+  "id": "616",
   "adjacencies": [
    617,
    615,
@@ -3035,7 +3035,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "617": {
-  "id": 617,
+  "id": "617",
   "adjacencies": [
    618,
    616,
@@ -3049,7 +3049,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "618": {
-  "id": 618,
+  "id": "618",
   "adjacencies": [
    619,
    617,
@@ -3063,7 +3063,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "619": {
-  "id": 619,
+  "id": "619",
   "adjacencies": [
    620,
    618,
@@ -3077,7 +3077,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "620": {
-  "id": 620,
+  "id": "620",
   "adjacencies": [
    621,
    619,
@@ -3091,7 +3091,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "621": {
-  "id": 621,
+  "id": "621",
   "adjacencies": [
    620,
    661,
@@ -3103,7 +3103,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "632": {
-  "id": 632,
+  "id": "632",
   "adjacencies": [
    633,
    673
@@ -3113,7 +3113,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "633": {
-  "id": 633,
+  "id": "633",
   "adjacencies": [
    632,
    673
@@ -3123,7 +3123,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "646": {
-  "id": 646,
+  "id": "646",
   "adjacencies": [
    647,
    686,
@@ -3135,7 +3135,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "647": {
-  "id": 647,
+  "id": "647",
   "adjacencies": [
    648,
    646,
@@ -3149,7 +3149,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "648": {
-  "id": 648,
+  "id": "648",
   "adjacencies": [
    649,
    647,
@@ -3163,7 +3163,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "649": {
-  "id": 649,
+  "id": "649",
   "adjacencies": [
    650,
    648,
@@ -3177,7 +3177,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "650": {
-  "id": 650,
+  "id": "650",
   "adjacencies": [
    649,
    610,
@@ -3189,7 +3189,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "655": {
-  "id": 655,
+  "id": "655",
   "adjacencies": [
    656,
    615,
@@ -3200,7 +3200,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "656": {
-  "id": 656,
+  "id": "656",
   "adjacencies": [
    657,
    655,
@@ -3212,7 +3212,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "657": {
-  "id": 657,
+  "id": "657",
   "adjacencies": [
    658,
    656,
@@ -3225,7 +3225,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "658": {
-  "id": 658,
+  "id": "658",
   "adjacencies": [
    659,
    657,
@@ -3239,7 +3239,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "659": {
-  "id": 659,
+  "id": "659",
   "adjacencies": [
    660,
    658,
@@ -3253,7 +3253,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "660": {
-  "id": 660,
+  "id": "660",
   "adjacencies": [
    661,
    659,
@@ -3267,7 +3267,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "661": {
-  "id": 661,
+  "id": "661",
   "adjacencies": [
    660,
    621,
@@ -3279,7 +3279,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "671": {
-  "id": 671,
+  "id": "671",
   "adjacencies": [
    711
   ],
@@ -3288,7 +3288,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "673": {
-  "id": 673,
+  "id": "673",
   "adjacencies": [
    633,
    632
@@ -3298,7 +3298,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "675": {
-  "id": 675,
+  "id": "675",
   "adjacencies": [
    676,
    715
@@ -3308,7 +3308,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "676": {
-  "id": 676,
+  "id": "676",
   "adjacencies": [
    675,
    716,
@@ -3319,7 +3319,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "686": {
-  "id": 686,
+  "id": "686",
   "adjacencies": [
    687,
    646,
@@ -3331,7 +3331,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "687": {
-  "id": 687,
+  "id": "687",
   "adjacencies": [
    688,
    686,
@@ -3345,7 +3345,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "688": {
-  "id": 688,
+  "id": "688",
   "adjacencies": [
    689,
    687,
@@ -3359,7 +3359,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "689": {
-  "id": 689,
+  "id": "689",
   "adjacencies": [
    688,
    729,
@@ -3371,7 +3371,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "697": {
-  "id": 697,
+  "id": "697",
   "adjacencies": [
    698,
    737,
@@ -3384,7 +3384,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "698": {
-  "id": 698,
+  "id": "698",
   "adjacencies": [
    699,
    697,
@@ -3398,7 +3398,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "699": {
-  "id": 699,
+  "id": "699",
   "adjacencies": [
    700,
    698,
@@ -3412,7 +3412,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "700": {
-  "id": 700,
+  "id": "700",
   "adjacencies": [
    699,
    740,
@@ -3424,7 +3424,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "711": {
-  "id": 711,
+  "id": "711",
   "adjacencies": [
    671
   ],
@@ -3433,7 +3433,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "715": {
-  "id": 715,
+  "id": "715",
   "adjacencies": [
    716,
    675,
@@ -3444,7 +3444,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "716": {
-  "id": 716,
+  "id": "716",
   "adjacencies": [
    715,
    676
@@ -3454,7 +3454,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "727": {
-  "id": 727,
+  "id": "727",
   "adjacencies": [
    728,
    767,
@@ -3467,7 +3467,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "728": {
-  "id": 728,
+  "id": "728",
   "adjacencies": [
    729,
    727,
@@ -3481,7 +3481,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "729": {
-  "id": 729,
+  "id": "729",
   "adjacencies": [
    728,
    689,
@@ -3493,7 +3493,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "737": {
-  "id": 737,
+  "id": "737",
   "adjacencies": [
    738,
    777,
@@ -3504,7 +3504,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "738": {
-  "id": 738,
+  "id": "738",
   "adjacencies": [
    739,
    737,
@@ -3518,7 +3518,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "739": {
-  "id": 739,
+  "id": "739",
   "adjacencies": [
    740,
    738,
@@ -3532,7 +3532,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "740": {
-  "id": 740,
+  "id": "740",
   "adjacencies": [
    739,
    780,
@@ -3545,7 +3545,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "766": {
-  "id": 766,
+  "id": "766",
   "adjacencies": [
    767,
    807,
@@ -3556,7 +3556,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "767": {
-  "id": 767,
+  "id": "767",
   "adjacencies": [
    768,
    766,
@@ -3571,7 +3571,7 @@ let kMap = {
   "isCapital": true,
  },
  "768": {
-  "id": 768,
+  "id": "768",
   "adjacencies": [
    767,
    808,
@@ -3583,7 +3583,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "777": {
-  "id": 777,
+  "id": "777",
   "adjacencies": [
    778,
    817,
@@ -3596,7 +3596,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "778": {
-  "id": 778,
+  "id": "778",
   "adjacencies": [
    779,
    777,
@@ -3610,7 +3610,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "779": {
-  "id": 779,
+  "id": "779",
   "adjacencies": [
    780,
    778,
@@ -3624,7 +3624,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "780": {
-  "id": 780,
+  "id": "780",
   "adjacencies": [
    779,
    820,
@@ -3635,7 +3635,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "782": {
-  "id": 782,
+  "id": "782",
   "adjacencies": [
    822
   ],
@@ -3644,7 +3644,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "792": {
-  "id": 792,
+  "id": "792",
   "adjacencies": [
    793,
    832,
@@ -3655,7 +3655,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "793": {
-  "id": 793,
+  "id": "793",
   "adjacencies": [
    792,
    833,
@@ -3666,7 +3666,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "795": {
-  "id": 795,
+  "id": "795",
   "adjacencies": [
    835,
    836
@@ -3676,7 +3676,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "807": {
-  "id": 807,
+  "id": "807",
   "adjacencies": [
    808,
    847,
@@ -3689,7 +3689,7 @@ let kMap = {
   "homeContinent": "SA",
  },
  "808": {
-  "id": 808,
+  "id": "808",
   "adjacencies": [
    807,
    768,
@@ -3701,7 +3701,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "817": {
-  "id": 817,
+  "id": "817",
   "adjacencies": [
    818,
    857,
@@ -3712,7 +3712,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "818": {
-  "id": 818,
+  "id": "818",
   "adjacencies": [
    819,
    817,
@@ -3726,7 +3726,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "819": {
-  "id": 819,
+  "id": "819",
   "adjacencies": [
    820,
    818,
@@ -3741,7 +3741,7 @@ let kMap = {
   "isCapital": true,
  },
  "820": {
-  "id": 820,
+  "id": "820",
   "adjacencies": [
    819,
    780,
@@ -3753,7 +3753,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "822": {
-  "id": 822,
+  "id": "822",
   "adjacencies": [
    782
   ],
@@ -3762,7 +3762,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "832": {
-  "id": 832,
+  "id": "832",
   "adjacencies": [
    833,
    872,
@@ -3774,7 +3774,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "833": {
-  "id": 833,
+  "id": "833",
   "adjacencies": [
    834,
    832,
@@ -3788,7 +3788,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "834": {
-  "id": 834,
+  "id": "834",
   "adjacencies": [
    835,
    833,
@@ -3801,7 +3801,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "835": {
-  "id": 835,
+  "id": "835",
   "adjacencies": [
    836,
    834,
@@ -3814,7 +3814,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "836": {
-  "id": 836,
+  "id": "836",
   "adjacencies": [
    835,
    876,
@@ -3826,7 +3826,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "846": {
-  "id": 846,
+  "id": "846",
   "adjacencies": [
    847,
    887,
@@ -3837,7 +3837,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "847": {
-  "id": 847,
+  "id": "847",
   "adjacencies": [
    846,
    887,
@@ -3849,7 +3849,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "857": {
-  "id": 857,
+  "id": "857",
   "adjacencies": [
    858,
    817,
@@ -3861,7 +3861,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "858": {
-  "id": 858,
+  "id": "858",
   "adjacencies": [
    859,
    857,
@@ -3875,7 +3875,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "859": {
-  "id": 859,
+  "id": "859",
   "adjacencies": [
    858,
    899,
@@ -3887,7 +3887,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "871": {
-  "id": 871,
+  "id": "871",
   "adjacencies": [
    872,
    912,
@@ -3898,7 +3898,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "872": {
-  "id": 872,
+  "id": "872",
   "adjacencies": [
    873,
    871,
@@ -3912,7 +3912,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "873": {
-  "id": 873,
+  "id": "873",
   "adjacencies": [
    874,
    872,
@@ -3926,7 +3926,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "874": {
-  "id": 874,
+  "id": "874",
   "adjacencies": [
    875,
    873,
@@ -3941,7 +3941,7 @@ let kMap = {
   "isCapital": true,
  },
  "875": {
-  "id": 875,
+  "id": "875",
   "adjacencies": [
    876,
    874,
@@ -3955,7 +3955,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "876": {
-  "id": 876,
+  "id": "876",
   "adjacencies": [
    875,
    916,
@@ -3966,7 +3966,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "887": {
-  "id": 887,
+  "id": "887",
   "adjacencies": [
    847,
    846
@@ -3976,7 +3976,7 @@ let kMap = {
   "homeContinent": "SA"
  },
  "898": {
-  "id": 898,
+  "id": "898",
   "adjacencies": [
    899,
    858,
@@ -3987,7 +3987,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "899": {
-  "id": 899,
+  "id": "899",
   "adjacencies": [
    898,
    859,
@@ -3998,7 +3998,7 @@ let kMap = {
   "homeContinent": "AF"
  },
  "912": {
-  "id": 912,
+  "id": "912",
   "adjacencies": [
    913,
    872,
@@ -4009,7 +4009,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "913": {
-  "id": 913,
+  "id": "913",
   "adjacencies": [
    914,
    912,
@@ -4021,7 +4021,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "914": {
-  "id": 914,
+  "id": "914",
   "adjacencies": [
    915,
    913,
@@ -4033,7 +4033,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "915": {
-  "id": 915,
+  "id": "915",
   "adjacencies": [
    916,
    914,
@@ -4045,7 +4045,7 @@ let kMap = {
   "homeContinent": "AU"
  },
  "916": {
-  "id": 916,
+  "id": "916",
   "adjacencies": [
    915,
    876,

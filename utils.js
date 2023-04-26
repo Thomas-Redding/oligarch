@@ -83,42 +83,42 @@ let utils = {
   CAPITALS: ["South Africa", "Ontario", "Argentina", "Northern Europe", "Japan", "Eastern Australia"],
   NATIONS: {
     "Africa": {
-      "capital": "South Africa",
+      "capital": "819",
       // "base_income_per_territory" : 6,
       // "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"],
       "num_auction_rounds": 5,
       "abbr": "AF"
     },
     "North America": {
-      "capital": "Ontario",
+      "capital": "246",
       // "base_income_per_territory" : 4,
       // "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"],
       "num_auction_rounds": 6,
       "abbr": "NA"
     },
     "South America": {
-      "capital": "Argentina",
+      "capital": "767",
       // "base_income_per_territory" : 9,
       // "territories": ["Venezuela", "Brazil", "Argentina", "Peru"],
       "num_auction_rounds": 5,
       "abbr": "SA"
     },
     "Europe": {
-      "capital": "Northern Europe",
+      "capital": "258",
       // "base_income_per_territory" : 5,
       // "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"],
       "num_auction_rounds": 6,
       "abbr": "EU"
     },
     "Asia": {
-      "capital": "Japan",
+      "capital": "310",
       // "base_income_per_territory" : 3,
       // "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"],
       "num_auction_rounds": 6,
       "abbr": "AS"
     },
     "Australia": {
-      "capital": "Eastern Australia",
+      "capital": "874",
       // "base_income_per_territory" : 9,
       // "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"],
       "num_auction_rounds": 4,
