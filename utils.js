@@ -125,6 +125,17 @@ let utils = {
       "abbr": "AU"
     }
   },
+
+  name_from_nation: (nation) => {
+    for (let nation_name in utils.NATIONS) {
+      if (utils.NATIONS[nation_name] == nation) {
+        return nation_name;
+      }
+    }
+    throw Error();
+  },
+
+
   /*
    * Find how many shares have already been auctioned off for each nation.
    * @returns {Object} a dictionary with nation names as keys and number of
@@ -514,10 +525,11 @@ let utils = {
   },
 
   territories_of_nation_that_can_spawn: (mother_state, nation) => {
+    let nation_name = name_from_nation(nation);
     let territoriesWithArmy = {};
     for (let nationName in mother_state.nations) {
-      let nation = mother_state.nations[nationName];
-      for (let unit of nation.army) {
+      let nat = mother_state.nations[nationName];
+      for (let unit of nat.army) {
         territoriesWithArmy[unit.territory] = 1;
       }
     }
@@ -536,9 +548,15 @@ let utils = {
         continue;
       }
       // Must be adjacent to barrack that you own.
-      let adjacencies = kMap[territory_name].adjacencies;
-      for (let hexId of adjacencies)
-      rtn.push(territory_name);
+      for (let hexId of kMap[territory_name].adjacencies) {
+        let adjacentTerritory = utils.territory_for_territory_name(mother_state, hexId);
+        if (adjacentTerritory.n_barracks) {
+          if (utils.territory_to_owner(mother_state, adjacentTerritory) == nation_name) {
+            rtn.push(territory_name);
+            break;
+          }
+        }
+      }
     }
     return rtn;
   },
@@ -557,8 +575,8 @@ let utils = {
   territories_of_nation_that_can_build: (mother_state, nation) => {
     let territoriesWithArmy = {};
     for (let nationName in mother_state.nations) {
-      let nation = mother_state.nations[nationName];
-      for (let unit of nation.army) {
+      let nat = mother_state.nations[nationName];
+      for (let unit of nat.army) {
         territoriesWithArmy[unit.territory] = 1;
       }
     }
