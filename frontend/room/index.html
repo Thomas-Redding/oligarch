@@ -509,8 +509,8 @@ class Hex {
       return;
     }
 
-    // if (gSelectedHex) {
-      let valid = utils.territories_barracks_can_spawn_to(gLatestState, this.id);
+    if (gSelectedHex) {
+      let valid = utils.territories_barracks_can_spawn_to(gLatestState, gSelectedHex.id);
 
 
       let type = null;
@@ -528,10 +528,10 @@ class Hex {
           "args": [this.id, type]
         });
       }
-      // gSelectedHex.on_deselect();
+      gSelectedHex.on_deselect();
       Hex.unhighlight_all_hexes();
       return;
-    // }
+    }
 
     Hex.unhighlight_all_hexes();
 
