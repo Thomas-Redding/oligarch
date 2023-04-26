@@ -308,6 +308,30 @@ function render_map(state) {
       gHexes[id] = new Hex(id, kMap[id]);
     }
 
+    const incomeTable = svg.g();
+    incomeTable.setAttribute('transform', "translate(850,450)");
+    const nations = ['Africa', 'North America', 'South America', 'Europe', 'Asia', 'Australia'];
+    const abbrs = ['Africa', 'N America', 'S America', 'Europe', 'Asia', 'Australia'];
+    for (let i = 0; i < nations.length; ++i) {
+      incomeTable.appendChild(svg.text(
+        abbrs[i],
+        0,
+        i * 32,
+        {
+          "text-anchor": "end",
+        }
+      ));
+      incomeTable.children[incomeTable.children.length - 1].style.font = "bold 30px sans-serif";
+      incomeTable.appendChild(svg.text(
+        "$" + utils.income_of_nation(state, nations[i]),
+        100,
+        i * 32,
+        {"text-anchor": "end"}
+      ));
+      incomeTable.children[incomeTable.children.length - 1].style.font = "bold 30px sans-serif";
+    }
+    hexMap.appendChild(incomeTable);
+
     hexMap.addEventListener('click', (e) => {
       if (e.target === hexMap) {
         ocean_clicked();
