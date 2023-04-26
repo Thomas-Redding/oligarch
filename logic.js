@@ -334,7 +334,7 @@ class Game
         let terr_info = utils.territory_for_territory_name(
             this.mother_state, terr)
         let n_buildings = terr_info.n_barracks + terr_info.n_factories
-        let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
+        let afford = this.mother_state.nations[nat].cash >= COSTS[type]
         if (n_buildings < 4 && afford &&
              username === this.mother_state.nations[nat].president) {
                 let t_str = type == 'barracks' ? 'n_barracks' : 'n_factories'
@@ -343,7 +343,7 @@ class Game
                 terrInfo[t_str] += 1
                 this.mother_state.nations[nat].cash -= COSTS[type]
         }
-        this._prayer('built_infrastructure','')
+        this._prayer('built_infrastructure', {'type': type, 'territory': terr});
     }
 
     spawn(username, terr, type)
@@ -502,7 +502,7 @@ class Game
         this.timer = timer
         this._history = new History(this.prayer);
         this.mother_state = { }
-        const kDebug = true;
+        const kDebug = false;
         this.mother_state.settings = {
             "debug": kDebug,
             "deliberationTime": (kDebug ?   1 : 30)* 1*1000,

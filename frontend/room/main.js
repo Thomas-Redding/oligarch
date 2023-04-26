@@ -1023,6 +1023,8 @@ function htmlFromLog(action, details, isToast) {
   } else if (action == "trade_rejected") {
     if (isToast) return undefined;
     else return "Trade rejected";
+  } else if (action == "built_infrastructure") {
+    return details.type + ' built in ' + details.territory;
   } else {
     if (isToast) return undefined;
     else return action + "@" + details;
