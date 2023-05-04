@@ -9,7 +9,7 @@
    "x": 10,
    "y": 2,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "91": {
    "id": "91",
@@ -22,7 +22,7 @@
    "x": 11,
    "y": 2,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "92": {
    "id": "92",
@@ -34,7 +34,7 @@
    "x": 12,
    "y": 2,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "98": {
    "id": "98",
@@ -46,7 +46,7 @@
    "x": 18,
    "y": 2,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "99": {
    "id": "99",
@@ -59,7 +59,7 @@
    "x": 19,
    "y": 2,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "100": {
    "id": "100",
@@ -71,7 +71,7 @@
    "x": 20,
    "y": 2,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "122": {
    "id": "122",
@@ -83,7 +83,7 @@
    "x": 2,
    "y": 3,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "123": {
    "id": "123",
@@ -96,7 +96,7 @@
    "x": 3,
    "y": 3,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "124": {
    "id": "124",
@@ -109,7 +109,7 @@
    "x": 4,
    "y": 3,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "125": {
    "id": "125",
@@ -122,7 +122,7 @@
    "x": 5,
    "y": 3,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "126": {
    "id": "126",
@@ -133,7 +133,7 @@
    "x": 6,
    "y": 3,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "130": {
    "id": "130",
@@ -146,7 +146,7 @@
    "x": 10,
    "y": 3,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "131": {
    "id": "131",
@@ -161,7 +161,7 @@
    "x": 11,
    "y": 3,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "132": {
    "id": "132",
@@ -174,7 +174,7 @@
    "x": 12,
    "y": 3,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "134": {
    "id": "134",
@@ -184,7 +184,7 @@
    "x": 14,
    "y": 3,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "137": {
    "id": "137",
@@ -195,7 +195,7 @@
    "x": 17,
    "y": 3,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "138": {
    "id": "138",
@@ -208,7 +208,7 @@
    "x": 18,
    "y": 3,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "139": {
    "id": "139",
@@ -222,7 +222,7 @@
    "x": 19,
    "y": 3,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "140": {
    "id": "140",
@@ -236,7 +236,7 @@
    "x": 20,
    "y": 3,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "141": {
    "id": "141",
@@ -249,7 +249,7 @@
    "x": 21,
    "y": 3,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "142": {
    "id": "142",
@@ -262,7 +262,7 @@
    "x": 22,
    "y": 3,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "143": {
    "id": "143",
@@ -275,7 +275,7 @@
    "x": 23,
    "y": 3,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "144": {
    "id": "144",
@@ -287,7 +287,7 @@
    "x": 24,
    "y": 3,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "147": {
    "id": "147",
@@ -299,7 +299,7 @@
    "x": 27,
    "y": 3,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "148": {
    "id": "148",
@@ -312,7 +312,7 @@
    "x": 28,
    "y": 3,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "149": {
    "id": "149",
@@ -325,7 +325,7 @@
    "x": 29,
    "y": 3,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "150": {
    "id": "150",
@@ -338,7 +338,7 @@
    "x": 30,
    "y": 3,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "151": {
    "id": "151",
@@ -351,7 +351,7 @@
    "x": 31,
    "y": 3,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "152": {
    "id": "152",
@@ -364,7 +364,7 @@
    "x": 32,
    "y": 3,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "153": {
    "id": "153",
@@ -375,7 +375,7 @@
    "x": 33,
    "y": 3,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "162": {
    "id": "162",
@@ -386,7 +386,7 @@
    "x": 2,
    "y": 4,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "163": {
    "id": "163",
@@ -400,7 +400,7 @@
    "x": 3,
    "y": 4,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "164": {
    "id": "164",
@@ -415,7 +415,7 @@
    "x": 4,
    "y": 4,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "165": {
    "id": "165",
@@ -430,7 +430,7 @@
    "x": 5,
    "y": 4,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "166": {
    "id": "166",
@@ -444,7 +444,7 @@
    "x": 6,
    "y": 4,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "169": {
    "id": "169",
@@ -455,7 +455,7 @@
    "x": 9,
    "y": 4,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "171": {
    "id": "171",
@@ -468,7 +468,7 @@
    "x": 11,
    "y": 4,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "172": {
    "id": "172",
@@ -483,7 +483,7 @@
    "x": 12,
    "y": 4,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "173": {
    "id": "173",
@@ -495,7 +495,7 @@
    "x": 13,
    "y": 4,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "175": {
    "id": "175",
@@ -506,7 +506,7 @@
    "x": 15,
    "y": 4,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "180": {
    "id": "180",
@@ -520,7 +520,7 @@
    "x": 20,
    "y": 4,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "181": {
    "id": "181",
@@ -535,7 +535,7 @@
    "x": 21,
    "y": 4,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "182": {
    "id": "182",
@@ -550,7 +550,7 @@
    "x": 22,
    "y": 4,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "183": {
    "id": "183",
@@ -565,7 +565,7 @@
    "x": 23,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "184": {
    "id": "184",
@@ -580,7 +580,7 @@
    "x": 24,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "185": {
    "id": "185",
@@ -594,7 +594,7 @@
    "x": 25,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "186": {
    "id": "186",
@@ -607,7 +607,7 @@
    "x": 26,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "187": {
    "id": "187",
@@ -621,7 +621,7 @@
    "x": 27,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "188": {
    "id": "188",
@@ -636,7 +636,7 @@
    "x": 28,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "189": {
    "id": "189",
@@ -651,7 +651,7 @@
    "x": 29,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "190": {
    "id": "190",
@@ -666,7 +666,7 @@
    "x": 30,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "191": {
    "id": "191",
@@ -681,7 +681,7 @@
    "x": 31,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "192": {
    "id": "192",
@@ -696,7 +696,7 @@
    "x": 32,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "193": {
    "id": "193",
@@ -710,7 +710,7 @@
    "x": 33,
    "y": 4,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "203": {
    "id": "203",
@@ -723,7 +723,7 @@
    "x": 3,
    "y": 5,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "204": {
    "id": "204",
@@ -738,7 +738,7 @@
    "x": 4,
    "y": 5,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "205": {
    "id": "205",
@@ -753,7 +753,7 @@
    "x": 5,
    "y": 5,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "206": {
    "id": "206",
@@ -766,7 +766,7 @@
    "x": 6,
    "y": 5,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "207": {
    "id": "207",
@@ -778,7 +778,7 @@
    "x": 7,
    "y": 5,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "208": {
    "id": "208",
@@ -792,7 +792,7 @@
    "x": 8,
    "y": 5,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "209": {
    "id": "209",
@@ -804,7 +804,7 @@
    "x": 9,
    "y": 5,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "211": {
    "id": "211",
@@ -817,7 +817,7 @@
    "x": 11,
    "y": 5,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "212": {
    "id": "212",
@@ -830,7 +830,7 @@
    "x": 12,
    "y": 5,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "214": {
    "id": "214",
@@ -840,7 +840,7 @@
    "x": 14,
    "y": 5,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "216": {
    "id": "216",
@@ -852,7 +852,7 @@
    "x": 16,
    "y": 5,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "217": {
    "id": "217",
@@ -865,7 +865,7 @@
    "x": 17,
    "y": 5,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "218": {
    "id": "218",
@@ -878,7 +878,7 @@
    "x": 18,
    "y": 5,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "219": {
    "id": "219",
@@ -892,7 +892,7 @@
    "x": 19,
    "y": 5,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "220": {
    "id": "220",
@@ -907,7 +907,7 @@
    "x": 20,
    "y": 5,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "221": {
    "id": "221",
@@ -922,7 +922,7 @@
    "x": 21,
    "y": 5,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "222": {
    "id": "222",
@@ -937,7 +937,7 @@
    "x": 22,
    "y": 5,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "223": {
    "id": "223",
@@ -952,7 +952,7 @@
    "x": 23,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "224": {
    "id": "224",
@@ -967,7 +967,7 @@
    "x": 24,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "225": {
    "id": "225",
@@ -982,7 +982,7 @@
    "x": 25,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "226": {
    "id": "226",
@@ -997,7 +997,7 @@
    "x": 26,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "227": {
    "id": "227",
@@ -1012,7 +1012,7 @@
    "x": 27,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "228": {
    "id": "228",
@@ -1027,7 +1027,7 @@
    "x": 28,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "229": {
    "id": "229",
@@ -1042,7 +1042,7 @@
    "x": 29,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "230": {
    "id": "230",
@@ -1057,7 +1057,7 @@
    "x": 30,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "231": {
    "id": "231",
@@ -1072,7 +1072,7 @@
    "x": 31,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "232": {
    "id": "232",
@@ -1086,7 +1086,7 @@
    "x": 32,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "233": {
    "id": "233",
@@ -1097,7 +1097,7 @@
    "x": 33,
    "y": 5,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "244": {
    "id": "244",
@@ -1111,7 +1111,7 @@
    "x": 4,
    "y": 6,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "245": {
    "id": "245",
@@ -1126,7 +1126,7 @@
    "x": 5,
    "y": 6,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "246": {
    "id": "246",
@@ -1141,7 +1141,7 @@
    "y": 6,
    "homeContinent": "NA",
    "income": 1,
-   "isCapital": true,
+   "isCapital": true
   },
   "248": {
    "id": "248",
@@ -1155,7 +1155,7 @@
    "x": 8,
    "y": 6,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "249": {
    "id": "249",
@@ -1168,7 +1168,7 @@
    "x": 9,
    "y": 6,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "252": {
    "id": "252",
@@ -1179,7 +1179,7 @@
    "x": 12,
    "y": 6,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "256": {
    "id": "256",
@@ -1192,7 +1192,7 @@
    "x": 16,
    "y": 6,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "257": {
    "id": "257",
@@ -1207,7 +1207,7 @@
    "x": 17,
    "y": 6,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "258": {
    "id": "258",
@@ -1223,7 +1223,7 @@
    "y": 6,
    "homeContinent": "EU",
    "income": 1,
-   "isCapital": true,
+   "isCapital": true
   },
   "259": {
    "id": "259",
@@ -1238,7 +1238,7 @@
    "x": 19,
    "y": 6,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "260": {
    "id": "260",
@@ -1253,7 +1253,7 @@
    "x": 20,
    "y": 6,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "261": {
    "id": "261",
@@ -1268,7 +1268,7 @@
    "x": 21,
    "y": 6,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "262": {
    "id": "262",
@@ -1283,7 +1283,7 @@
    "x": 22,
    "y": 6,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "263": {
    "id": "263",
@@ -1298,7 +1298,7 @@
    "x": 23,
    "y": 6,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "264": {
    "id": "264",
@@ -1313,7 +1313,7 @@
    "x": 24,
    "y": 6,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "265": {
    "id": "265",
@@ -1328,7 +1328,7 @@
    "x": 25,
    "y": 6,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "266": {
    "id": "266",
@@ -1343,7 +1343,7 @@
    "x": 26,
    "y": 6,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "267": {
    "id": "267",
@@ -1358,7 +1358,7 @@
    "x": 27,
    "y": 6,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "268": {
    "id": "268",
@@ -1373,7 +1373,7 @@
    "x": 28,
    "y": 6,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "269": {
    "id": "269",
@@ -1388,7 +1388,7 @@
    "x": 29,
    "y": 6,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "270": {
    "id": "270",
@@ -1403,7 +1403,7 @@
    "x": 30,
    "y": 6,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "271": {
    "id": "271",
@@ -1418,7 +1418,7 @@
    "x": 31,
    "y": 6,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "272": {
    "id": "272",
@@ -1432,7 +1432,7 @@
    "x": 32,
    "y": 6,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "283": {
    "id": "283",
@@ -1444,7 +1444,7 @@
    "x": 3,
    "y": 7,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "284": {
    "id": "284",
@@ -1459,7 +1459,7 @@
    "x": 4,
    "y": 7,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "285": {
    "id": "285",
@@ -1474,7 +1474,7 @@
    "x": 5,
    "y": 7,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "286": {
    "id": "286",
@@ -1488,7 +1488,7 @@
    "x": 6,
    "y": 7,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "287": {
    "id": "287",
@@ -1502,7 +1502,7 @@
    "x": 7,
    "y": 7,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "288": {
    "id": "288",
@@ -1515,7 +1515,7 @@
    "x": 8,
    "y": 7,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "295": {
    "id": "295",
@@ -1528,7 +1528,7 @@
    "x": 15,
    "y": 7,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "296": {
    "id": "296",
@@ -1543,7 +1543,7 @@
    "x": 16,
    "y": 7,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "297": {
    "id": "297",
@@ -1558,7 +1558,7 @@
    "x": 17,
    "y": 7,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "298": {
    "id": "298",
@@ -1573,7 +1573,7 @@
    "x": 18,
    "y": 7,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "299": {
    "id": "299",
@@ -1588,7 +1588,7 @@
    "x": 19,
    "y": 7,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "300": {
    "id": "300",
@@ -1603,7 +1603,7 @@
    "x": 20,
    "y": 7,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "301": {
    "id": "301",
@@ -1618,7 +1618,7 @@
    "x": 21,
    "y": 7,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "302": {
    "id": "302",
@@ -1633,7 +1633,7 @@
    "x": 22,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "303": {
    "id": "303",
@@ -1648,7 +1648,7 @@
    "x": 23,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "304": {
    "id": "304",
@@ -1663,7 +1663,7 @@
    "x": 24,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "305": {
    "id": "305",
@@ -1678,7 +1678,7 @@
    "x": 25,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "306": {
    "id": "306",
@@ -1693,7 +1693,7 @@
    "x": 26,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "307": {
    "id": "307",
@@ -1708,7 +1708,7 @@
    "x": 27,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "308": {
    "id": "308",
@@ -1723,7 +1723,7 @@
    "x": 28,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "309": {
    "id": "309",
@@ -1738,7 +1738,7 @@
    "x": 29,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "310": {
    "id": "310",
@@ -1754,7 +1754,7 @@
    "y": 7,
    "homeContinent": "AS",
    "income": 1,
-   "isCapital": true,
+   "isCapital": true
   },
   "311": {
    "id": "311",
@@ -1769,7 +1769,7 @@
    "x": 31,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "312": {
    "id": "312",
@@ -1781,7 +1781,7 @@
    "x": 32,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "314": {
    "id": "314",
@@ -1791,7 +1791,7 @@
    "x": 34,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "324": {
    "id": "324",
@@ -1804,7 +1804,7 @@
    "x": 4,
    "y": 8,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "325": {
    "id": "325",
@@ -1819,7 +1819,7 @@
    "x": 5,
    "y": 8,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "326": {
    "id": "326",
@@ -1833,7 +1833,7 @@
    "x": 6,
    "y": 8,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "327": {
    "id": "327",
@@ -1846,7 +1846,7 @@
    "x": 7,
    "y": 8,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "328": {
    "id": "328",
@@ -1859,7 +1859,7 @@
    "x": 8,
    "y": 8,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "334": {
    "id": "334",
@@ -1871,7 +1871,7 @@
    "x": 14,
    "y": 8,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "335": {
    "id": "335",
@@ -1885,7 +1885,7 @@
    "x": 15,
    "y": 8,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "336": {
    "id": "336",
@@ -1899,7 +1899,7 @@
    "x": 16,
    "y": 8,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "337": {
    "id": "337",
@@ -1913,7 +1913,7 @@
    "x": 17,
    "y": 8,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "338": {
    "id": "338",
@@ -1927,7 +1927,7 @@
    "x": 18,
    "y": 8,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "339": {
    "id": "339",
@@ -1941,7 +1941,7 @@
    "x": 19,
    "y": 8,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "340": {
    "id": "340",
@@ -1955,7 +1955,7 @@
    "x": 20,
    "y": 8,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "341": {
    "id": "341",
@@ -1969,7 +1969,7 @@
    "x": 21,
    "y": 8,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "342": {
    "id": "342",
@@ -1984,7 +1984,7 @@
    "x": 22,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "343": {
    "id": "343",
@@ -1999,7 +1999,7 @@
    "x": 23,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "344": {
    "id": "344",
@@ -2013,7 +2013,7 @@
    "x": 24,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "345": {
    "id": "345",
@@ -2026,7 +2026,7 @@
    "x": 25,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "346": {
    "id": "346",
@@ -2040,7 +2040,7 @@
    "x": 26,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "347": {
    "id": "347",
@@ -2055,7 +2055,7 @@
    "x": 27,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "348": {
    "id": "348",
@@ -2070,7 +2070,7 @@
    "x": 28,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "349": {
    "id": "349",
@@ -2084,7 +2084,7 @@
    "x": 29,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "350": {
    "id": "350",
@@ -2098,7 +2098,7 @@
    "x": 30,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "351": {
    "id": "351",
@@ -2113,7 +2113,7 @@
    "x": 31,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "352": {
    "id": "352",
@@ -2126,7 +2126,7 @@
    "x": 32,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "354": {
    "id": "354",
@@ -2136,7 +2136,7 @@
    "x": 34,
    "y": 8,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "364": {
    "id": "364",
@@ -2149,7 +2149,7 @@
    "x": 4,
    "y": 9,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "365": {
    "id": "365",
@@ -2163,7 +2163,7 @@
    "x": 5,
    "y": 9,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "368": {
    "id": "368",
@@ -2173,7 +2173,7 @@
    "x": 8,
    "y": 9,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "373": {
    "id": "373",
@@ -2185,7 +2185,7 @@
    "x": 13,
    "y": 9,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "374": {
    "id": "374",
@@ -2200,7 +2200,7 @@
    "x": 14,
    "y": 9,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "375": {
    "id": "375",
@@ -2213,7 +2213,7 @@
    "x": 15,
    "y": 9,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "377": {
    "id": "377",
@@ -2225,7 +2225,7 @@
    "x": 17,
    "y": 9,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "379": {
    "id": "379",
@@ -2236,7 +2236,7 @@
    "x": 19,
    "y": 9,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "381": {
    "id": "381",
@@ -2249,7 +2249,7 @@
    "x": 21,
    "y": 9,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "382": {
    "id": "382",
@@ -2264,7 +2264,7 @@
    "x": 22,
    "y": 9,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "383": {
    "id": "383",
@@ -2278,7 +2278,7 @@
    "x": 23,
    "y": 9,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "386": {
    "id": "386",
@@ -2291,7 +2291,7 @@
    "x": 26,
    "y": 9,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "387": {
    "id": "387",
@@ -2306,7 +2306,7 @@
    "x": 27,
    "y": 9,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "388": {
    "id": "388",
@@ -2319,7 +2319,7 @@
    "x": 28,
    "y": 9,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "390": {
    "id": "390",
@@ -2332,7 +2332,7 @@
    "x": 30,
    "y": 9,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "391": {
    "id": "391",
@@ -2346,7 +2346,7 @@
    "x": 31,
    "y": 9,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "405": {
    "id": "405",
@@ -2358,7 +2358,7 @@
    "x": 5,
    "y": 10,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "406": {
    "id": "406",
@@ -2370,7 +2370,7 @@
    "x": 6,
    "y": 10,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "414": {
    "id": "414",
@@ -2382,7 +2382,7 @@
    "x": 14,
    "y": 10,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "415": {
    "id": "415",
@@ -2394,7 +2394,7 @@
    "x": 15,
    "y": 10,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "418": {
    "id": "418",
@@ -2404,7 +2404,7 @@
    "x": 18,
    "y": 10,
    "homeContinent": "EU",
-   "income": 1,
+   "income": 1
   },
   "422": {
    "id": "422",
@@ -2418,7 +2418,7 @@
    "x": 22,
    "y": 10,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "423": {
    "id": "423",
@@ -2433,7 +2433,7 @@
    "x": 23,
    "y": 10,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "424": {
    "id": "424",
@@ -2446,7 +2446,7 @@
    "x": 24,
    "y": 10,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "427": {
    "id": "427",
@@ -2459,7 +2459,7 @@
    "x": 27,
    "y": 10,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "428": {
    "id": "428",
@@ -2472,7 +2472,7 @@
    "x": 28,
    "y": 10,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "431": {
    "id": "431",
@@ -2485,7 +2485,7 @@
    "x": 31,
    "y": 10,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "432": {
    "id": "432",
@@ -2497,7 +2497,7 @@
    "x": 32,
    "y": 10,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "446": {
    "id": "446",
@@ -2509,7 +2509,7 @@
    "x": 6,
    "y": 11,
    "homeContinent": "NA",
-   "income": 1,
+   "income": 1
   },
   "461": {
    "id": "461",
@@ -2521,7 +2521,7 @@
    "x": 21,
    "y": 11,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "462": {
    "id": "462",
@@ -2535,7 +2535,7 @@
    "x": 22,
    "y": 11,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "463": {
    "id": "463",
@@ -2550,7 +2550,7 @@
    "x": 23,
    "y": 11,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "464": {
    "id": "464",
@@ -2562,7 +2562,7 @@
    "x": 24,
    "y": 11,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "467": {
    "id": "467",
@@ -2573,7 +2573,7 @@
    "x": 27,
    "y": 11,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "471": {
    "id": "471",
@@ -2584,7 +2584,7 @@
    "x": 31,
    "y": 11,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "486": {
    "id": "486",
@@ -2597,7 +2597,7 @@
    "x": 6,
    "y": 12,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "487": {
    "id": "487",
@@ -2611,7 +2611,7 @@
    "x": 7,
    "y": 12,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "488": {
    "id": "488",
@@ -2624,7 +2624,7 @@
    "x": 8,
    "y": 12,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "489": {
    "id": "489",
@@ -2636,7 +2636,7 @@
    "x": 9,
    "y": 12,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "495": {
    "id": "495",
@@ -2648,7 +2648,7 @@
    "x": 15,
    "y": 12,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "496": {
    "id": "496",
@@ -2661,7 +2661,7 @@
    "x": 16,
    "y": 12,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "497": {
    "id": "497",
@@ -2674,7 +2674,7 @@
    "x": 17,
    "y": 12,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "498": {
    "id": "498",
@@ -2686,7 +2686,7 @@
    "x": 18,
    "y": 12,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "501": {
    "id": "501",
@@ -2698,7 +2698,7 @@
    "x": 21,
    "y": 12,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "503": {
    "id": "503",
@@ -2711,7 +2711,7 @@
    "x": 23,
    "y": 12,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "504": {
    "id": "504",
@@ -2724,7 +2724,7 @@
    "x": 24,
    "y": 12,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "525": {
    "id": "525",
@@ -2737,7 +2737,7 @@
    "x": 5,
    "y": 13,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "526": {
    "id": "526",
@@ -2752,7 +2752,7 @@
    "x": 6,
    "y": 13,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "527": {
    "id": "527",
@@ -2767,7 +2767,7 @@
    "x": 7,
    "y": 13,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "528": {
    "id": "528",
@@ -2782,7 +2782,7 @@
    "x": 8,
    "y": 13,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "529": {
    "id": "529",
@@ -2795,7 +2795,7 @@
    "x": 9,
    "y": 13,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "534": {
    "id": "534",
@@ -2808,7 +2808,7 @@
    "x": 14,
    "y": 13,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "535": {
    "id": "535",
@@ -2823,7 +2823,7 @@
    "x": 15,
    "y": 13,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "536": {
    "id": "536",
@@ -2838,7 +2838,7 @@
    "x": 16,
    "y": 13,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "537": {
    "id": "537",
@@ -2853,7 +2853,7 @@
    "x": 17,
    "y": 13,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "538": {
    "id": "538",
@@ -2867,7 +2867,7 @@
    "x": 18,
    "y": 13,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "539": {
    "id": "539",
@@ -2880,7 +2880,7 @@
    "x": 19,
    "y": 13,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "540": {
    "id": "540",
@@ -2894,7 +2894,7 @@
    "x": 20,
    "y": 13,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "541": {
    "id": "541",
@@ -2907,7 +2907,7 @@
    "x": 21,
    "y": 13,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "543": {
    "id": "543",
@@ -2919,7 +2919,7 @@
    "x": 23,
    "y": 13,
    "homeContinent": "AS",
-   "income": 1,
+   "income": 1
   },
   "565": {
    "id": "565",
@@ -2931,7 +2931,7 @@
    "x": 5,
    "y": 14,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "566": {
    "id": "566",
@@ -2946,7 +2946,7 @@
    "x": 6,
    "y": 14,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "567": {
    "id": "567",
@@ -2961,7 +2961,7 @@
    "x": 7,
    "y": 14,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "568": {
    "id": "568",
@@ -2976,7 +2976,7 @@
    "x": 8,
    "y": 14,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "569": {
    "id": "569",
@@ -2991,7 +2991,7 @@
    "x": 9,
    "y": 14,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "570": {
    "id": "570",
@@ -3004,7 +3004,7 @@
    "x": 10,
    "y": 14,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "574": {
    "id": "574",
@@ -3016,7 +3016,7 @@
    "x": 14,
    "y": 14,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "575": {
    "id": "575",
@@ -3031,7 +3031,7 @@
    "x": 15,
    "y": 14,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "576": {
    "id": "576",
@@ -3046,7 +3046,7 @@
    "x": 16,
    "y": 14,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "577": {
    "id": "577",
@@ -3061,7 +3061,7 @@
    "x": 17,
    "y": 14,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "578": {
    "id": "578",
@@ -3076,7 +3076,7 @@
    "x": 18,
    "y": 14,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "579": {
    "id": "579",
@@ -3091,7 +3091,7 @@
    "x": 19,
    "y": 14,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "580": {
    "id": "580",
@@ -3106,7 +3106,7 @@
    "x": 20,
    "y": 14,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "581": {
    "id": "581",
@@ -3121,7 +3121,7 @@
    "x": 21,
    "y": 14,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "582": {
    "id": "582",
@@ -3134,7 +3134,7 @@
    "x": 22,
    "y": 14,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "583": {
    "id": "583",
@@ -3145,7 +3145,7 @@
    "x": 23,
    "y": 14,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "605": {
    "id": "605",
@@ -3158,7 +3158,7 @@
    "x": 5,
    "y": 15,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "606": {
    "id": "606",
@@ -3173,7 +3173,7 @@
    "x": 6,
    "y": 15,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "607": {
    "id": "607",
@@ -3188,7 +3188,7 @@
    "x": 7,
    "y": 15,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "608": {
    "id": "608",
@@ -3203,7 +3203,7 @@
    "x": 8,
    "y": 15,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "609": {
    "id": "609",
@@ -3218,7 +3218,7 @@
    "x": 9,
    "y": 15,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "610": {
    "id": "610",
@@ -3230,7 +3230,7 @@
    "x": 10,
    "y": 15,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "614": {
    "id": "614",
@@ -3243,7 +3243,7 @@
    "x": 14,
    "y": 15,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "615": {
    "id": "615",
@@ -3258,7 +3258,7 @@
    "x": 15,
    "y": 15,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "616": {
    "id": "616",
@@ -3273,7 +3273,7 @@
    "x": 16,
    "y": 15,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "617": {
    "id": "617",
@@ -3288,7 +3288,7 @@
    "x": 17,
    "y": 15,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "618": {
    "id": "618",
@@ -3303,7 +3303,7 @@
    "x": 18,
    "y": 15,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "619": {
    "id": "619",
@@ -3318,7 +3318,7 @@
    "x": 19,
    "y": 15,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "620": {
    "id": "620",
@@ -3333,7 +3333,7 @@
    "x": 20,
    "y": 15,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "621": {
    "id": "621",
@@ -3346,7 +3346,7 @@
    "x": 21,
    "y": 15,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "632": {
    "id": "632",
@@ -3357,7 +3357,7 @@
    "x": 32,
    "y": 15,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "633": {
    "id": "633",
@@ -3368,7 +3368,7 @@
    "x": 33,
    "y": 15,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "646": {
    "id": "646",
@@ -3381,7 +3381,7 @@
    "x": 6,
    "y": 16,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "647": {
    "id": "647",
@@ -3396,7 +3396,7 @@
    "x": 7,
    "y": 16,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "648": {
    "id": "648",
@@ -3411,7 +3411,7 @@
    "x": 8,
    "y": 16,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "649": {
    "id": "649",
@@ -3426,7 +3426,7 @@
    "x": 9,
    "y": 16,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "650": {
    "id": "650",
@@ -3439,7 +3439,7 @@
    "x": 10,
    "y": 16,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "655": {
    "id": "655",
@@ -3451,7 +3451,7 @@
    "x": 15,
    "y": 16,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "656": {
    "id": "656",
@@ -3464,7 +3464,7 @@
    "x": 16,
    "y": 16,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "657": {
    "id": "657",
@@ -3478,7 +3478,7 @@
    "x": 17,
    "y": 16,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "658": {
    "id": "658",
@@ -3493,7 +3493,7 @@
    "x": 18,
    "y": 16,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "659": {
    "id": "659",
@@ -3508,7 +3508,7 @@
    "x": 19,
    "y": 16,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "660": {
    "id": "660",
@@ -3523,7 +3523,7 @@
    "x": 20,
    "y": 16,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "661": {
    "id": "661",
@@ -3536,7 +3536,7 @@
    "x": 21,
    "y": 16,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "671": {
    "id": "671",
@@ -3546,7 +3546,7 @@
    "x": 31,
    "y": 16,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "673": {
    "id": "673",
@@ -3557,7 +3557,7 @@
    "x": 33,
    "y": 16,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "675": {
    "id": "675",
@@ -3568,7 +3568,7 @@
    "x": 35,
    "y": 16,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "676": {
    "id": "676",
@@ -3580,7 +3580,7 @@
    "x": 36,
    "y": 16,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "686": {
    "id": "686",
@@ -3593,7 +3593,7 @@
    "x": 6,
    "y": 17,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "687": {
    "id": "687",
@@ -3608,7 +3608,7 @@
    "x": 7,
    "y": 17,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "688": {
    "id": "688",
@@ -3623,7 +3623,7 @@
    "x": 8,
    "y": 17,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "689": {
    "id": "689",
@@ -3636,7 +3636,7 @@
    "x": 9,
    "y": 17,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "697": {
    "id": "697",
@@ -3650,7 +3650,7 @@
    "x": 17,
    "y": 17,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "698": {
    "id": "698",
@@ -3665,7 +3665,7 @@
    "x": 18,
    "y": 17,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "699": {
    "id": "699",
@@ -3680,7 +3680,7 @@
    "x": 19,
    "y": 17,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "700": {
    "id": "700",
@@ -3693,7 +3693,7 @@
    "x": 20,
    "y": 17,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "711": {
    "id": "711",
@@ -3703,7 +3703,7 @@
    "x": 31,
    "y": 17,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "715": {
    "id": "715",
@@ -3715,7 +3715,7 @@
    "x": 35,
    "y": 17,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "716": {
    "id": "716",
@@ -3726,7 +3726,7 @@
    "x": 36,
    "y": 17,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "727": {
    "id": "727",
@@ -3740,7 +3740,7 @@
    "x": 7,
    "y": 18,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "728": {
    "id": "728",
@@ -3755,7 +3755,7 @@
    "x": 8,
    "y": 18,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "729": {
    "id": "729",
@@ -3768,7 +3768,7 @@
    "x": 9,
    "y": 18,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "737": {
    "id": "737",
@@ -3780,7 +3780,7 @@
    "x": 17,
    "y": 18,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "738": {
    "id": "738",
@@ -3795,7 +3795,7 @@
    "x": 18,
    "y": 18,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "739": {
    "id": "739",
@@ -3810,7 +3810,7 @@
    "x": 19,
    "y": 18,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "740": {
    "id": "740",
@@ -3824,7 +3824,7 @@
    "x": 20,
    "y": 18,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "766": {
    "id": "766",
@@ -3836,7 +3836,7 @@
    "x": 6,
    "y": 19,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "767": {
    "id": "767",
@@ -3852,7 +3852,7 @@
    "y": 19,
    "homeContinent": "SA",
    "income": 1,
-   "isCapital": true,
+   "isCapital": true
   },
   "768": {
    "id": "768",
@@ -3865,7 +3865,7 @@
    "x": 8,
    "y": 19,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "777": {
    "id": "777",
@@ -3879,7 +3879,7 @@
    "x": 17,
    "y": 19,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "778": {
    "id": "778",
@@ -3894,7 +3894,7 @@
    "x": 18,
    "y": 19,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "779": {
    "id": "779",
@@ -3909,7 +3909,7 @@
    "x": 19,
    "y": 19,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "780": {
    "id": "780",
@@ -3921,7 +3921,7 @@
    "x": 20,
    "y": 19,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "782": {
    "id": "782",
@@ -3931,7 +3931,7 @@
    "x": 22,
    "y": 19,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "792": {
    "id": "792",
@@ -3943,7 +3943,7 @@
    "x": 32,
    "y": 19,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "793": {
    "id": "793",
@@ -3955,7 +3955,7 @@
    "x": 33,
    "y": 19,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "795": {
    "id": "795",
@@ -3966,7 +3966,7 @@
    "x": 35,
    "y": 19,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "807": {
    "id": "807",
@@ -3980,7 +3980,7 @@
    "x": 7,
    "y": 20,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "808": {
    "id": "808",
@@ -3993,7 +3993,7 @@
    "x": 8,
    "y": 20,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "817": {
    "id": "817",
@@ -4005,7 +4005,7 @@
    "x": 17,
    "y": 20,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "818": {
    "id": "818",
@@ -4020,7 +4020,7 @@
    "x": 18,
    "y": 20,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "819": {
    "id": "819",
@@ -4036,7 +4036,7 @@
    "y": 20,
    "homeContinent": "AF",
    "income": 1,
-   "isCapital": true,
+   "isCapital": true
   },
   "820": {
    "id": "820",
@@ -4049,7 +4049,7 @@
    "x": 20,
    "y": 20,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "822": {
    "id": "822",
@@ -4059,7 +4059,7 @@
    "x": 22,
    "y": 20,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "832": {
    "id": "832",
@@ -4072,7 +4072,7 @@
    "x": 32,
    "y": 20,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "833": {
    "id": "833",
@@ -4087,7 +4087,7 @@
    "x": 33,
    "y": 20,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "834": {
    "id": "834",
@@ -4101,7 +4101,7 @@
    "x": 34,
    "y": 20,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "835": {
    "id": "835",
@@ -4115,7 +4115,7 @@
    "x": 35,
    "y": 20,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "836": {
    "id": "836",
@@ -4128,7 +4128,7 @@
    "x": 36,
    "y": 20,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "846": {
    "id": "846",
@@ -4140,7 +4140,7 @@
    "x": 6,
    "y": 21,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "847": {
    "id": "847",
@@ -4153,7 +4153,7 @@
    "x": 7,
    "y": 21,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "857": {
    "id": "857",
@@ -4166,7 +4166,7 @@
    "x": 17,
    "y": 21,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "858": {
    "id": "858",
@@ -4181,7 +4181,7 @@
    "x": 18,
    "y": 21,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "859": {
    "id": "859",
@@ -4194,7 +4194,7 @@
    "x": 19,
    "y": 21,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "871": {
    "id": "871",
@@ -4206,7 +4206,7 @@
    "x": 31,
    "y": 21,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "872": {
    "id": "872",
@@ -4221,7 +4221,7 @@
    "x": 32,
    "y": 21,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "873": {
    "id": "873",
@@ -4236,7 +4236,7 @@
    "x": 33,
    "y": 21,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "874": {
    "id": "874",
@@ -4252,7 +4252,7 @@
    "y": 21,
    "homeContinent": "AU",
    "income": 1,
-   "isCapital": true,
+   "isCapital": true
   },
   "875": {
    "id": "875",
@@ -4267,7 +4267,7 @@
    "x": 35,
    "y": 21,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "876": {
    "id": "876",
@@ -4279,7 +4279,7 @@
    "x": 36,
    "y": 21,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "887": {
    "id": "887",
@@ -4290,7 +4290,7 @@
    "x": 7,
    "y": 22,
    "homeContinent": "SA",
-   "income": 1,
+   "income": 1
   },
   "898": {
    "id": "898",
@@ -4302,7 +4302,7 @@
    "x": 18,
    "y": 22,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "899": {
    "id": "899",
@@ -4314,7 +4314,7 @@
    "x": 19,
    "y": 22,
    "homeContinent": "AF",
-   "income": 1,
+   "income": 1
   },
   "912": {
    "id": "912",
@@ -4326,7 +4326,7 @@
    "x": 32,
    "y": 22,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "913": {
    "id": "913",
@@ -4339,7 +4339,7 @@
    "x": 33,
    "y": 22,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "914": {
    "id": "914",
@@ -4352,7 +4352,7 @@
    "x": 34,
    "y": 22,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "915": {
    "id": "915",
@@ -4365,7 +4365,7 @@
    "x": 35,
    "y": 22,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   },
   "916": {
    "id": "916",
@@ -4377,40 +4377,40 @@
    "x": 36,
    "y": 22,
    "homeContinent": "AU",
-   "income": 1,
+   "income": 1
   }
  },
  "continents": [
   {
    "abbreviation": "NA",
    "capital": 90,
-   "name": "North America",
+   "name": "North America"
   },
   {
    "abbreviation": "EU",
    "capital": 98,
-   "name": "Europe",
+   "name": "Europe"
   },
   {
    "abbreviation": "AS",
    "capital": 143,
-   "name": "Asia",
+   "name": "Asia"
   },
   {
    "abbreviation": "SA",
    "capital": 486,
-   "name": "South America",
+   "name": "South America"
   },
   {
    "abbreviation": "AF",
    "capital": 495,
-   "name": "Africa",
+   "name": "Africa"
   },
   {
    "abbreviation": "AU",
    "capital": 632,
-   "name": "Australia",
-  },
+   "name": "Australia"
+  }
  ],
  "waterPaths": [
   [{"x":19, "y":20}, {"x":21, "y":20}],
@@ -4442,6 +4442,6 @@
   [{"x":35, "y":17}, {"x":34, "y":19}],
   [{"x":30, "y":17}, {"x":31, "y":19}],
   [{"x":31, "y":15}, {"x":30, "y":16}],
-  [{"x":30, "y":17}, {"x":32, "y":16}],
+  [{"x":30, "y":17}, {"x":32, "y":16}]
  ]
 }
