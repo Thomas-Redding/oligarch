@@ -80,6 +80,14 @@ const kAbbr2Name = {
 }
 
 let utils = {
+  load_map(path) {
+    let rtn = JSON.parse(fs.readFileSync('map.json'));
+    for (let path of gMap.waterPaths) {
+      rtn.states[path.from]["adjacencies"].push(path.to);
+      rtn.states[path.to]["adjacencies"].push(path.from);
+    }
+    return rtn;
+  },
   CAPITALS: ["819", "246", "767", "258", "310", "874"],
   NATIONS: {
     "Africa": {

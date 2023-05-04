@@ -1313,6 +1313,10 @@ let loadPromises = [
           tab = kTabInfo;
           fetch('room/assets/map.json').then(resp => resp.json()).then(map => {
             gMap = map;
+            for (let path of gMap.waterPaths) {
+              gMap[path.from]["adjacencies"].push(path.to);
+              gMap[path.to]["adjacencies"].push(path.from);
+            }
             window.onresize();
           });
         }
