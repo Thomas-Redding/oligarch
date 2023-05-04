@@ -4384,32 +4384,38 @@
   {
    "abbreviation": "NA",
    "capital": 90,
-   "name": "North America"
+   "name": "North America",
+   "color": {"r": 224, "g": 128, "b": 96}
   },
   {
    "abbreviation": "EU",
    "capital": 98,
-   "name": "Europe"
+   "name": "Europe",
+   "color": {"r": 224, "g": 224, "b": 96}
   },
   {
    "abbreviation": "AS",
    "capital": 143,
-   "name": "Asia"
+   "name": "Asia",
+   "color": {"r": 96, "g": 255, "b": 255}
   },
   {
    "abbreviation": "SA",
    "capital": 486,
-   "name": "South America"
+   "name": "South America",
+   "color": {"r": 128, "g": 144, "b": 255}
   },
   {
    "abbreviation": "AF",
    "capital": 495,
-   "name": "Africa"
+   "name": "Africa",
+   "color": {"r": 96, "g": 255, "b": 96}
   },
   {
    "abbreviation": "AU",
    "capital": 632,
-   "name": "Australia"
+   "name": "Australia",
+   "color": {"r": 255, "g": 96, "b": 255}
   }
  ],
  "waterPaths": [
