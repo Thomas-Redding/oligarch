@@ -431,7 +431,7 @@ class Hex {
   }
   static unhighlight_all_hexes() {
     // Unhighlight all hexagons
-    for (let id in kMap) {
+    for (let id in gLatestState.map.states) {
       gHexes[id].path.style.strokeWidth = 0;
       gHexes[id].path.style.stroke = '#0000';
     }
@@ -609,7 +609,7 @@ class Hex {
     return null;
   }
   set_type(type) {
-    if (kMap[this.id].isCapital) {
+    if (gLatestState.map.states[this.id].isCapital) {
       if (type !== kTileTypeCapital) {
         throw Error('');
       }
