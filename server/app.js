@@ -77,7 +77,7 @@ let app = http.createServer((request, response) => {
 
 // If you want to host for a LAN party, choose the IP address assigned by your router.
 // Start the server on port 3000
- app.listen(3000, '127.0.0.1');
+app.listen(3000, '127.0.0.1');
 // app.listen(3000, '10.0.0.50');
 // app.listen(3000, '10.30.18.174');
 // app.listen(3000, '192.168.1.172');
