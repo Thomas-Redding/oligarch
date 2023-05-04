@@ -296,64 +296,14 @@ function render_map(state) {
   // This code only runs once!
   if (Object.keys(gHexes).length === 0) {
     // Draw water lines
-    let waterLines = [
-      // Madagascar
-      [{x:19, y:20}, {x:21, y:20}],
-      [{x:19, y:19}, {x:21, y:19}],
-      [{x:19, y:19}, {x:21, y:20}],
-
-      // Mediterranean
-      [{x:14, y:10}, {x:15, y:12}],
-      [{x:14, y:12}, {x:14, y:10}],
-      [{x:13, y:10}, {x:14, y:12}],
-      [{x:17, y:10}, {x:17, y:12}],
-      [{x:17, y:10}, {x:16, y:12}],
-
-      // North America and Greenland
-      [{x:8, y:5}, {x:10, y:4}],
-      [{x:8, y:4}, {x:9, y:3}],
-
-      // Greenland to Great Britain
-      [{x:12, y:4}, {x:13, y:3}],
-      [{x:12, y:4}, {x:14, y:4}],
-      [{x:12, y:4}, {x:13, y:5}],
-
-      // Great Britain to Europe
-      [{x:13, y:5}, {x:15, y:6}],
-      [{x:14, y:4}, {x:15, y:5}],
-
-      // North America and South America
-      [{x:4, y:10}, {x:5, y:12}],
-
-      // South America to Africa
-      [{x:9, y:15}, {x:13, y:14}],
-      [{x:9, y:15}, {x:13, y:15}],
-
-      // Asia and Australia
-      [{x:30, y:11}, {x:31, y:15}],
-      [{x:30, y:11}, {x:32, y:15}],
-      [{x:30, y:11}, {x:30, y:16}],
-
-      // Asia and Japan
-      [{x:31, y:8}, {x:33, y:8}],
-      [{x:31, y:7}, {x:33, y:7}],
-
-      // Australia
-      [{x:32, y:15}, {x:34, y:16}],
-      [{x:32, y:16}, {x:34, y:16}],
-      [{x:34, y:17}, {x:34, y:19}],
-      [{x:35, y:17}, {x:34, y:19}],
-      [{x:30, y:17}, {x:31, y:19}],
-      [{x:31, y:15}, {x:30, y:16}],
-      [{x:30, y:17}, {x:32, y:16}],
-
-    ];
-    for (let [a, b] of waterLines) {
+    for (let [a, b] of gLatestState.map.waterPaths) {
+      let stateA = gLatestState.map.states[a];
+      let stateB = gLatestState.map.states[b];
       let line = svg.line(
-        Hex.get_screen_x(a.x, a.y),
-        Hex.get_screen_y(a.x, a.y),
-        Hex.get_screen_x(b.x, b.y),
-        Hex.get_screen_y(b.x, b.y),
+        Hex.get_screen_x(stateA.x - 1, stateA.y),
+        Hex.get_screen_y(stateA.x - 1, stateA.y),
+        Hex.get_screen_x(stateB.x - 1, stateB.y),
+        Hex.get_screen_y(stateB.x - 1, stateB.y),
       );
       line.style.stroke = 'white';
       line.style.strokeWidth = 2;
@@ -365,14 +315,14 @@ function render_map(state) {
       gHexes[id] = new Hex(id, gLatestState, gLatestState.map.states[id]);
     }
 
-    draw_map_table(state);
-
     hexMap.addEventListener('click', (e) => {
       if (e.target === hexMap) {
         ocean_clicked();
       }
     });
   }
+
+  draw_map_table(state);
 
   for (let hexId in gLatestState.map.states) {
     if (gHexIdToUnitType[hexId] === undefined) {
