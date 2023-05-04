@@ -237,7 +237,7 @@ let utils = {
   territories_of_nation: (mother_state, nation) => {
     let rtn = [];
     for (let nat in utils.NATIONS) {
-      let hexIds = Object.values(mother_state.map.states).filter(x => x.homeContinent == utils.NATIONS[nat].abbr).map(x => x.id);
+      let hexIds = Object.values(mother_state.map.states).filter(x => x.homeContinent == utils.abbr_from_nation_name(mother_state, nat)).map(x => x.id);
       for (let hexId of hexIds) {
         if (utils.territory_to_owner(mother_state, hexId) == nation) {
           rtn.push(hexId);
@@ -753,6 +753,15 @@ let utils = {
       }
     }
     throw Error("Nation abbreviation not found: " + nation_abbreviation);
+  },
+
+  abbr_from_nation_name(mother_state, nation_name) {
+    for (let continent of mother_state.map.continents) {
+      if (continent.name == nation_name) {
+        return continent.abbreviation;
+      }
+    }
+    throw Error("Nation name not found: " + nation_abbreviation);
   }
 };
 
