@@ -230,7 +230,12 @@ function draw_map_table(state) {
   function font(size) {
     return "bold " + kFontSize + "px sans-serif";
   }
-  const incomeTable = svg.g();
+  let incomeTable = document.getElementById("incomeTable");
+  if (!incomeTable) {
+    incomeTable = svg.g();
+    incomeTable.setAttribute("id", "incomeTable");
+  }
+  incomeTable.innerHTML = "";
   incomeTable.setAttribute('transform', "translate(780,450)");
   const nations = ['Africa', 'North America', 'South America', 'Europe', 'Asia', 'Australia'];
   const abbrs = ['AF', 'NA', 'SA', 'EU', 'AS', 'AU'];
