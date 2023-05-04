@@ -227,7 +227,7 @@ let gHexes = {};
 
 function draw_map_table(state) {
   const kColumnWidth = 80;
-  const kFontSize = 24;
+  const kFontSize = 20;
   function font(size) {
     return "bold " + kFontSize + "px sans-serif";
   }
@@ -1415,6 +1415,8 @@ let loadPromises = [
         } else if (action == "connection_change") {
           render_table(state);
         }
+
+        render_map(state);
 
         if (state.stage.phase === "Action") {
           render_vote_table(state);
