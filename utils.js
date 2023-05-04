@@ -413,11 +413,6 @@ let utils = {
     const getAdjacencies = (territoryID) => {
       let r = motherState.map.states[territoryID]["adjacencies"];
       r = r.filter(id => !territoriesAdjacentToEnemies.has(id));
-      r = r.filter(id => !territoriesWithFriendlyUnits.has(id));
-      r = r.filter(id => {
-        let a = utils.num_barracks_and_factories_in_territory(motherState, id);
-        return a.n_barracks + a.n_factories === 0;
-      });
       return r;
     };
     const kTroopTypeToSpeed = {
@@ -426,6 +421,16 @@ let utils = {
       "Calvary": 4,
     };
     let D = utils.distance_to_hexes(territoryID, getAdjacencies, kTroopTypeToSpeed[troopType]);
+    for (let id of Object.keys(D)) {
+      if (territoriesWithFriendlyUnits.has(id)) {
+        delete D[id];
+        continue;
+      }
+      let a = utils.num_barracks_and_factories_in_territory(motherState, id);
+      if (a.n_barracks + a.n_factories > 0) {
+        delete D[id];
+      }
+    }
     return D;
   },
 
@@ -442,7 +447,6 @@ let utils = {
         break;
       }
       let node = open.pop_front();
-      console.log(node, D);
       if (D[node] + 1 > maxDistance) {
         continue;
       }
