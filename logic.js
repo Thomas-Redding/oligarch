@@ -729,7 +729,7 @@ class Game
             nation.owns = []
             nation.army = []
             nation.president = null
-            let hexIds = Object.values(this.mother_state.map.states).filter(x => x.homeContinent == utils.NATIONS[nationName].abbr).map(x => x.id);
+            let hexIds = Object.values(this.mother_state.map.states).filter(x => x.homeContinent == utils.abbr_from_nation_name(this.mother_state, nationName)).map(x => x.id);
             for (let hexId of hexIds) {
                 nation.owns.push(hexId)
                 nation[hexId] = {}
