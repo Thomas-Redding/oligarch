@@ -524,8 +524,9 @@ let utils = {
     return armies;
   },
 
-  territories_of_nation_that_can_spawn: (mother_state, nation) => {
-    let nation_name = name_from_nation(nation);
+  territories_of_nation_that_can_spawn: (mother_state, nation_name) => {
+    //let nation_name = utils.name_from_nation(nation);
+    let nation = mother_state.nations[nation_name];
     let territoriesWithArmy = {};
     for (let nationName in mother_state.nations) {
       let nat = mother_state.nations[nationName];
