@@ -349,6 +349,8 @@ class Hex {
       return true;
     }
 
+    let a = utils.num_barracks_and_factories_in_territory(gLatestState, this.id);
+
     let territory = gLatestState.nations[nationName][this.id];
     let army = gLatestState.nations[nationName].army;
     army = army.filter(x => x.territory == this.id);
@@ -362,7 +364,7 @@ class Hex {
       }
     } else {
       if (gLatestState.stage.subphase === 'Spawn') {
-        return territory.n_barracks_can_spawn === 0;
+        return a.n_barracks_can_spawn === 0;
       }
     }
     return true;

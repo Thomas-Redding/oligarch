@@ -265,7 +265,7 @@ function draw_map_table(state) {
     ));
     incomeTable.children[incomeTable.children.length - 1].style.font = font(kFontSize);
     incomeTable.appendChild(svg.text(
-      "$" + utils.income_of_nation(state, nations[i]),
+      "$" + gLatestState.nations["North America"].cash,
       kColumnWidth,
       (i + 1) * kFontSize,
       {"text-anchor": "end"}
