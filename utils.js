@@ -440,7 +440,7 @@ let utils = {
       }
       let node = open.pop_front();
       console.log(node, D);
-      if (D[node] + 1 >= maxDistance) {
+      if (D[node] + 1 > maxDistance) {
         continue;
       }
       for (let neighbor of getAdjacencies(node)) {
