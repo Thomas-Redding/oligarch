@@ -51,7 +51,6 @@ function bid(val, button) {
   if (button.classList.contains('disabled-button')) {
     return;
   }
-  gLatestState
   if (gLatestState.players[gUsername].cash < val) return;
   send({
     "method": "bid",
