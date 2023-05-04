@@ -225,6 +225,64 @@ function ocean_clicked() {
 
 let gHexes = {};
 
+function draw_map_table(state) {
+  const kColumnWidth = 80;
+  const kFontSize = 24;
+  function font(size) {
+    return "bold " + kFontSize + "px sans-serif";
+  }
+  const incomeTable = svg.g();
+  incomeTable.setAttribute('transform', "translate(780,450)");
+  const nations = ['Africa', 'North America', 'South America', 'Europe', 'Asia', 'Australia'];
+  const abbrs = ['AF', 'NA', 'SA', 'EU', 'AS', 'AU'];
+  {
+    incomeTable.appendChild(svg.text(
+      "cash",
+      kColumnWidth * 1,
+      0,
+      {
+        "text-anchor": "end",
+      }
+    ));
+    incomeTable.children[incomeTable.children.length - 1].style.font = font(kFontSize * 0.8);
+    incomeTable.appendChild(svg.text(
+      "rev",
+      kColumnWidth * 2,
+      0,
+      {
+        "text-anchor": "end",
+      }
+    ));
+    incomeTable.children[incomeTable.children.length - 1].style.font = font(kFontSize * 0.8);
+  }
+  for (let i = 0; i < nations.length; ++i) {
+    incomeTable.appendChild(svg.text(
+      abbrs[i],
+      0,
+      (i + 1) * kFontSize,
+      {
+        "text-anchor": "end",
+      }
+    ));
+    incomeTable.children[incomeTable.children.length - 1].style.font = font(kFontSize);
+    incomeTable.appendChild(svg.text(
+      "$" + utils.income_of_nation(state, nations[i]),
+      kColumnWidth,
+      (i + 1) * kFontSize,
+      {"text-anchor": "end"}
+    ));
+    incomeTable.children[incomeTable.children.length - 1].style.font = font(kFontSize);
+    incomeTable.appendChild(svg.text(
+      "$" + utils.income_of_nation(state, nations[i]),
+      kColumnWidth * 2,
+      (i + 1) * kFontSize,
+      {"text-anchor": "end"}
+    ));
+    incomeTable.children[incomeTable.children.length - 1].style.font = font(kFontSize);
+  }
+  hexMap.appendChild(incomeTable);
+}
+
 function render_map(state) {
   // render_nation_rects(state);
 
@@ -308,29 +366,7 @@ function render_map(state) {
       gHexes[id] = new Hex(id, kMap[id]);
     }
 
-    const incomeTable = svg.g();
-    incomeTable.setAttribute('transform', "translate(850,450)");
-    const nations = ['Africa', 'North America', 'South America', 'Europe', 'Asia', 'Australia'];
-    const abbrs = ['Africa', 'N America', 'S America', 'Europe', 'Asia', 'Australia'];
-    for (let i = 0; i < nations.length; ++i) {
-      incomeTable.appendChild(svg.text(
-        abbrs[i],
-        0,
-        i * 32,
-        {
-          "text-anchor": "end",
-        }
-      ));
-      incomeTable.children[incomeTable.children.length - 1].style.font = "bold 30px sans-serif";
-      incomeTable.appendChild(svg.text(
-        "$" + utils.income_of_nation(state, nations[i]),
-        100,
-        i * 32,
-        {"text-anchor": "end"}
-      ));
-      incomeTable.children[incomeTable.children.length - 1].style.font = "bold 30px sans-serif";
-    }
-    hexMap.appendChild(incomeTable);
+    draw_map_table(state);
 
     hexMap.addEventListener('click', (e) => {
       if (e.target === hexMap) {
