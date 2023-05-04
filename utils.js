@@ -1,8 +1,3 @@
-try {
-  kMap = require('./map.js');
-} catch {
-  // Frontend just uses <script src="utils.js"></script> :)
-}
 
 const HexType = {
   none: "none",
