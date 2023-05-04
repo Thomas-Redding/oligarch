@@ -487,6 +487,7 @@ let utils = {
         continue;
       }
       // Must be adjacent to barrack that you own.
+      console.log('AJD')
       for (let hexId of mother_state.map.states[territory_name].adjacencies) {
         let adjacentTerritory = utils.territory_for_territory_name(mother_state, hexId);
         if (adjacentTerritory.n_barracks) {
