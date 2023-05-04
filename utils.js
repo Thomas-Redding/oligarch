@@ -1,66 +1,3 @@
-try {
-  kMap = require('./map.js');
-} catch {
-  // Frontend just uses <script src="utils.js"></script> :)
-}
-
-let waterPaths = [
-  // // Madagascar
-  [19+40*20 ,21+40*20],
-  [19+40*19 ,21+40*19],
-  [19+40*19 ,21+40*20],
-
-  // Mediterranean
-  [14+40*10 ,15+40*12],
-  [14+40*12 ,14+40*10],
-  [13+40*10 ,14+40*12],
-  [17+40*10 ,17+40*12],
-  [17+40*10 ,16+40*12],
-
-  // North America and Greenland
-  [8+40*5 ,10+40*4],
-  [8+40*4 ,9+40*3],
-
-  // Greenland to Great Britain
-  [12+40*4 ,13+40*3],
-  [12+40*4 ,14+40*4],
-  [12+40*4 ,13+40*5],
-
-  // Great Britain to Europe
-  [13+40*5 ,15+40*6],
-  [14+40*4 ,15+40*5],
-
-  // North America and South America
-  [4+40*10 ,5+40*12],
-
-  // South America to Africa
-  [9+40*15 ,13+40*14],
-  [9+40*15 ,13+40*15],
-
-  // Asia and Australia
-  [30+40*11 ,31+40*15],
-  [30+40*11 ,32+40*15],
-  [30+40*11 ,30+40*16],
-
-  // Asia and Japan
-  [31+40*8 ,33+40*8],
-  [31+40*7 ,33+40*7],
-
-  // Australia
-  [32+40*15 ,34+40*16],
-  [32+40*16 ,34+40*16],
-  [34+40*17 ,34+40*19],
-  [35+40*17 ,34+40*19],
-  [30+40*17 ,31+40*19],
-  [31+40*15 ,30+40*16],
-  [30+40*17 ,32+40*16],
-];
-
-for (let path of waterPaths) {
-  path = path.map(x => x + 1);
-  kMap[path[0]]["adjacencies"].push(path[1]);
-  kMap[path[1]]["adjacencies"].push(path[0]);
-}
 
 const HexType = {
   none: "none",
@@ -70,21 +7,13 @@ const HexType = {
 const kHexTypeNone = 'none';
 const kHexTypeInfantry = 'infanty';
 
-const kAbbr2Name = {
-  "NA": "North America",
-  "SA": "South America",
-  "EU": "Europe",
-  "AF": "Africa",
-  "AS": "Asia",
-  "AU": "Australia",
-}
-
 let utils = {
-  load_map(path) {
-    let rtn = JSON.parse(fs.readFileSync('map.json'));
-    for (let path of gMap.waterPaths) {
-      rtn.states[path.from]["adjacencies"].push(path.to);
-      rtn.states[path.to]["adjacencies"].push(path.from);
+  load_map(jsonDict) {
+    let rtn = jsonDict;
+    for (let path of rtn.waterPaths) {
+      // TODO: Add water paths.
+      // rtn.states[path.from]["adjacencies"].push(path.to);
+      // rtn.states[path.to]["adjacencies"].push(path.from);
     }
     return rtn;
   },
@@ -188,7 +117,7 @@ let utils = {
    */
   income_of_territory: (mother_state, territory) => {
     let natural_income = utils.natural_income_of_territory(territory);
-    let nationName = kAbbr2Name[kMap[territory].homeContinent];
+    let nationName = utils.nation_name_from_abbr(mother_state, mother_state.map.states[territory].homeContinent);
     let factory_income = 5 * mother_state.nations[nationName][territory].n_factories;
     return natural_income + factory_income;
   },
@@ -308,7 +237,7 @@ let utils = {
   territories_of_nation: (mother_state, nation) => {
     let rtn = [];
     for (let nat in utils.NATIONS) {
-      let hexIds = Object.values(kMap).filter(x => x.homeContinent == utils.NATIONS[nat].abbr).map(x => x.id);
+      let hexIds = Object.values(mother_state.map.states).filter(x => x.homeContinent == utils.NATIONS[nat].abbr).map(x => x.id);
       for (let hexId of hexIds) {
         if (utils.territory_to_owner(mother_state, hexId) == nation) {
           rtn.push(hexId);
@@ -356,7 +285,7 @@ let utils = {
         rtn += n;
       }
     }
-    let neighbors = kMap[territory]["adjacencies"];
+    let neighbors = mother_state.map.states[territory]["adjacencies"];
     for (let neighbor of neighbors) {
       rtn += utils.sum(utils.army_in_territory(mother_state, nation, neighbor, "Move")["Artillery"]);
     }
@@ -379,7 +308,7 @@ let utils = {
       return [];
     }
 
-    let adjacencies = kMap[territoryId]["adjacencies"];
+    let adjacencies = mother_state.map.states[territoryId]["adjacencies"];
     adjacencies = adjacencies.filter(x => utils.is_hex_occupied(mother_state, x));
     return adjacencies;
   },
@@ -395,7 +324,7 @@ let utils = {
       return utils._valid_moves_for_cavalry(mother_state, nation_name, territory);
     }
     let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
-    let neighbors = kMap[territory]["adjacencies"];
+    let neighbors = mother_state.map.states[territory]["adjacencies"];
     let rtn = {};
     for (let neighbor of neighbors) {
       if (!utils.is_hex_occupied(mother_state, neighbor)) {
@@ -413,7 +342,7 @@ let utils = {
   _valid_moves_for_cavalry: (mother_state, nation_name, territory) => {
     let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
     let rtn = new Set();
-    let neighbors = kMap[territory]["adjacencies"];
+    let neighbors = mother_state.map.states[territory]["adjacencies"];
     let uncontested_neighbors = [];
     for (let neighbor of neighbors) {
       if (is_territory_uncontested) {
@@ -433,7 +362,7 @@ let utils = {
       }
     }
     for (let neighbor of uncontested_neighbors) {
-      for (territoryId of kMap[neighbor]["adjacencies"]) {
+      for (territoryId of mother_state.map.states[neighbor]["adjacencies"]) {
         rtn.add(territoryId);
       }
     }
@@ -464,7 +393,7 @@ let utils = {
    */
   territory_to_owner: (mother_state, territory) => {
     territory = territory + '';
-    let neighbors = kMap[territory]["adjacencies"].map(x => x + '');
+    let neighbors = mother_state.map.states[territory]["adjacencies"].map(x => x + '');
 
     let claimants = [];
     for (let nationName in mother_state.nations) {
@@ -483,7 +412,7 @@ let utils = {
       return claimants[0];
     }
 
-    return utils.puppeteer(mother_state, kMap[territory].homeContinent);
+    return utils.puppeteer(mother_state, mother_state.map.states[territory].homeContinent);
   },
 
   /*
@@ -502,7 +431,7 @@ let utils = {
     if (owner !== mother_state.stage.turn) {
       return [];
     }
-    adjacencies = kMap[territoryId]["adjacencies"].filter(x => !utils.is_hex_occupied(mother_state, x));
+    adjacencies = mother_state.map.states[territoryId]["adjacencies"].filter(x => !utils.is_hex_occupied(mother_state, x));
     return adjacencies;
   },
 
@@ -558,7 +487,7 @@ let utils = {
         continue;
       }
       // Must be adjacent to barrack that you own.
-      for (let hexId of kMap[territory_name].adjacencies) {
+      for (let hexId of mother_state.map.states[territory_name].adjacencies) {
         let adjacentTerritory = utils.territory_for_territory_name(mother_state, hexId);
         if (adjacentTerritory.n_barracks) {
           if (utils.territory_to_owner(mother_state, hexId) == nation_name) {
@@ -572,7 +501,7 @@ let utils = {
   },
 
   unit_for_territory(mother_state, territory_name) {
-    let nationName = kAbbr2Name[kMap[territory_name].homeContinent];
+    let nationName = utils.nation_name_from_abbr(mother_state, mother_state.map.states[territory_name].homeContinent);
     let territory = mother_state.nations[nationName][territory_name];
     if (territory.n_barracks) {
       return 'barrack';
@@ -615,10 +544,11 @@ let utils = {
    * this method returns null.
    */
   puppeteer: (mother_state, nation) => {
-    if (nation in kAbbr2Name) {
-      nation = kAbbr2Name[nation];
+    try {
+      nation = utils.nation_name_from_abbr(mother_state, nation);
+    } catch {
+      // TODO: Remove this try-catch
     }
-
     if (mother_state.nations[nation].army.filter(x => x.territory == utils.NATIONS[nation].capital).length > 0) {
       return nation;
     }
@@ -806,16 +736,25 @@ let utils = {
 
   union_dict: (d1, d2) => {
     return Object.assign({}, d1, d2);
+  },
+
+  terr2continentName(mother_state) {
+    let rtn = {};
+    for (let territoryId in mother_state.map) {
+      rtn[territoryId] = utils.nation_name_from_abbr(mother_state, mother_state.map.states[territoryId].homeContinent);
+    }
+    return rtn;
+  },
+
+  nation_name_from_abbr(mother_state, nation_abbreviation) {
+    for (let continent of mother_state.map.continents) {
+      if (continent.abbreviation == nation_abbreviation) {
+        return continent.name;
+      }
+    }
+    throw Error("Nation abbreviation not found: " + nation_abbreviation);
   }
 };
-
-{
-  let terr2continentName = {};
-  for (let territoryId in kMap) {
-    terr2continentName[territoryId] = kAbbr2Name[kMap[territoryId].homeContinent];
-  }
-  utils.terr2continentName = terr2continentName;
-}
 
 // Terrible hack so this can be included on frontend.
 try { module.exports = utils; } catch (err) {}

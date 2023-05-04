@@ -506,7 +506,7 @@ class Game
         this.timer = timer
         this._history = new History(this.prayer);
         this.mother_state = { }
-        this.map = JSON.parse(fs.readFileSync('map.json'));
+        this.mother_state.map = utils.load_map(JSON.parse(fs.readFileSync('map.json')));
         const kDebug = true;
         this.mother_state.settings = {
             "debug": kDebug,
@@ -725,7 +725,7 @@ class Game
             nation.owns = []
             nation.army = []
             nation.president = null
-            let hexIds = Object.values(kMap).filter(x => x.homeContinent == utils.NATIONS[nationName].abbr).map(x => x.id);
+            let hexIds = Object.values(this.mother_state.map.states).filter(x => x.homeContinent == utils.NATIONS[nationName].abbr).map(x => x.id);
             for (let hexId of hexIds) {
                 nation.owns.push(hexId)
                 nation[hexId] = {}
@@ -733,7 +733,7 @@ class Game
                 nation[hexId].n_barracks = 0
                 nation[hexId].n_barracks_can_spawn = 0
                 if (this.mother_state.settings.debug) {
-                    if (kMap[hexId].isCapital) {
+                    if (this.mother_state.map.states[hexId].isCapital) {
                         continue;
                     }
                     if (Math.random() < 0.125) {

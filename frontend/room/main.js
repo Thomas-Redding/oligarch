@@ -362,8 +362,8 @@ function render_map(state) {
     }
 
     // Draw hexagons
-    for (let id in kMap) {
-      gHexes[id] = new Hex(id, kMap[id]);
+    for (let id in gLatestState.map.states) {
+      gHexes[id] = new Hex(id, gLatestState.map.states[id]);
     }
 
     draw_map_table(state);
@@ -375,7 +375,7 @@ function render_map(state) {
     });
   }
 
-  for (let hexId in kMap) {
+  for (let hexId in gLatestState.map.states) {
     if (gHexIdToUnitType[hexId] === undefined) {
       throw Error(hexId, gHexIdToUnitType[hexId]);
     }
@@ -1191,9 +1191,9 @@ let loadPromises = [
         gLatestState = state;
 
         // Populate gHexIdToUnitType for convenience.
-        for (let id in kMap) {
+        for (let id in gLatestState.map.states) {
           gHexIdToUnitType[id] = kTileTypeEmpty;
-          if (kMap[id].isCapital) {
+          if (gLatestState.map.states[id].isCapital) {
             gHexIdToUnitType[id] = kTileTypeCapital;
           }
         }
@@ -1207,7 +1207,7 @@ let loadPromises = [
             }[unit.type];
           }
           for (let key in nation) {
-            if (key in kMap) {
+            if (key in gLatestState.map.states) {
               let territory = gLatestState.nations[nationName][key];
               if (territory.n_factories > 0) {
                 gHexIdToUnitType[key] = kTileTypeFactory;
@@ -1311,14 +1311,7 @@ let loadPromises = [
         }
         else if (action === "game_start") {
           tab = kTabInfo;
-          fetch('/room/map.json').then(resp => resp.json()).then(map => {
-            gMap = map;
-            // for (let path of gMap.waterPaths) {
-            //   gMap[path.from]["adjacencies"].push(path.to);
-            //   gMap[path.to]["adjacencies"].push(path.from);
-            // }
-            window.onresize();
-          });
+          window.onresize();
         }
         else if (action === "buy_share") {
           render_table(state);
