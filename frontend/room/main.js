@@ -227,7 +227,7 @@ let gHexes = {};
 
 function draw_map_table(state) {
   const kColumnWidth = 80;
-  const kFontSize = 24;
+  const kFontSize = 20;
   function font(size) {
     return "bold " + kFontSize + "px sans-serif";
   }
