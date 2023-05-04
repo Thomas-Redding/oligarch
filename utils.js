@@ -389,6 +389,11 @@ let utils = {
     return r;
   },
 
+  num_barracks_and_factories_in_territory: (motherState, territoryID) => {
+    let continent = utils.nation_name_from_abbr(motherState, motherState.map.states[territoryID].homeContinent);
+    return motherState.nations[continent][territoryID];
+  },
+
   /*
    * @param {string} nation_name the name of the nation whose unit want to move
    * @param {string} territory the territory where the unit are
@@ -411,9 +416,8 @@ let utils = {
       r = r.filter(id => !territoriesAdjacentToEnemies.has(id));
       r = r.filter(id => !territoriesWithFriendlyUnits.has(id));
       r = r.filter(id => {
-        let continent = utils.nation_name_from_abbr(motherState, motherState.map.states[id].homeContinent);
-        let ter = motherState.nations[continent][id];
-        return ter.n_barracks + ter.n_factories === 0;
+        let a = utils.num_barracks_and_factories_in_territory(motherState, id);
+        return a.n_barracks + a.n_factories === 0;
       });
       return r;
     };
