@@ -264,7 +264,7 @@ class Game
                 }
             }
            
-            this._manage_conquest(utils.terr2continentName[target])
+            this._manage_conquest(utils.terr2continentName(this.mother_state)[target])
             this._prayer('moves_made','')
         }
     }
