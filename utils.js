@@ -328,7 +328,7 @@ let utils = {
     let enemyUnits = utils._enemy_units(motherState, nationName);
     let territoriesAdjacentToEnemies = [];
     for (let enemyUnit of enemyUnits) {
-      territoriesAdjacentToEnemies = territoriesAdjacentToEnemies.concat(kMap[enemyUnit.territory].adjacencies);
+      territoriesAdjacentToEnemies = territoriesAdjacentToEnemies.concat(motherState.map.states[enemyUnit.territory].adjacencies);
     }
     territoriesAdjacentToEnemies = new Set(territoriesAdjacentToEnemies);
 
@@ -336,11 +336,11 @@ let utils = {
     let territoriesWithFriendlyUnits = new Set(myArmy.map(x => x.territory));
 
     const getAdjacencies = (territoryID) => {
-      let r = kMap[territoryID]["adjacencies"];
+      let r = motherState.map.states[territoryID]["adjacencies"];
       r = r.filter(id => !territoriesAdjacentToEnemies.has(id));
       r = r.filter(id => !territoriesWithFriendlyUnits.has(id));
       r = r.filter(id => {
-        let continent = utils.nation_name_from_abbr(motherState, kMap[id].homeContinent);
+        let continent = utils.nation_name_from_abbr(motherState, motherState.map.states[id].homeContinent);
         let ter = motherState.nations[continent][id];
         return ter.n_barracks + ter.n_factories === 0;
       });

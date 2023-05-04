@@ -64,8 +64,6 @@ let app = http.createServer((request, response) => {
       sendFile(response, 'utils.js')
     } else if (request.url.startsWith('/room/map.json')) {
       sendFile(response, 'map.json')
-    } else if (request.url.startsWith('/room/map.js')) {
-      sendFile(response, 'map.js')
     } else if (request.url.indexOf(".") > -1) {
       sendFile(response, 'frontend' + request.url)
     } else {
