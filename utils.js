@@ -82,9 +82,8 @@ let utils = {
   load_map(jsonDict) {
     let rtn = jsonDict;
     for (let path of rtn.waterPaths) {
-      // TODO: Add water paths.
-      // rtn.states[path.from]["adjacencies"].push(path.to);
-      // rtn.states[path.to]["adjacencies"].push(path.from);
+      rtn.states[path[0]]["adjacencies"].push(path[1]);
+      rtn.states[path[1]]["adjacencies"].push(path[0]);
     }
     return rtn;
   },
