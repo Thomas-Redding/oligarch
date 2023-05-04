@@ -422,7 +422,7 @@ let utils = {
    */
   territories_barracks_can_spawn_to: (mother_state, territoryId) => {
     territoryId = territoryId + '';
-    let continent = utils.terr2continentName[territoryId];
+    let continent = utils.terr2continentName(mother_state)[territoryId];
     let territory = mother_state.nations[continent][territoryId];
     if (territory.n_barracks_can_spawn === 0) {
       return [];
@@ -441,7 +441,7 @@ let utils = {
    * @returns {boolean} whether the hex has a unit or building on it.
    */
   is_hex_occupied(mother_state, territoryId) {
-    let continent = utils.terr2continentName[territoryId];
+    let continent = utils.terr2continentName(mother_state)[territoryId];
     if (mother_state.nations[continent][territoryId].n_barracks > 0) {
       return true;
     }
@@ -692,7 +692,7 @@ let utils = {
   },
 
   has_valid_targets: (mother_state, nation_name, territory_name) => {
-    const continent = utils.terr2continentName[territory_name];
+    const continent = utils.terr2continentName(mother_state)[territory_name];
     const territory = mother_state.nations[continent][territory_name];
     for (let name in mother_state.nations) {
       if (name === nation_name) {
@@ -710,7 +710,7 @@ let utils = {
   },
 
   continent_from_territory: (mother_state, territory_name) => {
-    let nationName = utils.terr2continentName[territory_name];
+    let nationName = utils.terr2continentName(mother_state)[territory_name];
     return mother_state.nations[nationName];
   },
 
@@ -740,7 +740,7 @@ let utils = {
 
   terr2continentName(mother_state) {
     let rtn = {};
-    for (let territoryId in mother_state.map) {
+    for (let territoryId in mother_state.map.states) {
       rtn[territoryId] = utils.nation_name_from_abbr(mother_state, mother_state.map.states[territoryId].homeContinent);
     }
     return rtn;
