@@ -1275,7 +1275,10 @@ let loadPromises = [
         }
         else if (action === "game_start") {
           tab = kTabInfo;
-          window.onresize();
+          fetch('room/assets/map.json').then(resp => resp.json()).then(map => {
+            gMap = map;
+            window.onresize();
+          });
         }
         else if (action === "buy_share") {
           render_table(state);

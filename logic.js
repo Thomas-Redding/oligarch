@@ -502,6 +502,7 @@ class Game
         this.timer = timer
         this._history = new History(this.prayer);
         this.mother_state = { }
+        this.map = JSON.parse(fs.readFileSync('map.json'));
         const kDebug = false;
         this.mother_state.settings = {
             "debug": kDebug,
