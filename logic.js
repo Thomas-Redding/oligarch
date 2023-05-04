@@ -6,7 +6,7 @@ let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
 const { throws } = require('assert');
 
-const SUPERSHARES = [1,1,1,2,2,3];
+const SUPERSHARES = [1,1,1,1,1,1];
 
 log.enabled = true;
 
