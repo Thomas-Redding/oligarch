@@ -353,6 +353,9 @@ class Game
         let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         let val_terr = utils.territories_of_nation_that_can_spawn(
             this.mother_state, nat)
+        console.log(afford)
+        console.log(val_terr.includes(terr))
+
         if (val_terr.includes(terr) && afford){
             let terrInfo =
                 utils.territory_for_territory_name(this.mother_state, terr);
@@ -362,6 +365,7 @@ class Game
             this.mother_state.nations[nat].army.push(unit)
             this.mother_state.nations[nat].cash -= COSTS[type]
         }
+        console.log(this.mother_state.nations[nat].army)
         this._prayer('spawned_unit','')
     }
 
