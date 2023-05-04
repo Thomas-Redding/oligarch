@@ -1312,11 +1312,7 @@ let loadPromises = [
         else if (action === "game_start") {
           tab = kTabInfo;
           fetch('room/assets/map.json').then(resp => resp.json()).then(map => {
-            gMap = map;
-            for (let path of gMap.waterPaths) {
-              gMap[path.from]["adjacencies"].push(path.to);
-              gMap[path.to]["adjacencies"].push(path.from);
-            }
+            gMap = utils.load_map(map);
             window.onresize();
           });
         }
