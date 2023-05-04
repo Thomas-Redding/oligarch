@@ -474,7 +474,7 @@ let utils = {
 
     let territory_names = utils.territories_of_nation(mother_state, nation_name);
     let rtn = [];
-
+    console.log(territory_names)
     for (let territory_name of territory_names) {
       let territory = utils.territory_for_territory_name(mother_state, territory_name);
       if (territory.n_factories) {
