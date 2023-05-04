@@ -1,3 +1,74 @@
+class Deque {
+  constructor(maxSize, reserve) {
+    if (maxSize) {
+      this.maxSize = maxSize;
+      this.data = new Array(reserve ? reserve : maxSize);
+    } else {
+      this.maxSize = Infinity;
+      this.data = new Array(reserve ? reserve : 10);
+    }
+    this.start = 0;
+    this.length = 0;
+  }
+  double_size() {
+    let A = new Array(Math.min(this.maxSize, this.data.length * 2));
+    for (let i = 0; i < this.length; ++i) {
+      A[i] = this.get(i);
+    }
+    this.data = A;
+    this.start = 0;
+  }
+  get(i) {
+    if (i >= this.length) {
+      throw Error();
+    }
+    if (i < 0) {
+      throw Error();
+    }
+    return this.data[(i + this.start) % this.data.length];
+  }
+  push_back(val) {
+    if (this.length + 1 > this.maxSize) {
+      throw Error('');
+    }
+    if (this.length === this.data.length) {
+      this.double_size();
+    }
+    this.data[(this.start + this.length) % this.data.length] = val;
+    this.length += 1;
+  }
+  pop_back() {
+    if (this.length === 0) {
+      throw Error('');
+    }
+    let i = (this.start + this.length - 1) % this.data.length;
+    let val = this.data[i];
+    this.data[i] = null;
+    this.length -= 1;
+    return val;
+  }
+  pop_front() {
+    if (this.length === 0) {
+      throw Error('');
+    }
+    let val = this.data[this.start];
+    this.data[this.start] = null;
+    this.start = (this.start + 1) % this.data.length;
+    this.length -= 1;
+    return val;
+  }
+  push_front(val) {
+    if (this.length + 1 > this.maxSize) {
+      throw Error('');
+    }
+    if (this.length === this.data.length) {
+      this.double_size();
+    }
+    this.start = (this.start + this.data.length - 1) % this.data.length;
+    this.length += 1;
+    this.data[this.start] = val;
+  }
+}
 
 const HexType = {
   none: "none",
@@ -349,21 +420,26 @@ let utils = {
     const kTroopTypeToSpeed = {
       "Infantry": 2,
       "Artillery": 2,
-      "Cavalry": 4,
+      "Calvary": 4,
     };
     let D = utils.distance_to_hexes(territoryID, getAdjacencies, kTroopTypeToSpeed[troopType]);
-    console.log(D);
     return D;
   },
 
   distance_to_hexes: (territoryID, getAdjacencies, maxDistance) => {
     let D = {};
     D[territoryID] = 0;
-    let open = [territoryID];
+    let open = new Deque();
+    let openSet = new Set();
+    open.push_back(territoryID);
+    openSet.add(territoryID);
+    let it = 0;
     while (open.length > 0) {
-      console.log(open);
-      console.log(D);
-      let node = open.pop();
+      if (++it > 400) {
+        break;
+      }
+      let node = open.pop_front();
+      console.log(node, D);
       if (D[node] + 1 >= maxDistance) {
         continue;
       }
@@ -372,13 +448,16 @@ let utils = {
           if (D[neighbor] <= D[node] + 1) {
             continue;
           }
+          D[neighbor] = Math.min(D[neighbor], D[node] + 1);
+        } else {
+          D[neighbor] = D[node] + 1;
         }
-        D[neighbor] = D[node] + 1;
         if (D[neighbor] >= maxDistance) {
           continue;
         }
-        if (!open.includes(neighbor)) {   // O(n) but bite me.
-          open.push(neighbor);
+        if (!openSet.has(neighbor)) {   // O(n) but bite me.
+          open.push_back(neighbor);
+          openSet.add(neighbor);
         }
       }
     }
