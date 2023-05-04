@@ -253,16 +253,6 @@ class Color {
   }
 }
 
-const kContinent2Color = {
-    "": new Color(  0,   0,   0),
-  "North America": new Color(192, 192,   0),
-  "South America": new Color(  0, 192, 192),
-  "Europe": new Color(  0,   0, 192),
-  "Africa": new Color(  0, 192,   0),
-  "Asia": new Color(192,   0,   0),
-  "Australia": new Color(192,   0, 192),
-};
-
 const kTileTypeEmpty = '';
 const kTileTypeCapital = "whitestar.png";
 const kTileTypeCalvary = "horse.png";
@@ -426,7 +416,12 @@ class Hex {
   }
   owner_color() {
     let owner = utils.territory_to_owner(gLatestState, this.id);
-    return kContinent2Color[owner];
+    for (let continent of gLatestState.map.continents) {
+      if (continent.abbreviation == this.homeContinent) {
+        return new Color(continent.color.r, continent.color.g, continent.color.b);
+      }
+    }
+    throw Error();
   }
   highlight_hexes(hexIds) {
     for (let id of hexIds) {
