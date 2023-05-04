@@ -307,63 +307,82 @@ let utils = {
     return adjacencies;
   },
 
-  /*
-   * @param {string} nation_name the name of the nation whose cavalry want to move
-   * @param {string} territory the territory where the cavalry are
-   * @param {string} troop_type the type of troop to move; one of {"Infantry", "Artillery", "Cavalry"}
-   * @returns {Object} a dictionary whose keys are states a cavalry can move to
-   */
-  valid_moves_for_troop: (mother_state, nation_name, territory, troop_type) => {
-    if (troop_type == "Cavalry") {
-      return utils._valid_moves_for_cavalry(mother_state, nation_name, territory);
-    }
-    let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
-    let neighbors = mother_state.map.states[territory]["adjacencies"];
-    let rtn = {};
-    for (let neighbor of neighbors) {
-      if (!utils.is_hex_occupied(mother_state, neighbor)) {
-        rtn[neighbor] = 1;
+  _enemy_units: (motherState, yourNationName) => {
+    let r = [];
+    for (let nationName in motherState.nations) {
+      if (nationName === yourNationName) {
+        continue;
       }
+      r = r.concat(motherState.nations[nationName].army);
     }
-    return rtn;
+    return r;
   },
 
   /*
-   * @param {string} nation_name the name of the nation whose cavalry want to move
-   * @param {string} territory the territory where the cavalry are
-   * @returns {Object} a dictionary whose keys are states a cavalry can move to
+   * @param {string} nation_name the name of the nation whose unit want to move
+   * @param {string} territory the territory where the unit are
+   * @param {string} troop_type the type of troop to move; one of {"Infantry", "Artillery", "Cavalry"}
+   * @returns {Object} a dictionary whose keys are territories a unit can move to
    */
-  _valid_moves_for_cavalry: (mother_state, nation_name, territory) => {
-    let is_territory_uncontested = (utils.territory_to_owner(mother_state, territory) == nation_name);
-    let rtn = new Set();
-    let neighbors = mother_state.map.states[territory]["adjacencies"];
-    let uncontested_neighbors = [];
-    for (let neighbor of neighbors) {
-      if (is_territory_uncontested) {
-        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
-          // If my tile is contested, I can only move into tiles I own.
-          uncontested_neighbors.push(neighbor);
-          rtn.add(neighbor);
+  valid_moves_for_troop: (motherState, nationName, territoryID, troopType) => {
+    let enemyUnits = utils._enemy_units(motherState, nationName);
+    let territoriesAdjacentToEnemies = [];
+    for (let enemyUnit of enemyUnits) {
+      territoriesAdjacentToEnemies = territoriesAdjacentToEnemies.concat(kMap[enemyUnit.territory].adjacencies);
+    }
+    territoriesAdjacentToEnemies = new Set(territoriesAdjacentToEnemies);
+
+    let myArmy = motherState.nations[nationName].army;
+    let territoriesWithFriendlyUnits = new Set(myArmy.map(x => x.territory));
+
+    const getAdjacencies = (territoryID) => {
+      let r = kMap[territoryID]["adjacencies"];
+      r = r.filter(id => !territoriesAdjacentToEnemies.has(id));
+      r = r.filter(id => !territoriesWithFriendlyUnits.has(id));
+      r = r.filter(id => {
+        let continent = utils.nation_name_from_abbr(motherState, kMap[id].homeContinent);
+        let ter = motherState.nations[continent][id];
+        return ter.n_barracks + ter.n_factories === 0;
+      });
+      return r;
+    };
+    const kTroopTypeToSpeed = {
+      "Infantry": 2,
+      "Artillery": 2,
+      "Cavalry": 4,
+    };
+    let D = utils.distance_to_hexes(territoryID, getAdjacencies, kTroopTypeToSpeed[troopType]);
+    console.log(D);
+    return D;
+  },
+
+  distance_to_hexes: (territoryID, getAdjacencies, maxDistance) => {
+    let D = {};
+    D[territoryID] = 0;
+    let open = [territoryID];
+    while (open.length > 0) {
+      console.log(open);
+      console.log(D);
+      let node = open.pop();
+      if (D[node] + 1 >= maxDistance) {
+        continue;
+      }
+      for (let neighbor of getAdjacencies(node)) {
+        if (neighbor in D) {
+          if (D[neighbor] <= D[node] + 1) {
+            continue;
+          }
         }
-      } else {
-        console.log(neighbor, is_territory_uncontested);
-        if (utils.territory_to_owner(mother_state, neighbor) == nation_name) {
-          // I own the neighbor.
-          console.log("a");
-          uncontested_neighbors.push(neighbor);
-          rtn.add(neighbor);
+        D[neighbor] = D[node] + 1;
+        if (D[neighbor] >= maxDistance) {
+          continue;
+        }
+        if (!open.includes(neighbor)) {   // O(n) but bite me.
+          open.push(neighbor);
         }
       }
     }
-    for (let neighbor of uncontested_neighbors) {
-      for (territoryId of mother_state.map.states[neighbor]["adjacencies"]) {
-        rtn.add(territoryId);
-      }
-    }
-    if (territory in rtn) {
-      rtn.delete(territory);
-    }
-    return rtn;
+    return D;
   },
 
   /*
