@@ -363,7 +363,7 @@ function render_map(state) {
 
     // Draw hexagons
     for (let id in gLatestState.map.states) {
-      gHexes[id] = new Hex(id, gLatestState.map.states[id]);
+      gHexes[id] = new Hex(id, gLatestState, gLatestState.map.states[id]);
     }
 
     draw_map_table(state);

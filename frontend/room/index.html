@@ -285,12 +285,12 @@ function unwrap(A) {
 }
 
 class Hex {
-  constructor(id, info) {
+  constructor(id, mother_state, info) {
     this.id = parseInt(id);
     this.x = info.x - 1;
     this.y = info.y;
     this.adjacencies = info.adjacencies;
-    this.homeContinent = utils.terr2continentName[this.id];
+    this.homeContinent = info.homeContinent;
     this.type = null;  // one of TileType
 
     const thetas = [0, 1, 2, 3, 4, 5].map(x => x * Math.PI * 2 / 6);
@@ -303,7 +303,15 @@ class Hex {
 
     this.path = svg.polygon(xs, ys, {});
     this.path.setAttribute('hexid', id);
-    this.color = kContinent2Color[this.homeContinent];
+    this.color = null;
+    for (let continent of mother_state.map.continents) {
+      if (continent.abbreviation == this.homeContinent) {
+        this.color = new Color(continent.color.r, continent.color.g, continent.color.b);
+      }
+    }
+    if (this.color === null) {
+      throw Error();
+    }
     this.path.style.fill = this.color.hex();
     hexMap.appendChild(this.path);
 
