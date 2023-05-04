@@ -349,11 +349,15 @@ class Game
     spawn(username, terr, type)
     {
         log(username, terr, type);
+        // cast terr to str
+        terr = terr.toString()
         let nat = this.mother_state.stage.turn
         let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
         let val_terr = utils.territories_of_nation_that_can_spawn(
             this.mother_state, nat)
         console.log(afford)
+        console.log(val_terr)
+        console.log(terr)
         console.log(val_terr.includes(terr))
 
         if (val_terr.includes(terr) && afford){

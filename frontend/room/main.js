@@ -1416,6 +1416,8 @@ let loadPromises = [
           render_table(state);
         }
 
+        render_map(state);
+
         if (state.stage.phase === "Action") {
           render_vote_table(state);
         }
