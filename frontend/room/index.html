@@ -505,7 +505,8 @@ class Hex {
   _spawnclick() {
     let nationName = gLatestState.stage.turn;
     let owner = utils.territory_to_owner(gLatestState, this.id);
-    let territory = gLatestState.nations[this.homeContinent][this.id];
+    let homeContinentAbbr = utils.nation_name_from_abbr(gLatestState, this.homeContinent);
+    let territory = gLatestState.nations[homeContinentAbbr][this.id];
 
     if (nationName !== owner) {
       Hex.unhighlight_all_hexes();
