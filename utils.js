@@ -411,9 +411,10 @@ let utils = {
     let territoriesWithFriendlyUnits = new Set(myArmy.map(x => x.territory));
 
     const getAdjacencies = (territoryID) => {
-      let r = motherState.map.states[territoryID]["adjacencies"];
-      r = r.filter(id => !territoriesAdjacentToEnemies.has(id));
-      return r;
+      if (territoriesAdjacentToEnemies.has(territoryID)) {
+        return [];
+      }
+      return motherState.map.states[territoryID]["adjacencies"];
     };
     const kTroopTypeToSpeed = {
       "Infantry": 2,
