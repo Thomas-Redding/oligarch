@@ -23,43 +23,37 @@ let utils = {
       "capital": "819",
       // "base_income_per_territory" : 6,
       // "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"],
-      "num_auction_rounds": 5,
-      "abbr": "AF"
+      "num_auction_rounds": 5
     },
     "North America": {
       "capital": "246",
       // "base_income_per_territory" : 4,
       // "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"],
-      "num_auction_rounds": 6,
-      "abbr": "NA"
+      "num_auction_rounds": 6
     },
     "South America": {
       "capital": "767",
       // "base_income_per_territory" : 9,
       // "territories": ["Venezuela", "Brazil", "Argentina", "Peru"],
-      "num_auction_rounds": 5,
-      "abbr": "SA"
+      "num_auction_rounds": 5
     },
     "Europe": {
       "capital": "258",
       // "base_income_per_territory" : 5,
       // "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"],
-      "num_auction_rounds": 6,
-      "abbr": "EU"
+      "num_auction_rounds": 6
     },
     "Asia": {
       "capital": "310",
       // "base_income_per_territory" : 3,
       // "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"],
-      "num_auction_rounds": 6,
-      "abbr": "AS"
+      "num_auction_rounds": 6
     },
     "Australia": {
       "capital": "874",
       // "base_income_per_territory" : 9,
       // "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"],
-      "num_auction_rounds": 4,
-      "abbr": "AU"
+      "num_auction_rounds": 4
     }
   },
 
