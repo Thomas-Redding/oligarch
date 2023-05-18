@@ -356,7 +356,7 @@ class Hex {
     return null;
   }
   set_type(type) {
-    if (gLatestState.map.states[this.id].isCapital) {
+    if (utils.is_tile_capital(gLatestState, this.id)) {
       if (type !== kTileTypeCapital) {
         throw Error('');
       }

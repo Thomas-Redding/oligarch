@@ -743,7 +743,7 @@ class Game
                 nation[hexId].n_barracks = 0
                 nation[hexId].n_barracks_can_spawn = 0
                 if (this.mother_state.settings.debug) {
-                    if (this.mother_state.map.states[hexId].isCapital) {
+                    if (utils.is_tile_capital(this.mother_state, hexId)) {
                         continue;
                     }
                     if (Math.random() < 0.125) {

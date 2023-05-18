@@ -813,6 +813,16 @@ let utils = {
     throw Error("Continent name not found: " + continent_name);
   },
 
+  is_tile_capital(mother_state, tile_id) {
+    tile_id = parseInt(tile_id);
+    for (let continent of mother_state.map.continents) {
+      if (continent.capital == tile_id) {
+        return true;
+      }
+    }
+    return false;
+  },
+
   abbr_from_nation_name(mother_state, nation_name) {
     for (let continent of mother_state.map.continents) {
       if (continent.name == nation_name) {

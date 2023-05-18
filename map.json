@@ -1140,8 +1140,7 @@
    "x": 6,
    "y": 6,
    "homeContinent": "NA",
-   "income": 1,
-   "isCapital": true
+   "income": 1
   },
   "248": {
    "id": "248",
@@ -1222,8 +1221,7 @@
    "x": 18,
    "y": 6,
    "homeContinent": "EU",
-   "income": 1,
-   "isCapital": true
+   "income": 1
   },
   "259": {
    "id": "259",
@@ -1753,8 +1751,7 @@
    "x": 30,
    "y": 7,
    "homeContinent": "AS",
-   "income": 1,
-   "isCapital": true
+   "income": 1
   },
   "311": {
    "id": "311",
@@ -3851,8 +3848,7 @@
    "x": 7,
    "y": 19,
    "homeContinent": "SA",
-   "income": 1,
-   "isCapital": true
+   "income": 1
   },
   "768": {
    "id": "768",
@@ -4035,8 +4031,7 @@
    "x": 19,
    "y": 20,
    "homeContinent": "AF",
-   "income": 1,
-   "isCapital": true
+   "income": 1
   },
   "820": {
    "id": "820",
@@ -4251,8 +4246,7 @@
    "x": 34,
    "y": 21,
    "homeContinent": "AU",
-   "income": 1,
-   "isCapital": true
+   "income": 1
   },
   "875": {
    "id": "875",
@@ -4383,42 +4377,42 @@
  "continents": [
   {
    "abbreviation": "NA",
-   "capital": 90,
+   "capital": 246,
    "name": "North America",
    "color": {"r": 224, "g": 128, "b": 96},
    "num_auction_rounds": 6
   },
   {
    "abbreviation": "EU",
-   "capital": 98,
+   "capital": 258,
    "name": "Europe",
    "color": {"r": 224, "g": 224, "b": 96},
    "num_auction_rounds": 6
   },
   {
    "abbreviation": "AS",
-   "capital": 143,
+   "capital": 310,
    "name": "Asia",
    "color": {"r": 96, "g": 255, "b": 255},
    "num_auction_rounds": 6
   },
   {
    "abbreviation": "SA",
-   "capital": 486,
+   "capital": 767,
    "name": "South America",
    "color": {"r": 128, "g": 144, "b": 255},
    "num_auction_rounds": 5
   },
   {
    "abbreviation": "AF",
-   "capital": 495,
+   "capital": 819,
    "name": "Africa",
    "color": {"r": 96, "g": 255, "b": 96},
    "num_auction_rounds": 5
   },
   {
    "abbreviation": "AU",
-   "capital": 632,
+   "capital": 874,
    "name": "Australia",
    "color": {"r": 255, "g": 96, "b": 255},
    "num_auction_rounds": 4

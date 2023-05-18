@@ -1147,7 +1147,7 @@ let loadPromises = [
         // Populate gHexIdToUnitType for convenience.
         for (let id in gLatestState.map.states) {
           gHexIdToUnitType[id] = kTileTypeEmpty;
-          if (gLatestState.map.states[id].isCapital) {
+          if (utils.is_tile_capital(gLatestState, id)) {
             gHexIdToUnitType[id] = kTileTypeCapital;
           }
         }
