@@ -6,7 +6,7 @@ let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
 const { throws } = require('assert');
 
-const SUPERSHARES = [1,1,1,1,1,1];
+const SHARES_FROM_TURN = [1,1,1,1,1,1];
 
 log.enabled = true;
 
@@ -541,7 +541,7 @@ class Game
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
         this.mother_state.trading_pairs = []
-        this.mother_state.supershares = SUPERSHARES
+        this.mother_state.supershares_from_turn = SHARES_FROM_TURN
         // log.enable = false
         this._nation_init()
     }
@@ -843,7 +843,7 @@ class Game
         else if (this.mother_state.stage.round > 1 || !this.mother_state.settings.burnCashFirstRound){
             this.mother_state.nations[curnat].cash += price
         }
-        this.mother_state.players[winner].shares[curnat] += SUPERSHARES[i-1]
+        this.mother_state.players[winner].shares[curnat] += SHARES_FROM_TURN[i-1]
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
         this._prayer('conclude_bidding', details)

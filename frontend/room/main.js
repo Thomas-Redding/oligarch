@@ -1094,7 +1094,7 @@ function updateCurrentActionDivFromState(state) {
     let num_ready = utils.sum(Object.values(gLatestState.players).map(x => x.ready));
     updateDiv("Discuss (" + num_ready + "/" + Object.keys(gLatestState.players).length + " want to skip)");
   } else if (state.stage.phase == "Auction") {
-    let n = gLatestState.supershares[gLatestState.stage.round - 1];
+    let n = gLatestState.supershares_from_turn[gLatestState.stage.round - 1];
     let adviceString = "";
     if (gLatestState.settings.advice) {
       let advisedPrice = Math.round(utils.advised_share_price(gLatestState, state.stage.turn, n));

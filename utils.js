@@ -215,7 +215,7 @@ let utils = {
       let cash = mother_state.nations[nation_name].cash;
       let income = utils.income_of_nation(mother_state, nation_name);
       let existingShares = utils.shares_sold(mother_state, nation_name);
-      let sharesArray = mother_state.supershares;
+      let sharesArray = mother_state.supershares_from_turn;
       let sum = 0;
       let i;
       for (i = 0; i < existingShares; ++i) {
@@ -275,7 +275,7 @@ let utils = {
     let cash = mother_state.nations[nation_name].cash;
     let income = utils.income_of_nation(mother_state, nation_name);
     let existingShares = utils.shares_sold(mother_state, nation_name);
-    let sharesArray = mother_state.supershares.slice(mother_state.stage.round-1);
+    let sharesArray = mother_state.supershares_from_turn.slice(mother_state.stage.round-1);
     return sharesArray[0] * utils._private_advised_price_for_one_share(cash, income, existingShares, sharesArray);
   },
 
@@ -816,7 +816,7 @@ let utils = {
   total_shares: (mother_state, nation_name) => {
     let r = 0;
     for (let i = 0; i < mother_state.nations[nation_name].num_auction_rounds; ++i) {
-      r += mother_state.supershares[i];
+      r += mother_state.supershares_from_turn[i];
     }
     return r;
   },
