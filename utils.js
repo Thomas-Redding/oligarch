@@ -87,55 +87,6 @@ let utils = {
     }
     return rtn;
   },
-  CAPITALS: ["819", "246", "767", "258", "310", "874"],
-  NATIONS: {
-    "Africa": {
-      "capital": "819",
-      // "base_income_per_territory" : 6,
-      // "territories": ["Madagascar", "North Africa", "Egypt", "East Africa", "Congo", "South Africa"],
-      "num_auction_rounds": 5
-    },
-    "North America": {
-      "capital": "246",
-      // "base_income_per_territory" : 4,
-      // "territories": ["Alaska", "Ontario", "Northwest Territory", "Greenland", "Eastern United States", "Western United States", "Quebec", "Central America", "Alberta"],
-      "num_auction_rounds": 6
-    },
-    "South America": {
-      "capital": "767",
-      // "base_income_per_territory" : 9,
-      // "territories": ["Venezuela", "Brazil", "Argentina", "Peru"],
-      "num_auction_rounds": 5
-    },
-    "Europe": {
-      "capital": "258",
-      // "base_income_per_territory" : 5,
-      // "territories": ["Iceland", "Great Britain", "Scandinavia", "Southern Europe", "Western Europe", "Northern Europe", "Ukraine"],
-      "num_auction_rounds": 6
-    },
-    "Asia": {
-      "capital": "310",
-      // "base_income_per_territory" : 3,
-      // "territories": ["Japan", "Yakursk", "Kamchatka", "Siberia", "Ural", "Afghanistan", "Middle East", "India", "Siam", "China", "Mongolia", "Irkutsk"],
-      "num_auction_rounds": 6
-    },
-    "Australia": {
-      "capital": "874",
-      // "base_income_per_territory" : 9,
-      // "territories": ["Eastern Australia", "Indonesia", "New Guinea", "Western Australia"],
-      "num_auction_rounds": 4
-    }
-  },
-
-  name_from_nation: (nation) => {
-    for (let nation_name in utils.NATIONS) {
-      if (utils.NATIONS[nation_name] == nation) {
-        return nation_name;
-      }
-    }
-    throw Error();
-  },
-
 
   /*
    * Find how many shares have already been auctioned off for each nation.
@@ -300,8 +251,8 @@ let utils = {
    */
   territories_of_nation: (mother_state, nation) => {
     let rtn = [];
-    for (let nat in utils.NATIONS) {
-      let hexIds = Object.values(mother_state.map.states).filter(x => x.homeContinent == utils.abbr_from_nation_name(mother_state, nat)).map(x => x.id);
+    for (let nat of mother_state.map.continents) {
+      let hexIds = Object.values(mother_state.map.states).filter(x => x.homeContinent == nat.abbreviation).map(x => x.id);
       for (let hexId of hexIds) {
         if (utils.territory_to_owner(mother_state, hexId) == nation) {
           rtn.push(hexId);
@@ -562,7 +513,6 @@ let utils = {
   },
 
   territories_of_nation_that_can_spawn: (mother_state, nation_name) => {
-    //let nation_name = utils.name_from_nation(nation);
     let nation = mother_state.nations[nation_name];
     let territoriesWithArmy = {};
     for (let nationName in mother_state.nations) {
@@ -648,13 +598,13 @@ let utils = {
     } catch {
       // TODO: Remove this try-catch
     }
-    if (mother_state.nations[nation].army.filter(x => x.territory == utils.NATIONS[nation].capital).length > 0) {
+    if (mother_state.nations[nation].army.filter(x => x.territory == utils.continent_from_name(mother_state, nation).capital + '').length > 0) {
       return nation;
     }
     let owner = null;
     for (let n in mother_state.nations) {
       if (n === nation) continue;
-      if (mother_state.nations[n].army.filter(x => x.territory == utils.NATIONS[nation].capital).length > 0) {
+      if (mother_state.nations[n].army.filter(x => x.territory == utils.continent_from_name(mother_state, nation).capital + '').length > 0) {
         if (owner !== null) return null;
         owner = n;
       }
@@ -815,7 +765,7 @@ let utils = {
 
   total_shares: (mother_state, nation_name) => {
     let r = 0;
-    for (let i = 0; i < mother_state.nations[nation_name].num_auction_rounds; ++i) {
+    for (let i = 0; i < utils.continent_from_name(mother_state, nation_name).num_auction_rounds; ++i) {
       r += mother_state.supershares_from_turn[i];
     }
     return r;
@@ -854,13 +804,22 @@ let utils = {
     throw Error("Nation abbreviation not found: " + nation_abbreviation);
   },
 
+  continent_from_name(mother_state, continent_name) {
+    for (let continent of mother_state.map.continents) {
+      if (continent.name == continent_name) {
+        return continent;
+      }
+    }
+    throw Error("Continent name not found: " + continent_name);
+  },
+
   abbr_from_nation_name(mother_state, nation_name) {
     for (let continent of mother_state.map.continents) {
       if (continent.name == nation_name) {
         return continent.abbreviation;
       }
     }
-    throw Error("Nation name not found: " + nation_abbreviation);
+    throw Error("Nation name not found: " + nation_name);
   }
 };
 

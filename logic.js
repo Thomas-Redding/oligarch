@@ -208,12 +208,12 @@ class Game
             player.vote = null
             player.ready = false
             if (this.mother_state.settings.debug) {
-                for (let key in utils.NATIONS) {
-                    player.shares[key] = Math.random() * 2 | 0
+                for (let countinent of this.mother_state.map.continents) {
+                    player.shares[countinent.name] = Math.random() * 2 | 0
                 }
             } else {
-                for (let key in utils.NATIONS) {
-                    player.shares[key] = 0
+                for (let countinent of this.mother_state.map.continents) {
+                    player.shares[countinent.name] = 0
                 }
             }
             this.mother_state.players[username] = player
@@ -524,8 +524,14 @@ class Game
             "advice": false,
         }
         this.mother_state.players = { }
-        this.mother_state.nations = utils.NATIONS
+        this.mother_state.nations = { }
+        for (let nation of this.mother_state.map.continents) {
+          this.mother_state.nations[nation.name] = {
+            army: [],
+          };
+        }
         this.mother_state.blacklisted_names = TURNS.concat(BLACKLISTED_NAMES)
+        this.mother_state.blacklisted_names.push('abstain');
         this.mother_state.phase = PHASES
         this.mother_state.subphase = SUBPHASES
         this.mother_state.turn = TURNS
