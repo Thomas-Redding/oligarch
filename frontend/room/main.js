@@ -237,8 +237,8 @@ function draw_map_table(state) {
   }
   incomeTable.innerHTML = "";
   incomeTable.setAttribute('transform', "translate(780,450)");
-  const nations = ['Africa', 'North America', 'South America', 'Europe', 'Asia', 'Australia'];
-  const abbrs = ['AF', 'NA', 'SA', 'EU', 'AS', 'AU'];
+  const nations = ['North America', 'South America', 'Europe', 'Africa', 'Asia', 'Australia'];
+  const abbrs = ['NA', 'SA', 'EU', 'AF', 'AS', 'AU'];
   {
     incomeTable.appendChild(svg.text(
       "cash",
