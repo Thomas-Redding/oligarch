@@ -312,6 +312,20 @@ let utils = {
     return motherState.nations[continent][territoryID];
   },
 
+  territory_to_continent: (motherState, territoryID) => {
+    let homeContinentAbbr = motherState.map.states[territoryID].homeContinent;
+    let C = motherState.map.continents.filter(continent => continent.abbreviation === homeContinentAbbr);
+    if (C.length !== 1) {
+      throw Error();
+    }
+    return C[0];
+  },
+
+  is_territory_a_capital: (motherState, territoryID) => {
+    let continent = utils.territory_to_continent(motherState, territoryID);
+    return continent.capital == territoryID;
+  },
+
   /*
    * @param {string} nation_name the name of the nation whose unit want to move
    * @param {string} territory the territory where the unit are
@@ -347,7 +361,7 @@ let utils = {
         continue;
       }
       let a = utils.num_barracks_and_factories_in_territory(motherState, id);
-      if (a.n_barracks + a.n_factories > 0) {
+      if (a.n_barracks + a.n_factories > 0 || utils.is_territory_a_capital(motherState, id)) {
         delete D[id];
       }
     }

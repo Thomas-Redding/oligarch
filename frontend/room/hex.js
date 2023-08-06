@@ -164,7 +164,7 @@ class Hex {
   owner_color() {
     let owner = utils.territory_to_owner(gLatestState, this.id);
     for (let continent of gLatestState.map.continents) {
-      if (continent.abbreviation == this.homeContinent) {
+      if (continent.name == owner) {
         return new Color(continent.color.r, continent.color.g, continent.color.b);
       }
     }
