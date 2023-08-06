@@ -1,5 +1,5 @@
 const kTileTypeEmpty = '';
-const kTileTypeCapital = "whitestar.png";
+const kCapitalIcon = "whitestar.png";
 const kTileTypeCalvary = "horse.png";
 const kTileTypeFactory = "factory.png";
 const kTileTypeInfantry = "helmet.png";
@@ -27,6 +27,7 @@ class Hex {
     this.adjacencies = info.adjacencies;
     this.homeContinent = info.homeContinent;
     this.type = null;  // one of TileType
+    this.isCapital = utils.is_tile_capital(mother_state, this.id);
 
     const thetas = [0, 1, 2, 3, 4, 5].map(x => x * Math.PI * 2 / 6);
     this.screenX = Hex.get_screen_x(this.x, this.y);
@@ -48,9 +49,25 @@ class Hex {
       throw Error();
     }
     this.path.style.fill = this.color.hex();
-    hexMap.appendChild(this.path);
+    mapHexes.appendChild(this.path);
 
     this.image = null;
+
+    this.capitalIcon = null;
+    if (this.isCapital) {
+      let x = Math.min.apply(null, xs);
+      let y = Math.min.apply(null, ys) + kMapScale * 0.05;
+      let w = kMapScale;
+      let h = kMapScale;
+      this.capitalIcon = svg.image(
+        "./assets/" + kCapitalIcon,
+        x, y,
+        { "width": w, "height": h },
+      );
+      this.capitalIcon.style.pointerEvents = 'none';
+
+      mapCapitals.appendChild(this.capitalIcon);
+    }
 
     this.path.addEventListener('click', (e) => {
       this.click(e);
@@ -162,6 +179,9 @@ class Hex {
     this.path.style.fill = this.owner_color().hex();
   }
   owner_color() {
+    if (this.isCapital) {
+      return new Color(255, 255, 255);
+    }
     let owner = utils.territory_to_owner(gLatestState, this.id);
     for (let continent of gLatestState.map.continents) {
       if (continent.name == owner) {
@@ -356,18 +376,13 @@ class Hex {
     return null;
   }
   set_type(type) {
-    if (utils.is_tile_capital(gLatestState, this.id)) {
-      if (type !== kTileTypeCapital) {
-        throw Error('');
-      }
-    }
     if (type === this.type) {
       return;
     }
     this.type = type;
 
     if (this.image && hexMap.contains(this.image)) {
-      hexMap.removeChild(this.image);
+      mapIcons.removeChild(this.image);
     }
 
     if (type === kTileTypeEmpty) {
@@ -387,14 +402,6 @@ class Hex {
       w *= 0.8;
       h *= 0.8;
     }
-    else if (type == kTileTypeCapital) {
-      y -= kMapScale * 0.05;
-    } else {
-      x -= kMapScale * 0.1;
-      y -= kMapScale * 0.1;
-      w *= 1.2;
-      h *= 1.2;
-    }
 
     this.image = svg.image(
       "./assets/" + type,
@@ -402,7 +409,7 @@ class Hex {
       { "width": w, "height": h }
     );
 
-    hexMap.appendChild(this.image);
+    mapIcons.appendChild(this.image);
     this.image.addEventListener('click', (e) => {
       this.click(e);
     });

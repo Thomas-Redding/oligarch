@@ -312,7 +312,7 @@ function render_map(state) {
       );
       line.style.stroke = 'white';
       line.style.strokeWidth = 2;
-      hexMap.appendChild(line);
+      mapLines.appendChild(line);
     }
 
     // Draw hexagons
@@ -1146,9 +1146,6 @@ let loadPromises = [
         // Populate gHexIdToUnitType for convenience.
         for (let id in gLatestState.map.states) {
           gHexIdToUnitType[id] = kTileTypeEmpty;
-          if (utils.is_tile_capital(gLatestState, id)) {
-            gHexIdToUnitType[id] = kTileTypeCapital;
-          }
         }
         for (let nationName in gLatestState.nations) {
           let nation = gLatestState.nations[nationName];
