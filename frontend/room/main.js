@@ -270,12 +270,13 @@ function draw_map_table(state) {
     ));
     incomeTable.children[incomeTable.children.length - 1].style.font = font(kFontSize);
     incomeTable.appendChild(svg.text(
-      "$" + gLatestState.nations["North America"].cash,
+      "$" + gLatestState.nations[nations[i]].cash,
       kColumnWidth,
       (i + 1) * kFontSize,
       {"text-anchor": "end"}
     ));
     incomeTable.children[incomeTable.children.length - 1].style.font = font(kFontSize);
+    console.log('@@@', nations[i], utils.income_of_nation(state, nations[i]))
     incomeTable.appendChild(svg.text(
       "$" + utils.income_of_nation(state, nations[i]),
       kColumnWidth * 2,
