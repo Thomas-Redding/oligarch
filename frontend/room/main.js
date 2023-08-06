@@ -869,7 +869,12 @@ function render_status_bar(state) {
   } else {
     statusBarPhaseDiv.innerHTML = state.stage.phase;
   }
-  statusBarNationDiv.innerHTML = state.stage.turn;
+  let next = utils.next_turn(state);
+  if (next) {
+    statusBarNationDiv.innerHTML = state.stage.turn + ` (${next} next)`;
+  } else {
+    statusBarNationDiv.innerHTML = state.stage.turn + " (end of round)";
+  }
   if (state.stage.phase === "action") {
     statusBarSubphaseDiv.previousElementSibling.style.display = "block";
     statusBarSubphaseDiv.innerHTML = state.stage.subphase;

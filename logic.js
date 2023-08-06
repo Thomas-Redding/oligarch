@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-let utils = require('./utils.js')
+let { utils, reverse, ROUNDS, PHASES, TURNS, SUBPHASES, BLACKLISTED_NAMES, UNITS, COSTS } = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
@@ -14,21 +14,6 @@ log.enabled = true;
 Array.prototype.fromback = function(i=1) {
     return this[this.length - i];
 }
-const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
-
-//global lists and macros defined here
-const ROUNDS = [1, 2, 3, 4, 5, 6]
-const PHASES = ['Taxation','Discuss','Auction','Action']
-const TURNS = ['North America', 'South America',
-    'Europe', 'Africa', 'Asia', 'Australia']
-const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
-const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
-const UNITS = ['Cavalry','Infantry','Artillery']
-const COSTS = {'factory' : 10, 'barracks' : 10, 'Infantry': 8, 
-    'Artillery':12, 'Cavalry':12 }
-
-
-
 
 //game class defined below
 
