@@ -122,6 +122,9 @@ class Game
         }
         let [action, args, state] = this._history.last_save();
         try {
+            if (!fs.existsSync("data")) {
+                fs.mkdirSync("data");
+            }
             fs.writeFileSync("data/" + save_name + ".json", JSON.stringify([action, args, state]))
         } catch (err) {
             log("ERROR:", err)
