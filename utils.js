@@ -79,6 +79,22 @@ const kHexTypeNone = 'none';
 const kHexTypeInfantry = 'infanty';
 
 let utils = {
+  is_username_valid(username) {
+    if (username.search(/[a-zA-Z0-9]/) == -1) {
+      // username must contain at least 1 alphanumeric character
+      return false;
+    }
+    if ('\n'.search(/[^a-zA-Z0-9]/)) {
+      // username may not contain newlines
+      return false;
+    }
+    if (['abstain'].includes(username)) {
+      // username is explicitly forbidden
+      return false;
+    }
+    return true;
+  },
+
   load_map(jsonDict) {
     let rtn = jsonDict;
     for (let path of rtn.waterPaths) {

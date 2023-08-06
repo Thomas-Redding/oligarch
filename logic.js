@@ -189,11 +189,15 @@ class Game
         log(username);
         let player = {}
         let rtn = true
-        if (this.mother_state.stage.phase !== 'lobby') {
-            //allow spects
-            return true
+        if (!utils.is_username_valid(username)) {
+            return 'Username is invalid.';
+        }
+        else if (this.mother_state.stage.phase !== 'lobby') {
+            // Allow spectators.
+            return null
         }
         else {
+            // Allow player.
             player.username = username
             player.cash = 0
             // The first player to join is the admin.
@@ -217,9 +221,9 @@ class Game
                 }
             }
             this.mother_state.players[username] = player
+            this._prayer("player_added",username)
+            return null;
         }
-        this._prayer("player_added",username)
-        return rtn
     }
 
     rdyUp(username)

@@ -851,7 +851,7 @@ function login() {
     username = arr[0];
     password = arr[1];
   } else {
-    while (username.length == 0 || username.length > 9) {
+    while (!utils.is_username_valid(username)) {
       username = prompt("username?");
     }
     while (password.length == 0) {
@@ -859,7 +859,6 @@ function login() {
     }
   }
   gUsername = username;
-  // return network.makeWebSocket("chat", username, password);
   return network.makeWebSocket("oligarch", username, password);
 }
 
