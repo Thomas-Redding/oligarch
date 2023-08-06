@@ -1218,6 +1218,7 @@ let loadPromises = [
         }
         else if (action === "begin_spawn") {
           render_map(state);
+          Hex.unhighlight_all_hexes();
         }
         else if (action === "undo") {
         }
@@ -1292,15 +1293,19 @@ let loadPromises = [
           gClock.set_time_remaining(state.clock);
         }
         else if (action === "begin_build") {
+          Hex.unhighlight_all_hexes();
           factoryRadio.checked = true;
         }
         else if (action === "begin_move") {
+          Hex.unhighlight_all_hexes();
           render_map(state);
         }
         else if (action === "begin_attack") {
+          Hex.unhighlight_all_hexes();
           render_map(state);
         }
         else if (action === "built_infrastructure") {
+          Hex.unhighlight_all_hexes();
           render_table(state);
         }
         else if (action === "bldg_razed") {
