@@ -108,7 +108,7 @@ function render_table(state, table, isEndOfGame) {
       <td class="column-AS">AS</td>
       <td class="column-AU">AU</td>
       <td>Cash</td>
-      <td>Worth</td>
+      <td>Score</td>
     </tr>
   `;
 
