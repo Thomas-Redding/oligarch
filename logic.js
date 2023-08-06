@@ -521,8 +521,6 @@ class Game
             "biddingTime":      (kDebug ?   1 : 12)* 1*1000,
             "electionTime":     (kDebug ? 999 :  2)*60*1000,
             "actionsTime":      (kDebug ? 999 :  3)*60*1000,
-            "bidsGoToOwners": true,
-            "burnCashFirstRound": true,
             "startingCash": 1475,
             "advice": true,
         }
@@ -838,20 +836,11 @@ class Game
         log();
         let i = this.mother_state.stage.round
         let price = this.mother_state.current_bid
+        console.log('_conclude_bidding', price);
         let winner = this.mother_state.highest_bidder
         let curnat = this.mother_state.stage.turn
         this.mother_state.players[winner].cash -= price
-        let dem = utils.num_shares_already_auctioned_for_nation(
-            this.mother_state)[curnat]
-        if (this.mother_state.settings.bidsGoToOwners && dem > 0) {
-            let owners = utils.owners(this.mother_state, curnat) 
-            for (let p in owners) {
-                this.mother_state.players[p].cash += price*owners[p]/dem
-            }
-        }
-        else if (this.mother_state.stage.round > 1 || !this.mother_state.settings.burnCashFirstRound){
-            this.mother_state.nations[curnat].cash += price
-        }
+        this.mother_state.nations[curnat].cash += price
         this.mother_state.players[winner].shares[curnat] += SHARES_FROM_TURN[i-1]
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
