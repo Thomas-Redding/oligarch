@@ -1,3 +1,16 @@
+//global lists and macros defined here
+const ROUNDS = [1, 2, 3, 4, 5, 6]
+const PHASES = ['Taxation','Discuss','Auction','Action']
+const TURNS = ['North America', 'South America',
+    'Europe', 'Africa', 'Asia', 'Australia']
+const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
+const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
+const UNITS = ['Cavalry','Infantry','Artillery']
+const COSTS = {'factory' : 10, 'barracks' : 10, 'Infantry': 8, 
+    'Artillery':12, 'Cavalry':12 }
+
+const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
+
 class Deque {
   constructor(maxSize, reserve) {
     if (maxSize) {
@@ -577,6 +590,23 @@ let utils = {
     return rtn;
   },
 
+  /**
+   * @returns the name of the continent who plays next; null if game is ending.
+   */
+  next_turn: (motherState) => {
+    let turns = TURNS;
+    if (motherState.stage.round % 2 === 0) {
+      turns = reverse(turns);
+    }
+    let i = turns.indexOf(motherState.stage.turn);
+
+    if (i + 1 < turns.length) {
+      return turns[i + 1];
+    } else {
+      return null;
+    }
+  },
+
   /*
    * @returns the puppeteer of the given nation. If the nation owns itself, then
    * the puppeteer is itself. If the capital is contested only by enemies, then
@@ -824,4 +854,14 @@ let utils = {
 };
 
 // Terrible hack so this can be included on frontend.
-try { module.exports = utils; } catch (err) {}
+try { module.exports = {
+  utils,
+  reverse,
+  ROUNDS,
+  PHASES,
+  TURNS,
+  SUBPHASES,
+  BLACKLISTED_NAMES,
+  UNITS,
+  COSTS,
+}; } catch (err) {}
