@@ -162,7 +162,6 @@ let utils = {
    */
   score_of_player: (mother_state, username) => {
     let player = mother_state.players[username];
-    console.log('score_of_player', username, player);
     let rtn = parseFloat(player.cash);
     for (let nation_name in player.shares) {
       if (player.shares[nation_name] == 0) continue;
@@ -170,7 +169,6 @@ let utils = {
       let income = utils.income_of_nation(mother_state, nation_name);
       let share_n = utils.total_shares(mother_state, nation_name);
       let percent_owned = player.shares[nation_name] / share_n;
-      console.log('>', nation_name, cash, income, share_n, percent_owned);
       rtn += percent_owned * (cash + 2 * income);
     }
     return rtn;
@@ -181,7 +179,6 @@ let utils = {
     let cash = mother_state.nations[nation_name].cash;
     let income = utils.income_of_nation(mother_state, nation_name);
     let value_of_nation = cash + (utils.rounds_left(mother_state) + 2) * income;
-    console.log('advised_share_price', nation_name, new_shares, share_n, cash, income, value_of_nation);
     return value_of_nation * new_shares / share_n;
   },
 

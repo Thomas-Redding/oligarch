@@ -520,7 +520,7 @@ class Game
             "bidsGoToOwners": true,
             "burnCashFirstRound": true,
             "startingCash": 1475,
-            "advice": false,
+            "advice": true,
         }
         this.mother_state.players = { }
         this.mother_state.nations = { }
