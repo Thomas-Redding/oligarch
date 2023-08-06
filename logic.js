@@ -396,10 +396,10 @@ class Game
         log(username, amount);
         let nat = this.mother_state.stage.turn
         let is_prez = username === this.mother_state.nations[nat].president
-        let n_shares = utils.shares_sold(this.mother_state, nat)
+        let n_shares = utils.total_shares(this.mother_state, nat)
         let is_int = amount % n_shares == 0
         let can_afford = amount <= this.mother_state.nations[nat].cash
-        if (is_prez && is_int && can_afford){
+        if (is_prez && is_int && can_afford) {
             this.mother_state.nations[nat].cash -= amount
             let income_per_share = amount / n_shares
             let owners = utils.owners(this.mother_state, nat)
@@ -407,10 +407,9 @@ class Game
                 let inc = owners[owner] * income_per_share
                 this.mother_state.players[owner].cash += inc
             }
-        this._prayer('dividends_paid',amount,this.mother_state)
-        this.timer.stop(true)
+            this._prayer('dividends_paid',amount,this.mother_state)
+            this.timer.stop(true)
         }
-        
     }
 
     bribe(username, amount, nation)

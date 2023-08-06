@@ -77,8 +77,8 @@ let app = http.createServer((request, response) => {
 
 // If you want to host for a LAN party, choose the IP address assigned by your router.
 // Start the server on port 3000
-// app.listen(3000, '127.0.0.1');
-app.listen(3000, '192.168.0.14'); // use this to host with port forwarding
+app.listen(3000, '127.0.0.1');
+// app.listen(3000, '192.168.0.14'); // use this to host with port forwarding
 
 
 /********** WebSocket Logic **********/
