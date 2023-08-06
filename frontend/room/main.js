@@ -863,22 +863,13 @@ function login() {
 }
 
 function render_status_bar(state) {
-  const turn2label = {
-    "North America": "America",
-    "South America": "Banana Republic",
-    "Europe":        "Reichland",
-    "Africa":        "Afrika",
-    "Asia":          "The Orient",
-    "Australia":     "The Downunder",
-  };
-
   statusBarRoundDiv.innerHTML = "Round " + state.stage.round;
   if (state.stage.phase === "Action") {
     statusBarPhaseDiv.innerHTML = state.stage.subphase;
   } else {
     statusBarPhaseDiv.innerHTML = state.stage.phase;
   }
-  statusBarNationDiv.innerHTML = turn2label[state.stage.turn];
+  statusBarNationDiv.innerHTML = state.stage.turn;
   if (state.stage.phase === "action") {
     statusBarSubphaseDiv.previousElementSibling.style.display = "block";
     statusBarSubphaseDiv.innerHTML = state.stage.subphase;
