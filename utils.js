@@ -1,5 +1,4 @@
 //global lists and macros defined here
-const ROUNDS = [1, 2, 3, 4, 5, 6]
 const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
@@ -187,7 +186,7 @@ let utils = {
    * @returns {int} the cash the given nation would have if the game entered stasis now
    */
   score_of_nation: (mother_state, nation_name) => {
-    let income_mult = 2 + utils.rounds_left(mother_state);
+    let income_mult = 2 + utils.taxations_left(mother_state);
     let cash = mother_state.nations[nation_name].cash;
     let income = utils.income_of_nation(mother_state, nation_name);
     return cash + income_mult * income;
@@ -215,7 +214,7 @@ let utils = {
     let share_n = utils.total_shares(mother_state, nation_name);
     let cash = mother_state.nations[nation_name].cash;
     let income = utils.income_of_nation(mother_state, nation_name);
-    let value_of_nation = cash + (utils.rounds_left(mother_state) + 2) * income;
+    let value_of_nation = cash + (utils.taxations_left(mother_state) + 2) * income;
     return value_of_nation * new_shares / share_n;
   },
 
@@ -228,11 +227,15 @@ let utils = {
     return utils.score_of_player(mother_state, username);
   },
 
+  total_rounds: () => {
+    return 7;
+  },
+
   /*
    * @returns the number of rounds left (excluding the current round).
    */
-  rounds_left: (mother_state) => {
-    return 6 - mother_state.stage.round;
+  taxations_left: (mother_state) => {
+    return utils.total_rounds() - mother_state.stage.round;
   },
 
   /*
@@ -915,7 +918,6 @@ let utils = {
 try { module.exports = {
   utils,
   reverse,
-  ROUNDS,
   PHASES,
   TURNS,
   SUBPHASES,

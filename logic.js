@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-let { utils, reverse, ROUNDS, PHASES, TURNS, SUBPHASES, UNITS, COSTS } = require('./utils.js')
+let { utils, reverse, PHASES, TURNS, SUBPHASES, UNITS, COSTS } = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
@@ -527,7 +527,10 @@ class Game
         this.mother_state.phase = PHASES
         this.mother_state.subphase = SUBPHASES
         this.mother_state.turn = TURNS
-        this.mother_state.round = ROUNDS
+        this.mother_state.round = [];
+        for (let i = 0; i < utils.total_rounds(); ++i) {
+          this.mother_state.round.push(i + 1);
+        }
         this.mother_state.order = ['subphase', 'turn', 'phase', 'round']
         this.mother_state.clock = 0
         //this.mother_state.phase = 'lobby'
@@ -695,7 +698,7 @@ class Game
         else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback()
             && turn == curTURNS.fromback()) {
                 this.mother_state.stage.round += 1
-                if (this.mother_state.stage.round > ROUNDS.fromback()){
+                if (this.mother_state.stage.round > utils.total_rounds()){
                     this._prayer('game_over')
                     return
                 }
