@@ -435,8 +435,7 @@ let utils = {
         delete D[id];
         continue;
       }
-      let a = utils.num_barracks_and_factories_in_territory(motherState, id);
-      if (a.n_barracks + a.n_factories > 0) {
+      if (utils.is_hex_occupied(motherState, id)) {
         delete D[id];
       }
     }
@@ -551,6 +550,7 @@ let utils = {
    * @returns {boolean} whether the hex has a unit or building on it.
    */
   is_hex_occupied(mother_state, territoryId) {
+    territoryId = territoryId + '';
     let continent = utils.terr2continentName(mother_state)[territoryId];
     if (mother_state.nations[continent][territoryId].n_barracks > 0) {
       return true;
@@ -558,7 +558,6 @@ let utils = {
     if (mother_state.nations[continent][territoryId].n_factories > 0) {
       return true;
     }
-    territoryId = territoryId + '';
     let armies = utils.armies(mother_state).map(x => x.territory + '');
     return armies.includes(territoryId);
   },
