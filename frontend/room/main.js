@@ -1008,7 +1008,11 @@ function htmlFromLog(action, details, isToast) {
     if (isToast) return undefined
     else return "Dividend deliberations began";
   } else if (action == "dividends_paid") {
-    return "$" + details + "B paid in dividends";
+    if (details == 0) {
+      return "Dividends skipped";
+    } else {
+      return "$" + details + "B paid in dividends";
+    }
   } else if (action == "end_presidential_command") {
     return "The reign has ended.";
   } else if (action == "bribe") {
@@ -1654,6 +1658,13 @@ function start_game() {
       "method": "startGame",
     }]);
   }
+}
+
+function skip_dividends() {
+  send({
+    "method": "dividends",
+    "args": [0]
+  });
 }
 
 function pay_dividends() {

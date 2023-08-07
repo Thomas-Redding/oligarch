@@ -311,8 +311,11 @@ let admin = {
           <input id="dividendSlider" type="range" min=0 max=100 step=3 style="width:100%" onchange="dividendValueDiv.innerHTML = this.value;" onmousemove="dividendValueDiv.innerHTML = this.value;">
           <div id="dividendValueDiv" style="width:3em;"></div>
         </div>
-        <div style="text-align:right;">
-          <div onclick="pay_dividends()" class="button">Pay Dividends</div><br>
+        <div style="">
+            <!-- Dummy button to compute proper height: -->
+            <div class="button disabled-button" style="opacity: 0.0;">D</div>
+            <div onclick="skip_dividends()" class="button" style="position: absolute; left: 0;">Skip Dividends</div>
+            <div onclick="pay_dividends()" class="button" style="position: absolute; right: 0;">Pay Dividends</div><br>
         </div>
       </div>
     </div>
