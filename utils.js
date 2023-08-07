@@ -326,7 +326,7 @@ let utils = {
       },
     }
 
-    let bias = 1;
+    let bias = 0;
     console.log(neighbors);
     for (let neighbor of neighbors) {
       let tid = utils.troop_ids_in_territory(
@@ -770,7 +770,7 @@ let utils = {
 
   troop_ids_in_territory: (mother_state, territory_name, nation_name, unit_type) => {
      let army = mother_state.nations[nation_name].army;
-     army = army.filter(x => x.territory === territory_name);
+     army = army.filter(x => x.territory == territory_name);
       if (unit_type){
         army = army.filter(x => x.type === unit_type);
       }
