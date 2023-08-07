@@ -1221,22 +1221,22 @@ let loadPromises = [
           if (action === "get_state") {
             main(state);
           } else {
-            render_presidential_div(gLatestState);
+            render_presidential_div(state);
             window.onresize();
           }
           render_table(state);
           gClock.set_time_remaining(state.clock);
-          if (gLatestState.is_paused) {
+          if (state.is_paused) {
             gClock.pause();
           }
           updateLobbyUsernames();
         }
         else if (action === "game_over") {
-          render_table(gLatestState, endOfGameTable, true);
+          render_table(state, endOfGameTable, true);
           let best = -Infinity;
           let winner = null;
-          for (let player_name in gLatestState.players) {
-            let score = utils.end_score_of_player(gLatestState, player_name)
+          for (let player_name in state.players) {
+            let score = utils.end_score_of_player(state, player_name)
             if (score > best) {
               best = score;
               winner = player_name;
@@ -1304,6 +1304,7 @@ let loadPromises = [
         }
         else if (action === "begin_deliberation") {
           gClock.set_time_remaining(state.clock);
+          render_table(state);
         }
         else if (action === "deliberation_over") {
           gClock.set_time_remaining(state.clock);
@@ -1313,7 +1314,7 @@ let loadPromises = [
         }
         else if (action === "start_election") {
           gClock.set_time_remaining(state.clock);
-          render_table();
+          render_table(state);
         }
         else if (action === "vote_tallied") {
           render_map(state);
