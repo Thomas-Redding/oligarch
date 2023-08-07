@@ -332,7 +332,7 @@ let utils = {
       },
     }
 
-    let bias = 0;
+    let bias = 1;
     console.log(neighbors);
     for (let neighbor of neighbors) {
       let tid = utils.troop_ids_in_territory(
@@ -495,24 +495,23 @@ let utils = {
 
   /*
    * @param {Object} mother_state - the mother state
-   * @param {string} territory
+   * @param {string} territoryId
    * @returns {?string} the name of the nation that owns the territory. Returns
    * null if the territory is contested.
    */
-  territory_to_owner: (mother_state, territory) => {
-    territory = territory + '';
-    let neighbors = mother_state.map.states[territory]["adjacencies"].map(x => x + '');
+  territory_to_owner: (mother_state, territoryId) => {
+    territoryId = territoryId + '';
+    let neighbors = mother_state.map.states[territoryId]["adjacencies"].map(x => x + '');
 
-    let claimants = [];
+    let claimants = new Set();
     for (let nationName in mother_state.nations) {
       let nation = mother_state.nations[nationName];
       for (let unit of nation.army) {
-        if (unit.territory + '' === territory) {
+        if (unit.territory + '' === territoryId) {
           return nationName;
         }
         if (neighbors.includes(unit.territory + '')) {
-          claimants.push(nationName);
-          break;
+          claimants.add(nationName);
         }
       }
     }
@@ -523,7 +522,7 @@ let utils = {
       return null;
     }
 
-    return utils.puppeteer(mother_state, mother_state.map.states[territory].homeContinent);
+    return utils.puppeteer(mother_state, mother_state.map.states[territoryId].homeContinent);
   },
 
   /*
