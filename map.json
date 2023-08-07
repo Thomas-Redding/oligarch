@@ -1432,14 +1432,6 @@
    "homeContinent": "AS",
    "income": 1
   },
-  "281": {
-   "id": "281",
-   "adjacencies": [],
-   "x": 1,
-   "y": 7,
-   "homeContinent": "NA",
-   "income": 1
-  },
   "283": {
    "id": "283",
    "adjacencies": [
@@ -4608,11 +4600,6 @@
     "type": "simple"
   },
   {
-    "from": 283,
-    "to":   281,
-    "type": "simple"
-  },
-  {
     "from": 122,
     "to": 153,
     "type": "wrap"
@@ -4623,7 +4610,7 @@
     "type": "wrap"
   },
   {
-    "from": 281,
+    "from": 283,
     "to": 314,
     "type": "wrap"
   }
