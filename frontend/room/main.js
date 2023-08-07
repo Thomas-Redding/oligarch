@@ -979,8 +979,7 @@ function htmlFromLog(action, details, isToast) {
   } else if (action == "start_election") {
     return "Election began in " + details;
   } else if (action == "vote_tallied") {
-    let candidate = Object.keys(details)[0];
-    return "Someone voted for <b>" + candidate + "</b>";
+    return "Someone voted";
   } else if (action == "conclude_election") {
     if (details.winner) {
       return "<b>" + details.winner + "</b> won the election";

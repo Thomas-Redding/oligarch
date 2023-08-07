@@ -205,7 +205,7 @@ function show_trade_proposal(proposal) {
   } else {
     foo = '';
     for (let nation in shares_to_player) {
-      foo += ` <span class="abbrSpan">` + utils.NATIONS[nation].abbr + '</span>x' + shares_to_player[nation] + ' ';
+      foo += ` <span class="abbrSpan">` + utils.continent_from_name(gLatestState, nation).abbreviation + '</span>x' + shares_to_player[nation] + ' ';
     }
     if (proposal.cash_to > 0) {
       foo += " and $" + proposal.cash_to + "B";
@@ -222,7 +222,7 @@ function show_trade_proposal(proposal) {
   } else {
     bar = '';
     for (let nation in shares_from_player) {
-      bar += ` <span class="abbrSpan">` + utils.NATIONS[nation].abbr + '</span>x' + shares_from_player[nation] + ' ';
+      bar += ` <span class="abbrSpan">` + utils.continent_from_name(gLatestState, nation).abbreviation + '</span>x' + shares_from_player[nation] + ' ';
     }
     if (proposal.cash_from > 0) {
       bar += " and $" + proposal.cash_from + "B";

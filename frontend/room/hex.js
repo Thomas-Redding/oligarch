@@ -179,10 +179,10 @@ class Hex {
     this.path.style.fill = this.owner_color().hex();
   }
   owner_color() {
-    if (this.isCapital) {
+    let owner = utils.territory_to_owner(gLatestState, this.id);
+    if (owner === null) {
       return new Color(255, 255, 255);
     }
-    let owner = utils.territory_to_owner(gLatestState, this.id);
     for (let continent of gLatestState.map.continents) {
       if (continent.name == owner) {
         return new Color(continent.color.r, continent.color.g, continent.color.b);

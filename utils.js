@@ -490,8 +490,8 @@ let utils = {
   /*
    * @param {Object} mother_state - the mother state
    * @param {string} territory
-   * @returns {string} the name of the nation that owns the territory. Returns
-   * `null`` if the territory is contested.
+   * @returns {?string} the name of the nation that owns the territory. Returns
+   * null if the territory is contested.
    */
   territory_to_owner: (mother_state, territory) => {
     territory = territory + '';
@@ -512,6 +512,9 @@ let utils = {
     }
     if (claimants.length === 1) {
       return claimants[0];
+    }
+    if (claimants.length > 1) {
+      return null;
     }
 
     return utils.puppeteer(mother_state, mother_state.map.states[territory].homeContinent);
