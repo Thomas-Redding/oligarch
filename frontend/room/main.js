@@ -98,7 +98,11 @@ function render_table(state, table, isEndOfGame) {
     table = mainTable;
   }
   let tbody = table.children[0];
+  let arrowChar = utils.isCountryOrderReversed(state) ? '←' : '→';
   tbody.innerHTML = `
+    <tr>
+      <td id="tableArrowCell" colspan="10" style="text-align: center;">` + arrowChar + `</td>
+    </tr>
     <tr>
       <td></td>
       <td></td>
@@ -186,7 +190,7 @@ function render_table(state, table, isEndOfGame) {
 
   let turn = gLatestState.stage.turn;
   let turnIndex = ['North America', 'South America', 'Europe', 'Africa', 'Asia', 'Australia'].indexOf(turn);
-  for (let i = 0; i < tbody.children.length; ++i) {
+  for (let i = 1; i < tbody.children.length; ++i) {
     let tr = tbody.children[i];
     tr.children[turnIndex + 2].style.backgroundColor = '#444';
   }
@@ -897,9 +901,9 @@ function render_status_bar(state) {
   }
   let next = utils.next_turn(state);
   if (next) {
-    statusBarNationDiv.innerHTML = state.stage.turn + ` (${next} next)`;
+    statusBarNationDiv.innerHTML = state.stage.turn;
   } else {
-    statusBarNationDiv.innerHTML = state.stage.turn + " (end of round)";
+    statusBarNationDiv.innerHTML = state.stage.turn;
   }
   if (state.stage.phase === "action") {
     statusBarSubphaseDiv.previousElementSibling.style.display = "block";

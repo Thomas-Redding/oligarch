@@ -664,6 +664,10 @@ let utils = {
     }
   },
 
+  isCountryOrderReversed: (mother_state) => {
+    return mother_state.stage.round % 2 === 0
+  },
+
   /*
    * @returns the puppeteer of the given nation. If the nation owns itself, then
    * the puppeteer is itself. If the capital is contested only by enemies, then
