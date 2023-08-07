@@ -194,6 +194,10 @@ function render_table(state, table, isEndOfGame) {
   render_map(state);
 }
 
+function help_clicked() {
+  show_modal('Help');
+}
+
 // function render_nation_rects(state) {
 //   let shares = utils.num_shares_already_auctioned_for_nation(state);
 //   nationRects.innerHTML = "";
@@ -1609,6 +1613,7 @@ function show_modal(type) {
   tradePopupDiv.style.display = (type === "Trade" ? "block" : "none");
   votePopupDiv.style.display = (type === "Vote" ? "block" : "none");
   bribePopupDiv.style.display = (type === "Bribe" ? "block" : "none");
+  helpPopupDiv.style.display = (type === "Help" ? "block" : "none");
 
   popupDiv.children[0].onclick = close_modal;
   popupDiv.style.display = 'block';
