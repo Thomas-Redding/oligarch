@@ -1309,6 +1309,7 @@ let loadPromises = [
         }
         else if (action === "start_election") {
           gClock.set_time_remaining(state.clock);
+          render_table();
         }
         else if (action === "vote_tallied") {
           render_map(state);
