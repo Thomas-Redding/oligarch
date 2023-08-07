@@ -184,6 +184,13 @@ function render_table(state, table, isEndOfGame) {
     }
   }
 
+  let turn = gLatestState.stage.turn;
+  let turnIndex = ['North America', 'South America', 'Europe', 'Africa', 'Asia', 'Australia'].indexOf(turn);
+  for (let i = 0; i < tbody.children.length; ++i) {
+    let tr = tbody.children[i];
+    tr.children[turnIndex + 2].style.backgroundColor = '#444';
+  }
+
   render_map(state);
 }
 
