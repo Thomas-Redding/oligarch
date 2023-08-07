@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-let { utils, reverse, ROUNDS, PHASES, TURNS, SUBPHASES, BLACKLISTED_NAMES, UNITS, COSTS } = require('./utils.js')
+let { utils, reverse, ROUNDS, PHASES, TURNS, SUBPHASES, UNITS, COSTS } = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
@@ -524,8 +524,6 @@ class Game
             army: [],
           };
         }
-        this.mother_state.blacklisted_names = TURNS.concat(BLACKLISTED_NAMES)
-        this.mother_state.blacklisted_names.push('abstain');
         this.mother_state.phase = PHASES
         this.mother_state.subphase = SUBPHASES
         this.mother_state.turn = TURNS

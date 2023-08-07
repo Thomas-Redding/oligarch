@@ -4,7 +4,6 @@ const PHASES = ['Taxation','Discuss','Auction','Action']
 const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
-const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
 const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 10, 'Infantry': 8, 
     'Artillery':12, 'Cavalry':12 }
@@ -101,7 +100,14 @@ let utils = {
       // username may not contain newlines
       return false;
     }
-    if (['abstain'].includes(username)) {
+    let blacklist = [
+      // continents
+      'na','sa','eu','af','as','au',
+      'north america', 'south america', 'europe', 'africa', 'asia', 'australia',
+      // game words
+      'cash', 'score', 'total', 'abstain'
+    ];
+    if (blacklist.includes(username.toLowerCase())) {
       // username is explicitly forbidden
       return false;
     }
@@ -914,7 +920,6 @@ try { module.exports = {
   PHASES,
   TURNS,
   SUBPHASES,
-  BLACKLISTED_NAMES,
   UNITS,
   COSTS,
 }; } catch (err) {}
