@@ -289,12 +289,17 @@ class Game
 
         if (this.mother_state.stage.subphase == 'Attack' &&
             this.mother_state.nations[nat].president == username) {
-                let terr = utils.troop_from_id(
-                    this.mother_state, unit_id).territory
+                let terrA = utils.troop_from_id(
+                    this.mother_state, unit_id).territory;
+                let terrB = utils.troop_from_id(
+                    this.mother_state, target_id).territory
                 let atk_pts = utils.military_bias(
-                    this.mother_state, nat, terr)
+                    this.mother_state, nat, terrA, terrB, true)
                 let def_pts = utils.military_bias(
-                    this.mother_state, target_nat, terr)
+                    this.mother_state, target_nat, terrA, terrB, false)
+                console.log('bias')
+                console.log(atk_pts)
+                console.log(def_pts)
                 let details = this._battle(atk_pts,def_pts)
                 console.log(details)
                 this.mother_state.nations[nat].army[idx_cur].can_attack = false
