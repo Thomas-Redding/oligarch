@@ -1198,6 +1198,7 @@ let loadPromises = [
         }
 
         console.log("========================");
+        console.log(new Date());
         console.log("Received action:", action);
         console.log("Received details:", details);
         console.log("Received state:", state);
@@ -1660,7 +1661,8 @@ function end_deliberation() {
 }
 
 function send(obj) {
-  console.log("SEND", obj)
+  console.log(new Date());
+  console.log("SEND", obj);
   gSocket.send(JSON.stringify(obj));
 }
 
