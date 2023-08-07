@@ -4,7 +4,7 @@ const kTileTypeCalvary = "horse.png";
 const kTileTypeFactory = "factory.png";
 const kTileTypeInfantry = "helmet.png";
 const kTileTypeCannon = "cannon.png";
-const kTileTypeBarracks = "castle.png";
+const kTileTypeBarracks = "tent.png";
 
 const kMapScale = 31;
 const a = 0.6;
@@ -305,10 +305,10 @@ class Hex {
         type = "Cavalry";
       }
 
-      if (type && valid.includes(this.id)) {
+      if (type && valid.includes(this.id + '')) {
         send({
           "method": "spawn",
-          "args": [this.id, type]
+          "args": [gSelectedHex.id, this.id, type]
         });
       }
       gSelectedHex.on_deselect();
@@ -407,7 +407,9 @@ class Hex {
     let h = kMapScale;
 
     if (type == kTileTypeBarracks) {
-      y -= kMapScale * 0.1;
+      x += kMapScale * 0.1;
+      w *= 0.8;
+      h *= 0.8;
     } else if (type == kTileTypeFactory) {
       x += kMapScale * 0.1;
       y += kMapScale * 0.05;
