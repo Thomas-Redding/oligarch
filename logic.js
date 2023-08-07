@@ -670,10 +670,8 @@ class Game
     {
         log()
         let cur_ord = (this.mother_state.stage.round % 2 == 1)
-        //let curTURNS = TURNS
         console.log(this.mother_state.stage)
         let curTURNS = cur_ord ? TURNS : reverse(TURNS)
-        //console.log(curTURNS)
       
         function next(cur, table) {
             let next_idx = (table.indexOf(cur) + 1) % table.length
