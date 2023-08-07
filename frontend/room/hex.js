@@ -32,11 +32,23 @@ class Hex {
     const thetas = [0, 1, 2, 3, 4, 5].map(x => x * Math.PI * 2 / 6);
     this.screenX = Hex.get_screen_x(this.x, this.y);
     this.screenY = Hex.get_screen_y(this.x, this.y);
+
+    {  // Add background
+      let xs = thetas.map(x => Math.sin(x) * (a + 1) / 2 * kMapScale + this.screenX);
+      let ys = thetas.map(y => Math.cos(y) * (a + 1) / 2 * kMapScale + this.screenY);
+      let path = svg.polygon(xs, ys, {});
+      for (let continent of mother_state.map.continents) {
+        if (continent.abbreviation === this.homeContinent) {
+          path.style.fill = new Color(continent.color.r, continent.color.g, continent.color.b).scale(0.5).hex();
+        }
+      }
+      mapContinents.appendChild(path);
+    }
+
     let xs = thetas.map(
       x => Math.sin(x) * a * kMapScale + this.screenX);
     let ys = thetas.map(
       y => Math.cos(y) * a * kMapScale + this.screenY);
-
     this.path = svg.polygon(xs, ys, {});
     this.path.setAttribute('hexid', id);
     this.color = null;
