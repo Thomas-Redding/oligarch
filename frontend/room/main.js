@@ -301,18 +301,36 @@ function render_map(state) {
   // This code only runs once!
   if (Object.keys(gHexes).length === 0) {
     // Draw water lines
-    for (let [a, b] of gLatestState.map.waterPaths) {
-      let stateA = gLatestState.map.states[a];
-      let stateB = gLatestState.map.states[b];
-      let line = svg.line(
-        Hex.get_screen_x(stateA.x - 1, stateA.y),
-        Hex.get_screen_y(stateA.x - 1, stateA.y),
-        Hex.get_screen_x(stateB.x - 1, stateB.y),
-        Hex.get_screen_y(stateB.x - 1, stateB.y),
-      );
+    function style_water_line(line) {
       line.style.stroke = 'white';
       line.style.strokeWidth = 2;
-      mapLines.appendChild(line);
+      return line;
+    }
+    for (let waterPath of gLatestState.map.waterPaths) {
+      let stateA = gLatestState.map.states[waterPath.from];
+      let stateB = gLatestState.map.states[waterPath.to];
+      if (waterPath.type === "simple") {
+        mapLines.appendChild(style_water_line(svg.line(
+          Hex.get_screen_x(stateA.x - 1, stateA.y),
+          Hex.get_screen_y(stateA.x - 1, stateA.y),
+          Hex.get_screen_x(stateB.x - 1, stateB.y),
+          Hex.get_screen_y(stateB.x - 1, stateB.y),
+        )));
+      } else {
+        // Assumes stateA is left of stateB
+        mapLines.appendChild(style_water_line(svg.line(
+          Hex.get_screen_x(stateA.x - 1, stateA.y),
+          Hex.get_screen_y(stateA.x - 1, stateA.y),
+          Hex.get_screen_x(-1, stateA.y),
+          Hex.get_screen_y(-1, stateA.y),
+        )));
+        mapLines.appendChild(style_water_line(svg.line(
+          Hex.get_screen_x(stateB.x - 1, stateB.y),
+          Hex.get_screen_y(stateB.x - 1, stateB.y),
+          Hex.get_screen_x(35, stateB.y),
+          Hex.get_screen_y(35, stateB.y),
+        )));
+      }
     }
 
     // Draw hexagons

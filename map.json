@@ -1432,6 +1432,14 @@
    "homeContinent": "AS",
    "income": 1
   },
+  "281": {
+   "id": "281",
+   "adjacencies": [],
+   "x": 1,
+   "y": 7,
+   "homeContinent": "NA",
+   "income": 1
+  },
   "283": {
    "id": "283",
    "adjacencies": [
@@ -4419,37 +4427,205 @@
   }
  ],
  "waterPaths": [
-  [173, 134],
-  [173, 175],
-  [173, 214],
-  [169, 130],
-  [209, 171],
-  [405, 486],
-  [610, 574],
-  [610, 614],
-  [780, 782],
-  [780, 822],
-  [820, 782],
-  [820, 822],
-  [175, 216],
-  [214, 256],
-  [414, 495],
-  [414, 496],
-  [415, 495],
-  [415, 496],
-  [418, 497],
-  [418, 498],
-  [312, 314],
-  [352, 354],
-  [471, 671],
-  [471, 632],
-  [471, 633],
-  [671, 632],
-  [711, 673],
-  [675, 633],
-  [675, 673],
-  [711, 792],
-  [795, 715],
-  [795, 716]
+  {
+    "from": 173,
+    "to":   134,
+    "type": "simple"
+  },
+  {
+    "from": 173,
+    "to":   175,
+    "type": "simple"
+  },
+  {
+    "from": 173,
+    "to":   214,
+    "type": "simple"
+  },
+  {
+    "from": 169,
+    "to":   130,
+    "type": "simple"
+  },
+  {
+    "from": 209,
+    "to":   171,
+    "type": "simple"
+  },
+  {
+    "from": 405,
+    "to":   486,
+    "type": "simple"
+  },
+  {
+    "from": 610,
+    "to":   574,
+    "type": "simple"
+  },
+  {
+    "from": 610,
+    "to":   614,
+    "type": "simple"
+  },
+  {
+    "from": 780,
+    "to":   782,
+    "type": "simple"
+  },
+  {
+    "from": 780,
+    "to":   822,
+    "type": "simple"
+  },
+  {
+    "from": 820,
+    "to":   782,
+    "type": "simple"
+  },
+  {
+    "from": 820,
+    "to":   822,
+    "type": "simple"
+  },
+  {
+    "from": 175,
+    "to":   216,
+    "type": "simple"
+  },
+  {
+    "from": 214,
+    "to":   256,
+    "type": "simple"
+  },
+  {
+    "from": 414,
+    "to":   495,
+    "type": "simple"
+  },
+  {
+    "from": 414,
+    "to":   496,
+    "type": "simple"
+  },
+  {
+    "from": 415,
+    "to":   495,
+    "type": "simple"
+  },
+  {
+    "from": 415,
+    "to":   496,
+    "type": "simple"
+  },
+  {
+    "from": 418,
+    "to":   497,
+    "type": "simple"
+  },
+  {
+    "from": 418,
+    "to":   498,
+    "type": "simple"
+  },
+  {
+    "from": 312,
+    "to":   314,
+    "type": "simple"
+  },
+  {
+    "from": 352,
+    "to":   354,
+    "type": "simple"
+  },
+  {
+    "from": 471,
+    "to":   671,
+    "type": "simple"
+  },
+  {
+    "from": 471,
+    "to":   632,
+    "type": "simple"
+  },
+  {
+    "from": 471,
+    "to":   633,
+    "type": "simple"
+  },
+  {
+    "from": 671,
+    "to":   632,
+    "type": "simple"
+  },
+  {
+    "from": 711,
+    "to":   673,
+    "type": "simple"
+  },
+  {
+    "from": 675,
+    "to":   633,
+    "type": "simple"
+  },
+  {
+    "from": 675,
+    "to":   673,
+    "type": "simple"
+  },
+  {
+    "from": 711,
+    "to":   792,
+    "type": "simple"
+  },
+  {
+    "from": 795,
+    "to":   715,
+    "type": "simple"
+  },
+  {
+    "from": 795,
+    "to":   716,
+    "type": "simple"
+  },
+  {
+    "from": 368,
+    "to":   489,
+    "type": "simple"
+  },
+  {
+    "from": 368,
+    "to":   488,
+    "type": "simple"
+  },
+  {
+    "from": 570,
+    "to":   574,
+    "type": "simple"
+  },
+  {
+    "from": 570,
+    "to":   614,
+    "type": "simple"
+  },
+  {
+    "from": 283,
+    "to":   281,
+    "type": "simple"
+  },
+  {
+    "from": 122,
+    "to": 153,
+    "type": "wrap"
+  },
+  {
+    "from": 162,
+    "to": 193,
+    "type": "wrap"
+  },
+  {
+    "from": 281,
+    "to": 314,
+    "type": "wrap"
+  }
  ]
 }
