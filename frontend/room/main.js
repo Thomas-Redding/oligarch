@@ -108,7 +108,7 @@ function render_table(state, table, isEndOfGame) {
       <td class="column-AS">AS</td>
       <td class="column-AU">AU</td>
       <td>Cash</td>
-      <td>Worth</td>
+      <td>Score</td>
     </tr>
   `;
 
@@ -237,8 +237,8 @@ function draw_map_table(state) {
   }
   incomeTable.innerHTML = "";
   incomeTable.setAttribute('transform', "translate(780,450)");
-  const nations = ['Africa', 'North America', 'South America', 'Europe', 'Asia', 'Australia'];
-  const abbrs = ['AF', 'NA', 'SA', 'EU', 'AS', 'AU'];
+  const nations = ['North America', 'South America', 'Europe', 'Africa', 'Asia', 'Australia'];
+  const abbrs = ['NA', 'SA', 'EU', 'AF', 'AS', 'AU'];
   {
     incomeTable.appendChild(svg.text(
       "cash",
@@ -301,18 +301,36 @@ function render_map(state) {
   // This code only runs once!
   if (Object.keys(gHexes).length === 0) {
     // Draw water lines
-    for (let [a, b] of gLatestState.map.waterPaths) {
-      let stateA = gLatestState.map.states[a];
-      let stateB = gLatestState.map.states[b];
-      let line = svg.line(
-        Hex.get_screen_x(stateA.x - 1, stateA.y),
-        Hex.get_screen_y(stateA.x - 1, stateA.y),
-        Hex.get_screen_x(stateB.x - 1, stateB.y),
-        Hex.get_screen_y(stateB.x - 1, stateB.y),
-      );
+    function style_water_line(line) {
       line.style.stroke = 'white';
       line.style.strokeWidth = 2;
-      mapLines.appendChild(line);
+      return line;
+    }
+    for (let waterPath of gLatestState.map.waterPaths) {
+      let stateA = gLatestState.map.states[waterPath.from];
+      let stateB = gLatestState.map.states[waterPath.to];
+      if (waterPath.type === "simple") {
+        mapLines.appendChild(style_water_line(svg.line(
+          Hex.get_screen_x(stateA.x - 1, stateA.y),
+          Hex.get_screen_y(stateA.x - 1, stateA.y),
+          Hex.get_screen_x(stateB.x - 1, stateB.y),
+          Hex.get_screen_y(stateB.x - 1, stateB.y),
+        )));
+      } else {
+        // Assumes stateA is left of stateB
+        mapLines.appendChild(style_water_line(svg.line(
+          Hex.get_screen_x(stateA.x - 1, stateA.y),
+          Hex.get_screen_y(stateA.x - 1, stateA.y),
+          Hex.get_screen_x(-1, stateA.y),
+          Hex.get_screen_y(-1, stateA.y),
+        )));
+        mapLines.appendChild(style_water_line(svg.line(
+          Hex.get_screen_x(stateB.x - 1, stateB.y),
+          Hex.get_screen_y(stateB.x - 1, stateB.y),
+          Hex.get_screen_x(35, stateB.y),
+          Hex.get_screen_y(35, stateB.y),
+        )));
+      }
     }
 
     // Draw hexagons
@@ -851,7 +869,7 @@ function login() {
     username = arr[0];
     password = arr[1];
   } else {
-    while (username.length == 0 || username.length > 9) {
+    while (!utils.is_username_valid(username)) {
       username = prompt("username?");
     }
     while (password.length == 0) {
@@ -859,27 +877,22 @@ function login() {
     }
   }
   gUsername = username;
-  // return network.makeWebSocket("chat", username, password);
   return network.makeWebSocket("oligarch", username, password);
 }
 
 function render_status_bar(state) {
-  const turn2label = {
-    "North America": "America",
-    "South America": "Banana Republic",
-    "Europe":        "Reichland",
-    "Africa":        "Afrika",
-    "Asia":          "The Orient",
-    "Australia":     "The Downunder",
-  };
-
   statusBarRoundDiv.innerHTML = "Round " + state.stage.round;
   if (state.stage.phase === "Action") {
     statusBarPhaseDiv.innerHTML = state.stage.subphase;
   } else {
     statusBarPhaseDiv.innerHTML = state.stage.phase;
   }
-  statusBarNationDiv.innerHTML = turn2label[state.stage.turn];
+  let next = utils.next_turn(state);
+  if (next) {
+    statusBarNationDiv.innerHTML = state.stage.turn + ` (${next} next)`;
+  } else {
+    statusBarNationDiv.innerHTML = state.stage.turn + " (end of round)";
+  }
   if (state.stage.phase === "action") {
     statusBarSubphaseDiv.previousElementSibling.style.display = "block";
     statusBarSubphaseDiv.innerHTML = state.stage.subphase;
@@ -1219,6 +1232,7 @@ let loadPromises = [
         }
         else if (action === "begin_spawn") {
           render_map(state);
+          Hex.unhighlight_all_hexes();
         }
         else if (action === "undo") {
         }
@@ -1293,15 +1307,19 @@ let loadPromises = [
           gClock.set_time_remaining(state.clock);
         }
         else if (action === "begin_build") {
+          Hex.unhighlight_all_hexes();
           factoryRadio.checked = true;
         }
         else if (action === "begin_move") {
+          Hex.unhighlight_all_hexes();
           render_map(state);
         }
         else if (action === "begin_attack") {
+          Hex.unhighlight_all_hexes();
           render_map(state);
         }
         else if (action === "built_infrastructure") {
+          Hex.unhighlight_all_hexes();
           render_table(state);
         }
         else if (action === "bldg_razed") {
@@ -1502,6 +1520,18 @@ function render_presidential_div(state) {
   }
 }
 
+function bribe_input_changed() {
+  let canSend = parseInt(bribeInput.value) > 0;
+  let nationButtons = document.getElementsByClassName('bribe-nation-button');
+  for (let nationButton of nationButtons) {
+    if (canSend) {
+      nationButton.classList.remove('disabled-button');
+    } else {
+      nationButton.classList.add('disabled-button');
+    }
+  }
+}
+
 function increment_bid_input(delta) {
   let newBid = parseInt(bidInput.value) + delta;
   newBid = Math.max(newBid, 0);
@@ -1514,6 +1544,7 @@ function increment_bribe_input(delta) {
   newBribe = Math.max(newBribe, 0);
   newBribe = Math.min(newBribe, gLatestState.players[gUsername].cash);
   bribeInput.value = newBribe;
+  bribe_input_changed();
 }
 
 function vote_for(playername) {
@@ -1559,7 +1590,7 @@ function show_modal(type) {
   {
     let button = document.createElement('DIV');
     button.classList.add("button");
-    button.innerHTML = "abstain";
+    button.innerHTML = "<i>abstain</i>";
     button.addEventListener('click', (e) => {
       close_modal();
       vote_for("abstain");
@@ -1670,12 +1701,11 @@ function highlightTerritories(territoryNames) {
 
 function send_bribe(nation_name) {
   close_modal();
+  let bribeValue = parseInt(bribeInput.value);
+  if (bribeValue === 0) return;
   send({
     "method": "bribe",
-    "args": [
-      parseInt(bribeInput.value),
-      nation_name
-    ]
+    "args":[bribeValue, nation_name]
   });
   bribeInput.value = 0;
 }

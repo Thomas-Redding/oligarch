@@ -1,3 +1,16 @@
+//global lists and macros defined here
+const ROUNDS = [1, 2, 3, 4, 5, 6]
+const PHASES = ['Taxation','Discuss','Auction','Action']
+const TURNS = ['North America', 'South America',
+    'Europe', 'Africa', 'Asia', 'Australia']
+const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
+const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
+const UNITS = ['Cavalry','Infantry','Artillery']
+const COSTS = {'factory' : 10, 'barracks' : 10, 'Infantry': 8, 
+    'Artillery':12, 'Cavalry':12 }
+
+const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
+
 class Deque {
   constructor(maxSize, reserve) {
     if (maxSize) {
@@ -79,11 +92,29 @@ const kHexTypeNone = 'none';
 const kHexTypeInfantry = 'infanty';
 
 let utils = {
+  is_username_valid(username) {
+    if (username.search(/[a-zA-Z0-9]/) == -1) {
+      // username must contain at least 1 alphanumeric character
+      return false;
+    }
+    if ('\n'.search(/[^a-zA-Z0-9]/)) {
+      // username may not contain newlines
+      return false;
+    }
+    if (['abstain'].includes(username)) {
+      // username is explicitly forbidden
+      return false;
+    }
+    return true;
+  },
+
   load_map(jsonDict) {
     let rtn = jsonDict;
     for (let path of rtn.waterPaths) {
-      rtn.states[path[0]]["adjacencies"].push(path[1]);
-      rtn.states[path[1]]["adjacencies"].push(path[0]);
+      let a = path["from"];
+      let b = path["to"];
+      rtn.states[a]["adjacencies"].push(b);
+      rtn.states[b]["adjacencies"].push(a);
     }
     return rtn;
   },
@@ -605,6 +636,23 @@ let utils = {
     return rtn;
   },
 
+  /**
+   * @returns the name of the continent who plays next; null if game is ending.
+   */
+  next_turn: (motherState) => {
+    let turns = TURNS;
+    if (motherState.stage.round % 2 === 0) {
+      turns = reverse(turns);
+    }
+    let i = turns.indexOf(motherState.stage.turn);
+
+    if (i + 1 < turns.length) {
+      return turns[i + 1];
+    } else {
+      return null;
+    }
+  },
+
   /*
    * @returns the puppeteer of the given nation. If the nation owns itself, then
    * the puppeteer is itself. If the capital is contested only by enemies, then
@@ -854,4 +902,14 @@ let utils = {
 };
 
 // Terrible hack so this can be included on frontend.
-try { module.exports = utils; } catch (err) {}
+try { module.exports = {
+  utils,
+  reverse,
+  ROUNDS,
+  PHASES,
+  TURNS,
+  SUBPHASES,
+  BLACKLISTED_NAMES,
+  UNITS,
+  COSTS,
+}; } catch (err) {}

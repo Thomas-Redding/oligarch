@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-let utils = require('./utils.js')
+let { utils, reverse, ROUNDS, PHASES, TURNS, SUBPHASES, BLACKLISTED_NAMES, UNITS, COSTS } = require('./utils.js')
 let Battle = require('./battle.js')
 let log = require('./log.js');
 const { puppeteer } = require('./utils.js');
@@ -14,21 +14,6 @@ log.enabled = true;
 Array.prototype.fromback = function(i=1) {
     return this[this.length - i];
 }
-const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
-
-//global lists and macros defined here
-const ROUNDS = [1, 2, 3, 4, 5, 6]
-const PHASES = ['Taxation','Discuss','Auction','Action']
-const TURNS = ['North America', 'South America',
-    'Europe', 'Africa', 'Asia', 'Australia']
-const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
-const BLACKLISTED_NAMES = ['NA','SA','EU','AF','AS','AU', 'TOTAL']
-const UNITS = ['Cavalry','Infantry','Artillery']
-const COSTS = {'factory' : 10, 'barracks' : 10, 'Infantry': 8, 
-    'Artillery':12, 'Cavalry':12 }
-
-
-
 
 //game class defined below
 
@@ -122,6 +107,9 @@ class Game
         }
         let [action, args, state] = this._history.last_save();
         try {
+            if (!fs.existsSync("data")) {
+                fs.mkdirSync("data");
+            }
             fs.writeFileSync("data/" + save_name + ".json", JSON.stringify([action, args, state]))
         } catch (err) {
             log("ERROR:", err)
@@ -189,11 +177,15 @@ class Game
         log(username);
         let player = {}
         let rtn = true
-        if (this.mother_state.stage.phase !== 'lobby') {
-            //allow spects
-            return true
+        if (!utils.is_username_valid(username)) {
+            return 'Username is invalid.';
+        }
+        else if (this.mother_state.stage.phase !== 'lobby') {
+            // Allow spectators.
+            return null
         }
         else {
+            // Allow player.
             player.username = username
             player.cash = 0
             // The first player to join is the admin.
@@ -217,9 +209,9 @@ class Game
                 }
             }
             this.mother_state.players[username] = player
+            this._prayer("player_added",username)
+            return null;
         }
-        this._prayer("player_added",username)
-        return rtn
     }
 
     rdyUp(username)
@@ -522,8 +514,6 @@ class Game
             "biddingTime":      (kDebug ?   1 : 12)* 1*1000,
             "electionTime":     (kDebug ? 999 :  2)*60*1000,
             "actionsTime":      (kDebug ? 999 :  3)*60*1000,
-            "bidsGoToOwners": true,
-            "burnCashFirstRound": true,
             "startingCash": 1475,
             "advice": true,
         }
@@ -839,20 +829,11 @@ class Game
         log();
         let i = this.mother_state.stage.round
         let price = this.mother_state.current_bid
+        console.log('_conclude_bidding', price);
         let winner = this.mother_state.highest_bidder
         let curnat = this.mother_state.stage.turn
         this.mother_state.players[winner].cash -= price
-        let dem = utils.num_shares_already_auctioned_for_nation(
-            this.mother_state)[curnat]
-        if (this.mother_state.settings.bidsGoToOwners && dem > 0) {
-            let owners = utils.owners(this.mother_state, curnat) 
-            for (let p in owners) {
-                this.mother_state.players[p].cash += price*owners[p]/dem
-            }
-        }
-        else if (this.mother_state.stage.round > 1 || !this.mother_state.settings.burnCashFirstRound){
-            this.mother_state.nations[curnat].cash += price
-        }
+        this.mother_state.nations[curnat].cash += price
         this.mother_state.players[winner].shares[curnat] += SHARES_FROM_TURN[i-1]
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
