@@ -336,7 +336,6 @@ let utils = {
     }
 
     let bias = 1;
-    console.log(neighbors);
     for (let neighbor of neighbors) {
       let tid = utils.troop_ids_in_territory(
         mother_state, neighbor, nation);
@@ -344,7 +343,6 @@ let utils = {
       if (tid.length === 0) {
         continue;
       }
-      console.log(tid);
       // should only ever be one troop in a territory
       let troop = tid[0];
       let attack = unit_stats[troop.type]['attack'];
@@ -354,8 +352,8 @@ let utils = {
       } else {
         bias += defense;
       }
-    return bias;
     }
+    return bias;
   },
 
   valid_attacks_for_troop: (mother_state, territoryId) => {
@@ -777,12 +775,12 @@ let utils = {
   },
 
   troop_ids_in_territory: (mother_state, territory_name, nation_name, unit_type) => {
-     let army = mother_state.nations[nation_name].army;
-     army = army.filter(x => x.territory == territory_name);
-      if (unit_type){
-        army = army.filter(x => x.type === unit_type);
-      }
-     return army;
+    let army = mother_state.nations[nation_name].army;
+    army = army.filter(x => x.territory == territory_name);
+    if (unit_type) {
+      army = army.filter(x => x.type === unit_type);
+    }
+    return army;
   },
 
   /*
