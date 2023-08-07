@@ -515,8 +515,8 @@ let utils = {
         }
       }
     }
-    if (claimants.length === 1) {
-      return claimants[0];
+    if (claimants.size === 1) {
+      return Array.from(claimants)[0];
     }
     if (claimants.length > 1) {
       return null;
