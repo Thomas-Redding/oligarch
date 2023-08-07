@@ -308,8 +308,9 @@ let utils = {
     // concat terrB adj to action_terrs
     action_terrs = action_terrs.concat(
       mother_state.map.states[terrB]["adjacencies"]);
-    let neighbors =  action_terrs.concat([terrA, terrB]);
-
+    let neighbors =  action_terrs;
+    // turn neighbors into a set
+    neighbors = new Set(neighbors);
     let unit_stats = {
       'Cavalry': {
         'attack': 1,
@@ -326,6 +327,7 @@ let utils = {
     }
 
     let bias = 1;
+    console.log(neighbors);
     for (let neighbor of neighbors) {
       let tid = utils.troop_ids_in_territory(
         mother_state, neighbor, nation);
