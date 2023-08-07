@@ -1477,7 +1477,9 @@ function update_buttons(state) {
     endDeliberationButton.classList.remove("disabled-button");
   }
 
-  bribeButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
+  // Switch lines if you want to enable bribing (i.e. donating to a country)
+  // bribeButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
+  bribeButton.style.display = "none";
 
   if (stage.phase === "Action" && stage.subphase == "Election") {
     voteButton.style.display = "inline-block";
