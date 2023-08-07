@@ -14,8 +14,11 @@ class Battle {
         let atk = Math.min(this._atk_pts, max_pts)
         let def = Math.min(this._def_pts, max_pts) 
         this.metadata.max_roll = max_pts
-        this.metadata.atk_roll = Math.floor(Math.random()*atk) + 1
-        this.metadata.def_roll = Math.floor(Math.random()*def) + 1
+        this.metadata.atk_roll = Math.floor(Math.random()*atk + 1)
+        this.metadata.def_roll = Math.floor(Math.random()*def + 1)
+        console.log('rolls')
+        console.log(this.metadata.atk_roll)
+        console.log(this.metadata.def_roll)
         let n = Math.min(atk, def)
         this.metadata.win_prob = 0.5*n*(n-1) + Math.min(def*(atk-def), 0)
         this.metadata.outcome = this.metadata.atk_roll > this.metadata.def_roll

@@ -257,7 +257,7 @@ let utils = {
    * @param {string} territory - the name of the territory
    * @returns {int} the bias for the nation's military in the territory
    */
-  military_bias: (mother_state, nation, territory) => {
+  military_bias_old: (mother_state, nation, territory) => {
     let rtn = 0;
     let type_to_action_to_count = utils.army_in_territory(mother_state, nation, territory, "Move");
     for (let type in type_to_action_to_count) {
@@ -270,6 +270,50 @@ let utils = {
       rtn += utils.sum(utils.army_in_territory(mother_state, nation, neighbor, "Move")["Artillery"]);
     }
     return rtn;
+  },
+
+  military_bias: (mother_state, nation, terrA, terrB, is_aggressor) => {
+    let action_terrs = mother_state.map.states[terrA]["adjacencies"];
+    // concat terrB adj to action_terrs
+    action_terrs = action_terrs.concat(
+      mother_state.map.states[terrB]["adjacencies"]);
+    let neighbors =  action_terrs.concat([terrA, terrB]);
+
+    let unit_stats = {
+      'Cavalry': {
+        'attack': 1,
+        'defense': 1,
+      },
+      'Artillery': {
+        'attack': 1,
+        'defense': 1,
+      },
+      'Infantry': {
+        'attack': 1,
+        'defense': 1,
+      },
+    }
+
+    let bias = 1;
+    for (let neighbor of neighbors) {
+      let tid = utils.troop_ids_in_territory(
+        mother_state, neighbor, nation);
+      // check if tid is empty
+      if (tid.length === 0) {
+        continue;
+      }
+      console.log(tid);
+      // should only ever be one troop in a territory
+      let troop = tid[0];
+      let attack = unit_stats[troop.type]['attack'];
+      let defense = unit_stats[troop.type]['defense'];
+      if (is_aggressor) {
+        bias += attack;
+      } else {
+        bias += defense;
+      }
+    return bias;
+    }
   },
 
   valid_attacks_for_troop: (mother_state, territoryId) => {
@@ -674,7 +718,9 @@ let utils = {
   troop_ids_in_territory: (mother_state, territory_name, nation_name, unit_type) => {
      let army = mother_state.nations[nation_name].army;
      army = army.filter(x => x.territory === territory_name);
-     army = army.filter(x => x.type === unit_type);
+      if (unit_type){
+        army = army.filter(x => x.type === unit_type);
+      }
      return army;
   },
 
