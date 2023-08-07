@@ -742,8 +742,9 @@ class Game
                         nation[hexId].n_factories = 1
                     } else if (Math.random() < 0.14) {
                         nation[hexId].n_barracks = 1
-                    } else if (Math.random() < 0.17) {
-                        let T = ["Infantry", "Cavalry", "Artillery"];
+                    } else if (Math.random() < 0.3) {
+                        // let T = ["Infantry", "Cavalry", "Artillery"];
+                        let T = ["Cavalry"];
                         let type = T[Math.random() * T.length | 0];
                         nation.army.push({
                             "type": type,
