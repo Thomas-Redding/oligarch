@@ -543,7 +543,7 @@ let utils = {
       return [];
     }
     adjacencies = mother_state.map.states[territoryId]["adjacencies"].filter(x => !utils.is_hex_occupied(mother_state, x));
-    return adjacencies;
+    return adjacencies.map(x => x + '');
   },
 
   /*

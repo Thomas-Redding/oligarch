@@ -287,6 +287,10 @@ class Game
         let [idx_cur, nat] = this._unit2idx(unit_id)
         let [idx_t, target_nat] = this._unit2idx(target_id)
 
+        if (nat === target_nat) {
+            return;
+        }
+
         if (this.mother_state.stage.subphase == 'Attack' &&
             this.mother_state.nations[nat].president == username) {
                 let terrA = utils.troop_from_id(
@@ -343,30 +347,30 @@ class Game
         this._prayer('built_infrastructure', {'type': type, 'territory': terr});
     }
 
-    spawn(username, terr, type)
+    spawn(username, barrackTerritoryId, spawnTerritoryId, type)
     {
-        log(username, terr, type);
+        log(username, barrackTerritoryId, spawnTerritoryId, type);
         // cast terr to str
-        terr = terr.toString()
-        let nat = this.mother_state.stage.turn
-        let afford = this.mother_state.nations[nat].cash >=  COSTS[type]
-        let val_terr = utils.territories_of_nation_that_can_spawn(
-            this.mother_state, nat)
-        console.log(afford)
-        console.log(val_terr)
-        console.log(terr)
-        console.log(val_terr.includes(terr))
+        barrackTerritoryId = barrackTerritoryId.toString();
+        spawnTerritoryId = spawnTerritoryId.toString();
+        let nationName = this.mother_state.stage.turn;
+        let afford = this.mother_state.nations[nationName].cash >= COSTS[type];
+        let validTerritories = utils.territories_barracks_can_spawn_to(this.mother_state, barrackTerritoryId);
 
-        if (val_terr.includes(terr) && afford){
-            let terrInfo =
-                utils.territory_for_territory_name(this.mother_state, terr);
-            terrInfo.n_barracks_can_spawn -= 1
-            let unit = {"type": type, "territory":terr,
-                "id":utils.uuid(), 'can_move':false, 'can_move':false}
-            this.mother_state.nations[nat].army.push(unit)
-            this.mother_state.nations[nat].cash -= COSTS[type]
+        if (validTerritories.includes(spawnTerritoryId) && afford) {
+            console.log('yay');
+            let bTerritory = utils.territory_for_territory_name(this.mother_state, barrackTerritoryId);
+            let sTerritory = utils.territory_for_territory_name(this.mother_state, spawnTerritoryId);
+            bTerritory.n_barracks_can_spawn -= 1
+            this.mother_state.nations[nationName].army.push({
+                "type": type,
+                "territory": spawnTerritoryId,
+                "id":utils.uuid(),
+                'can_move': false,
+                'can_move': false,
+            });
+            this.mother_state.nations[nationName].cash -= COSTS[type];
         }
-        console.log(this.mother_state.nations[nat].army)
         this._prayer('spawned_unit','')
     }
 
