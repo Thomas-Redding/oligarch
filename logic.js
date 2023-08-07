@@ -287,6 +287,10 @@ class Game
         let [idx_cur, nat] = this._unit2idx(unit_id)
         let [idx_t, target_nat] = this._unit2idx(target_id)
 
+        if (nat === target_nat) {
+            return;
+        }
+
         if (this.mother_state.stage.subphase == 'Attack' &&
             this.mother_state.nations[nat].president == username) {
                 let terrA = utils.troop_from_id(
