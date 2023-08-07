@@ -1502,6 +1502,18 @@ function render_presidential_div(state) {
   }
 }
 
+function bribe_input_changed() {
+  let canSend = parseInt(bribeInput.value) > 0;
+  let nationButtons = document.getElementsByClassName('bribe-nation-button');
+  for (let nationButton of nationButtons) {
+    if (canSend) {
+      nationButton.classList.remove('disabled-button');
+    } else {
+      nationButton.classList.add('disabled-button');
+    }
+  }
+}
+
 function increment_bid_input(delta) {
   let newBid = parseInt(bidInput.value) + delta;
   newBid = Math.max(newBid, 0);
@@ -1514,6 +1526,7 @@ function increment_bribe_input(delta) {
   newBribe = Math.max(newBribe, 0);
   newBribe = Math.min(newBribe, gLatestState.players[gUsername].cash);
   bribeInput.value = newBribe;
+  bribe_input_changed();
 }
 
 function vote_for(playername) {
@@ -1559,7 +1572,7 @@ function show_modal(type) {
   {
     let button = document.createElement('DIV');
     button.classList.add("button");
-    button.innerHTML = "abstain";
+    button.innerHTML = "<i>abstain</i>";
     button.addEventListener('click', (e) => {
       close_modal();
       vote_for("abstain");
@@ -1670,12 +1683,11 @@ function highlightTerritories(territoryNames) {
 
 function send_bribe(nation_name) {
   close_modal();
+  let bribeValue = parseInt(bribeInput.value);
+  if (bribeValue === 0) return;
   send({
     "method": "bribe",
-    "args": [
-      parseInt(bribeInput.value),
-      nation_name
-    ]
+    "args":[bribeValue, nation_name]
   });
   bribeInput.value = 0;
 }
