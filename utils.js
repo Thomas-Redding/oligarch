@@ -408,6 +408,7 @@ let utils = {
    * @returns {Object} a dictionary whose keys are territories a unit can move to
    */
   valid_moves_for_troop: (motherState, nationName, territoryID, troopType) => {
+    territoryID = territoryID + '';
     let enemyUnits = utils._enemy_units(motherState, nationName);
     let territoriesAdjacentToEnemies = [];
     for (let enemyUnit of enemyUnits) {
