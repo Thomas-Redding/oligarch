@@ -101,6 +101,7 @@ function render_table(state, table, isEndOfGame) {
   tbody.innerHTML = `
     <tr>
       <td></td>
+      <td></td>
       <td class="column-NA">NA</td>
       <td class="column-SA">SA</td>
       <td class="column-EU">EU</td>
@@ -122,13 +123,9 @@ function render_table(state, table, isEndOfGame) {
       tr.style.backgroundColor = '#444';
     }
     // We pretend everyone is connected for now.
-    if (isEndOfGame) {
-      tr.innerHTML += `<td>` + player.username + " </td>";
-    } else {
-      // tr.innerHTML += `<td><svg width=16 height=16><circle cx=8 cy=8 r=8 style="fill:` + color + `;"></svg> ` + player.username + " </td>";
-      let opacity = state.players[name].connected * 0.5 + 0.5;
-      tr.innerHTML += `<td style="opacity:` + opacity + `">` + player.username + " </td>";
-    }
+    let connectionCircleColor = player.connected ? 'green' : '#888';
+    tr.innerHTML += `<td><div style="background-color:` + connectionCircleColor + `; width: 0.5em; height: 0.5em; border-radius: 0.25em;"></div></td>`;
+    tr.innerHTML += `<td>` + player.username + " </td>";
     tr.innerHTML += '<td class="column-NA">' + player.shares["North America"] + "</td>";
     tr.innerHTML += '<td class="column-SA">' + player.shares["South America"] + "</td>";
     tr.innerHTML += '<td class="column-EU">' + player.shares["Europe"] + "</td>";
@@ -156,7 +153,7 @@ function render_table(state, table, isEndOfGame) {
 
     tr = document.createElement("TR");
     tr.style.borderTop = 'solid white 1px';
-    tr.innerHTML += "<td>TOTAL</td>";
+    tr.innerHTML += "<td></td><td>TOTAL</td>";
     tr.innerHTML += '<td class="column-NA">' + all_shares_out("North America") + "</td>";
     tr.innerHTML += '<td class="column-SA">' + all_shares_out("South America") + "</td>";
     tr.innerHTML += '<td class="column-EU">' + all_shares_out("Europe") + "</td>";
