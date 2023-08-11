@@ -54,7 +54,7 @@ function bid(val, button) {
   if (gLatestState.players[gUsername].cash < val) return;
   send({
     "method": "bid",
-    "args": [val]
+    "args": [{'amount': val, 'nation': gLatestState.stage.turn}]
   });
   close_modal();
 }

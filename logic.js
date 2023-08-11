@@ -230,12 +230,12 @@ class Game
         }
     }
 
-    bid(username, amount)
+    bid(username, bidInfo)
     {
-        //log(username, amount);
-        if (this.mother_state.players[username].cash >= amount &&
-            this.mother_state.current_bid < amount) {
-            this._register_bid(amount, username)
+        //log(username, bidInfo);
+        if (this.mother_state.players[username].cash >= bidInfo.amount &&
+            this.mother_state.current_bid < bidInfo.amount) {
+            this._register_bid(bidInfo, username)
         }
     }
 
@@ -546,6 +546,7 @@ class Game
         this.mother_state.stage.subphase = null
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
+        this.mother_state.allow_bids = false
         this.mother_state.trading_pairs = []
         this.mother_state.supershares_from_turn = SHARES_FROM_TURN
         // log.enable = false
@@ -808,21 +809,29 @@ class Game
         this.timer.stop(false)
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
+        this.mother_state.allow_bids = true;
         this._prayer('auction_start', nation, true)
     }
 
-    _register_bid(amount, username)
+    _register_bid(bidInfo, username)
     {
+        if (!this.mother_state.allow_bids) {
+            return;
+        }
+        if (bidInfo.nation != this.mother_state.stage.turn) {
+          // Delayed bid from earlier auction.
+          return;
+        }
         if (this.mother_state.highest_bidder === null) {
             this._save("auction_start", null);
         }
-        log(amount, username);
-        this.mother_state.current_bid = amount
+        log(bidInfo, username);
+        this.mother_state.current_bid = bidInfo.amount
         this.mother_state.highest_bidder = username
         if (this.timer) this.timer.stop(false)
         this.timer.start(this.mother_state.settings.biddingTime, this._conclude_bidding.bind(this))
         console.log('register bid called')
-        this._prayer('bid_received', {'amount' : amount, 'player': username,
+        this._prayer('bid_received', {'amount' : bidInfo.amount, 'player': username,
             'nation': this.mother_state.stage.turn}, true)
 
     }
@@ -840,6 +849,7 @@ class Game
         this.mother_state.players[winner].shares[curnat] += SHARES_FROM_TURN[i-1]
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
+        this.mother_state.allow_bids = false;
         this._prayer('conclude_bidding', details, true)
         this._transition()
     }
