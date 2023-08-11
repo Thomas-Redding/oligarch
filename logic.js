@@ -554,14 +554,14 @@ class Game
 
 
     //prayer wrapper for automatic timing
-    _prayer(prayer_id, signal)
+    _prayer(prayer_id, signal, doubleTap=false)
     {
         log(prayer_id, signal);
         this._log([prayer_id, signal]);
         let tau = 0;
         if (this.timer && this.timer.isRunning()) tau = this.timer.queryTime()
         this.mother_state.clock = tau
-        this.prayer(prayer_id, signal)
+        this.prayer(prayer_id, signal, doubleTap)
     }
 
     //acts based on current game state
@@ -808,7 +808,7 @@ class Game
         this.timer.stop(false)
         this.mother_state.current_bid = -1
         this.mother_state.highest_bidder = null
-        this._prayer('auction_start', nation)
+        this._prayer('auction_start', nation, true)
     }
 
     _register_bid(amount, username)
@@ -823,7 +823,7 @@ class Game
         this.timer.start(this.mother_state.settings.biddingTime, this._conclude_bidding.bind(this))
         console.log('register bid called')
         this._prayer('bid_received', {'amount' : amount, 'player': username,
-            'nation': this.mother_state.stage.turn})
+            'nation': this.mother_state.stage.turn}, true)
 
     }
 
@@ -840,7 +840,7 @@ class Game
         this.mother_state.players[winner].shares[curnat] += SHARES_FROM_TURN[i-1]
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
-        this._prayer('conclude_bidding', details)
+        this._prayer('conclude_bidding', details, true)
         this._transition()
     }
 
