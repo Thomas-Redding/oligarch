@@ -15,15 +15,23 @@ class OligarchRoom extends Room {
 
   sendDataToAll(data) {
     let users = super.connectedUsers();
+    let s = data == null ? "" : JSON.stringify(data);
     for (let user of users) {
-      super.sendData(user, JSON.stringify(data));
+      super.sendData(user, s);
     }
   }
 
-  prayer(action, details) {
+  // If `doubleTap` is true, we send a dummy message after a delay.
+  // See https://github.com/Thomas-Redding/oligarch/issues/153 for details.
+  prayer(action, details, doubleTap=false) {
     let newModel = this.fetchGameState();
     console.log('<<<', JSON.stringify([action, details, "<state clock:" + newModel.clock + ">"]));
     this.sendDataToAll([ action, details, newModel ]);
+    if (doubleTap) {
+      setTimeout(() => {
+        this.sendDataToAll(null);
+      }, 1000);
+    }
   }
 
   fetchGameState() {

@@ -1168,7 +1168,10 @@ let loadPromises = [
         window.location.reload();
       });
       gSocket.addEventListener("message", (event) => {
-        if (event.data.length == 0) return;
+        if (event.data.length == 0) {
+          // This is a "doubleTap" event (see prayer() in oligarch.js).
+          return;
+        }
         let [action, details, state] = JSON.parse(event.data);
         gLatestState = state;
 

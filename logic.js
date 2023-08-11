@@ -379,7 +379,8 @@ class Game
         log(username, candidate_username);
         let cur_nat = this.mother_state.stage.turn
         let cur_r = this.mother_state.stage.round
-        if (this.mother_state.stage.subphase == 'Election'){
+        if (this.mother_state.stage.subphase == 'Election') {
+            // TODO: Remove the following if-check to allow users to vote multiple times.
             if (this.mother_state.players[username].vote == null) {
                 this._register_vote(username, candidate_username)
             }
@@ -792,11 +793,9 @@ class Game
 
     _finish_deliberation()
     {
-        console.trace()
         log();
         this.timer.stop(true);
         this.timer.stop(true);
-        console.trace()
         this._prayer('deliberation_over','')
         this._transition()
     }
