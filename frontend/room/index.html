@@ -286,7 +286,7 @@ let admin = {
     <div id="actionPanel" style="min-height:3em;">
       <div id="tradeButton" class='button' style="display:inline-block;" onclick="show_modal('Trade')">Trade</div>
       <div id="voteButton" class='button' style="display:inline-block;" onclick="vote_button_clicked()">Vote</div>
-      <div id="bribeButton" class='button' style="display:inline-block;" onclick="show_modal('Bribe')">Bribe</div>
+      <div id="donateButton" class='button' style="display:inline-block;" onclick="show_modal('Donate')">Donate</div>
       <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1, this)">Bid +1</div>
       <div id="bid5Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 5, this)">Bid +5</div>
       <div id="bid25Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 25, this)">Bid +25</div>
@@ -421,21 +421,21 @@ let admin = {
     <div id="votePlayerButtonsContainer"></div>
   </div>
 
-  <div id="bribePopupDiv" class="popup">
-    <h2 align="center">Bribe</h2>
+  <div id="donatePopupDiv" class="popup">
+    <h2 align="center">Donate</h2>
     <br/><br/>
     Give
     <table style='text-align:center; margin: 0 auto;'>
       <tbody>
         <tr>
           <td>
-            <input id="bribeInput" oninput="bribe_input_changed();" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
+            <input id="donateInput" oninput="donate_input_changed();" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
           </td>
           <td>
-            <div class="button" onClick="increment_bribe_input(5);">+$5</div>
+            <div class="button" onClick="increment_donate_input(5);">+$5</div>
           </td>
           <td>
-            <div class="button" onClick="increment_bribe_input(20);">+$20</div>
+            <div class="button" onClick="increment_donate_input(20);">+$20</div>
           </td>
         </tr>
       </tbody>
@@ -443,13 +443,13 @@ let admin = {
     <br/><br/>
     To
     <div style="text-align:center;">
-      <div onClick="send_bribe('North America')" class='button bribe-nation-button'>NA</div>
-      <div onClick="send_bribe('South America')" class='button bribe-nation-button'>EU</div>
-      <div onClick="send_bribe('Asia')" class='button bribe-nation-button'>AS</div>
+      <div onClick="send_donate('North America')" class='button donate-nation-button'>NA</div>
+      <div onClick="send_donate('South America')" class='button donate-nation-button'>EU</div>
+      <div onClick="send_donate('Asia')" class='button donate-nation-button'>AS</div>
       <br><br>
-      <div onClick="send_bribe('South America')" class='button bribe-nation-button'>SA</div>
-      <div onClick="send_bribe('Africa')" class='button bribe-nation-button'>AF</div>
-      <div onClick="send_bribe('Australia')" class='button bribe-nation-button'>AU</div>
+      <div onClick="send_donate('South America')" class='button donate-nation-button'>SA</div>
+      <div onClick="send_donate('Africa')" class='button donate-nation-button'>AF</div>
+      <div onClick="send_donate('Australia')" class='button donate-nation-button'>AU</div>
     </div>
   </div>
 

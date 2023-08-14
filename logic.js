@@ -414,14 +414,14 @@ class Game
         }
     }
 
-    bribe(username, amount, nation)
+    donate(username, amount, nation)
     {
         if (this.mother_state.players[username].cash >= amount) {
             this.mother_state.players[username].cash -= amount
             this.mother_state.nations[nation].cash += amount
             let details = { 'amount' : amount,
                 'player':username, 'nation':nation }
-            this._prayer('bribe', details, this.mother_state)
+            this._prayer('donate', details, this.mother_state)
         }
     }
 
@@ -512,7 +512,7 @@ class Game
         this._history = new History(this.prayer);
         this.mother_state = { }
         this.mother_state.map = utils.load_map(JSON.parse(fs.readFileSync('map.json')));
-        const kDebug = false;
+        const kDebug = true;
         this.mother_state.settings = {
             "debug": kDebug,
             "deliberationTime": (kDebug ?   1 : 30)* 1*1000,

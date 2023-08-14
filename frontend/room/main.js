@@ -1027,8 +1027,8 @@ function htmlFromLog(action, details, isToast) {
     }
   } else if (action == "end_presidential_command") {
     return "The reign has ended.";
-  } else if (action == "bribe") {
-    return "<b>" + details.player + "</b> bribed " + details.nation + " with $" + details.amount + "B";
+  } else if (action == "donate") {
+    return "<b>" + details.player + "</b> donated " + details.nation + " with $" + details.amount + "B";
   } else if (action == "player_added") {
     if (isToast) return undefined;
     else return "<b>" + details + "</b> joined";
@@ -1303,7 +1303,7 @@ let loadPromises = [
         else if (action === "taxes_collected") {
           render_table(state);
         }
-        else if (action === "bribe") {
+        else if (action === "donate") {
           render_table(state);
         }
         else if (action === "begin_deliberation") {
@@ -1488,8 +1488,8 @@ function update_buttons(state) {
   }
 
   // Switch lines if you want to enable bribing (i.e. donating to a country)
-  // bribeButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
-  bribeButton.style.display = "none";
+  // donateButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
+  donateButton.style.display = "none";
 
   if (stage.phase === "Action" && stage.subphase == "Election") {
     voteButton.style.display = "inline-block";
@@ -1509,8 +1509,8 @@ function onstagechange(state) {
 
   const myCash = state.players[gUsername].cash;
 
-  bribeInput.max = myCash;
-  bribeInput.value = Math.min(parseInt(bribeInput.value), myCash);
+  donateInput.max = myCash;
+  donateInput.value = Math.min(parseInt(donateInput.value), myCash);
 
   render_presidential_div(state);
 }
@@ -1543,9 +1543,9 @@ function render_presidential_div(state) {
   }
 }
 
-function bribe_input_changed() {
-  let canSend = parseInt(bribeInput.value) > 0;
-  let nationButtons = document.getElementsByClassName('bribe-nation-button');
+function donate_input_changed() {
+  let canSend = parseInt(donateInput.value) > 0;
+  let nationButtons = document.getElementsByClassName('donate-nation-button');
   for (let nationButton of nationButtons) {
     if (canSend) {
       nationButton.classList.remove('disabled-button');
@@ -1562,12 +1562,12 @@ function increment_bid_input(delta) {
   bidInput.value = newBid;
 }
 
-function increment_bribe_input(delta) {
-  let newBribe = parseInt(bribeInput.value) + delta;
-  newBribe = Math.max(newBribe, 0);
-  newBribe = Math.min(newBribe, gLatestState.players[gUsername].cash);
-  bribeInput.value = newBribe;
-  bribe_input_changed();
+function increment_donate_input(delta) {
+  let newDonation = parseInt(donateInput.value) + delta;
+  newDonation = Math.max(newDonation, 0);
+  newDonation = Math.min(newDonation, gLatestState.players[gUsername].cash);
+  donateInput.value = newDonation;
+  donate_input_changed();
 }
 
 function vote_for(playername) {
@@ -1624,7 +1624,7 @@ function show_modal(type) {
   tradePopup2Div.style.display = "none";
   tradePopupDiv.style.display = (type === "Trade" ? "block" : "none");
   votePopupDiv.style.display = (type === "Vote" ? "block" : "none");
-  bribePopupDiv.style.display = (type === "Bribe" ? "block" : "none");
+  donatePopupDiv.style.display = (type === "Donate" ? "block" : "none");
   helpPopupDiv.style.display = (type === "Help" ? "block" : "none");
 
   popupDiv.children[0].onclick = close_modal;
@@ -1731,13 +1731,13 @@ function highlightTerritories(territoryNames) {
   }
 }
 
-function send_bribe(nation_name) {
+function send_donate(nation_name) {
   close_modal();
-  let bribeValue = parseInt(bribeInput.value);
-  if (bribeValue === 0) return;
+  let donateValue = parseInt(donateInput.value);
+  if (donateValue === 0) return;
   send({
-    "method": "bribe",
-    "args":[bribeValue, nation_name]
+    "method": "donate",
+    "args":[donateValue, nation_name]
   });
-  bribeInput.value = 0;
+  donateInput.value = 0;
 }
