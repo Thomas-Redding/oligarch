@@ -211,7 +211,7 @@ function render_playerTable(state, table, isEndOfGame) {
 
   let turn = gLatestState.stage.turn;
   let turnIndex = ['North America', 'South America', 'Europe', 'Africa', 'Asia', 'Australia'].indexOf(turn);
-  for (let i = 1; i < tbody.children.length; ++i) {
+  for (let i = 1; i < tbody.children.length - 2; ++i) {
     let tr = tbody.children[i];
     tr.children[turnIndex + 2].style.backgroundColor = '#444';
   }
