@@ -104,7 +104,7 @@ let utils = {
       'na','sa','eu','af','as','au',
       'north america', 'south america', 'europe', 'africa', 'asia', 'australia',
       // game words
-      'cash', 'score', 'total', 'abstain'
+      'cash', 'score', 'total', 'abstain', 'world bank'
     ];
     if (blacklist.includes(username.toLowerCase())) {
       // username is explicitly forbidden
@@ -852,6 +852,18 @@ let utils = {
       r += mother_state.supershares_from_turn[i];
     }
     return r;
+  },
+
+  unowned_shares: (mother_state, nation_name) => {
+    let owned_shares = 0;
+    for (let username in mother_state.players) {
+      owned_shares += mother_state.players[username].shares[nation_name];
+    }
+    let rtn = utils.total_shares(mother_state, nation_name) - owned_shares;
+    if (rtn < 0) {
+      throw Error();
+    }
+    return rtn;
   },
 
   /*

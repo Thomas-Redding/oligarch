@@ -93,9 +93,9 @@ function argmax(A) {
   return r;
 }
 
-function render_table(state, table, isEndOfGame) {
+function render_playerTable(state, table, isEndOfGame) {
   if (!table) {
-    table = mainTable;
+    table = playerTable;
   }
   let tbody = table.children[0];
   let arrowChar = utils.isCountryOrderReversed(state) ? '←' : '→';
@@ -186,6 +186,27 @@ function render_table(state, table, isEndOfGame) {
       tr.innerHTML += "<td></td>";
       tbody.appendChild(tr);
     }
+  }
+
+  {
+    let trPadding = document.createElement("TR");
+    trPadding.innerHTML = '<td><div>&nbsp;</div></td>';
+    tbody.appendChild(trPadding);
+
+    // World Bank
+    let sharesLeft = {};
+    let tr = document.createElement("TR");
+    tr.innerHTML += `<td></td>`;
+    tr.innerHTML += `<td><i>World Bank</i></td>`;
+    tr.innerHTML += '<td class="column-NA">' + utils.unowned_shares(state, 'North America') + "</td>";
+    tr.innerHTML += '<td class="column-SA">' + utils.unowned_shares(state, 'South America') + "</td>";
+    tr.innerHTML += '<td class="column-EU">' + utils.unowned_shares(state, 'Europe') + "</td>";
+    tr.innerHTML += '<td class="column-AF">' + utils.unowned_shares(state, 'Africa') + "</td>";
+    tr.innerHTML += '<td class="column-AS">' + utils.unowned_shares(state, 'Asia') + "</td>";
+    tr.innerHTML += '<td class="column-AU">' + utils.unowned_shares(state, 'Australia') + "</td>";
+    tr.innerHTML += "<td>∞</td>";
+    tr.innerHTML += "<td></td>";
+    tbody.appendChild(tr);
   }
 
   let turn = gLatestState.stage.turn;
@@ -577,7 +598,7 @@ function render_map(state) {
 }
 
 function add_player(details, state) {
-  render_table(state);
+  render_playerTable(state);
 }
 
 let theme = {
@@ -822,7 +843,7 @@ window.onresize = () => {
     contentDiv.style.flexDirection = 'row';
     leftPanel.style.display = 'block';
     leftPanel.style.width = '30em';
-    mainTable.style.display = 'table';
+    playerTable.style.display = 'table';
     actionPanel.style.display = 'block';
     mapDiv.style.display = 'block';
     mapDiv.style.flex = 1;
@@ -831,7 +852,7 @@ window.onresize = () => {
     bottomNavBarDiv.style.display = 'none';
     currentVotesDiv.style.display = "block";
 
-    mainTable.style.fontSize = '1.3em';
+    playerTable.style.fontSize = '1.3em';
   } else {
     // Mobile
     statusBarDiv.style.fontSize = '1em';
@@ -846,11 +867,11 @@ window.onresize = () => {
     gameLogContainer.style.display = (tab === kTabLog ? "block" : "none");
     gameLogContainer.style.maxWidth = 'none';
     actionPanel.style.display = (tab === kTabInfo ? "block" : "none");
-    mainTable.style.display = (tab === kTabInfo ? "table" : "none");
+    playerTable.style.display = (tab === kTabInfo ? "table" : "none");
     bottomNavBarDiv.style.display = 'flex';
     currentVotesDiv.style.display = (tab === kTabInfo ? "block" : "none");
 
-    mainTable.style.fontSize = '1em';
+    playerTable.style.fontSize = '1em';
   }
 
   lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
@@ -1228,7 +1249,7 @@ let loadPromises = [
             render_presidential_div(state);
             window.onresize();
           }
-          render_table(state);
+          render_playerTable(state);
           gClock.set_time_remaining(state.clock);
           if (state.is_paused) {
             gClock.pause();
@@ -1236,7 +1257,7 @@ let loadPromises = [
           updateLobbyUsernames();
         }
         else if (action === "game_over") {
-          render_table(state, endOfGameTable, true);
+          render_playerTable(state, endOfGameTable, true);
           let best = -Infinity;
           let winner = null;
           for (let player_name in state.players) {
@@ -1265,21 +1286,21 @@ let loadPromises = [
           window.location.reload(true);
         }
         else if (action === "built_infrastructure") {
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "spawned_unit") {
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "trade_proposed") {
           maybe_show_trade_proposal(state);
         }
         else if (action === "trade_accepted") {
           tradeSnackbarContainer.style.display = "none";
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "battle_outcome") {
           render_map(state);
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "is_admin") {
           areAdminFetched(details);
@@ -1298,17 +1319,17 @@ let loadPromises = [
           window.onresize();
         }
         else if (action === "buy_share") {
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "taxes_collected") {
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "donate") {
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "begin_deliberation") {
           gClock.set_time_remaining(state.clock);
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "deliberation_over") {
           gClock.set_time_remaining(state.clock);
@@ -1318,7 +1339,7 @@ let loadPromises = [
         }
         else if (action === "start_election") {
           gClock.set_time_remaining(state.clock);
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "vote_tallied") {
           render_map(state);
@@ -1341,22 +1362,22 @@ let loadPromises = [
         }
         else if (action === "built_infrastructure") {
           Hex.unhighlight_all_hexes();
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "bldg_razed") {
           render_map(state);
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "dividends_paid") {
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "conclude_bidding") {
-          render_table(state);
+          render_playerTable(state);
           // render_nation_rects(state);
         }
         else if (action === "moves_made") {
           render_map(state);
-          render_table(state);
+          render_playerTable(state);
         }
         else if (action === "players_busy") {
           // TODO: this message should look different depending on
@@ -1403,7 +1424,7 @@ let loadPromises = [
             }, kBidDisableTime * 1000);
           }
         } else if (action == "connection_change") {
-          render_table(state);
+          render_playerTable(state);
         }
 
         render_map(state);
