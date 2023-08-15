@@ -285,8 +285,9 @@ let admin = {
     <br>
     <div id="actionPanel" style="min-height:3em;">
       <div id="tradeButton" class='button' style="display:inline-block;" onclick="show_modal('Trade')">Trade</div>
-      <div id="voteButton" class='button' style="display:inline-block;" onclick="vote_button_clicked()">Vote</div>
       <div id="donateButton" class='button' style="display:inline-block;" onclick="show_modal('Donate')">Donate</div>
+      <div id="borrowButton" class='button' style="display:inline-block;" onclick="show_modal('Borrow')">Borrow</div>
+      <div id="voteButton" class='button' style="display:inline-block;" onclick="vote_button_clicked()">Vote</div>
       <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1, this)">Bid +1</div>
       <div id="bid5Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 5, this)">Bid +5</div>
       <div id="bid25Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 25, this)">Bid +25</div>
@@ -450,6 +451,32 @@ let admin = {
       <div onClick="send_donate('South America')" class='button donate-nation-button'>SA</div>
       <div onClick="send_donate('Africa')" class='button donate-nation-button'>AF</div>
       <div onClick="send_donate('Australia')" class='button donate-nation-button'>AU</div>
+    </div>
+  </div>
+
+  <div id="borrowPopupDiv" class="popup">
+    <h2 align="center">Borrow</h2>
+    <br/><br/>
+    Give
+    <table style='text-align:center; margin: 0 auto;'>
+      <tbody>
+        <tr>
+          <td>
+            <input id="borrowInput" oninput="borrow_input_changed();" type='number' value=0 min=0 style="width:3em; font-size:1em; display:inline-block;">
+          </td>
+          <td>
+            <div class="button" onClick="increment_borrow_input(5);">+$5</div>
+          </td>
+          <td>
+            <div class="button" onClick="increment_borrow_input(20);">+$20</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br/><br/>
+    To
+    <div style="text-align:center;">
+      <div onClick="borrow()" class='button' id="submitBorrowButton">Borrow</div>
     </div>
   </div>
 

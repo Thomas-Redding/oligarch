@@ -94,6 +94,7 @@ function argmax(A) {
 }
 
 function render_playerTable(state, table, isEndOfGame) {
+  // TODO(debt): Add debt.
   if (!table) {
     table = playerTable;
   }
@@ -1050,6 +1051,8 @@ function htmlFromLog(action, details, isToast) {
     return "The reign has ended.";
   } else if (action == "donate") {
     return "<b>" + details.player + "</b> donated " + details.nation + " with $" + details.amount + "B";
+  } else if (action == "borrowed") {
+    return "<b>" + details.player + "</b> borrowed $" + details.amount + "B";
   } else if (action == "player_added") {
     if (isToast) return undefined;
     else return "<b>" + details + "</b> joined";
@@ -1327,6 +1330,9 @@ let loadPromises = [
         else if (action === "donate") {
           render_playerTable(state);
         }
+        else if (action === "borrowed") {
+          render_playerTable(state);
+        }
         else if (action === "begin_deliberation") {
           gClock.set_time_remaining(state.clock);
           render_playerTable(state);
@@ -1511,6 +1517,7 @@ function update_buttons(state) {
   // Switch lines if you want to enable bribing (i.e. donating to a country)
   // donateButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
   donateButton.style.display = "none";
+  borrowButton.style.display = gLatestState.settings.debt ? "inline-block" : "none";
 
   if (stage.phase === "Action" && stage.subphase == "Election") {
     voteButton.style.display = "inline-block";
@@ -1644,12 +1651,15 @@ function show_modal(type) {
 
   tradePopup2Div.style.display = "none";
   tradePopupDiv.style.display = (type === "Trade" ? "block" : "none");
-  votePopupDiv.style.display = (type === "Vote" ? "block" : "none");
   donatePopupDiv.style.display = (type === "Donate" ? "block" : "none");
+  borrowPopupDiv.style.display = (type === "Borrow" ? "block" : "none");
+  votePopupDiv.style.display = (type === "Vote" ? "block" : "none");
   helpPopupDiv.style.display = (type === "Help" ? "block" : "none");
 
   if (type === "Donate") {
     donate_input_changed();
+  } else if (type === "Borrow") {
+    borrow_input_changed();
   }
 
   popupDiv.children[0].onclick = close_modal;
@@ -1765,4 +1775,29 @@ function send_donate(nation_name) {
     "args":[donateValue, nation_name]
   });
   donateInput.value = 0;
+}
+
+function borrow_input_changed() {
+  if (parseInt(borrowInput.value) > 0) {
+    submitBorrowButton.classList.remove('disabled-button');
+  } else {
+    submitBorrowButton.classList.add('disabled-button');
+  }
+}
+
+function increment_borrow_input(delta) {
+  let newLoan = parseInt(borrowInput.value) + delta;
+  newLoan = Math.max(newLoan, 0);
+  borrowInput.value = newLoan;
+  borrow_input_changed();
+}
+
+function borrow() {
+  let borrowValue = parseInt(borrowInput.value);
+  if (borrowValue == 0) return;
+  close_modal();
+  send({
+    "method": "borrow",
+    "args":[borrowValue]
+  });
 }

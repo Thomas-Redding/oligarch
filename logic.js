@@ -425,6 +425,15 @@ class Game
         }
     }
 
+    borrow(username, amount)
+    {
+        // TODO(debt): Add interest calculations.
+        if (!this.mother_state.settings.debt) return;
+        this.mother_state.players[username].cash += amount;
+        this.mother_state.players[username].debt += amount;
+        this._prayer('borrowed', {'player': username, 'amount': amount}, this.mother_state);
+    }
+
     //shares_to / shares_from is a list with shares as strings (potential dupes)
     //first share and cash args (shares_to & cash_to) go to player (second user)
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
@@ -521,6 +530,7 @@ class Game
             "actionsTime":      (kDebug ? 999 :  3)*60*1000,
             "startingCash": 1475,
             "advice": true,
+            'debt': false,
         }
         this.mother_state.players = { }
         this.mother_state.nations = { }
@@ -775,6 +785,7 @@ class Game
         let inicash = Math.floor(this.mother_state.settings.startingCash/n_players)
         for (let player in this.mother_state.players){
             this.mother_state.players[player].cash = inicash
+            this.mother_state.players[player].debt = 0
         }
     }
 
