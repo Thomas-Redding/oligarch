@@ -1767,9 +1767,9 @@ function highlightTerritories(territoryNames) {
 }
 
 function send_donate(nation_name) {
-  close_modal();
   let donateValue = parseInt(donateInput.value);
   if (donateValue === 0) return;
+  close_modal();
   send({
     "method": "donate",
     "args":[donateValue, nation_name]
