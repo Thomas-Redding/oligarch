@@ -188,6 +188,7 @@ class Game
             // Allow player.
             player.username = username
             player.cash = 0
+            player.manualDebt = 0
             // The first player to join is the admin.
             console.log(Object.keys(this.mother_state.players).length);
             if (Object.keys(this.mother_state.players).length == 0) {
