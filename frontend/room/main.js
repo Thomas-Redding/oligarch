@@ -1648,6 +1648,10 @@ function show_modal(type) {
   donatePopupDiv.style.display = (type === "Donate" ? "block" : "none");
   helpPopupDiv.style.display = (type === "Help" ? "block" : "none");
 
+  if (type === "Donate") {
+    donate_input_changed();
+  }
+
   popupDiv.children[0].onclick = close_modal;
   popupDiv.style.display = 'block';
 }
