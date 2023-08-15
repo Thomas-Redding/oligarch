@@ -1572,7 +1572,20 @@ function render_presidential_div(state) {
 }
 
 function donate_input_changed() {
-  let canSend = parseInt(donateInput.value) > 0;
+  let amount = parseInt(donateInput.value);
+
+  if (canSpendAmount(amount + 5)) {
+    donate5Button.classList.remove('disabled-button');
+  } else {
+    donate5Button.classList.add('disabled-button');
+  }
+  if (canSpendAmount(amount + 20)) {
+    donate20Button.classList.remove('disabled-button');
+  } else {
+    donate20Button.classList.add('disabled-button');
+  }
+
+  let canSend = amount > 0 && (amount < gLatestState.players[gUsername].cash || gLatestState.settings.debt == 'automatic');
   let nationButtons = document.getElementsByClassName('donate-nation-button');
   for (let nationButton of nationButtons) {
     if (canSend) {
@@ -1583,17 +1596,20 @@ function donate_input_changed() {
   }
 }
 
+function canSpendAmount(amount) {
+  return amount <= gLatestState.players[gUsername].cash || gLatestState.settings.debt == 'automatic';
+}
+
 function increment_bid_input(delta) {
   let newBid = parseInt(bidInput.value) + delta;
+  if (!canSpendAmount(newBid)) return;
   newBid = Math.max(newBid, 0);
-  if (gLatestState.settings.debt != 'automatic') {
-    newBid = Math.min(newBid, gLatestState.players[gUsername].cash);
-  }
   bidInput.value = newBid;
 }
 
 function increment_donate_input(delta) {
   let newDonation = parseInt(donateInput.value) + delta;
+  if (!canSpendAmount(newDonation)) return;
   newDonation = Math.max(newDonation, 0);
   if (gLatestState.settings.debt != 'automatic') {
     newDonation = Math.min(newDonation, gLatestState.players[gUsername].cash);

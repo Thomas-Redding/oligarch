@@ -531,7 +531,7 @@ class Game
             "actionsTime":      (kDebug ? 999 :  3)*60*1000,
             "startingCash": 1475,
             "advice": true,
-            'debt': 'automatic', // 'none', 'manual', 'auto'
+            'debt': 'none', // 'none', 'manual', 'auto'
         }
         this.mother_state.players = { }
         this.mother_state.nations = { }
