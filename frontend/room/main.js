@@ -1053,6 +1053,8 @@ function htmlFromLog(action, details, isToast) {
     return "<b>" + details.player + "</b> donated " + details.nation + " with $" + details.amount + "B";
   } else if (action == "borrowed") {
     return "<b>" + details.player + "</b> borrowed $" + details.amount + "B";
+  } else if (action == "paid_back") {
+    return "<b>" + details.player + "</b> paid back $" + details.amount + "B in debt";
   } else if (action == "player_added") {
     if (isToast) return undefined;
     else return "<b>" + details + "</b> joined";
@@ -1518,6 +1520,7 @@ function update_buttons(state) {
   // donateButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
   // donateButton.style.display = "none";
   borrowButton.style.display = (gLatestState.settings.debt == 'manual' ? "inline-block" : "none");
+  payBackButton.style.display = (gLatestState.settings.debt == 'manual' && gLatestState.players[gUsername].manualDebt > 0 ? "inline-block" : "none");
 
   if (stage.phase === "Action" && stage.subphase == "Election") {
     voteButton.style.display = "inline-block";
@@ -1585,7 +1588,7 @@ function donate_input_changed() {
     donate20Button.classList.add('disabled-button');
   }
 
-  let canSend = amount > 0 && (amount < gLatestState.players[gUsername].cash || gLatestState.settings.debt == 'automatic');
+  let canSend = amount > 0 && canSpendAmount(amount);
   let nationButtons = document.getElementsByClassName('donate-nation-button');
   for (let nationButton of nationButtons) {
     if (canSend) {
@@ -1673,13 +1676,18 @@ function show_modal(type) {
   tradePopupDiv.style.display = (type === "Trade" ? "block" : "none");
   donatePopupDiv.style.display = (type === "Donate" ? "block" : "none");
   borrowPopupDiv.style.display = (type === "Borrow" ? "block" : "none");
+  payBackPopupDiv.style.display = (type === "PayBack" ? "block" : "none");
   votePopupDiv.style.display = (type === "Vote" ? "block" : "none");
   helpPopupDiv.style.display = (type === "Help" ? "block" : "none");
 
   if (type === "Donate") {
     donate_input_changed();
   } else if (type === "Borrow") {
+  	borrowInput.value = 0;
     borrow_input_changed();
+  } else if (type === "PayBack") {
+  	payBackInput.value = 0;
+    payBack_input_changed();
   }
 
   popupDiv.children[0].onclick = close_modal;
@@ -1816,8 +1824,46 @@ function borrow() {
   let borrowValue = parseInt(borrowInput.value);
   if (borrowValue == 0) return;
   close_modal();
+  borrowInput.value = 0;
   send({
     "method": "borrow",
     "args":[borrowValue]
+  });
+}
+
+function payBack_input_changed() {
+  let amount = parseInt(payBackInput.value);
+  if (amount > gLatestState.players[gUsername].cash) {
+    payBackInput.value = gLatestState.players[gUsername].cash;
+  }
+  if (amount > gLatestState.players[gUsername].manualDebt) {
+    payBackInput.value = gLatestState.players[gUsername].manualDebt;
+  }
+  if (parseInt(payBackInput.value) > 0) {
+    submitPayBackButton.classList.remove('disabled-button');
+  } else {
+    submitPayBackButton.classList.add('disabled-button');
+  }
+}
+
+function increment_payBack_input(delta) {
+  let newPayment = parseInt(payBackInput.value) + delta;
+  if (newPayment > gLatestState.players[gUsername].cash) return;
+  if (newPayment > gLatestState.players[gUsername].debt) return;
+  newPayment = Math.max(newPayment, 0);
+  payBackInput.value = newPayment;
+  payBack_input_changed();
+}
+
+function payBack() {
+  let payBackValue = parseInt(payBackInput.value);
+  if (payBackValue == 0) return;
+  if (payBackValue > gLatestState.players[gUsername].cash) return;
+  if (payBackValue > gLatestState.players[gUsername].debt) return;
+  close_modal();
+  payBackInput.value = 0;
+  send({
+    "method": "payBack",
+    "args":[payBackValue]
   });
 }

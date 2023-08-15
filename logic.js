@@ -435,6 +435,15 @@ class Game
         this._prayer('borrowed', {'player': username, 'amount': amount}, this.mother_state);
     }
 
+    payBack(username, amount)
+    {
+        if (this.mother_state.settings.debt != 'manual') return;
+        if (amount > this.mother_state.players[username].cash) return;
+        this.mother_state.players[username].cash -= amount;
+        this.mother_state.players[username].manualDebt -= amount;
+        this._prayer('paid_back', {'player': username, 'amount': amount}, this.mother_state);
+    }
+
     //shares_to / shares_from is a list with shares as strings (potential dupes)
     //first share and cash args (shares_to & cash_to) go to player (second user)
     initTrade(username, player, shares_to, shares_from, cash_to, cash_from)
@@ -531,7 +540,7 @@ class Game
             "actionsTime":      (kDebug ? 999 :  3)*60*1000,
             "startingCash": 1475,
             "advice": true,
-            'debt': 'none', // 'none', 'manual', 'auto'
+            'debt': 'manual', // 'none', 'manual', 'auto'
         }
         this.mother_state.players = { }
         this.mother_state.nations = { }
