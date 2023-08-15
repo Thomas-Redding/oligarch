@@ -233,8 +233,8 @@ class Game
     bid(username, bidInfo)
     {
         //log(username, bidInfo);
-        if (this.mother_state.players[username].cash >= bidInfo.amount &&
-            this.mother_state.current_bid < bidInfo.amount) {
+        let hasLiquidity = (this.mother_state.players[username].cash >= bidInfo.amount || this.mother_state.settings.debt == 'automatic');
+        if (hasLiquidity && this.mother_state.current_bid < bidInfo.amount) {
             this._register_bid(bidInfo, username)
         }
     }
@@ -416,7 +416,7 @@ class Game
 
     donate(username, amount, nation)
     {
-        if (this.mother_state.players[username].cash >= amount) {
+        if (this.mother_state.players[username].cash >= amount || this.mother_state.settings.debt == 'automatic') {
             this.mother_state.players[username].cash -= amount
             this.mother_state.nations[nation].cash += amount
             let details = { 'amount' : amount,
@@ -428,9 +428,9 @@ class Game
     borrow(username, amount)
     {
         // TODO(debt): Add interest calculations.
-        if (!this.mother_state.settings.debt) return;
+        if (this.mother_state.settings.debt != 'manual') return;
         this.mother_state.players[username].cash += amount;
-        this.mother_state.players[username].debt += amount;
+        this.mother_state.players[username].manualDebt += amount;
         this._prayer('borrowed', {'player': username, 'amount': amount}, this.mother_state);
     }
 
@@ -530,7 +530,7 @@ class Game
             "actionsTime":      (kDebug ? 999 :  3)*60*1000,
             "startingCash": 1475,
             "advice": true,
-            'debt': false,
+            'debt': 'automatic', // 'none', 'manual', 'auto'
         }
         this.mother_state.players = { }
         this.mother_state.nations = { }
@@ -785,7 +785,7 @@ class Game
         let inicash = Math.floor(this.mother_state.settings.startingCash/n_players)
         for (let player in this.mother_state.players){
             this.mother_state.players[player].cash = inicash
-            this.mother_state.players[player].debt = 0
+            this.mother_state.players[player].manualDebt = 0
         }
     }
 
@@ -1010,8 +1010,8 @@ class Game
 
         let trade_ok = shares_valid(shares_from, player)
         trade_ok &= shares_valid(shares_to, user)
-        trade_ok &= (this.mother_state.players[player].cash >= cash_from)
-        trade_ok &= (this.mother_state.players[user].cash >= cash_to)
+        trade_ok &= (this.mother_state.players[player].cash >= cash_from || this.mother_state.settings.debt == 'automatic')
+        trade_ok &= (this.mother_state.players[user].cash >= cash_to || this.mother_state.settings.debt == 'automatic')
         return trade_ok
     }
 

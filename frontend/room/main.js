@@ -51,7 +51,7 @@ function bid(val, button) {
   if (button.classList.contains('disabled-button')) {
     return;
   }
-  if (gLatestState.players[gUsername].cash < val) return;
+  if (gLatestState.players[gUsername].cash < val && gLatestState.settings.debt != 'automatic') return;
   send({
     "method": "bid",
     "args": [{'amount': val, 'nation': gLatestState.stage.turn}]
@@ -1398,17 +1398,17 @@ let loadPromises = [
         else if (action === "bid_received") {
           gClock.set_time_remaining(state.clock);
           if (details.player === gUsername) {
-            if (state.players[gUsername].cash > state.current_bid) {
+            if (state.players[gUsername].cash > state.current_bid || state.settings.debt == 'automatic') {
               bid1Button.classList.remove("disabled-button");
             } else {
               bid1Button.classList.add("disabled-button");
             }
-            if (state.players[gUsername].cash > state.current_bid + 5) {
+            if (state.players[gUsername].cash > state.current_bid + 5 || state.settings.debt == 'automatic') {
               bid5Button.classList.remove("disabled-button");
             } else {
               bid5Button.classList.add("disabled-button");
             }
-            if (state.players[gUsername].cash > state.current_bid + 25) {
+            if (state.players[gUsername].cash > state.current_bid + 25 || state.settings.debt == 'automatic') {
               bid25Button.classList.remove("disabled-button");
             } else {
               bid25Button.classList.add("disabled-button");
@@ -1418,13 +1418,13 @@ let loadPromises = [
             bid5Button.classList.add("disabled-button");
             bid25Button.classList.add("disabled-button");
             setTimeout(() => {
-              if (state.players[gUsername].cash > state.current_bid) {
+              if (state.players[gUsername].cash > state.current_bid || state.settings.debt == 'automatic') {
                 bid1Button.classList.remove("disabled-button");
               }
-              if (state.players[gUsername].cash > state.current_bid + 5) {
+              if (state.players[gUsername].cash > state.current_bid + 5 || state.settings.debt == 'automatic') {
                 bid5Button.classList.remove("disabled-button");
               }
-              if (state.players[gUsername].cash > state.current_bid + 25) {
+              if (state.players[gUsername].cash > state.current_bid + 25 || state.settings.debt == 'automatic') {
                 bid25Button.classList.remove("disabled-button");
               }
             }, kBidDisableTime * 1000);
@@ -1516,8 +1516,8 @@ function update_buttons(state) {
 
   // Switch lines if you want to enable bribing (i.e. donating to a country)
   // donateButton.style.display = (stage.phase === "Action" ? "inline-block" : "none");
-  donateButton.style.display = "none";
-  borrowButton.style.display = gLatestState.settings.debt ? "inline-block" : "none";
+  // donateButton.style.display = "none";
+  borrowButton.style.display = (gLatestState.settings.debt == 'manual' ? "inline-block" : "none");
 
   if (stage.phase === "Action" && stage.subphase == "Election") {
     voteButton.style.display = "inline-block";
@@ -1586,14 +1586,18 @@ function donate_input_changed() {
 function increment_bid_input(delta) {
   let newBid = parseInt(bidInput.value) + delta;
   newBid = Math.max(newBid, 0);
-  newBid = Math.min(newBid, gLatestState.players[gUsername].cash);
+  if (gLatestState.settings.debt != 'automatic') {
+    newBid = Math.min(newBid, gLatestState.players[gUsername].cash);
+  }
   bidInput.value = newBid;
 }
 
 function increment_donate_input(delta) {
   let newDonation = parseInt(donateInput.value) + delta;
   newDonation = Math.max(newDonation, 0);
-  newDonation = Math.min(newDonation, gLatestState.players[gUsername].cash);
+  if (gLatestState.settings.debt != 'automatic') {
+    newDonation = Math.min(newDonation, gLatestState.players[gUsername].cash);
+  }
   donateInput.value = newDonation;
   donate_input_changed();
 }
