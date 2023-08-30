@@ -1238,7 +1238,8 @@ let loadPromises = [
         }
 
         statusBarYourCash.innerHTML = "$" + Math.floor(state.players[gUsername].cash) + "B";
-        document.getElementById("factoryRadio").innerHTML = "Barracks (" + state.settings.factoryIncome + "B)";
+        document.getElementById("factoryRadioLabel").innerHTML = "Factory (cost: $" + COSTS['factory'] + "B; yield: $" + state.settings.factoryIncome + "B/turn)";
+        document.getElementById("barracksRadioLabel").innerHTML = "Barracks (cost: $" + COSTS['barracks'] + "B)";
 
         if (action === "get_state" || action === "undo") {
           // We assume get_state is only called when the user
