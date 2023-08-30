@@ -1238,7 +1238,7 @@ let loadPromises = [
         }
 
         statusBarYourCash.innerHTML = "$" + Math.floor(state.players[gUsername].cash) + "B";
-
+        document.getElementById("factoryRadio").innerHTML = "Barracks (" + state.settings.factoryIncome + "B)";
 
         if (action === "get_state" || action === "undo") {
           // We assume get_state is only called when the user

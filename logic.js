@@ -537,9 +537,10 @@ class Game
             "biddingTime":      (kDebug ?   1 : 12)* 1*1000,
             "electionTime":     (kDebug ? 999 :  2)*60*1000,
             "actionsTime":      (kDebug ? 999 :  3)*60*1000,
-            "startingCash": 1475,
+            "startingCash": 1770,
             "advice": true,
             'debt': 'manual', // 'none', 'manual', 'auto'
+            'factoryIncome': 15,
         }
         this.mother_state.players = { }
         this.mother_state.nations = { }

@@ -4,8 +4,8 @@ const TURNS = ['North America', 'South America',
     'Europe', 'Africa', 'Asia', 'Australia']
 const SUBPHASES = [null,'Election','Move','Attack','Spawn','Build','Dividends']
 const UNITS = ['Cavalry','Infantry','Artillery']
-const COSTS = {'factory' : 10, 'barracks' : 10, 'Infantry': 8, 
-    'Artillery':12, 'Cavalry':12 }
+const COSTS = {'factory' : 40, 'barracks' : 30, 'Infantry': 4,
+    'Artillery':6, 'Cavalry':6 }
 
 const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1])
 
@@ -169,7 +169,7 @@ let utils = {
   income_of_territory: (mother_state, territory) => {
     let natural_income = utils.natural_income_of_territory(territory);
     let nationName = utils.nation_name_from_abbr(mother_state, mother_state.map.states[territory].homeContinent);
-    let factory_income = 5 * mother_state.nations[nationName][territory].n_factories;
+    let factory_income = mother_state.settings.factoryIncome * mother_state.nations[nationName][territory].n_factories;
     return natural_income + factory_income;
   },
 
