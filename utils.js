@@ -7,7 +7,7 @@ const UNITS = ['Cavalry','Infantry','Artillery']
 const COSTS = {'factory' : 10, 'barracks' : 10, 'Infantry': 8, 
     'Artillery':12, 'Cavalry':12 }
 
-const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1]) 
+const reverse = (A) =>  A.map((v, i) => A[A.length - i - 1])
 
 class Deque {
   constructor(maxSize, reserve) {
