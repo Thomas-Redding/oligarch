@@ -99,6 +99,7 @@ function render_playerTable(state, table, isEndOfGame) {
     table = playerTable;
   }
   let tbody = table.children[0];
+  tbody.style.textAlign = 'right';
   let arrowChar = utils.isCountryOrderReversed(state) ? '←' : '→';
   tbody.innerHTML = `
     <tr>
@@ -130,7 +131,7 @@ function render_playerTable(state, table, isEndOfGame) {
     // We pretend everyone is connected for now.
     let connectionCircleColor = player.connected ? 'green' : '#888';
     tr.innerHTML += `<td><div style="background-color:` + connectionCircleColor + `; width: 0.5em; height: 0.5em; border-radius: 0.25em;"></div></td>`;
-    tr.innerHTML += `<td>` + player.username + " </td>";
+    tr.innerHTML += `<td style="text-align: left;">` + player.username + " </td>";
     tr.innerHTML += '<td class="column-NA">' + player.shares["North America"] + "</td>";
     tr.innerHTML += '<td class="column-SA">' + player.shares["South America"] + "</td>";
     tr.innerHTML += '<td class="column-EU">' + player.shares["Europe"] + "</td>";
@@ -156,19 +157,6 @@ function render_playerTable(state, table, isEndOfGame) {
   if (!isEndOfGame) {
     let tr;
 
-    tr = document.createElement("TR");
-    tr.style.borderTop = 'solid white 1px';
-    tr.innerHTML += "<td></td><td>TOTAL</td>";
-    tr.innerHTML += '<td class="column-NA">' + all_shares_out("North America") + "</td>";
-    tr.innerHTML += '<td class="column-SA">' + all_shares_out("South America") + "</td>";
-    tr.innerHTML += '<td class="column-EU">' + all_shares_out("Europe") + "</td>";
-    tr.innerHTML += '<td class="column-AF">' + all_shares_out("Africa") + "</td>";
-    tr.innerHTML += '<td class="column-AS">' + all_shares_out("Asia") + "</td>";
-    tr.innerHTML += '<td class="column-AU">' + all_shares_out("Australia") + "</td>";
-    tr.innerHTML += "<td>" + Math.round(utils.sum(players.map(x => x.cash))) + "</td>";
-    tr.innerHTML += "<td></td>";
-    tbody.appendChild(tr);
-
     if (gLatestState.settings.advice && false) {
       tr = document.createElement("TR");
       tr.style.borderTop = 'solid white 1px';
@@ -176,7 +164,7 @@ function render_playerTable(state, table, isEndOfGame) {
       tbody.appendChild(tr);
 
       tr = document.createElement("TR");
-      tr.innerHTML += "<td>TOTAL</td>";
+      tr.innerHTML += '<td style="text-align: left;">TOTAL</td>';
       tr.innerHTML += '<td class="column-NA">' + utils.score_of_nation(gLatestState, "North America") + "</td>";
       tr.innerHTML += '<td class="column-SA">' + utils.score_of_nation(gLatestState, "South America") + "</td>";
       tr.innerHTML += '<td class="column-EU">' + utils.score_of_nation(gLatestState, "Europe") + "</td>";
@@ -190,15 +178,11 @@ function render_playerTable(state, table, isEndOfGame) {
   }
 
   {
-    let trPadding = document.createElement("TR");
-    trPadding.innerHTML = '<td><div>&nbsp;</div></td>';
-    tbody.appendChild(trPadding);
-
     // World Bank
     let sharesLeft = {};
     let tr = document.createElement("TR");
     tr.innerHTML += `<td></td>`;
-    tr.innerHTML += `<td><i>World Bank</i></td>`;
+    tr.innerHTML += `<td style="text-align: left;"><i>World Bank</i></td>`;
     tr.innerHTML += '<td class="column-NA">' + utils.unowned_shares(state, 'North America') + "</td>";
     tr.innerHTML += '<td class="column-SA">' + utils.unowned_shares(state, 'South America') + "</td>";
     tr.innerHTML += '<td class="column-EU">' + utils.unowned_shares(state, 'Europe') + "</td>";
@@ -210,9 +194,38 @@ function render_playerTable(state, table, isEndOfGame) {
     tbody.appendChild(tr);
   }
 
+  {
+    let tr = document.createElement("TR");
+    tr.style.borderTop = 'solid white 1px';
+    tr.innerHTML += `<td></td>`;
+    tr.innerHTML += `<td style="text-align: left;"><i>Cash ($)</i></td>`;
+    tr.innerHTML += '<td class="column-NA">' + state.nations['North America'].cash + "</td>";
+    tr.innerHTML += '<td class="column-SA">' + state.nations['South America'].cash + "</td>";
+    tr.innerHTML += '<td class="column-EU">' + state.nations['Europe'].cash + "</td>";
+    tr.innerHTML += '<td class="column-AF">' + state.nations['Africa'].cash + "</td>";
+    tr.innerHTML += '<td class="column-AS">' + state.nations['Asia'].cash + "</td>";
+    tr.innerHTML += '<td class="column-AU">' + state.nations['Australia'].cash + "</td>";
+    tr.innerHTML += "<td></td>";
+    tr.innerHTML += "<td></td>";
+    tbody.appendChild(tr);
+
+    let tr2 = document.createElement("TR");
+    tr2.innerHTML += `<td></td>`;
+    tr2.innerHTML += `<td><i>Revenue ($)</i></td>`;
+    tr2.innerHTML += '<td class="column-NA">' + utils.income_of_nation(state, 'North America') + "</td>";
+    tr2.innerHTML += '<td class="column-SA">' + utils.income_of_nation(state, 'South America') + "</td>";
+    tr2.innerHTML += '<td class="column-EU">' + utils.income_of_nation(state, 'Europe') + "</td>";
+    tr2.innerHTML += '<td class="column-AF">' + utils.income_of_nation(state, 'Africa') + "</td>";
+    tr2.innerHTML += '<td class="column-AS">' + utils.income_of_nation(state, 'Asia') + "</td>";
+    tr2.innerHTML += '<td class="column-AU">' + utils.income_of_nation(state, 'Australia') + "</td>";
+    tr2.innerHTML += "<td></td>";
+    tr2.innerHTML += "<td></td>";
+    tbody.appendChild(tr2);
+  }
+
   let turn = gLatestState.stage.turn;
   let turnIndex = ['North America', 'South America', 'Europe', 'Africa', 'Asia', 'Australia'].indexOf(turn);
-  for (let i = 1; i < tbody.children.length - 2; ++i) {
+  for (let i = 1; i < tbody.children.length; ++i) {
     let tr = tbody.children[i];
     tr.children[turnIndex + 2].style.backgroundColor = '#444';
   }
@@ -379,7 +392,7 @@ function render_map(state) {
     });
   }
 
-  draw_map_table(state);
+  // draw_map_table(state);
 
   for (let hexId in gLatestState.map.states) {
     if (gHexIdToUnitType[hexId] === undefined) {
