@@ -519,7 +519,7 @@ let utils = {
     if (claimants.size === 1) {
       return Array.from(claimants)[0];
     }
-    if (claimants.length > 1) {
+    if (claimants.size > 1) {
       return null;
     }
 
