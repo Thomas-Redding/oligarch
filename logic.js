@@ -655,7 +655,7 @@ class Game
                 }
         }
         else if (this.mother_state.stage.subphase == 'Spawn'){
-            this._prayer('begin_spawn','')
+            this._prayer('begin_spawn','',true)
             for (let terr of utils.territories_of_nation(this.mother_state, nat)) {
                 let terrInfo =
                     utils.territory_for_territory_name(this.mother_state, terr);
