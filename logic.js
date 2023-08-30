@@ -336,15 +336,13 @@ class Game
             this.mother_state, terr)
         let n_buildings = terr_info.n_barracks + terr_info.n_factories
         let afford = this.mother_state.nations[nat].cash >= COSTS[type]
-        if (n_buildings < 4 && afford &&
-             username === this.mother_state.nations[nat].president) {
-                let t_str = type == 'barracks' ? 'n_barracks' : 'n_factories'
-                let terrInfo =
-                    utils.territory_for_territory_name(this.mother_state, terr);
-                terrInfo[t_str] += 1
-                this.mother_state.nations[nat].cash -= COSTS[type]
+        if (n_buildings == 0 && afford && username === this.mother_state.nations[nat].president) {
+            let t_str = type == 'barracks' ? 'n_barracks' : 'n_factories'
+            let terrInfo = utils.territory_for_territory_name(this.mother_state, terr);
+            terrInfo[t_str] += 1
+            this.mother_state.nations[nat].cash -= COSTS[type]
+            this._prayer('built_infrastructure', {'type': type, 'territory': terr});
         }
-        this._prayer('built_infrastructure', {'type': type, 'territory': terr});
     }
 
     spawn(username, barrackTerritoryId, spawnTerritoryId, type)
