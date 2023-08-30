@@ -214,7 +214,7 @@ let utils = {
     let share_n = utils.total_shares(mother_state, nation_name);
     let cash = mother_state.nations[nation_name].cash;
     let income = utils.income_of_nation(mother_state, nation_name);
-    let value_of_nation = cash + (utils.taxations_left(mother_state) + 2) * income;
+    let value_of_nation = cash + (utils.taxations_left(mother_state) - 1 + 2) * income;
     return value_of_nation * new_shares / share_n;
   },
 
