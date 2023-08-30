@@ -284,15 +284,19 @@ let admin = {
     </div>
     <br>
     <div id="actionPanel" style="min-height:3em;">
-      <div id="tradeButton" class='button' style="display:inline-block;" onclick="show_modal('Trade')">Trade</div>
-      <div id="donateButton" class='button' style="display:inline-block;" onclick="show_modal('Donate')">Donate</div>
-      <div id="borrowButton" class='button' style="display:inline-block;" onclick="show_modal('Borrow')">Borrow</div>
-      <div id="payBackButton" class='button' style="display:inline-block;" onclick="show_modal('PayBack')">Pay Back</div>
-      <div id="voteButton" class='button' style="display:inline-block;" onclick="vote_button_clicked()">Vote</div>
-      <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1, this)">Bid +1</div>
-      <div id="bid5Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 5, this)">Bid +5</div>
-      <div id="bid25Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 25, this)">Bid +25</div>
-      <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Discussion</div>
+      <div>
+        <div id="tradeButton" class='button' style="display:inline-block;" onclick="show_modal('Trade')">Trade</div>
+        <div id="donateButton" class='button' style="display:inline-block;" onclick="show_modal('Donate')">Donate</div>
+        <div id="borrowButton" class='button' style="display:inline-block;" onclick="show_modal('Borrow')">Borrow</div>
+      </div>
+      <div>
+        <div id="payBackButton" class='button' style="display:inline-block;" onclick="show_modal('PayBack')">Pay Back</div>
+        <div id="voteButton" class='button' style="display:inline-block;" onclick="vote_button_clicked()">Vote</div>
+        <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1, this)">Bid +1</div>
+        <div id="bid5Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 5, this)">Bid +5</div>
+        <div id="bid25Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 25, this)">Bid +25</div>
+        <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Discussion</div>
+      </div>
     </div>
     <div id="presidentDiv" style="position:relative;  border-radius:0.2em; margin:0.5em;">
       <img src="assets/president.png" style="filter:invert(100%); height:3em; position:absolute; right:0; top:0;">
@@ -308,11 +312,11 @@ let admin = {
         <div class="button" onclick="end_attacking()">End Attacking</div>
       </div>
       <div id="spwaningDiv">
-        <input name="spawnForm" checked=1 id="soldierRadio" type="radio"><label for="soldierRadio">Infantry ($8B)</label>
+        <input name="spawnForm" checked=1 id="soldierRadio" type="radio"><label id="soldierRadioLabel" for="soldierRadio">Infantry ($8B)</label>
         <br>
-        <input name="spawnForm" id="calvaryRadio" type="radio"><label for="calvaryRadio">Cavalry ($12B)</label>
+        <input name="spawnForm" id="calvaryRadio" type="radio"><label id="calvaryRadioLabel" for="calvaryRadio">Cavalry ($12B)</label>
         <br>
-        <input name="spawnForm" id="artilleryRadio" type="radio"><label for="artilleryRadio">Artillery ($12B)</label>
+        <input name="spawnForm" id="artilleryRadio" type="radio"><label id="artilleryRadioLabel" for="artilleryRadio">Artillery ($12B)</label>
         <div style="text-align:right;">
           <div onclick="end_recruiting()" class="button">End Recruiting</div>
         </div>
@@ -458,7 +462,7 @@ let admin = {
   <div id="borrowPopupDiv" class="popup">
     <h2 align="center">Borrow</h2>
     <br/><br/>
-    Give
+    Ammount to Borrow:
     <table style='text-align:center; margin: 0 auto;'>
       <tbody>
         <tr>
