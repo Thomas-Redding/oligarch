@@ -530,14 +530,14 @@ class Game
         this._history = new History(this.prayer);
         this.mother_state = { }
         this.mother_state.map = utils.load_map(JSON.parse(fs.readFileSync('map.json')));
-        const kDebug = true;
+        const kDebug = false;
         this.mother_state.settings = {
             "debug": kDebug,
             "deliberationTime": (kDebug ?   1 : 30)* 1*1000,
             "biddingTime":      (kDebug ?   1 : 12)* 1*1000,
             "electionTime":     (kDebug ? 999 :  2)*60*1000,
             "actionsTime":      (kDebug ? 999 :  3)*60*1000,
-            "startingCash": 1770,
+            "startingCash": 2584,
             "advice": true,
             'debt': 'manual', // 'none', 'manual', 'auto'
             'factoryIncome': 15,
@@ -866,7 +866,7 @@ class Game
         let winner = this.mother_state.highest_bidder
         let curnat = this.mother_state.stage.turn
         this.mother_state.players[winner].cash -= price
-        this.mother_state.nations[curnat].cash += price
+        // this.mother_state.nations[curnat].cash += price // money goes to the World Bank
         this.mother_state.players[winner].shares[curnat] += SHARES_FROM_TURN[i-1]
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner

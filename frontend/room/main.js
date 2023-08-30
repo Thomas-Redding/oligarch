@@ -1152,7 +1152,7 @@ function updateCurrentActionDivFromState(state) {
     let adviceString = "";
     if (gLatestState.settings.advice) {
       let advisedPrice = Math.round(utils.advised_share_price(gLatestState, state.stage.turn, n));
-      adviceString += "<br/><br/> <i>( Assuming no future human actions are taken, the expected future cash flow of this share is $" + advisedPrice + "B )</i>";
+      adviceString += "<br/><br/> <i>( Your advisor recommends bidding $" + advisedPrice + "B )</i>";
     }
     if (state.highest_bidder == null) {
       updateDiv("Bidding for <u>" + n + " share" + (n > 1 ? "s" : "") + "</u> is open for " + state.stage.turn + ". Every bid will extend the countdown." + adviceString);

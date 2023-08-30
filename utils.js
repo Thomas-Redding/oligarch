@@ -415,6 +415,7 @@ let utils = {
     for (let enemyUnit of enemyUnits) {
       territoriesAdjacentToEnemies = territoriesAdjacentToEnemies.concat(motherState.map.states[enemyUnit.territory].adjacencies);
     }
+    territoriesAdjacentToEnemies = territoriesAdjacentToEnemies.concat(enemyUnits.map(x => x.territory));
     territoriesAdjacentToEnemies = new Set(territoriesAdjacentToEnemies);
 
     let myArmy = motherState.nations[nationName].army;
