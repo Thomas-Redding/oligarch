@@ -856,7 +856,7 @@ window.onresize = () => {
     contentDiv.style.display = 'flex';
     contentDiv.style.flexDirection = 'row';
     leftPanel.style.display = 'block';
-    leftPanel.style.width = '30em';
+    leftPanel.style.width = '31em';
     playerTable.style.display = 'table';
     actionPanel.style.display = 'block';
     mapDiv.style.display = 'block';
