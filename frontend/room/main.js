@@ -867,6 +867,7 @@ window.onresize = () => {
     currentVotesDiv.style.display = "block";
 
     playerTable.style.fontSize = '1.3em';
+    pauseDiv.style.height = '100%';
   } else {
     // Mobile
     statusBarDiv.style.fontSize = '1em';
@@ -886,6 +887,7 @@ window.onresize = () => {
     currentVotesDiv.style.display = (tab === kTabInfo ? "block" : "none");
 
     playerTable.style.fontSize = '1em';
+    pauseDiv.style.height = 'calc(100% - 1.5em - 13px)';
   }
 
   lobbyDiv.style.display = (tab === kTabLobby ? "block" : "none");
