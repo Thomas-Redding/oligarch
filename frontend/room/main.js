@@ -1486,6 +1486,9 @@ Promise.all(loadPromises).then(() => {
     {"method": "get_state"},
     {"method": "is_admin"},
   ]);
+  let quote = chooseQuote();
+  lobbyQuoteDivQuote.innerHTML = "<i>\"" + quote.quote + "\"</i>";
+  lobbyQuoteDivWho.innerHTML = "</br>- " + quote.who;
 }, (error) => {
   alert("Error occurred while connecting...");
 });
@@ -1885,4 +1888,23 @@ function payBack() {
     "method": "payBack",
     "args":[payBackValue]
   });
+}
+
+function chooseQuote() {
+  let quotes = [
+    {"who": "Adolf Hitler", "quote": "If you win, you need not have to explain...If you lose, you should not be there to explain!"},
+    {"who": "Adolf Hitler", "quote": "The very first essential for success is a perpetually constant and regular employment of violence."},
+    {"who": "Adolf Hitler", "quote": "When diplomacy ends, War begins."},
+    {"who": "Friedrich Nietzsche", "quote": "Terribleness is part of greatness: let us not deceive ourselves."},
+    {"who": "Giuseppe Prezzolini", "quote": "Representative government is artifice, a political myth, designed to conceal from the masses the dominance of a self-selected, self-perpetuating, and self-serving traditional ruling class."},
+    {"who": "Henry Kissinger", "quote": "America has no permanent friends or enemies, only interests"},
+    {"who": "Henry Kissinger", "quote": "I don't see why we need to stand by and watch a country go communist due to the irresponsibility of its people. The issues are much too important for the Chilean voters to be left to decide for themselves."},
+    {"who": "Henry Kissinger", "quote": "In crises the most daring course is often safest."},
+    {"who": "Henry Kissinger", "quote": "The illegal we do immediately. The unconstitutional takes a little longer."},
+    {"who": "Joseph Stalin", "quote": "Mankind is divided into rich and poor, into property owners and exploited; and to abstract oneself from this fundamental division; and from the antagonism between poor and rich means abstracting oneself from fundamental facts."},
+    {"who": "Joseph Stalin", "quote": "One death is a tragedy; one million is a statistic."},
+    {"who": "Theodore Roosevelt", "quote": "Do what you can, with what you have, where you are."},
+    {"who": "Theodore Roosevelt", "quote": "Speak softly and carry a big stick."},
+  ]
+  return quotes[Math.floor(Math.random() * quotes.length)];
 }
