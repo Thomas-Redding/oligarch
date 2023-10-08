@@ -19,6 +19,12 @@
    node server/app.js
    ```
 
+   If you are running into issues, you might consider using the installed node directly:
+
+   ```bash
+   /usr/local/opt/node/bin/node server/app.js
+   ```
+
 5. Navigate to http://localhost:3000/room/abc
 
 ## There are two branches
