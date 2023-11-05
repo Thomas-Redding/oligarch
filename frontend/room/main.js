@@ -1255,9 +1255,15 @@ let loadPromises = [
         statusBarYourCash.innerHTML = "$" + Math.floor(state.players[gUsername].cash) + "B";
         document.getElementById("factoryRadioLabel").innerHTML = "Factory (cost: $" + COSTS['factory'] + "B; yield: $" + state.settings.factoryIncome + "B/turn)";
         document.getElementById("barracksRadioLabel").innerHTML = "Barracks (cost: $" + COSTS['barracks'] + "B)";
-        document.getElementById("soldierRadioLabel").innerHTML = "Infantry ($" + COSTS['Infantry'] + "B)";
-        document.getElementById("calvaryRadioLabel").innerHTML = "Cavalry ($" + COSTS['Cavalry'] + "B)";
-        document.getElementById("artilleryRadioLabel").innerHTML = "Artillery ($" + COSTS['Artillery'] + "B)";
+        if (document.getElementById("soldierRadioLabel")) {
+          document.getElementById("soldierRadioLabel").innerHTML = "Infantry ($" + COSTS['Infantry'] + "B)";
+        }
+        if (document.getElementById("calvaryRadioLabel")) {
+          document.getElementById("calvaryRadioLabel").innerHTML = "Cavalry ($" + COSTS['Cavalry'] + "B)";
+        }
+        if (document.getElementById("artilleryRadioLabel")) {
+          document.getElementById("artilleryRadioLabel").innerHTML = "Artillery ($" + COSTS['Artillery'] + "B)";
+        }
 
         if (action === "get_state" || action === "undo") {
           // We assume get_state is only called when the user

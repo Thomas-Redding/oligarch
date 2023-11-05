@@ -297,11 +297,14 @@ class Hex {
 
 
       let type = null;
-      if (soldierRadio.checked) {
+      let soldierRadio = document.getElementById('soldierRadio');
+      let artilleryRadio = document.getElementById('artilleryRadio');
+      let calvaryRadio = document.getElementById('calvaryRadio');
+      if (soldierRadio && soldierRadio.checked) {
         type = "Infantry";
-      } else if (artilleryRadio.checked) {
+      } else if (artilleryRadio && artilleryRadio.checked) {
         type = "Artillery";
-      } else if (calvaryRadio.checked) {
+      } else if (calvaryRadio && calvaryRadio.checked) {
         type = "Cavalry";
       }
 
