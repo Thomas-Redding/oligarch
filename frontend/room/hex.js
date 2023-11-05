@@ -39,7 +39,9 @@ class Hex {
       let path = svg.polygon(xs, ys, {});
       for (let continent of mother_state.map.continents) {
         if (continent.abbreviation === this.homeContinent) {
-          path.style.fill = new Color(continent.color.r, continent.color.g, continent.color.b).scale(0.5).hex();
+          this.color = new Color(continent.color.r, continent.color.g, continent.color.b);
+          path.style.fill = this.color.scale(0.5).hex();
+          break;
         }
       }
       mapContinents.appendChild(path);
@@ -51,12 +53,6 @@ class Hex {
       y => Math.cos(y) * a * kMapScale + this.screenY);
     this.path = svg.polygon(xs, ys, {});
     this.path.setAttribute('hexid', id);
-    this.color = null;
-    for (let continent of mother_state.map.continents) {
-      if (continent.abbreviation == this.homeContinent) {
-        this.color = new Color(continent.color.r, continent.color.g, continent.color.b);
-      }
-    }
     if (this.color === null) {
       throw Error();
     }

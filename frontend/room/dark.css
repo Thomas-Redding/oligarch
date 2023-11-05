@@ -77,19 +77,19 @@ text {
 }
 
 .column-NA {
-  color: #e0e060;
-}
-.column-SA {
-  color: #60ffff;
-}
-.column-EU {
-  color: #6080ff;
-}
-.column-AF {
   color: #e08060;
 }
-.column-AS {
+.column-SA {
+  color: #6080ff;
+}
+.column-EU {
+  color: #e0e060;
+}
+.column-AF {
   color: #60ff60;
+}
+.column-AS {
+  color: #60ffff;
 }
 .column-AU {
   color: #ff60ff;

@@ -21,6 +21,9 @@ class Color {
   scale(s) {
     return new Color(this.r * s, this.g * s, this.b * s);
   }
+  toString() {
+    return `rgb(${this.r},${this.g},${this.b})`;
+  }
   static random() {
     return new Color(
       Math.random() * 255 | 0,
