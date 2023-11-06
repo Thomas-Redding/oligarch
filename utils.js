@@ -198,17 +198,22 @@ let utils = {
    */
   score_of_player: (mother_state, username) => {
     let player = mother_state.players[username];
-    let rtn = parseFloat(player.cash);
+
+    let share_value = 0;
     for (let nation_name in player.shares) {
       if (player.shares[nation_name] == 0) continue;
       let cash = mother_state.nations[nation_name].cash;
       let income = utils.income_of_nation(mother_state, nation_name);
       let share_n = utils.total_shares(mother_state, nation_name);
       let percent_owned = player.shares[nation_name] / share_n;
-      rtn += percent_owned * (cash + 2 * income);
+      share_value += percent_owned * (cash + 2 * income);
     }
-    return rtn;
-  }, // 110 = 231/6 + 213/5 + 114/4
+
+    let n_players = Object.keys(this.mother_state.players).length
+    let inicash = Math.floor(this.mother_state.settings.startingCash/n_players)
+
+    return share_value + parseFloat(player.cash) - inicash;
+  },
 
   advised_share_price: (mother_state, nation_name, new_shares) => {
     let share_n = utils.total_shares(mother_state, nation_name);
