@@ -243,7 +243,7 @@ let utils = {
   },
 
   total_rounds: () => {
-    return 1;
+    return 6;
   },
 
   /*
