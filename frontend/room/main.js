@@ -154,27 +154,25 @@ function render_playerTable(state, table, isEndOfGame) {
   }
 
   // sum row
-  if (!isEndOfGame) {
+  if (isEndOfGame) {
     let tr;
 
-    if (gLatestState.settings.advice && false) {
-      tr = document.createElement("TR");
-      tr.style.borderTop = 'solid white 1px';
-      tr.innerHTML += "<td colspan='9'>Estimated Value:</td>";
-      tbody.appendChild(tr);
+    tr = document.createElement("TR");
+    tr.style.borderTop = 'solid white 1px';
+    tr.innerHTML += "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
+    tbody.appendChild(tr);
 
-      tr = document.createElement("TR");
-      tr.innerHTML += '<td style="text-align: left;">TOTAL</td>';
-      tr.innerHTML += '<td class="column-NA">' + utils.score_of_nation(gLatestState, "North America") + "</td>";
-      tr.innerHTML += '<td class="column-SA">' + utils.score_of_nation(gLatestState, "South America") + "</td>";
-      tr.innerHTML += '<td class="column-EU">' + utils.score_of_nation(gLatestState, "Europe") + "</td>";
-      tr.innerHTML += '<td class="column-AF">' + utils.score_of_nation(gLatestState, "Africa") + "</td>";
-      tr.innerHTML += '<td class="column-AS">' + utils.score_of_nation(gLatestState, "Asia") + "</td>";
-      tr.innerHTML += '<td class="column-AU">' + utils.score_of_nation(gLatestState, "Australia") + "</td>";
-      tr.innerHTML += "<td></td>";
-      tr.innerHTML += "<td></td>";
-      tbody.appendChild(tr);
-    }
+    tr = document.createElement("TR");
+    tr.innerHTML += '<td></td><td style="text-align: left;">Score:</td>';
+    tr.innerHTML += '<td class="column-NA">' + utils.end_score_of_nation(gLatestState, "North America") + "</td>";
+    tr.innerHTML += '<td class="column-SA">' + utils.end_score_of_nation(gLatestState, "South America") + "</td>";
+    tr.innerHTML += '<td class="column-EU">' + utils.end_score_of_nation(gLatestState, "Europe") + "</td>";
+    tr.innerHTML += '<td class="column-AF">' + utils.end_score_of_nation(gLatestState, "Africa") + "</td>";
+    tr.innerHTML += '<td class="column-AS">' + utils.end_score_of_nation(gLatestState, "Asia") + "</td>";
+    tr.innerHTML += '<td class="column-AU">' + utils.end_score_of_nation(gLatestState, "Australia") + "</td>";
+    tr.innerHTML += "<td></td>";
+    tr.innerHTML += "<td></td>";
+    tbody.appendChild(tr);
   }
 
   {
@@ -1287,6 +1285,7 @@ let loadPromises = [
           updateLobbyUsernames();
         }
         else if (action === "game_over") {
+          // foobar
           render_playerTable(state, endOfGameTable, true);
           let best = -Infinity;
           let winner = null;

@@ -193,6 +193,16 @@ let utils = {
   },
 
   /*
+   * @param nation_name - the nation whose score we are computing
+   * @returns {int} the cash the given nation would have if the game entered stasis now
+   */
+  end_score_of_nation: (mother_state, nation_name) => {
+    let cash = mother_state.nations[nation_name].cash;
+    let income = utils.income_of_nation(mother_state, nation_name);
+    return cash + 2 * income;
+  },
+
+  /*
    * @param username - the user whose score we are computing
    * @returns {int} the score the given user would have if the game ended now
    */
@@ -233,7 +243,7 @@ let utils = {
   },
 
   total_rounds: () => {
-    return 7;
+    return 1;
   },
 
   /*
