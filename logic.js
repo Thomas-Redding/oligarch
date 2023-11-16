@@ -544,7 +544,7 @@ class Game
             "advice": true,
             'debt': 'manual', // 'none', 'manual', 'auto'
             'factoryIncome': 15,
-            'auctionMoneyRecipient': 'bank', // 'bank', 'old-human-owners', 'new-human-owners', 'county'
+            'auctionMoneyRecipient': 'county', // 'bank', 'old-human-owners', 'new-human-owners', 'county'
             'doesBankReceiveDividends': true,
         }
         this.mother_state.players = { }
