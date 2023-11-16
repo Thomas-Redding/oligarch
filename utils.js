@@ -209,8 +209,8 @@ let utils = {
       share_value += percent_owned * (cash + 2 * income);
     }
 
-    let n_players = Object.keys(this.mother_state.players).length
-    let inicash = Math.floor(this.mother_state.settings.startingCash/n_players)
+    let n_players = Object.keys(mother_state.players).length
+    let inicash = Math.floor(mother_state.settings.startingCash/n_players)
 
     return share_value + parseFloat(player.cash) - inicash;
   },
