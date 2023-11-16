@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const WebSocket = require('ws')
+const os = require('os')
 let log = require('../log.js');
 
 const OligarchRoom = require("./oligarch.js");
@@ -75,11 +76,21 @@ let app = http.createServer((request, response) => {
   }
 });
 
+function getIp() {
+  const nets = os.networkInterfaces()
+  for (const networkInterfaceId in nets) {
+    for (const address of nets[networkInterfaceId]) {
+      if (address['family'] == 'IPv4' && !address['internal']) {
+        return address['address']
+      }
+    }
+  }
+  return '127.0.0.1';
+}
+
 // If you want to host for a LAN party, choose the IP address assigned by your router.
 // Start the server on port 3000
-app.listen(3000, '127.0.0.1');
-// app.listen(3000, '192.168.0.14'); // use this to host with port forwarding
-
+app.listen(3000, getIp());
 
 /********** WebSocket Logic **********/
 
