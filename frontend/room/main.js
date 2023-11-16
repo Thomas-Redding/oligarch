@@ -1585,8 +1585,12 @@ function render_presidential_div(state) {
     buildingDiv.style.display = (subphase === "Build" ? "block" : "none");
     dividendsDiv.style.display = (subphase === "Dividends" ? "block" : "none");
     presidentialHeader.innerHTML = state.stage.turn + " ($" + nation.cash + " B)";
-
-    const num_shares = utils.total_shares(state, state.stage.turn);
+    let num_shares;
+    if (state.settings.doesBankReceiveDividends) {
+      num_shares = utils.total_shares(state, state.stage.turn);
+    } else {
+      num_shares = utils.shares_sold(state, state.stage.turn);
+    }
     dividendSlider.step = num_shares;
     dividendSlider.max = nation.cash;
     dividendSlider.value = (nation.cash / num_shares | 0) * num_shares;

@@ -396,7 +396,12 @@ class Game
         log(username, amount);
         let nat = this.mother_state.stage.turn
         let is_prez = username === this.mother_state.nations[nat].president
-        let n_shares = utils.total_shares(this.mother_state, nat)
+        let n_shares;
+        if (this.mother_state.settings.doesBankReceiveDividends) {
+          n_shares = utils.total_shares(this.mother_state, nat);
+        } else {
+          n_shares = utils.shares_sold(this.mother_state, nat);
+        }
         let is_int = amount % n_shares == 0
         let can_afford = amount <= this.mother_state.nations[nat].cash
         if (is_prez && is_int && can_afford) {
@@ -539,6 +544,8 @@ class Game
             "advice": true,
             'debt': 'manual', // 'none', 'manual', 'auto'
             'factoryIncome': 15,
+            'auctionMoneyRecipient': 'bank', // 'bank', 'old-human-owners', 'new-human-owners', 'county'
+            'doesBankReceiveDividends': true,
         }
         this.mother_state.players = { }
         this.mother_state.nations = { }
@@ -864,7 +871,31 @@ class Game
         let winner = this.mother_state.highest_bidder
         let curnat = this.mother_state.stage.turn
         this.mother_state.players[winner].cash -= price
-        // this.mother_state.nations[curnat].cash += price // money goes to the World Bank
+        let oldHumanShares = 0;
+        for (let player in this.mother_state.players) {
+          oldHumanShares += this.mother_state.players[player].shares[curnat];
+        }
+        switch(this.mother_state.settings.auctionMoneyRecipient) {
+          case 'bank':
+            // Do nothing.
+            break;
+          case 'old-human-owners':
+            for (let player in this.mother_state.players) {
+              this.mother_state.nations[curnat].cash += price * this.mother_state.players[player].shares[curnat] / oldHumanShares;
+            }
+            break;
+          case 'new-human-owners':
+            for (let player in this.mother_state.players) {
+              this.mother_state.nations[curnat].cash += price * this.mother_state.players[player].shares[curnat] / (oldHumanShares + SHARES_FROM_TURN[i-1]);
+            }
+            this.mother_state.players[winner].shares[curnat] += price * SHARES_FROM_TURN[i-1] / (oldHumanShares + SHARES_FROM_TURN[i-1]);
+            break;
+          case 'county':
+            this.mother_state.nations[curnat].cash += price;
+            break;
+          default:
+            throw Exception('Unrecognized auctionMoneyRecipient value: "' + this.mother_state.settings.auctionMoneyRecipient + '"');
+        }
         this.mother_state.players[winner].shares[curnat] += SHARES_FROM_TURN[i-1]
         let details = {'winner' : winner, 'nation' : curnat, 'price':price}
         details.winner = winner
