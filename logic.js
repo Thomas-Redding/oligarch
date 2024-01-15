@@ -542,7 +542,7 @@ class Game
             "actionsTime":      (kDebug ? 999 :  3)*60*1000,
             "startingCash": 2584,
             "advice": true,
-            'debt': 'manual', // 'none', 'manual', 'auto'
+            'debt': 'none', // 'none', 'manual', 'auto'
             'factoryIncome': 15,
             'auctionMoneyRecipient': 'county', // 'bank', 'old-human-owners', 'new-human-owners', 'county'
             'doesBankReceiveDividends': true,
