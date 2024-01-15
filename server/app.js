@@ -45,7 +45,7 @@ function sendCode(response, code, specific_message=undefined) {
     message = ': Not Implemented';
   } else {
     message = '';
-    console.log('Unrecognized code');
+    log('Unrecognized code');
   }
   response.writeHead(code, {'Content-Type': 'text/plain'});
   if (specific_message) {
@@ -90,11 +90,18 @@ function getIp() {
 
 // If you want to host for a LAN party, choose the IP address assigned by your router.
 // Start the server on port 3000
-app.listen(3000, getIp());
+
+const isLocal = false;
+
+if (isLocal) {
+  app.listen(3000, getIp());
+} else {
+  app.listen(80, '0.0.0.0');
+}
 
 /********** WebSocket Logic **********/
 
-const wss = new WebSocket.Server({ port: 3001 })
+const wss = new WebSocket.Server({ port: isLocal ? 3001 : 81 })
 
 let rooms = {};
 wss.on('connection', ws => {

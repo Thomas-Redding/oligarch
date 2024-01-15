@@ -10,6 +10,9 @@ let network = {
     }
     return new Promise((resolve, reject) => {
       let arr = window.location.host.split(":");
+      if (arr.length === 1) {
+        arr.push('80');
+      }
       arr[1] = (parseInt(arr[1])+1) + "";
       // The port address is 1 higher than the file address.
       let socket = new WebSocket("ws://" + arr.join(":"));
