@@ -93,11 +93,8 @@ function getIp() {
 
 const isLocal = false;
 
-if (isLocal) {
-  app.listen(3000, getIp());
-} else {
-  app.listen(80, '0.0.0.0');
-}
+const port = isLocal ? 3000 : 80
+app.listen(port, getIp());
 
 /********** WebSocket Logic **********/
 
