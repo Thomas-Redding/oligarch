@@ -192,14 +192,18 @@ let utils = {
     return cash + income_mult * income;
   },
 
+  doesBankCountAsOwner: (mother_state) => {
+    return mother_state.settings.auctionMoneyRecipient == 'bank' || mother_state.settings.doesBankReceiveDividends;
+  },
+
   /*
    * @param nation_name - the nation whose score we are computing
-   * @returns {int} the cash the given nation would have if the game entered stasis now
+   * @returns {int} the score of the given nation if the game ended now
    */
   end_score_of_nation: (mother_state, nation_name) => {
     let cash = mother_state.nations[nation_name].cash;
     let income = utils.income_of_nation(mother_state, nation_name);
-    return cash + 2 * income;
+    return cash + mother_state.settings.endGameIncomeMultiplier * income;
   },
 
   /*
@@ -208,15 +212,17 @@ let utils = {
    */
   score_of_player: (mother_state, username) => {
     let player = mother_state.players[username];
-
     let share_value = 0;
     for (let nation_name in player.shares) {
       if (player.shares[nation_name] == 0) continue;
       let cash = mother_state.nations[nation_name].cash;
       let income = utils.income_of_nation(mother_state, nation_name);
       let share_n = utils.total_shares(mother_state, nation_name);
+      if (!utils.doesBankCountAsOwner(mother_state, username)) {
+        share_n -= utils.unowned_shares(mother_state, nation_name);
+      }
       let percent_owned = player.shares[nation_name] / share_n;
-      share_value += percent_owned * (cash + 2 * income);
+      share_value += percent_owned * (cash + mother_state.settings.endGameIncomeMultiplier * income);
     }
 
     let n_players = Object.keys(mother_state.players).length
@@ -225,11 +231,20 @@ let utils = {
     return share_value + parseFloat(player.cash) - inicash;
   },
 
+  /*
+   * Computes the break-even price of new shares for the given nation assuming
+   * no further actions are taken by anyone.
+   *
+   * Note: new shares are assumed to essentially go do a dummy player, who gets them for free
+   *
+   * @param nation_name - the name of the nation who's advised share price is being computed
+   * @param new_shares - the number of new shares being valued
+   */
   advised_share_price: (mother_state, nation_name, new_shares) => {
     let share_n = utils.total_shares(mother_state, nation_name);
     let cash = mother_state.nations[nation_name].cash;
     let income = utils.income_of_nation(mother_state, nation_name);
-    let value_of_nation = cash + (utils.taxations_left(mother_state) - 1 + 2) * income;
+    let value_of_nation = cash + (utils.taxations_left(mother_state) + mother_state.settings.endGameIncomeMultiplier) * income;
     return value_of_nation * new_shares / share_n;
   },
 

@@ -546,6 +546,7 @@ class Game
             'factoryIncome': 15,
             'auctionMoneyRecipient': 'county', // 'bank', 'old-human-owners', 'new-human-owners', 'county'
             'doesBankReceiveDividends': true,
+            'endGameIncomeMultiplier': 2,
         }
         this.mother_state.players = { }
         this.mother_state.nations = { }
