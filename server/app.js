@@ -91,14 +91,14 @@ function getIp() {
 // If you want to host for a LAN party, choose the IP address assigned by your router.
 // Start the server on port 3000
 
-const isLocal = false;
 
-const port = isLocal ? 3000 : 80
+let port = process.argv.length > 2 ? parseInt(process.argv[2]) : 80;
+
 app.listen(port, getIp());
 
 /********** WebSocket Logic **********/
 
-const wss = new WebSocket.Server({ port: isLocal ? 3001 : 81 })
+const wss = new WebSocket.Server({ port: port+1 });
 
 let rooms = {};
 wss.on('connection', ws => {
