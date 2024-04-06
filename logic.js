@@ -315,7 +315,7 @@ class Game
                     this.mother_state.nations[nat].army.splice(idx_cur,1)
                 }
                 this._manage_conquest(target_nat)
-                this._prayer('battle_outcome',details,this.mother_state)
+                this._prayer('battle_outcome', details)
         }
     }
 
@@ -412,7 +412,7 @@ class Game
                 let inc = owners[owner] * income_per_share
                 this.mother_state.players[owner].cash += inc
             }
-            this._prayer('dividends_paid',amount,this.mother_state)
+            this._prayer('dividends_paid', amount)
             this.timer.stop(true)
         }
     }
@@ -424,7 +424,7 @@ class Game
             this.mother_state.nations[nation].cash += amount
             let details = { 'amount' : amount,
                 'player':username, 'nation':nation }
-            this._prayer('donate', details, this.mother_state)
+            this._prayer('donate', details)
         }
     }
 
@@ -434,7 +434,7 @@ class Game
         if (this.mother_state.settings.debt != 'manual') return;
         this.mother_state.players[username].cash += amount;
         this.mother_state.players[username].manualDebt += amount;
-        this._prayer('borrowed', {'player': username, 'amount': amount}, this.mother_state);
+        this._prayer('borrowed', {'player': username, 'amount': amount});
     }
 
     payBack(username, amount)
@@ -443,7 +443,7 @@ class Game
         if (amount > this.mother_state.players[username].cash) return;
         this.mother_state.players[username].cash -= amount;
         this.mother_state.players[username].manualDebt -= amount;
-        this._prayer('paid_back', {'player': username, 'amount': amount}, this.mother_state);
+        this._prayer('paid_back', {'player': username, 'amount': amount});
     }
 
     //shares_to / shares_from is a list with shares as strings (potential dupes)
@@ -464,13 +464,13 @@ class Game
         trade.cash_from = cash_from
 
         if (t_pairs.includes(username)||t_pairs.includes(player)) {
-            this._prayer('players_busy',trade,this.mother_state)
+            this._prayer('players_busy', trade)
         } 
         else if (this._trade_verification(
             username, player, shares_to, shares_from, cash_to, cash_from)) {
         
             this.mother_state.trading_pairs.push([username, player, trade])
-            this._prayer('trade_proposed',trade,this.mother_state)
+            this._prayer('trade_proposed', trade)
         }
     }
 
@@ -518,11 +518,11 @@ class Game
             this.mother_state.players[username].cash += cash_to
             this.mother_state.players[player].cash += cash_from
             this._trade_dequeue(username, player)
-            this._prayer('trade_accepted','',this.mother_state)
+            this._prayer('trade_accepted', '')
         }
         else {
             this._trade_dequeue(username, player)
-            this._prayer('trade_rejected','',this.mother_state)
+            this._prayer('trade_rejected', '')
         }
     }
 
