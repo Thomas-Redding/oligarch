@@ -1253,14 +1253,20 @@ let loadPromises = [
         statusBarYourCash.innerHTML = "$" + Math.floor(state.players[gUsername].cash) + "B";
         document.getElementById("factoryRadioLabel").innerHTML = "Factory (cost: $" + COSTS['factory'] + "B; yield: $" + state.settings.factoryIncome + "B/turn)";
         document.getElementById("barracksRadioLabel").innerHTML = "Barracks (cost: $" + COSTS['barracks'] + "B)";
-        if (document.getElementById("soldierRadioLabel")) {
+        if (gLatestState.settings.enabledTroops.includes('infantry')) {
           document.getElementById("soldierRadioLabel").innerHTML = "Infantry ($" + COSTS['Infantry'] + "B)";
+        } else {
+          document.getElementById("soldierRadioContainer").style.display = 'none';
         }
-        if (document.getElementById("calvaryRadioLabel")) {
+        if (gLatestState.settings.enabledTroops.includes('calvary')) {
           document.getElementById("calvaryRadioLabel").innerHTML = "Cavalry ($" + COSTS['Cavalry'] + "B)";
+        } else {
+          document.getElementById("calvaryRadioContainer").style.display = 'none';
         }
-        if (document.getElementById("artilleryRadioLabel")) {
+        if (gLatestState.settings.enabledTroops.includes('artillery')) {
           document.getElementById("artilleryRadioLabel").innerHTML = "Artillery ($" + COSTS['Artillery'] + "B)";
+        } else {
+          document.getElementById("artilleryRadioContainer").style.display = 'none';
         }
 
         if (action === "get_state" || action === "undo") {

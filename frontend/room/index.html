@@ -312,11 +312,15 @@ let admin = {
         <div class="button" onclick="end_attacking()">End Attacking</div>
       </div>
       <div id="spwaningDiv">
-        <!-- <input name="spawnForm" checked=1 id="soldierRadio" type="radio"><label id="soldierRadioLabel" for="soldierRadio">Infantry ($8B)</label>
-        <br> -->
-        <input name="spawnForm" id="calvaryRadio" type="radio" checked><label id="calvaryRadioLabel" for="calvaryRadio">Cavalry ($12B)</label>
-        <!-- <br>
-        <input name="spawnForm" id="artilleryRadio" type="radio"><label id="artilleryRadioLabel" for="artilleryRadio">Artillery ($12B)</label> -->
+        <div id="soldierRadioContainer">
+          <input name="spawnForm" checked=1 id="soldierRadio" type="radio"><label id="soldierRadioLabel" for="soldierRadio">Infantry ($8B)</label>
+        </div>
+        <div id="calvaryRadioContainer">
+          <input name="spawnForm" id="calvaryRadio" type="radio" checked><label id="calvaryRadioLabel" for="calvaryRadio">Cavalry ($12B)</label>
+        </div>
+        <div id="artilleryRadioContainer">
+          <input name="spawnForm" id="artilleryRadio" type="radio"><label id="artilleryRadioLabel" for="artilleryRadio">Artillery ($12B)</label>
+        </div>
         <div style="text-align:right;">
           <div onclick="end_recruiting()" class="button">End Recruiting</div>
         </div>
