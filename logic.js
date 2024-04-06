@@ -548,6 +548,7 @@ class Game
             'doesBankReceiveDividends': true,
             'endGameIncomeMultiplier': 2,
             'enabledTroops': ['cavalry'], // ['infantry', 'calvary', 'artillery']
+            'auctionType': 'limit-orders', // 'first-price' or 'limit-orders'
         }
         this.mother_state.players = { }
         this.mother_state.nations = { }
