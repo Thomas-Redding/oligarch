@@ -44,6 +44,9 @@ class Hex {
           break;
         }
       }
+      if (!this.color) {
+        throw Error();
+      }
       mapContinents.appendChild(path);
     }
 
@@ -53,9 +56,6 @@ class Hex {
       y => Math.cos(y) * a * kMapScale + this.screenY);
     this.path = svg.polygon(xs, ys, {});
     this.path.setAttribute('hexid', id);
-    if (this.color === null) {
-      throw Error();
-    }
     this.path.style.fill = this.color.hex();
     mapHexes.appendChild(this.path);
 
