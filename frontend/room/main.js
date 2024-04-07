@@ -1588,6 +1588,7 @@ class LimitOrderAuctionController extends AuctionController {
           </tr>
           <tr>
             <td colspan=2><div class='button' id="limitOrderSubmitButton">Submit</div></td>
+            <td colspan=2><div class='button' id="limitOrderCancelbutton">Cancel</div></td>
           </tr>
         </tbody>
       </table>
@@ -1596,6 +1597,7 @@ class LimitOrderAuctionController extends AuctionController {
     this.bidInput = document.getElementById("limitOrderBidInput");
     this.askInput = document.getElementById("limitOrderAskInput");
     this.submitButton = document.getElementById("limitOrderSubmitButton");
+    this.cancelButton = document.getElementById("limitOrderCancelbutton");
 
     this.bidInput.addEventListener('change', () => {
       this.submitButton.classList.remove("disabled-button");
@@ -1641,13 +1643,30 @@ class LimitOrderAuctionController extends AuctionController {
         "orderType": "ask",
       });
     });
+    this.cancelButton.addEventListener('click', () => {
+      this._reset(gLatestState);
+      send({
+        "method": "bid",
+        "args": [{'amount': null, 'nation': gLatestState.stage.turn}],
+        "orderType": "bid",
+      });
+      send({
+        "method": "bid",
+        "args": [{'amount': null, 'nation': gLatestState.stage.turn}],
+        "orderType": "ask",
+      });
+    });
+  }
+  _reset(state) {
+    this.bidInput.value = 0;
+    this.askInput.value = (this.myShares(state) === 0 ? "" : 0);
+    this.submitButton.classList.add("disabled-button");
   }
   myShares(state) {
     return state.players[gUsername].shares[gLatestState.stage.turn];
   }
   begin_auction(state) {
-    this.bidInput.value = 0;
-    this.askInput.value = (this.myShares(state) === 0 ? "" : 0);
+    this._reset(state);
     limitOrderUI.style.display = "block";
 
   }
