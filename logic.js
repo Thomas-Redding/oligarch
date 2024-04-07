@@ -940,11 +940,14 @@ class Game
               'time': this.mother_state.limitOrderAuction[username]['ask']['time'],
             });
           }
-          asks.push({
-            'username': null, // world bank
-            'value': 0,
-            'time': 0,
-          });
+          let curnat = this.mother_state.stage.turn;
+          if (utils.shares_sold(this.mother_state, curnat) < utils.total_shares(this.mother_state, curnat)) {
+            asks.push({
+              'username': null,
+              'value': 0,
+              'time': 0,
+            });
+          }
           bids.sort((x, y) => {
             if (x['value'] < y['value']) {
               return 1;
