@@ -1195,6 +1195,17 @@ function updateCurrentActionDivFromState(state) {
 
 let gHexIdToUnitType = {};
 
+let gStateEventTarget = new EventTarget();
+
+let gFirstStateLoadedPromise;
+{
+  let outerResolve;
+  gFirstStateLoadedPromise = new Promise((resolve, reject) => {
+    outerResolve = resolve;
+  });
+  gFirstStateLoadedPromise.resolve = outerResolve;
+}
+
 let gSocket
 let gLatestState;
 let loadPromises = [
@@ -1212,7 +1223,13 @@ let loadPromises = [
           return;
         }
         let [action, details, state] = JSON.parse(event.data);
+
+        const oldState = gLatestState;
         gLatestState = state;
+
+        if (!oldState) {
+          gFirstStateLoadedPromise.resolve(state);
+        }
 
         // Populate gHexIdToUnitType for convenience.
         for (let id in gLatestState.map.states) {
@@ -1428,39 +1445,12 @@ let loadPromises = [
           tradeSnackbarContainer.style.display = "none";
         }
         else if (action === "bid_received") {
-          gClock.set_time_remaining(state.clock);
-          if (details.player === gUsername) {
-            if (state.players[gUsername].cash > state.current_bid || state.settings.debt == 'automatic') {
-              bid1Button.classList.remove("disabled-button");
-            } else {
-              bid1Button.classList.add("disabled-button");
-            }
-            if (state.players[gUsername].cash > state.current_bid + 5 || state.settings.debt == 'automatic') {
-              bid5Button.classList.remove("disabled-button");
-            } else {
-              bid5Button.classList.add("disabled-button");
-            }
-            if (state.players[gUsername].cash > state.current_bid + 25 || state.settings.debt == 'automatic') {
-              bid25Button.classList.remove("disabled-button");
-            } else {
-              bid25Button.classList.add("disabled-button");
-            }
-          } else {
-            bid1Button.classList.add("disabled-button");
-            bid5Button.classList.add("disabled-button");
-            bid25Button.classList.add("disabled-button");
-            setTimeout(() => {
-              if (state.players[gUsername].cash > state.current_bid || state.settings.debt == 'automatic') {
-                bid1Button.classList.remove("disabled-button");
-              }
-              if (state.players[gUsername].cash > state.current_bid + 5 || state.settings.debt == 'automatic') {
-                bid5Button.classList.remove("disabled-button");
-              }
-              if (state.players[gUsername].cash > state.current_bid + 25 || state.settings.debt == 'automatic') {
-                bid25Button.classList.remove("disabled-button");
-              }
-            }, kBidDisableTime * 1000);
-          }
+          gStateEventTarget.dispatchEvent(new CustomEvent("bid_received", {
+            "detail": {
+              "state": gLatestState,
+              "details": details,
+            },
+          }));
         } else if (action == "connection_change") {
           render_playerTable(state);
         }
@@ -1470,6 +1460,13 @@ let loadPromises = [
         if (state.stage.phase === "Action") {
           render_vote_table(state);
         }
+
+        gStateEventTarget.dispatchEvent(new CustomEvent("statechange", {
+          "detail": {
+            oldState: oldState,
+            newState: state,
+          }
+        }));
 
         possiblyToast(action, details);
         rewriteActivityLogFromScratch()
@@ -1504,6 +1501,173 @@ Promise.all(loadPromises).then(() => {
   alert("Error occurred while connecting...");
 });
 
+class AuctionController {
+  constructor(gStateEventTarget, state) {
+    gStateEventTarget.addEventListener('statechange', (event) => {
+      const oldState = event.detail.oldState;
+      const newState = event.detail.newState;
+      if (newState.stage.phase !== 'Auction') {
+        this.end_auction();
+        return;
+      }
+      if (oldState.stage.phase === 'Auction') {
+        return;
+      }
+      this.begin_auction(newState);
+    });
+    gStateEventTarget.addEventListener('bid_received', (event) => {
+      this.bid_received(event.detail.state, event.detail.details);
+    });
+    if (state.stage.phase === 'Auction') {
+      this.begin_auction(event.detail.state);
+    }
+  }
+}
+
+class FirstPriceAuctionController extends AuctionController {
+  begin_auction(state) {
+    bid1Button.style.display = "inline-block";
+    bid5Button.style.display = "inline-block";
+    bid25Button.style.display = "inline-block";
+  }
+  end_auction(state) {
+    bid1Button.style.display = "none";
+    bid5Button.style.display = "none";
+    bid25Button.style.display = "none";
+  }
+  bid_received(state, details) {
+    gClock.set_time_remaining(state.clock);
+    if (details.player === gUsername) {
+      if (state.players[gUsername].cash > state.current_bid || state.settings.debt == 'automatic') {
+        bid1Button.classList.remove("disabled-button");
+      } else {
+        bid1Button.classList.add("disabled-button");
+      }
+      if (state.players[gUsername].cash > state.current_bid + 5 || state.settings.debt == 'automatic') {
+        bid5Button.classList.remove("disabled-button");
+      } else {
+        bid5Button.classList.add("disabled-button");
+      }
+      if (state.players[gUsername].cash > state.current_bid + 25 || state.settings.debt == 'automatic') {
+        bid25Button.classList.remove("disabled-button");
+      } else {
+        bid25Button.classList.add("disabled-button");
+      }
+    } else {
+      bid1Button.classList.add("disabled-button");
+      bid5Button.classList.add("disabled-button");
+      bid25Button.classList.add("disabled-button");
+      setTimeout(() => {
+        if (state.players[gUsername].cash > state.current_bid || state.settings.debt == 'automatic') {
+          bid1Button.classList.remove("disabled-button");
+        }
+        if (state.players[gUsername].cash > state.current_bid + 5 || state.settings.debt == 'automatic') {
+          bid5Button.classList.remove("disabled-button");
+        }
+        if (state.players[gUsername].cash > state.current_bid + 25 || state.settings.debt == 'automatic') {
+          bid25Button.classList.remove("disabled-button");
+        }
+      }, kBidDisableTime * 1000);
+    }
+  }
+}
+
+class LimitOrderAuctionController extends AuctionController {
+  constructor(eventTarget, state) {
+    super(eventTarget, state);
+    document.getElementById("limitOrderUI").innerHTML = `
+      <table>
+        <tbody>
+          <tr>
+            <td>Bid (Buy)</td>
+            <td><input id="limitOrderBidInput" type="number" style="width: 6em; padding: 0.2em;"></td>
+          </tr>
+          <tr>
+            <td>Ask (Sell)</td>
+            <td><input id="limitOrderAskInput" type="number" style="width: 6em; padding: 0.2em;"></td>
+          </tr>
+          <tr>
+            <td colspan=2><div class='button' id="limitOrderSubmitButton">Submit</div></td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+
+    this.bidInput = document.getElementById("limitOrderBidInput");
+    this.askInput = document.getElementById("limitOrderAskInput");
+    this.submitButton = document.getElementById("limitOrderSubmitButton");
+
+    this.bidInput.addEventListener('change', () => {
+      this.submitButton.classList.remove("disabled-button");
+      if (parseInt(this.bidInput.value) < 0) {
+        this.bidInput.value = 0;
+      }
+      if (parseInt(this.bidInput.value) > gLatestState.players[gUsername].cash) {
+        this.bidInput.value = gLatestState.players[gUsername].cash;
+      }
+    });
+    // TODO: if you receive a new share, you're free to set ask price.
+    this.askInput.addEventListener('change', () => {
+      this.submitButton.classList.remove("disabled-button");
+      const myShares = this.myShares(gLatestState);
+      if (parseInt(this.askInput.value) < 0) {
+        this.askInput.value = 0;
+      }
+      if (parseInt(this.askInput.value) > myShares) {
+        this.askInput.value = myShares;
+      }
+    });
+    this.submitButton.addEventListener('click', () => {
+      this.submitButton.classList.add("disabled-button");
+
+      let bidPrice = parseInt(this.bidInput.value);
+      if (isNaN(bidPrice)) {
+        bidPrice = null;
+      }
+
+      let askPrice = parseInt(this.askInput.value);
+      if (isNaN(askPrice)) {
+        askPrice = null;
+      }
+
+      send({
+        "method": "bid",
+        "args": [{'amount': bidPrice, 'nation': gLatestState.stage.turn}],
+        "orderType": "bid",
+      });
+      send({
+        "method": "bid",
+        "args": [{'amount': askPrice, 'nation': gLatestState.stage.turn}],
+        "orderType": "ask",
+      });
+    });
+  }
+  myShares(state) {
+    return state.players[gUsername].shares[gLatestState.stage.turn];
+  }
+  begin_auction(state) {
+    this.bidInput.value = 0;
+    this.askInput.value = (this.myShares(state) === 0 ? "" : 0);
+    limitOrderUI.style.display = "block";
+
+  }
+  end_auction(state) {
+    limitOrderUI.style.display = "none";
+  }
+  bid_received(state) {
+    // 
+  }
+}
+
+let gAuctionController;
+gFirstStateLoadedPromise.then((state) => {
+  if (gLatestState.settings.auctionType === "first-price") {
+    gAuctionController = new FirstPriceAuctionController(gStateEventTarget, state);
+  } else {
+    gAuctionController = new LimitOrderAuctionController(gStateEventTarget, state);
+  }
+});
+
 function count(A) {
   let R = {};
   for (let a of A) {
@@ -1523,18 +1687,13 @@ function get_current_modal_type() {
   return popupTitle.innerHTML;
 }
 
+function limit_order_bid_clicked() {
+  limitOrderBidButton.innerHTML = "Bid $0";
+  limitOrderAskButton.innerHTML = "Bid $na";
+}
+
 function update_buttons(state) {
   const stage = state.stage;
-
-  if (stage.phase === "Auction") {
-    bid1Button.style.display = "inline-block";
-    bid5Button.style.display = "inline-block";
-    bid25Button.style.display = "inline-block";
-  } else {
-    bid1Button.style.display = "none";
-    bid5Button.style.display = "none";
-    bid25Button.style.display = "none";
-  }
 
   if (stage.phase === "Discuss") {
     endDeliberationButton.style.display = "inline-block";

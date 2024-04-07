@@ -291,10 +291,14 @@ let admin = {
       </div>
       <div>
         <div id="payBackButton" class='button' style="display:inline-block;" onclick="show_modal('PayBack')">Pay Back</div>
-        <div id="voteButton" class='button' style="display:inline-block;" onclick="vote_button_clicked()">Vote</div>
-        <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1, this)">Bid +1</div>
-        <div id="bid5Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 5, this)">Bid +5</div>
-        <div id="bid25Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 25, this)">Bid +25</div>
+        <div id="voteButton" class='button' style="display:none;" onclick="vote_button_clicked()">Vote</div>
+        <div id="bid1Button" class='button' style="display:none;" onclick="bid(gLatestState.current_bid + 1, this)">Bid +1</div>
+        <div id="bid5Button" class='button' style="display:none;" onclick="bid(gLatestState.current_bid + 5, this)">Bid +5</div>
+        <div id="bid25Button" class='button' style="display:none;" onclick="bid(gLatestState.current_bid + 25, this)">Bid +25</div>
+
+        <div id="limitOrderUI" style="display:none;">
+        </div>
+
         <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Discussion</div>
       </div>
     </div>
