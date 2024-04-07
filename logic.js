@@ -999,6 +999,11 @@ class Game
               buyers.push(trade['bid']['username']);
               if (trade['ask']['username'] == null) {
                 // world bank
+                if (this.mother_state.settings.auctionMoneyRecipient == 'bank') {
+                  // do nothing
+                } else {
+                  // TODO: 'country'. 'old-human-owners', 'new-human-owners'
+                }
               } else {
                 this.mother_state.players[trade['ask']['username']].cash += marketPrice;
                 this.mother_state.players[trade['ask']['username']].shares[this.mother_state.stage.turn] -= 1;
