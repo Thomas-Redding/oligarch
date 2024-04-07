@@ -1615,7 +1615,9 @@ class LimitOrderAuctionController extends AuctionController {
       if (parseInt(this.askInput.value) < 0) {
         this.askInput.value = 0;
       }
-      if (parseInt(this.askInput.value) > myShares) {
+      if (myShares === 0) {
+        this.askInput.value = '';
+      } else if (parseInt(this.askInput.value) > myShares) {
         this.askInput.value = myShares;
       }
     });
