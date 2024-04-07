@@ -1647,7 +1647,7 @@ class LimitOrderAuctionController extends AuctionController {
       this._reset(gLatestState);
       send({
         "method": "bid",
-        "args": [{'amount': null, 'nation': gLatestState.stage.turn, "orderType": "ask"}],
+        "args": [{'amount': null, 'nation': gLatestState.stage.turn, "orderType": "bid"}],
       });
       send({
         "method": "bid",
