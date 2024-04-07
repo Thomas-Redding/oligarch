@@ -1256,12 +1256,12 @@ let loadPromises = [
           }
         }
 
-        // console.log("========================");
-        // console.log(new Date());
-        // console.log("Received action:", action);
-        // console.log("Received details:", details);
-        // console.log("Received state:", state);
-        // console.log("========================");
+        console.log("========================");
+        console.log(new Date());
+        console.log("Received action:", action);
+        console.log("Received details:", details);
+        console.log("Received state:", state);
+        console.log("========================");
 
         if (["get_state", "pause", "resume"].includes(action)) {
           pauseDiv.style.display = (state.is_paused ? "flex" : "none");
@@ -1503,11 +1503,9 @@ Promise.all(loadPromises).then(() => {
 
 class AuctionController {
   constructor(gStateEventTarget, state) {
-    console.log('x', state);
     gStateEventTarget.addEventListener('statechange', (event) => {
       const oldState = event.detail.oldState;
       const newState = event.detail.newState;
-      console.log(oldState.stage, newState.stage);
       if (newState.stage.phase !== 'Auction') {
         this.end_auction();
         return;
@@ -1648,7 +1646,6 @@ class LimitOrderAuctionController extends AuctionController {
     return state.players[gUsername].shares[gLatestState.stage.turn];
   }
   begin_auction(state) {
-    console.log('NEW AUCTION BEGAN');
     this.bidInput.value = 0;
     this.askInput.value = (this.myShares(state) === 0 ? "" : 0);
     limitOrderUI.style.display = "block";
