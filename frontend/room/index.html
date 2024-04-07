@@ -275,7 +275,7 @@ let admin = {
 </div>
 
 <div id='contentDiv'>
-  <div id="leftPanel" style="overflow-y:auto; height:100%;">
+  <div id="leftPanel" style="overflow-y:auto; height:100%; overflow-x:scroll;">
     <table id='playerTable'>
       <tbody></tbody>
     </table>
@@ -549,7 +549,7 @@ let admin = {
       <section>
         <h3>C. Auction (per country)</h3>
         <p>
-          Starting with North America, each player is given ~24 seconds to submit a bid and/or ask limit order. If the world bank has any remaining shares in the country, it submits an ask order at $0. After the time expires, the bid and ask orders are each sorted and a market price is set to the lowest market-clearing bid order. Then all orders are resolved at the market-clearing price. This is repeated for all other countries.
+          Starting with North America, each player is given ~24 seconds to submit a bid and/or ask limit order. If the world bank has any remaining shares in the country, it also sells as share. After the time expires, the bid and ask orders are each sorted and a market price is set to the lowest market-clearing bid order. Then all orders are resolved at the market-clearing price. This is repeated for all other countries.
         </p>
       </section>
       <section>
