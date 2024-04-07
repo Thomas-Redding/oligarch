@@ -1024,7 +1024,15 @@ function htmlFromLog(action, details, isToast) {
   } else if (action == "bid_received") {
     return undefined;
   } else if (action == "conclude_bidding") {
-    return "<b>" + details.winner + "</b> bought a share of " + details.nation + " for $" + details.price + "B";
+    if (gLatestState.settings.auctionType === "first-price") {
+      return "<b>" + details.winner + "</b> bought a share of " + details.nation + " for $" + details.price + "B";
+    } else {
+      if (details.marketPrice === null) {
+        return "No shares were bought";
+      }
+      const sellers = details.sellers.concat(["World Bank"]);
+      return "(" + details.buyers.join(', ') + ") bought shares from (" + sellers.join(', ') + ") for a market price of $" + details.marketPrice + "B";
+    }
   } else if (action == "auctions_complete") {
     return "Auctions concluded.";
   } else if (action == "start_election") {
@@ -1616,17 +1624,17 @@ class LimitOrderAuctionController extends AuctionController {
     this.askInput.addEventListener('change', () => {
       this.submitButton.classList.remove("disabled-button");
       const myShares = this.myShares(gLatestState);
-      if (parseInt(this.askInput.value) < 0) {
-        this.askInput.value = 0;
-      }
       if (myShares === 0) {
         this.askInput.value = '';
-      } else if (parseInt(this.askInput.value) > myShares) {
-        this.askInput.value = myShares;
+        return;
+      }
+      if (parseInt(this.askInput.value) < 0) {
+        this.askInput.value = 0;
       }
     });
     this.submitButton.addEventListener('click', () => {
       this.submitButton.classList.add("disabled-button");
+      this.cancelButton.classList.remove("disabled-button");
 
       let bidPrice = parseInt(this.bidInput.value);
       if (isNaN(bidPrice)) {
@@ -1662,7 +1670,8 @@ class LimitOrderAuctionController extends AuctionController {
   _reset(state) {
     this.bidInput.value = 0;
     this.askInput.value = (this.myShares(state) === 0 ? "" : 0);
-    this.submitButton.classList.add("disabled-button");
+    this.cancelButton.classList.add("disabled-button");
+    this.submitButton.classList.remove("disabled-button");
   }
   myShares(state) {
     return state.players[gUsername].shares[gLatestState.stage.turn];
