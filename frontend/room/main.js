@@ -1515,25 +1515,24 @@ class AuctionController {
       if (oldState.stage.phase === 'Auction') {
         return;
       }
-      console.log('NEW AUCTION BEGAN');
-      this.begin_auction();
+      this.begin_auction(newState);
     });
     gStateEventTarget.addEventListener('bid_received', (event) => {
       this.bid_received(event.detail.state, event.detail.details);
     });
     if (state.stage.phase === 'Auction') {
-      this.begin_auction();
+      this.begin_auction(event.detail.state);
     }
   }
 }
 
 class FirstPriceAuctionController extends AuctionController {
-  begin_auction() {
+  begin_auction(state) {
     bid1Button.style.display = "inline-block";
     bid5Button.style.display = "inline-block";
     bid25Button.style.display = "inline-block";
   }
-  end_auction() {
+  end_auction(state) {
     bid1Button.style.display = "none";
     bid5Button.style.display = "none";
     bid25Button.style.display = "none";
@@ -1579,29 +1578,87 @@ class LimitOrderAuctionController extends AuctionController {
   constructor(eventTarget, state) {
     super(eventTarget, state);
     document.getElementById("limitOrderUI").innerHTML = `
-      <div>
-        <div id="limitOrderBidButton" class='button'>Bid</div>
-      </div>
-      <div>
-        <div id="limitOrderAskButton" class='button'>Ask</div>
-      </div>
-      <div class='button'>Submit</div>
+      <table>
+        <tbody>
+          <tr>
+            <td>Bid (Buy)</td>
+            <td><input id="limitOrderBidInput" type="number" style="width: 6em; padding: 0.2em;"></td>
+          </tr>
+          <tr>
+            <td>Ask (Sell)</td>
+            <td><input id="limitOrderAskInput" type="number" style="width: 6em; padding: 0.2em;"></td>
+          </tr>
+          <tr>
+            <td colspan=2><div class='button' id="limitOrderSubmitButton">Submit</div></td>
+          </tr>
+        </tbody>
+      </table>
     `;
 
-    this.limitOrderBidButton = document.getElementById("limitOrderBidButton");
-    this.limitOrderAskButton = document.getElementById("limitOrderAskButton");
+    this.bidInput = document.getElementById("limitOrderBidInput");
+    this.askInput = document.getElementById("limitOrderAskInput");
+    this.submitButton = document.getElementById("limitOrderSubmitButton");
 
-    this.bidPrice = 0;
-    this.askPrice = 9999;
+    this.bidInput.addEventListener('change', () => {
+      this.submitButton.classList.remove("disabled-button");
+      if (parseInt(this.bidInput.value) < 0) {
+        this.bidInput.value = 0;
+      }
+      if (parseInt(this.bidInput.value) > gLatestState.players[gUsername].cash) {
+        this.bidInput.value = gLatestState.players[gUsername].cash;
+      }
+    });
+    // TODO: if you receive a new share, you're free to set ask price.
+    this.askInput.addEventListener('change', () => {
+      this.submitButton.classList.remove("disabled-button");
+      const myShares = this.myShares(gLatestState);
+      if (parseInt(this.askInput.value) < 0) {
+        this.askInput.value = 0;
+      }
+      if (parseInt(this.askInput.value) > myShares) {
+        this.askInput.value = myShares;
+      }
+    });
+    this.submitButton.addEventListener('click', () => {
+      this.submitButton.classList.add("disabled-button");
+
+      let bidPrice = parseInt(this.bidInput.value);
+      if (isNaN(bidPrice)) {
+        bidPrice = null;
+      }
+
+      let askPrice = parseInt(this.askInput.value);
+      if (isNaN(askPrice)) {
+        askPrice = null;
+      }
+
+      send({
+        "method": "bid",
+        "args": [{'amount': bidPrice, 'nation': gLatestState.stage.turn}],
+        "orderType": "bid",
+      });
+      send({
+        "method": "bid",
+        "args": [{'amount': askPrice, 'nation': gLatestState.stage.turn}],
+        "orderType": "ask",
+      });
+    });
   }
-  begin_auction() {
+  myShares(state) {
+    return state.players[gUsername].shares[gLatestState.stage.turn];
+  }
+  begin_auction(state) {
+    console.log('NEW AUCTION BEGAN');
+    this.bidInput.value = 0;
+    this.askInput.value = (this.myShares(state) === 0 ? "" : 0);
     limitOrderUI.style.display = "block";
+
   }
-  end_auction() {
+  end_auction(state) {
     limitOrderUI.style.display = "none";
   }
   bid_received(state) {
-    alert('bid Received');
+    // 
   }
 }
 
