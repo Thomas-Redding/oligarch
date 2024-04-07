@@ -20,6 +20,11 @@ class Battle {
         this.metadata.win_prob = 0.5*n*(n-1) + Math.min(def*(atk-def), 0)
         this.metadata.outcome = this.metadata.atk_roll > this.metadata.def_roll
     }
+    odds_battle() {
+        // outcome is based on odds. For example if atk_pts = 3 and def_pts = 2, then atk has 3/5 chance of winning
+        this.metadata.win_prob = this._atk_pts/(this._atk_pts + this._def_pts)
+        this.metadata.outcome = Math.random() < this.metadata.win_prob
+    }
 }
 module.exports = Battle
 
