@@ -517,28 +517,62 @@ let admin = {
 
   <div id="helpPopupDiv" class="popup">
     <div style="max-height: 80vh; overflow: scroll; text-align: left;">
-      <h2><i>The Oligarchs</i> Rules</h2>
-      <p>
-        <i>The Oligarchs</i> is a game of investment, war, and political intrigue. At its core, it is merely a fairly simple turn-based strategy game: nations build factories, collect income, recruit troops, and go to war. The novelty is that each player doesn't control their own country - they buy shares in multiple countries and have to cooperate democratically to get anything done!
-      </p><p>
-        The game proceeds along these stages:
-      </p>
-      <ol>
-        <li><b>Taxation</b> - the bank pays money out to each nation according to how many tiles and factories it controls</li>
-        <li><b>Discussion</b> - players discuss alliances and future plans</li>
-        <li><b>Auction</b> - players bid on a share for each country in order (NA, SA, EU, AF, AS, AU)</li>
-        <li><b>Action</b></li>
+      <section>
+        <h2><i>The Oligarchs</i> Rules</h2>
+        <p>
+          <i>The Oligarchs</i> is a game of investment, war, and political intrigue. At its core, it is merely a straightforward turn-based strategy game: nations build factories, collect income, recruit troops, and go to war. The novelty is that each player doesn't control their own country - they buy shares in multiple countries and have to cooperate democratically to get anything done!
+        </p><p>
+          The game consists of 6 rounds, each of which has 4 stages:
+        </p>
         <ol>
-          <li><b>Election</b> - shareholders elect the president</li>
-          <li><b>Movement</b> - the president moves existing troops</li>
-          <li><b>Attack</b> - the president attacks with existing troops</li>
-          <li><b>Spawn</b> - the president recruits new troops at barracks</li>
-          <li><b>Build</b> - the president builds new factories and barracks</li>
-          <li><b>Dividends</b> - the president pays a country's cash out to its shareholders in proportion to the number of shares owned</li>
+          <li><b>Taxation</b> - the bank pays money out to each nation according to how many tiles and factories it controls</li>
+          <li><b>Discussion</b> - players discuss alliances and future plans</li>
+          <li><b>Auction (per country)</b> - for each country, players bid on a new share</li>
+          <li><b>Action (per country)</b> - for each country, players who own share in a country act as that country</li>
         </ol>
-      </ol>
+      <section>
+        <h3>A. Taxation</h3>
+        <p>
+          Each country is paid money according to the amount of territory and factories it controls. Each hexagon pays out $1. Each factory pays out $15.
+        </p>
+      </section>
+      <section>
+        <h3>B. Discussion</h3>
+        <p>
+          The players are given some time (typically ~30s) to discuss anything they want among themselves.
+        </p>
+      </section>
+      <section>
+        <h3>C. Auction (per country)</h3>
+        <p>
+          Starting with North America, each player is given ~24 seconds to submit a bid and/or ask limit order. If the world bank has any remaining shares in the country, it submits an ask order at $0. After the time expires, the bid and ask orders are each sorted and a market price is set to the lowest market-clearing bid order. Then all orders are resolved at the market-clearing price. This is repeated for all other countries.
+        </p>
+      </section>
+      <section>
+        <h3>D. Action (per country)</h3>
+        <p>
+          Starting with North America, each country is given ~3 minutes to decide its actions. This proceeds in six sub-stages:
+        </p>
+        <ol>
+          <li><b>Election</b> - The country's shareholders elect the president. A majority is needed to win. If no single player achieves a majority, the country's action phase is skipped.</li>
+          <li><b>Movement</b> - The president may move existing troops. Each troop can move up to 4 spaces.</li>
+          <li><b>Attack</b> - The president may attack with existing troops. Each troop may attack at most once per turn. A troop may only attack a space adjacent to its own. If the adjacent space has a building, the building is destroyed. If a space has an enemy troop, the following. We count the number of troops from the attacker's country adjacent to either the origin square or the target square. We count the number of troops from the defender's country adjacent to either the origin square or the target square. We add one to both sums to represent the attacking and defending troops. These sums represent the odds of victory. For instance, if there are 3 adjacent attacking troops and 1 adjacent defending troop, the odds are 4:2, and so there is a 66.7% chance the attacker destroys the defender. Otherwise, the attacker is destroyed.</li>
+          <li><b>Spawn</b> - The president may recruit new troops, at most one per barrack. Both the barrack and the space the new troop will spawn must be under the country's control.</li>
+          <li><b>Build</b> - The president may builds new factories and barracks. The space being built must be under the country's control.</li>
+          <li><b>Dividends</b> - The president may pay a portion of they country's cash out to its shareholders in proportion to the number of shares they each own.</li>
+        </ol>
+        <p>
+          Which country controls a space is determined as follows:
+        </p>
+        <ol>
+          <li>If troops from two or more different country's are adjacent to the space, the space is under no one's control.</li>
+          <li>Otherwise, if troops from one country are adjacent to the space, the space is under that country's control.</li>
+          <li>Otherwise, the space is controlled by the country that controlled it in the beginning of the game.</li>
+        </ol>
+      </section>
+      <section>
       <p>
-        Finally, another novel twist that <i>The Oligarchs</i> is that the order countries act in flips every round. Thus, while the order on odd rounds (#1, #3, #5) is [NA, SA, EU, AF, AS, AU], the order on even rounds (#2, #4, #6) is [AU, AS, AF, EU, SA, NA]. This has an important effects on gameplay: each country will have two turns to act before another country acts, which makes military attacks much harder to respond to in a timely fashion.
+        Finally, another novel twist that <i>The Oligarchs</i> is that the order of the countries flips every round. Thus, while the order on odd rounds (#1, #3, #5) is [NA, SA, EU, AF, AS, AU], the order on even rounds (#2, #4, #6) is [AU, AS, AF, EU, SA, NA]. This affects both the auction and the action order. This has an important effects on gameplay: each country will have two turns to act before another country acts, which makes military attacks much harder to respond to in a timely fashion.
       </p>
     </div>
   </div>
