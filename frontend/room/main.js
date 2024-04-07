@@ -1636,26 +1636,22 @@ class LimitOrderAuctionController extends AuctionController {
 
       send({
         "method": "bid",
-        "args": [{'amount': bidPrice, 'nation': gLatestState.stage.turn}],
-        "orderType": "bid",
+        "args": [{'amount': bidPrice, 'nation': gLatestState.stage.turn, "orderType": "bid"}],
       });
       send({
         "method": "bid",
-        "args": [{'amount': askPrice, 'nation': gLatestState.stage.turn}],
-        "orderType": "ask",
+        "args": [{'amount': askPrice, 'nation': gLatestState.stage.turn, "orderType": "ask"}],
       });
     });
     this.cancelButton.addEventListener('click', () => {
       this._reset(gLatestState);
       send({
         "method": "bid",
-        "args": [{'amount': null, 'nation': gLatestState.stage.turn}],
-        "orderType": "bid",
+        "args": [{'amount': null, 'nation': gLatestState.stage.turn, "orderType": "ask"}],
       });
       send({
         "method": "bid",
-        "args": [{'amount': null, 'nation': gLatestState.stage.turn}],
-        "orderType": "ask",
+        "args": [{'amount': null, 'nation': gLatestState.stage.turn, "orderType": "ask"}],
       });
     });
   }
