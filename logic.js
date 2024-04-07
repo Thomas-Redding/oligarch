@@ -978,23 +978,35 @@ class Game
               'bid': bids[i],
             });
           }
-          let marketPrice = trades[trades.length-1]['bid']['value'];
-          console.log('marketPrice', marketPrice);
-          let buyers = [];
-          let sellers = [];
-          for (let trade of trades) {
-            this.mother_state.players[trade['bid']['username']].cash -= marketPrice;
-            this.mother_state.players[trade['ask']['username']].cash += marketPrice;
-            this.mother_state.players[trade['bid']['username']].shares[this.mother_state.stage.turn] += 1;
-            this.mother_state.players[trade['ask']['username']].shares[this.mother_state.stage.turn] -= 1;
-            buyers.push(trade['bid']['username']);
-            sellers.push(trade['ask']['username']);
+          if (trades.length == 0) {
+            this._prayer('conclude_bidding', {
+              'buyers': [],
+              'sellers': [],
+              'marketPrice': null,
+            }, true);
+          } else {
+            let marketPrice = trades[trades.length-1]['bid']['value'];
+            console.log('marketPrice', marketPrice);
+            let buyers = [];
+            let sellers = [];
+            for (let trade of trades) {
+              this.mother_state.players[trade['bid']['username']].cash -= marketPrice;
+              this.mother_state.players[trade['bid']['username']].shares[this.mother_state.stage.turn] += 1;
+              buyers.push(trade['bid']['username']);
+              if (trade['ask']['username'] == null) {
+                // world bank
+              } else {
+                this.mother_state.players[trade['ask']['username']].cash += marketPrice;
+                this.mother_state.players[trade['ask']['username']].shares[this.mother_state.stage.turn] -= 1;
+                sellers.push(trade['ask']['username']);
+              }
+            }
+            this._prayer('conclude_bidding', {
+              'buyers': buyers,
+              'sellers': sellers,
+              'marketPrice': marketPrice,
+            }, true);
           }
-          this._prayer('conclude_bidding', {
-            'buyers': buyers,
-            'sellers': sellers,
-            'marketPrice': marketPrice,
-          }, true);
         }
         this._transition()
     }
