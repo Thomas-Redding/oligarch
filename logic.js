@@ -922,6 +922,7 @@ class Game
         } else if (this.mother_state.settings.auctionType == 'limit-orders') {
           let bids = [];
           for (let username in this.mother_state.limitOrderAuction) {
+            if (this.mother_state.limitOrderAuction[username]['bid'] == null) continue;
             if (this.mother_state.limitOrderAuction[username]['bid']['value'] == null) continue;
             bids.push({
               'username': username,
@@ -931,6 +932,7 @@ class Game
           }
           let asks = [];
           for (let username in this.mother_state.limitOrderAuction) {
+            if (this.mother_state.limitOrderAuction[username]['ask'] == null) continue;
             if (this.mother_state.limitOrderAuction[username]['ask']['value'] == null) continue;
             asks.push({
               'username': username,
