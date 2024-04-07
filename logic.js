@@ -834,12 +834,16 @@ class Game
     _start_auction(nation)
     {
         log(nation);
-        this.mother_state.clock = 0
-        this.timer.stop(false)
-        this.mother_state.current_bid = -1
-        this.mother_state.highest_bidder = null
-        this.mother_state.allow_bids = true;
-        this._prayer('auction_start', nation, true)
+        if (this.mother_state.settings.auctionType == 'first-price') {
+          this.mother_state.clock = 0
+          this.timer.stop(false)
+          this.mother_state.current_bid = -1
+          this.mother_state.highest_bidder = null
+          this.mother_state.allow_bids = true;
+          this._prayer('auction_start', nation, true)
+        } else if (this.mother_state.settings.auctionType == 'limit-orders') {
+          // TODO
+        }
     }
 
     _register_bid(bidInfo, username)
@@ -851,59 +855,67 @@ class Game
           // Delayed bid from earlier auction.
           return;
         }
-        if (this.mother_state.highest_bidder === null) {
-            this._save("auction_start", null);
+        if (this.mother_state.settings.auctionType == 'first-price') {
+          if (this.mother_state.highest_bidder === null) {
+              this._save("auction_start", null);
+          }
+          log(bidInfo, username);
+          this.mother_state.current_bid = bidInfo.amount
+          this.mother_state.highest_bidder = username
+          if (this.timer) this.timer.stop(false)
+          this.timer.start(this.mother_state.settings.biddingTime, this._conclude_bidding.bind(this))
+          console.log('register bid called')
+          this._prayer('bid_received', {'amount' : bidInfo.amount, 'player': username,
+              'nation': this.mother_state.stage.turn}, true)
+        } else if (this.mother_state.settings.auctionType == 'limit-orders') {
+          // TODO
         }
-        log(bidInfo, username);
-        this.mother_state.current_bid = bidInfo.amount
-        this.mother_state.highest_bidder = username
-        if (this.timer) this.timer.stop(false)
-        this.timer.start(this.mother_state.settings.biddingTime, this._conclude_bidding.bind(this))
-        console.log('register bid called')
-        this._prayer('bid_received', {'amount' : bidInfo.amount, 'player': username,
-            'nation': this.mother_state.stage.turn}, true)
 
     }
 
     _conclude_bidding()
     {
         log();
-        let i = this.mother_state.stage.round
-        let price = this.mother_state.current_bid
-        console.log('_conclude_bidding', price);
-        let winner = this.mother_state.highest_bidder
-        let curnat = this.mother_state.stage.turn
-        this.mother_state.players[winner].cash -= price
-        let oldHumanShares = 0;
-        for (let player in this.mother_state.players) {
-          oldHumanShares += this.mother_state.players[player].shares[curnat];
+        if (this.mother_state.settings.auctionType == 'first-price') {
+          let i = this.mother_state.stage.round
+          let price = this.mother_state.current_bid
+          console.log('_conclude_bidding', price);
+          let winner = this.mother_state.highest_bidder
+          let curnat = this.mother_state.stage.turn
+          this.mother_state.players[winner].cash -= price
+          let oldHumanShares = 0;
+          for (let player in this.mother_state.players) {
+            oldHumanShares += this.mother_state.players[player].shares[curnat];
+          }
+          switch(this.mother_state.settings.auctionMoneyRecipient) {
+            case 'bank':
+              // Do nothing.
+              break;
+            case 'old-human-owners':
+              for (let player in this.mother_state.players) {
+                this.mother_state.nations[curnat].cash += price * this.mother_state.players[player].shares[curnat] / oldHumanShares;
+              }
+              break;
+            case 'new-human-owners':
+              for (let player in this.mother_state.players) {
+                this.mother_state.nations[curnat].cash += price * this.mother_state.players[player].shares[curnat] / (oldHumanShares + SHARES_FROM_TURN[i-1]);
+              }
+              this.mother_state.players[winner].shares[curnat] += price * SHARES_FROM_TURN[i-1] / (oldHumanShares + SHARES_FROM_TURN[i-1]);
+              break;
+            case 'county':
+              this.mother_state.nations[curnat].cash += price;
+              break;
+            default:
+              throw Exception('Unrecognized auctionMoneyRecipient value: "' + this.mother_state.settings.auctionMoneyRecipient + '"');
+          }
+          this.mother_state.players[winner].shares[curnat] += SHARES_FROM_TURN[i-1]
+          let details = {'winner' : winner, 'nation' : curnat, 'price':price}
+          details.winner = winner
+          this.mother_state.allow_bids = false;
+          this._prayer('conclude_bidding', details, true)
+        } else if (this.mother_state.settings.auctionType == 'limit-orders') {
+          // TODO
         }
-        switch(this.mother_state.settings.auctionMoneyRecipient) {
-          case 'bank':
-            // Do nothing.
-            break;
-          case 'old-human-owners':
-            for (let player in this.mother_state.players) {
-              this.mother_state.nations[curnat].cash += price * this.mother_state.players[player].shares[curnat] / oldHumanShares;
-            }
-            break;
-          case 'new-human-owners':
-            for (let player in this.mother_state.players) {
-              this.mother_state.nations[curnat].cash += price * this.mother_state.players[player].shares[curnat] / (oldHumanShares + SHARES_FROM_TURN[i-1]);
-            }
-            this.mother_state.players[winner].shares[curnat] += price * SHARES_FROM_TURN[i-1] / (oldHumanShares + SHARES_FROM_TURN[i-1]);
-            break;
-          case 'county':
-            this.mother_state.nations[curnat].cash += price;
-            break;
-          default:
-            throw Exception('Unrecognized auctionMoneyRecipient value: "' + this.mother_state.settings.auctionMoneyRecipient + '"');
-        }
-        this.mother_state.players[winner].shares[curnat] += SHARES_FROM_TURN[i-1]
-        let details = {'winner' : winner, 'nation' : curnat, 'price':price}
-        details.winner = winner
-        this.mother_state.allow_bids = false;
-        this._prayer('conclude_bidding', details, true)
         this._transition()
     }
 
