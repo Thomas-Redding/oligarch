@@ -1665,7 +1665,8 @@ class LimitOrderAuctionController extends AuctionController {
   _reset(state) {
     this.bidInput.value = 0;
     this.askInput.value = (this.myShares(state) === 0 ? "" : 0);
-    this.submitButton.classList.add("disabled-button");
+    this.cancelButton.classList.add("disabled-button");
+    this.submitButton.classList.remove("disabled-button");
   }
   myShares(state) {
     return state.players[gUsername].shares[gLatestState.stage.turn];
