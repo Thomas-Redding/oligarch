@@ -625,7 +625,7 @@ class Game
         }
         else if (this.mother_state.stage.phase === 'Auction') {
             if (utils.shares_sold(this.mother_state, turn) <
-                utils.total_shares(this.mother_state, nat))
+                utils.total_shares(this.mother_state, nat) || this.mother_state.settings.auctionType === 'limit-orders')
                 {
                     this._start_auction(turn)
                 }
@@ -1011,7 +1011,7 @@ class Game
     _battle(atk_pts, def_pts)
     {
         let battle = new Battle(atk_pts, def_pts)
-        battle.linear_die_battle()
+        battle.odds_battle()
         return battle.metadata
     }
 
