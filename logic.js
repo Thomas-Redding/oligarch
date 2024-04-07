@@ -946,29 +946,31 @@ class Game
             'time': 0,
           });
           bids.sort((x, y) => {
-            if (x['value'] > y['value']) {
+            if (x['value'] < y['value']) {
               return 1;
-            } else if (x['value'] < y['value']) {
+            } else if (x['value'] > y['value']) {
               return -1;
-            } else if (x['time'] < y['time']) {
-              return 1;
             } else if (x['time'] > y['time']) {
+              return 1;
+            } else if (x['time'] < y['time']) {
               return -1;
             }
             return 0;
           });
           asks.sort((x, y) => {
-            if (x['value'] < y['value']) {
+            if (x['value'] > y['value']) {
               return 1;
-            } else if (x['value'] > y['value']) {
+            } else if (x['value'] < y['value']) {
               return -1;
-            } else if (x['time'] < y['time']) {
-              return 1;
             } else if (x['time'] > y['time']) {
+              return 1;
+            } else if (x['time'] < y['time']) {
               return -1;
             }
             return 0;
           });
+          console.log('bids', bids);
+          console.log('asks', asks);
           let trades = [];
           for (let i = 0; i < Math.min(bids.length, asks.length); ++i) {
             if (asks[i]['value'] > bids[i]['value']) {
@@ -979,6 +981,7 @@ class Game
               'bid': bids[i],
             });
           }
+          console.log('trades', asks);
           if (trades.length == 0) {
             this._prayer('conclude_bidding', {
               'buyers': [],
