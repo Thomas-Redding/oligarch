@@ -1195,6 +1195,8 @@ function updateCurrentActionDivFromState(state) {
 
 let gHexIdToUnitType = {};
 
+let gStateEventTarget = new EventTarget();
+
 let gSocket
 let gLatestState;
 let loadPromises = [
@@ -1212,6 +1214,8 @@ let loadPromises = [
           return;
         }
         let [action, details, state] = JSON.parse(event.data);
+
+        const oldState = state;
         gLatestState = state;
 
         // Populate gHexIdToUnitType for convenience.
@@ -1428,39 +1432,12 @@ let loadPromises = [
           tradeSnackbarContainer.style.display = "none";
         }
         else if (action === "bid_received") {
-          gClock.set_time_remaining(state.clock);
-          if (details.player === gUsername) {
-            if (state.players[gUsername].cash > state.current_bid || state.settings.debt == 'automatic') {
-              bid1Button.classList.remove("disabled-button");
-            } else {
-              bid1Button.classList.add("disabled-button");
-            }
-            if (state.players[gUsername].cash > state.current_bid + 5 || state.settings.debt == 'automatic') {
-              bid5Button.classList.remove("disabled-button");
-            } else {
-              bid5Button.classList.add("disabled-button");
-            }
-            if (state.players[gUsername].cash > state.current_bid + 25 || state.settings.debt == 'automatic') {
-              bid25Button.classList.remove("disabled-button");
-            } else {
-              bid25Button.classList.add("disabled-button");
-            }
-          } else {
-            bid1Button.classList.add("disabled-button");
-            bid5Button.classList.add("disabled-button");
-            bid25Button.classList.add("disabled-button");
-            setTimeout(() => {
-              if (state.players[gUsername].cash > state.current_bid || state.settings.debt == 'automatic') {
-                bid1Button.classList.remove("disabled-button");
-              }
-              if (state.players[gUsername].cash > state.current_bid + 5 || state.settings.debt == 'automatic') {
-                bid5Button.classList.remove("disabled-button");
-              }
-              if (state.players[gUsername].cash > state.current_bid + 25 || state.settings.debt == 'automatic') {
-                bid25Button.classList.remove("disabled-button");
-              }
-            }, kBidDisableTime * 1000);
-          }
+          gStateEventTarget.dispatchEvent(new CustomEvent("bid_received", {
+            "detail": {
+              "state": gLatestState,
+              "details": details,
+            },
+          }));
         } else if (action == "connection_change") {
           render_playerTable(state);
         }
@@ -1470,6 +1447,13 @@ let loadPromises = [
         if (state.stage.phase === "Action") {
           render_vote_table(state);
         }
+
+        gStateEventTarget.dispatchEvent(new CustomEvent("statechange", {
+          "detail": {
+            oldState: oldState,
+            newState: state,
+          }
+        }));
 
         possiblyToast(action, details);
         rewriteActivityLogFromScratch()
@@ -1504,6 +1488,95 @@ Promise.all(loadPromises).then(() => {
   alert("Error occurred while connecting...");
 });
 
+class AuctionController {
+  constructor(gStateEventTarget) {
+    gStateEventTarget.addEventListener('statechange', (event) => {
+      const oldState = event.detail.oldState;
+      const newState = event.detail.newState;
+      if (newState.stage.phase !== 'Auction' || newState.stage.turn != oldState.stage.turn) {
+        this.end_auction();
+        return;
+      }
+      console.log('NEW AUCTION BEGAN');
+      this.begin_auction();
+    });
+    gStateEventTarget.addEventListener('bid_received', (event) => {
+      this.bid_received(event.detail.state, event.detail.details);
+    });
+  }
+}
+
+class FirstPriceAuctionController extends AuctionController {
+  begin_auction() {
+    bid1Button.style.display = "inline-block";
+    bid5Button.style.display = "inline-block";
+    bid25Button.style.display = "inline-block";
+  }
+  end_auction() {
+    bid1Button.style.display = "none";
+    bid5Button.style.display = "none";
+    bid25Button.style.display = "none";
+  }
+  bid_received(state, details) {
+    gClock.set_time_remaining(state.clock);
+    if (details.player === gUsername) {
+      if (state.players[gUsername].cash > state.current_bid || state.settings.debt == 'automatic') {
+        bid1Button.classList.remove("disabled-button");
+      } else {
+        bid1Button.classList.add("disabled-button");
+      }
+      if (state.players[gUsername].cash > state.current_bid + 5 || state.settings.debt == 'automatic') {
+        bid5Button.classList.remove("disabled-button");
+      } else {
+        bid5Button.classList.add("disabled-button");
+      }
+      if (state.players[gUsername].cash > state.current_bid + 25 || state.settings.debt == 'automatic') {
+        bid25Button.classList.remove("disabled-button");
+      } else {
+        bid25Button.classList.add("disabled-button");
+      }
+    } else {
+      bid1Button.classList.add("disabled-button");
+      bid5Button.classList.add("disabled-button");
+      bid25Button.classList.add("disabled-button");
+      setTimeout(() => {
+        if (state.players[gUsername].cash > state.current_bid || state.settings.debt == 'automatic') {
+          bid1Button.classList.remove("disabled-button");
+        }
+        if (state.players[gUsername].cash > state.current_bid + 5 || state.settings.debt == 'automatic') {
+          bid5Button.classList.remove("disabled-button");
+        }
+        if (state.players[gUsername].cash > state.current_bid + 25 || state.settings.debt == 'automatic') {
+          bid25Button.classList.remove("disabled-button");
+        }
+      }, kBidDisableTime * 1000);
+    }
+  }
+}
+
+class LimitOrderAuctionController extends AuctionController {
+  begin_auction() {
+    limitOrderUI.style.display = "block";
+  }
+  end_auction() {
+    limitOrderUI.style.display = "none";
+  }
+  bid_received(state) {
+    alert('bid Received');
+  }
+}
+
+let gAuctionController;
+Promise.all(loadPromises).then(() => {
+  gStateEventTarget.addEventListener('statechange', (event) => {
+    if (gLatestState.settings.auctionType === "first-price") {
+      gAuctionController = new FirstPriceAuctionController(gStateEventTarget);
+    } else {
+      gAuctionController = new LimitOrderAuctionController(gStateEventTarget);
+    }
+  });
+});
+
 function count(A) {
   let R = {};
   for (let a of A) {
@@ -1523,18 +1596,13 @@ function get_current_modal_type() {
   return popupTitle.innerHTML;
 }
 
+function limit_order_bid_clicked() {
+  limitOrderBidButton.innerHTML = "Bid $0";
+  limitOrderAskButton.innerHTML = "Bid $na";
+}
+
 function update_buttons(state) {
   const stage = state.stage;
-
-  if (stage.phase === "Auction") {
-    bid1Button.style.display = "inline-block";
-    bid5Button.style.display = "inline-block";
-    bid25Button.style.display = "inline-block";
-  } else {
-    bid1Button.style.display = "none";
-    bid5Button.style.display = "none";
-    bid25Button.style.display = "none";
-  }
 
   if (stage.phase === "Discuss") {
     endDeliberationButton.style.display = "inline-block";
