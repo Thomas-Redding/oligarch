@@ -842,13 +842,12 @@ class Game
           this.timer.stop(false)
           this.mother_state.current_bid = -1
           this.mother_state.highest_bidder = null
-          this.mother_state.allow_bids = true;
-          this._prayer('auction_start', nation, true);
         } else if (this.mother_state.settings.auctionType == 'limit-orders') {
           this.mother_state.limitOrderAuction = {}; // username -> {'bid': {'value': int, 'time': int}, 'ask': {'value': int, 'time': int}}
           this.timer.start(this.mother_state.settings.biddingTime, this._conclude_bidding.bind(this));
-          this._prayer('auction_start', nation, true);
         }
+        this.mother_state.allow_bids = true;
+        this._prayer('auction_start', nation, true);
     }
 
     _register_bid(bidInfo, username)

@@ -57,8 +57,8 @@ class OligarchRoom extends Room {
   }
 
   didReceiveData(username, data) {
-    console.log('>>>', data)
     data = JSON.parse(data);
+    console.log('>>>', username, data)
     if (!Array.isArray(data)) {
       data = [data];
     }
