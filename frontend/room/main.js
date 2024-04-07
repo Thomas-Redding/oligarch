@@ -47,6 +47,10 @@ class Vec2 {
   }
 }
 
+function isSpectator() {
+  return !(gUsername in gLatestState.players);
+}
+
 function bid(val, button) {
   if (button.classList.contains('disabled-button')) {
     return;
