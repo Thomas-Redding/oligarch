@@ -77,14 +77,14 @@ let app = http.createServer((request, response) => {
 });
 
 function getIp() {
-  // const nets = os.networkInterfaces()
-  // for (const networkInterfaceId in nets) {
-  //   for (const address of nets[networkInterfaceId]) {
-  //     if (address['family'] == 'IPv4' && !address['internal']) {
-  //       return address['address']
-  //     }
-  //   }
-  // }
+  const nets = os.networkInterfaces()
+  for (const networkInterfaceId in nets) {
+    for (const address of nets[networkInterfaceId]) {
+      if (address['family'] == 'IPv4' && !address['internal']) {
+        return address['address']
+      }
+    }
+  }
   return '127.0.0.1';
 }
 
