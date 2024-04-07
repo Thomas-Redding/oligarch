@@ -1026,7 +1026,8 @@ function htmlFromLog(action, details, isToast) {
       if (details.marketPrice === null) {
         return "No shares were bought";
       }
-      return "(" + details.buyers.join(', ') + ") bought shares from (" + details.sellers.join(', ') + ") for a market price of $" + details.marketPrice + "B";
+      const sellers = details.sellers.concat(["World Bank"]);
+      return "(" + details.buyers.join(', ') + ") bought shares from (" + sellers.join(', ') + ") for a market price of $" + details.marketPrice + "B";
     }
   } else if (action == "auctions_complete") {
     return "Auctions concluded.";
@@ -1619,17 +1620,17 @@ class LimitOrderAuctionController extends AuctionController {
     this.askInput.addEventListener('change', () => {
       this.submitButton.classList.remove("disabled-button");
       const myShares = this.myShares(gLatestState);
-      if (parseInt(this.askInput.value) < 0) {
-        this.askInput.value = 0;
-      }
       if (myShares === 0) {
         this.askInput.value = '';
-      } else if (parseInt(this.askInput.value) > myShares) {
-        this.askInput.value = myShares;
+        return;
+      }
+      if (parseInt(this.askInput.value) < 0) {
+        this.askInput.value = 0;
       }
     });
     this.submitButton.addEventListener('click', () => {
       this.submitButton.classList.add("disabled-button");
+      this.cancelButton.classList.remove("disabled-button");
 
       let bidPrice = parseInt(this.bidInput.value);
       if (isNaN(bidPrice)) {
