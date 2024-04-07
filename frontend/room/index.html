@@ -291,10 +291,14 @@ let admin = {
       </div>
       <div>
         <div id="payBackButton" class='button' style="display:inline-block;" onclick="show_modal('PayBack')">Pay Back</div>
-        <div id="voteButton" class='button' style="display:inline-block;" onclick="vote_button_clicked()">Vote</div>
-        <div id="bid1Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 1, this)">Bid +1</div>
-        <div id="bid5Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 5, this)">Bid +5</div>
-        <div id="bid25Button" class='button' style="display:inline-block;" onclick="bid(gLatestState.current_bid + 25, this)">Bid +25</div>
+        <div id="voteButton" class='button' style="display:none;" onclick="vote_button_clicked()">Vote</div>
+        <div id="bid1Button" class='button' style="display:none;" onclick="bid(gLatestState.current_bid + 1, this)">Bid +1</div>
+        <div id="bid5Button" class='button' style="display:none;" onclick="bid(gLatestState.current_bid + 5, this)">Bid +5</div>
+        <div id="bid25Button" class='button' style="display:none;" onclick="bid(gLatestState.current_bid + 25, this)">Bid +25</div>
+
+        <div id="limitOrderUI" style="display:none;">
+        </div>
+
         <div id="endDeliberationButton" class='button' style="display:inline-block;" onclick="end_deliberation()">End Discussion</div>
       </div>
     </div>
@@ -518,28 +522,28 @@ let admin = {
   <div id="helpPopupDiv" class="popup">
     <div style="max-height: 80vh; overflow: scroll; text-align: left;">
       <section>
-        <h2><i>The Oligarchs</i> Rules</h2>
+        <h2><i>Oligarchy</i> Rules</h2>
         <p>
-          <i>The Oligarchs</i> is a game of investment, war, and political intrigue. At its core, it is merely a straightforward turn-based strategy game: nations build factories, collect income, recruit troops, and go to war. The novelty is that each player doesn't control their own country - they buy shares in multiple countries and have to cooperate democratically to get anything done!
+          <i>Oligarchy</i> is a game of investment, war, and political intrigue. At its core, it is merely a straightforward turn-based strategy game: nations build factories, collect income, recruit troops, and go to war. The novelty is that each player doesn't control their own country - they buy shares in multiple countries and have to cooperate democratically to get anything done!
         </p><p>
           The game consists of 6 rounds, each of which has 4 stages:
         </p>
         <ol>
-          <li><b>Taxation</b> - the bank pays money out to each nation according to how many tiles and factories it controls</li>
-          <li><b>Discussion</b> - players discuss alliances and future plans</li>
-          <li><b>Auction (per country)</b> - for each country, players bid on a new share</li>
-          <li><b>Action (per country)</b> - for each country, players who own share in a country act as that country</li>
+          <li><b>Taxation</b> The national government raises federal funds based on territory and factories</li>
+          <li><b>Forum</b> The Oligarchs discuss alliances and future plans</li>
+          <li><b>Auction</b>For each country, an auction is held to faciliate the transaction of shares</li>
+          <li><b>Governance</b>For each country, the Oligarchs convene to designate a head of government to enact policy</li>
         </ol>
       <section>
         <h3>A. Taxation</h3>
         <p>
-          Each country is paid money according to the amount of territory and factories it controls. Each hexagon pays out $1. Each factory pays out $15.
+          Each government raises taxes proportional to the size of its economy. Each hexagonal tile pays out $1B and each factory pays out $15B.
         </p>
       </section>
       <section>
-        <h3>B. Discussion</h3>
+        <h3>B. Forum</h3>
         <p>
-          The players are given some time (typically ~30s) to discuss anything they want among themselves.
+          The Oligarchs convene in Forum to plan the new world order.
         </p>
       </section>
       <section>
@@ -549,7 +553,7 @@ let admin = {
         </p>
       </section>
       <section>
-        <h3>D. Action (per country)</h3>
+        <h3>D. Governance (per country)</h3>
         <p>
           Starting with North America, each country is given ~3 minutes to decide its actions. This proceeds in six sub-stages:
         </p>
