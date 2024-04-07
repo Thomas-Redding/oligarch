@@ -1020,7 +1020,14 @@ function htmlFromLog(action, details, isToast) {
   } else if (action == "bid_received") {
     return undefined;
   } else if (action == "conclude_bidding") {
-    return "<b>" + details.winner + "</b> bought a share of " + details.nation + " for $" + details.price + "B";
+    if (gLatestState.settings.auctionType === "first-price") {
+      return "<b>" + details.winner + "</b> bought a share of " + details.nation + " for $" + details.price + "B";
+    } else {
+      if (details.marketPrice === null) {
+        return "No shares were bought";
+      }
+      return "(" + details.buyers.join(', ') + ") bought shares from (" + details.sellers.join(', ') + ") for a market price of $" + details.marketPrice + "B";
+    }
   } else if (action == "auctions_complete") {
     return "Auctions concluded.";
   } else if (action == "start_election") {
