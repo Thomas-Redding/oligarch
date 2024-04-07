@@ -550,6 +550,9 @@ class Game
             'enabledTroops': ['cavalry'], // ['infantry', 'calvary', 'artillery']
             'auctionType': 'limit-orders', // 'first-price' or 'limit-orders'
         }
+        if (this.mother_state.settings.auctionType == 'limit-orders') {
+          this.mother_state.settings.biddingTime *= 2;
+        }
         this.mother_state.players = { }
         this.mother_state.nations = { }
         for (let nation of this.mother_state.map.continents) {
@@ -840,9 +843,11 @@ class Game
           this.mother_state.current_bid = -1
           this.mother_state.highest_bidder = null
           this.mother_state.allow_bids = true;
-          this._prayer('auction_start', nation, true)
+          this._prayer('auction_start', nation, true);
         } else if (this.mother_state.settings.auctionType == 'limit-orders') {
-          // TODO
+          this.mother_state.limitOrderAuction = {}; // username -> {'bid': {'value': int, 'time': int}, 'ask': {'value': int, 'time': int}}
+          this.timer.start(this.mother_state.settings.biddingTime, this._conclude_bidding.bind(this));
+          this._prayer('auction_start', nation, true);
         }
     }
 
@@ -868,9 +873,11 @@ class Game
           this._prayer('bid_received', {'amount' : bidInfo.amount, 'player': username,
               'nation': this.mother_state.stage.turn}, true)
         } else if (this.mother_state.settings.auctionType == 'limit-orders') {
-          // TODO
+          if (!(username in this.mother_state.limitOrderAuction)) {
+            this.mother_state.limitOrderAuction[username] = {'bid': null, 'ask': null};
+          }
+          this.mother_state.limitOrderAuction[username][bidInfo.orderType] = {'value': bidInfo.amount, 'time': new Date().getTime()};
         }
-
     }
 
     _conclude_bidding()
@@ -914,7 +921,80 @@ class Game
           this.mother_state.allow_bids = false;
           this._prayer('conclude_bidding', details, true)
         } else if (this.mother_state.settings.auctionType == 'limit-orders') {
-          // TODO
+          let bids = [];
+          for (let username in this.mother_state.limitOrderAuction) {
+            if (this.mother_state.limitOrderAuction[username]['bid']['value'] == null) continue;
+            bids.push({
+              'username': username,
+              'value': this.mother_state.limitOrderAuction[username]['bid']['value'],
+              'time': this.mother_state.limitOrderAuction[username]['bid']['time'],
+            });
+          }
+          let asks = [];
+          for (let username in this.mother_state.limitOrderAuction) {
+            if (this.mother_state.limitOrderAuction[username]['ask']['value'] == null) continue;
+            asks.push({
+              'username': username,
+              'value': this.mother_state.limitOrderAuction[username]['ask']['value'],
+              'time': this.mother_state.limitOrderAuction[username]['ask']['time'],
+            });
+          }
+          asks.push({
+            'username': null, // world bank
+            'value': 0,
+            'time': 0,
+          });
+          bids.sort((x, y) => {
+            if (x['value'] > y['value']) {
+              return 1;
+            } else if (x['value'] < y['value']) {
+              return -1;
+            } else if (x['time'] < y['time']) {
+              return 1;
+            } else if (x['time'] > y['time']) {
+              return -1;
+            }
+            return 0;
+          });
+          asks.sort((x, y) => {
+            if (x['value'] < y['value']) {
+              return 1;
+            } else if (x['value'] > y['value']) {
+              return -1;
+            } else if (x['time'] < y['time']) {
+              return 1;
+            } else if (x['time'] > y['time']) {
+              return -1;
+            }
+            return 0;
+          });
+          let trades = [];
+          for (let i = 0; i < Math.min(bids.length, asks.length); ++i) {
+            if (asks[i]['value'] > bids[i]['value']) {
+              break;
+            }
+            trades.push({
+              'ask': asks[i],
+              'bid': bids[i],
+            });
+          }
+          let marketPrice = trades[trades.length-1]['bid']['value'];
+          console.log('marketPrice', marketPrice);
+          let buyers = [];
+          let sellers = [];
+          for (let trade of trades) {
+            this.mother_state.players[trade['bid']['username']].cash -= marketPrice;
+            this.mother_state.players[trade['ask']['username']].cash += marketPrice;
+            this.mother_state.players[trade['bid']['username']].shares[this.mother_state.stage.turn] += 1;
+            this.mother_state.players[trade['ask']['username']].shares[this.mother_state.stage.turn] -= 1;
+            buyers.push(trade['bid']['username']);
+            sellers.push(trade['ask']['username']);
+          }
+          this._prayer('conclude_bidding', {
+            'buyers': buyers,
+            'sellers': sellers,
+            'marketPrice': marketPrice,
+          }, true);
         }
         this._transition()
     }
