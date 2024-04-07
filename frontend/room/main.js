@@ -1197,6 +1197,15 @@ let gHexIdToUnitType = {};
 
 let gStateEventTarget = new EventTarget();
 
+let gFirstStateLoadedPromise;
+{
+  let outerResolve;
+  gFirstStateLoadedPromise = new Promise((resolve, reject) => {
+    outerResolve = resolve;
+  });
+  gFirstStateLoadedPromise.resolve = outerResolve;
+}
+
 let gSocket
 let gLatestState;
 let loadPromises = [
@@ -1215,8 +1224,12 @@ let loadPromises = [
         }
         let [action, details, state] = JSON.parse(event.data);
 
-        const oldState = state;
+        const oldState = gLatestState;
         gLatestState = state;
+
+        if (!oldState) {
+          gFirstStateLoadedPromise.resolve(state);
+        }
 
         // Populate gHexIdToUnitType for convenience.
         for (let id in gLatestState.map.states) {
@@ -1243,12 +1256,12 @@ let loadPromises = [
           }
         }
 
-        console.log("========================");
-        console.log(new Date());
-        console.log("Received action:", action);
-        console.log("Received details:", details);
-        console.log("Received state:", state);
-        console.log("========================");
+        // console.log("========================");
+        // console.log(new Date());
+        // console.log("Received action:", action);
+        // console.log("Received details:", details);
+        // console.log("Received state:", state);
+        // console.log("========================");
 
         if (["get_state", "pause", "resume"].includes(action)) {
           pauseDiv.style.display = (state.is_paused ? "flex" : "none");
@@ -1489,12 +1502,17 @@ Promise.all(loadPromises).then(() => {
 });
 
 class AuctionController {
-  constructor(gStateEventTarget) {
+  constructor(gStateEventTarget, state) {
+    console.log('x', state);
     gStateEventTarget.addEventListener('statechange', (event) => {
       const oldState = event.detail.oldState;
       const newState = event.detail.newState;
-      if (newState.stage.phase !== 'Auction' || newState.stage.turn != oldState.stage.turn) {
+      console.log(oldState.stage, newState.stage);
+      if (newState.stage.phase !== 'Auction') {
         this.end_auction();
+        return;
+      }
+      if (oldState.stage.phase === 'Auction') {
         return;
       }
       console.log('NEW AUCTION BEGAN');
@@ -1503,6 +1521,9 @@ class AuctionController {
     gStateEventTarget.addEventListener('bid_received', (event) => {
       this.bid_received(event.detail.state, event.detail.details);
     });
+    if (state.stage.phase === 'Auction') {
+      this.begin_auction();
+    }
   }
 }
 
@@ -1555,6 +1576,24 @@ class FirstPriceAuctionController extends AuctionController {
 }
 
 class LimitOrderAuctionController extends AuctionController {
+  constructor(eventTarget, state) {
+    super(eventTarget, state);
+    document.getElementById("limitOrderUI").innerHTML = `
+      <div>
+        <div id="limitOrderBidButton" class='button'>Bid</div>
+      </div>
+      <div>
+        <div id="limitOrderAskButton" class='button'>Ask</div>
+      </div>
+      <div class='button'>Submit</div>
+    `;
+
+    this.limitOrderBidButton = document.getElementById("limitOrderBidButton");
+    this.limitOrderAskButton = document.getElementById("limitOrderAskButton");
+
+    this.bidPrice = 0;
+    this.askPrice = 9999;
+  }
   begin_auction() {
     limitOrderUI.style.display = "block";
   }
@@ -1567,14 +1606,12 @@ class LimitOrderAuctionController extends AuctionController {
 }
 
 let gAuctionController;
-Promise.all(loadPromises).then(() => {
-  gStateEventTarget.addEventListener('statechange', (event) => {
-    if (gLatestState.settings.auctionType === "first-price") {
-      gAuctionController = new FirstPriceAuctionController(gStateEventTarget);
-    } else {
-      gAuctionController = new LimitOrderAuctionController(gStateEventTarget);
-    }
-  });
+gFirstStateLoadedPromise.then((state) => {
+  if (gLatestState.settings.auctionType === "first-price") {
+    gAuctionController = new FirstPriceAuctionController(gStateEventTarget, state);
+  } else {
+    gAuctionController = new LimitOrderAuctionController(gStateEventTarget, state);
+  }
 });
 
 function count(A) {
