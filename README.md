@@ -30,3 +30,7 @@
 ## There are two branches
 1. master - the latest version (using hex tiles)
 2. v1 - the original version (using a Risk board)
+
+## Screenshot
+
+![screenshot](screenshot.png)
