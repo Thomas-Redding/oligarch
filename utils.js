@@ -233,67 +233,155 @@ let utils = {
 
   /*
    * Computes the break-even price of new shares for the given nation assuming
-   * no further actions are taken by anyone.
+   * all dividends are immediately paid out, but 
    *
    * Note: new shares are assumed to essentially go do a dummy player, who gets them for free
    *
    * @param nation_name - the name of the nation who's advised share price is being computed
-   * @param new_shares - the number of new shares being valued
+   * @param brand_new_shares - the number of new shares being valued
    */
-  advised_share_price: (mother_state, nation_name, new_shares) => {
-    let share_n = utils.total_shares(mother_state, nation_name);
-    let cash = mother_state.nations[nation_name].cash;
+  advised_share_price: (mother_state, nation_name, brand_new_shares) => {
+    // Ignore cash until the very end.
+    let continent = utils.continent_from_name(mother_state, nation_name);
     let income = utils.income_of_nation(mother_state, nation_name);
-    let value_of_nation = cash + (utils.taxations_left(mother_state) + mother_state.settings.endGameIncomeMultiplier) * income;
-    return value_of_nation * new_shares / share_n;
+    let multiplier = mother_state.settings.endGameIncomeMultiplier;
+    let final_share_count = utils.total_shares(mother_state, nation_name);
+
+    let value_of_last_share = (income * (multiplier+1)) / final_share_count;
+
+    let taxations_left = utils.taxations_left(mother_state); // 1
+    let share_value = value_of_last_share;
+    let round = utils.total_rounds() - 1;
+    let shares_owned_by_players = final_share_count;
+    if (round < continent.num_auction_rounds) {
+      shares_owned_by_players -= mother_state.supershares_from_turn[round];
+    }
+    const shares_up_for_auction = mother_state.supershares_from_turn[round];
+    // Go backwards in time from the end of the game to the current round.
+    // In a standard 6-round game, the last round is round 5 (0-indexed).
+    // I add comments detailing the variables' values at the end of th second-to-last round.
+    for (let i = 0; i < taxations_left; ++i) {
+      // 5 shares.
+      // Pay out dividends from income.
+      if (mother_state.settings.doesBankReceiveDividends) {
+        share_value += income / final_share_count;
+      } else {
+        share_value += income / shares_owned_by_players;
+      }
+      // Go to just before auction. We need to figure out dividends from the auction money.
+      round -= 1;
+      // round = 4
+      if (round < continent.num_auction_rounds) {
+        shares_owned_by_players -= mother_state.supershares_from_turn[round];
+      }
+      const new_shares = mother_state.supershares_from_turn[round];
+      // shares_owned_by_players = 4
+      // shares_up_for_auction = 1
+      // We're about to auction off the 5th share.
+      switch(mother_state.settings.auctionMoneyRecipient) {
+        case 'bank':
+          // The bank gets all the money from the auction.
+          break;
+        case 'old-human-owners':
+          // The previous 4 players split the auction money.
+          // This means the new player gets $0.
+          break;
+        case 'new-human-owners':
+          // The new player gets their share of the auction money (e.g. 20%).
+          // Let x be the fair price.
+          // x / (new_shares + shares_up_for_auction) + share_value = x
+          // x = share_value * (new_shares + shares_up_for_auction) / (new_shares)
+          share_value *= (shares_owned_by_players + shares_up_for_auction) / new_shares;
+          break;
+        case 'country':
+          // The country gets the auction money.
+          if (mother_state.settings.doesBankReceiveDividends) {
+            // x / final_share_count + share_value = x
+            // x = share_value final_share_count / (final_share_count - 1)
+            share_value *= final_share_count / (final_share_count - 1);
+          } else {
+            // x / (new_shares + shares_up_for_auction) + share_value = x
+            // x = share_value (new_shares + shares_up_for_auction) / new_shares
+            share_value *= (new_shares + shares_up_for_auction) / new_shares;
+          }
+          break;
+        default:
+          throw Error('Unrecognized auctionMoneyRecipient value: "' + mother_state.settings.auctionMoneyRecipient + '"');
+      }
+    }
+    if (brand_new_shares != shares_up_for_auction) {
+      throw Error('brand_new_shares != shares_up_for_auction');
+    }
+    let cash = mother_state.nations[nation_name].cash;
+    share_value += cash / (shares_owned_by_players + shares_up_for_auction);
+    return share_value * shares_up_for_auction;
   },
 
   advised_cash_looseness: (mother_state) => {
-    let total_unowned_shares_value = 0;
-
     mother_state = utils.deep_copy(mother_state);
-    let round = mother_state.stage.round;
-    
-    let total_cash_outflow = 0;
-    for (let nation_name in mother_state.nations) {
-      let continent = utils.continent_from_name(mother_state, nation_name);
-      let unowned_shares = utils.unowned_shares(mother_state, nation_name);
-      let total_shares = utils.total_shares(mother_state, nation_name);
-      let owned_shares = total_shares - unowned_shares;
-      // Determine what round we are in.
-      let owned_shares_counter = 0;
-      let i;
-      for (i = 0; i < continent.num_auction_rounds; ++i) {
-        if (owned_shares_counter >= owned_shares) {
-          break;
-        }
-        owned_shares_counter += mother_state.supershares_from_turn[i];
-      }
-      mother_state.stage.round = round;
-      for (i = i; i < continent.num_auction_rounds; ++i) {
-        mother_state.stage.round += 1;
-        let new_shares = mother_state.supershares_from_turn[i];
-        let fairSharePrice = utils.advised_share_price(mother_state, nation_name, new_shares);
-        let percentToBank = 1 - owned_shares_counter / total_shares;
-        total_cash_outflow += fairSharePrice * percentToBank;
-      }
-    }
-
-    let total_cash = 0;
+    let total_starting_cash = 0;
     for (let username in mother_state.players) {
-      total_cash += mother_state.players[username].cash;
+      total_starting_cash += mother_state.players[username].cash;
     }
     for (let nation_name in mother_state.nations) {
-      total_cash += mother_state.nations[nation_name].cash;
+      total_starting_cash += mother_state.nations[nation_name].cash;
     }
+    // Simulate the game to the end.
+    let total_cash_outflow = 0;
     let total_cash_inflow = 0;
-    for (let nation_name in mother_state.nations) {
-      let income = utils.income_of_nation(mother_state, nation_name);
-      let future_income = utils.taxations_left(mother_state) * income;
-      total_cash_inflow += future_income;
+    for (let round = mother_state.stage.round; round < utils.total_rounds(); ++round) {
+      console.log('round', round, total_cash_inflow, total_cash_outflow);
+      let turns;
+      if (round == mother_state.stage.round) {
+        turns = TURNS.slice(TURNS.indexOf(mother_state.stage.turn));
+      } else {
+        turns = TURNS;
+      }
+      // Auction of shares for each country.
+      for (let i = 0; i < turns.length; ++i) {
+        const nation_name = turns[i];
+        const continent = utils.continent_from_name(mother_state, nation_name);
+        if (round >= continent.num_auction_rounds) continue;
+        // Auction of shares for this country.
+        let new_new_shares = mother_state.supershares_from_turn[round];
+        let fairSharePrice = utils.advised_share_price(mother_state, nation_name, new_new_shares);
+        switch(mother_state.settings.auctionMoneyRecipient) {
+          case 'bank':
+            total_cash_outflow += fairSharePrice;
+            break;
+          case 'old-human-owners':
+            // No cash outflow.
+            break;
+          case 'new-human-owners':
+            // No cash outflow.
+            break;
+          case 'country':
+            mother_state.nations[nation_name].cash += fairSharePrice;
+            break;
+          default:
+            throw Error('Unrecognized auctionMoneyRecipient value: "' + mother_state.settings.auctionMoneyRecipient + '"');
+        }
+        // Give share to arbitrary player.
+        let some_player = Object.keys(mother_state.players)[0];
+        mother_state.players[some_player].shares[nation_name] += mother_state.supershares_from_turn[round];
+        // Don't worry about moving cash around. Player cash is irrelevant to this simulation.
+      }
+      for (let i = 0; i < TURNS.length; ++i) {
+        const nation_name = turns[i];
+        let income = utils.income_of_nation(mother_state, nation_name);
+        const dividends = income + mother_state.nations[nation_name].cash;
+        console.log('dividends', nation_name, income, dividends);
+        mother_state.nations[nation_name].cash = 0;
+        total_cash_inflow += income;
+        if (mother_state.settings.doesBankReceiveDividends) {
+          total_cash_outflow += utils.unowned_shares(mother_state, nation_name) / utils.total_shares(mother_state, nation_name) * dividends;
+        }
+      }
     }
-
-    return total_cash_outflow / (total_cash + total_cash_inflow);
+    console.log('total_cash_outflow', total_cash_outflow);
+    console.log('total_starting_cash', total_starting_cash);
+    console.log('total_cash_inflow', total_cash_inflow);
+    return total_cash_outflow / (total_starting_cash + total_cash_inflow);
   },
 
   /*
@@ -939,8 +1027,9 @@ let utils = {
       owned_shares += mother_state.players[username].shares[nation_name];
     }
     let rtn = utils.total_shares(mother_state, nation_name) - owned_shares;
+    console.log(owned_shares, rtn);
     if (rtn < 0) {
-      throw Error();
+      throw Error("Negative unowned shares for nation: " + nation_name);
     }
     return rtn;
   },

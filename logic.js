@@ -544,11 +544,12 @@ class Game
             "advice": true,
             'debt': 'none', // 'none', 'manual', 'auto'
             'factoryIncome': 15,
-            'auctionMoneyRecipient': 'county', // 'bank', 'old-human-owners', 'new-human-owners', 'county'
+            'auctionMoneyRecipient': 'country', // 'bank', 'old-human-owners', 'new-human-owners', 'country'
             'doesBankReceiveDividends': true,
             'endGameIncomeMultiplier': 2,
             'enabledTroops': ['cavalry'], // ['infantry', 'calvary', 'artillery']
-            'auctionType': 'limit-orders', // 'first-price' or 'limit-orders'
+            // 'auctionType': 'limit-orders', // 'first-price' or 'limit-orders'
+            'auctionType': 'first-price',
         }
         if (this.mother_state.settings.auctionType == 'limit-orders') {
           this.mother_state.settings.biddingTime *= 2;
@@ -908,7 +909,7 @@ class Game
               }
               this.mother_state.players[winner].shares[curnat] += price * SHARES_FROM_TURN[i-1] / (oldHumanShares + SHARES_FROM_TURN[i-1]);
               break;
-            case 'county':
+            case 'country':
               this.mother_state.nations[curnat].cash += price;
               break;
             default:
