@@ -248,6 +248,54 @@ let utils = {
     return value_of_nation * new_shares / share_n;
   },
 
+  advised_cash_looseness: (mother_state) => {
+    let total_unowned_shares_value = 0;
+
+    mother_state = utils.deep_copy(mother_state);
+    let round = mother_state.stage.round;
+    
+    let total_cash_outflow = 0;
+    for (let nation_name in mother_state.nations) {
+      let continent = utils.continent_from_name(mother_state, nation_name);
+      let unowned_shares = utils.unowned_shares(mother_state, nation_name);
+      let total_shares = utils.total_shares(mother_state, nation_name);
+      let owned_shares = total_shares - unowned_shares;
+      // Determine what round we are in.
+      let owned_shares_counter = 0;
+      let i;
+      for (i = 0; i < continent.num_auction_rounds; ++i) {
+        if (owned_shares_counter >= owned_shares) {
+          break;
+        }
+        owned_shares_counter += mother_state.supershares_from_turn[i];
+      }
+      mother_state.stage.round = round;
+      for (i = i; i < continent.num_auction_rounds; ++i) {
+        mother_state.stage.round += 1;
+        let new_shares = mother_state.supershares_from_turn[i];
+        let fairSharePrice = utils.advised_share_price(mother_state, nation_name, new_shares);
+        let percentToBank = 1 - owned_shares_counter / total_shares;
+        total_cash_outflow += fairSharePrice * percentToBank;
+      }
+    }
+
+    let total_cash = 0;
+    for (let username in mother_state.players) {
+      total_cash += mother_state.players[username].cash;
+    }
+    for (let nation_name in mother_state.nations) {
+      total_cash += mother_state.nations[nation_name].cash;
+    }
+    let total_cash_inflow = 0;
+    for (let nation_name in mother_state.nations) {
+      let income = utils.income_of_nation(mother_state, nation_name);
+      let future_income = utils.taxations_left(mother_state) * income;
+      total_cash_inflow += future_income;
+    }
+
+    return total_cash_outflow / (total_cash + total_cash_inflow);
+  },
+
   /*
    * Only call at the end of the game.
    * @param username - the user whose score we are computing

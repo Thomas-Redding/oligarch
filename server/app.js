@@ -94,7 +94,8 @@ function getIp() {
 
 let port = process.argv.length > 2 ? parseInt(process.argv[2]) : 80;
 
-app.listen(port, getIp());
+// app.listen(port, getIp());
+app.listen(port, '0.0.0.0');
 
 /********** WebSocket Logic **********/
 

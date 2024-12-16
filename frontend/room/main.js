@@ -1177,7 +1177,10 @@ function updateCurrentActionDivFromState(state) {
     let adviceString = "";
     if (gLatestState.settings.advice) {
       let advisedPrice = Math.round(utils.advised_share_price(gLatestState, state.stage.turn, n));
-      adviceString += "<br/><br/> <i>( Your advisor recommends a share price of $" + advisedPrice + "B )</i>";
+      let cashTightness = utils.advised_cash_looseness(gLatestState, state.stage.turn);
+      adviceString += "<br/><br/> <i>( Your naive stock advisor recommends a share price of $" + advisedPrice + "B )</i>";
+      adviceString += "<br/><br/> <i>( Your naive banker says " + Math.round(cashTightness * 100) + "% of money will be spent on stocks by the end of the game)</i>";
+      adviceString += "<br/><br/> <i>( Both pieces of advise assume all players do nothing but buy shares until the game ends )</i>";
     }
     if (state.highest_bidder == null) {
       updateDiv("Bidding for <u>" + n + " share" + (n > 1 ? "s" : "") + "</u> is open for " + state.stage.turn + ". Every bid will extend the countdown." + adviceString);
