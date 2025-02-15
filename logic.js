@@ -540,16 +540,16 @@ class Game
             "biddingTime":      (kDebug ?   1 : 12)* 1*1000,
             "electionTime":     (kDebug ? 999 :  2)*60*1000,
             "actionsTime":      (kDebug ? 999 :  3)*60*1000,
-            "startingCash": 2584,
+            "startingCash": 100,
             "advice": true,
-            'debt': 'none', // 'none', 'manual', 'auto'
+            'debt': 'automatic', // 'none', 'manual', 'automatic'
             'factoryIncome': 15,
             'auctionMoneyRecipient': 'country', // 'bank', 'old-human-owners', 'new-human-owners', 'country'
             'doesBankReceiveDividends': true,
             'endGameIncomeMultiplier': 2,
             'enabledTroops': ['cavalry'], // ['infantry', 'calvary', 'artillery']
-            // 'auctionType': 'limit-orders', // 'first-price' or 'limit-orders'
-            'auctionType': 'first-price',
+            'auctionType': 'limit-orders', // 'first-price' or 'limit-orders'
+            'interestRate': 0.2,
         }
         if (this.mother_state.settings.auctionType == 'limit-orders') {
           this.mother_state.settings.biddingTime *= 2;
@@ -733,7 +733,21 @@ class Game
         }
         else if (phase == PHASES.fromback() && subphase == SUBPHASES.fromback()
             && turn == curTURNS.fromback()) {
-                this.mother_state.stage.round += 1
+                this.mother_state.stage.round += 1;
+                if (this.mother_state.settings.debt !== 'none') {
+                    const r = this.mother_state.settings.interestRate;
+                    if (this.mother_state.settings.debt === 'manual') {
+                        for (const player of Object.values(this.mother_state.players)) {
+                            player.manualDebt = Math.ceil(player.manualDebt * (1 + r));
+                        }
+                    } else {
+                        for (const player of Object.values(this.mother_state.players)) {
+                            if (player.cash < 0) {
+                                player.cash = Math.ceil(player.cash * (1 + r));
+                            }
+                        }
+                    }
+                }
                 if (this.mother_state.stage.round > utils.total_rounds()){
                     this._prayer('game_over')
                     return
@@ -752,7 +766,7 @@ class Game
                 this.mother_state.stage.turn = next(turn, curTURNS)
                 this.timer.stop(false)
             }
-            this.mother_state.stage.subphase = nextsubphase
+             this.mother_state.stage.subphase = nextsubphase
         }
         this._act()
     }
